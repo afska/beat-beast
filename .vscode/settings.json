@@ -1,0 +1,9 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "stdbool.h": "c",
+        "stdlib.h": "c",
+        "playbackstate.h": "c",
+        "gba_input.h": "c"
+    }
+}

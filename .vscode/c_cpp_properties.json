@@ -5,7 +5,10 @@
             "includePath": [
                 "${workspaceFolder}/../butano/butano/include",
                 "${workspaceFolder}/src/**/*",
-                "${workspaceFolder}/build"
+                "${workspaceFolder}/build",
+                "/opt/devkitpro/devkitARM/arm-none-eabi/include/**",
+                "/opt/devkitpro/libtonc/include/**",
+                "/opt/devkitpro/libgba/include/**"
             ],
             "cStandard": "gnu17",
             "cppStandard": "gnu++20",

@@ -34,7 +34,11 @@ LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python
 SOURCES     	:=  src \
 					src/assets \
-					src/assets/fonts
+					src/assets/fonts \
+					src/player \
+					src/player/core \
+					src/utils \
+					src/utils/gbfs
 INCLUDES    	:=  include
 DATA        	:=
 GRAPHICS    	:=  graphics
@@ -46,8 +50,8 @@ USERFLAGS   	:=
 USERCXXFLAGS	:=  
 USERASFLAGS 	:=  
 USERLDFLAGS 	:=  
-USERLIBDIRS 	:=  
-USERLIBS    	:=  
+USERLIBDIRS 	:= $(DEVKITPRO)/libgba
+USERLIBS    	:= -lgba
 DEFAULTLIBS 	:=  
 STACKTRACE		:=	
 USERBUILD   	:=  
