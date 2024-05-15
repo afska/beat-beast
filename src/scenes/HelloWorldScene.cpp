@@ -1,17 +1,20 @@
 #include "HelloWorldScene.h"
 
-#include "bn_bg_palettes.h"
-#include "bn_core.h"
-#include "bn_sprite_ptr.h"
-#include "bn_sprite_text_generator.h"
+#include "../player/PlaybackState.h"
 
 #include "../assets/fonts/fixed_32x64_sprite_font.h"
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
+HelloWorldScene::HelloWorldScene() : textGenerator(fixed_8x16_sprite_font) {}
+
 void HelloWorldScene::init() {
-  bn::sprite_text_generator big_fixed_text_generator(fixed_8x16_sprite_font);
-  big_fixed_text_generator.set_center_alignment();
-  big_fixed_text_generator.generate(0, 0, "Hello world!", textSprites);
+  textGenerator.set_center_alignment();
+  textGenerator.generate(0, 0, "Hello world!", textSprites);
 }
 
-void HelloWorldScene::update() {}
+void HelloWorldScene::update() {
+  textSprites.clear();
+  textGenerator.generate(0, -8, "Hello world!", textSprites);
+  textGenerator.generate(0, 8, bn::to_string<32>(PlaybackState.msecs),
+                         textSprites);
+}

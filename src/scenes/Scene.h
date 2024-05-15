@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "bn_sprite_ptr.h"
+#include "bn_string.h"
 #include "bn_vector.h"
 
 class Scene {
