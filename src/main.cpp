@@ -32,5 +32,5 @@ int main() {
 
 BN_CODE_IWRAM void ISR_VBlank() {
   player_onVBlank();
-  // bn::core::default_vblank_handler();
+  bn::core::default_vblank_handler();
 }
