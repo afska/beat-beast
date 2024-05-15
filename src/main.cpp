@@ -3,9 +3,6 @@
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_text_generator.h"
 
-#include "assets/fonts/fixed_32x64_sprite_font.h"
-#include "assets/fonts/fixed_8x16_sprite_font.h"
-
 extern "C" {
 #include "player/player.h"
 }
@@ -26,6 +23,13 @@ BN_CODE_IWRAM void ISR_VBlank() {
   player_onVBlank();
   bn::core::default_vblank_handler();
 }
+
+// ---
+// Test code
+// ---
+
+#include "assets/fonts/fixed_32x64_sprite_font.h"
+#include "assets/fonts/fixed_8x16_sprite_font.h"
 
 void helloWorldScene() {
   bn::sprite_text_generator big_fixed_text_generator(fixed_8x16_sprite_font);
