@@ -1,3 +1,3 @@
-# synthbattle
+# romtitle
 
 `// TODO: Write something`
