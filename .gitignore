@@ -1,0 +1,6 @@
+build/
+
+# GBA
+*.elf
+*.gba
+*.sav
