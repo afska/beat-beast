@@ -20,3 +20,20 @@ git clone https://github.com/afska/synthbattle
 cd synthbattle/
 make -j12 # 12 = number of CPU cores
 ```
+
+## VS Code settings
+
+*Preferences: Open User Settings (JSON)*
+
+```json
+{
+  "C_Cpp.clang_format_style": "{ BasedOnStyle: Chromium }",
+  "editor.formatOnSave": true
+}
+```
+
+## Troubleshooting
+
+### Link errors
+
+If you've added new folders, ensure they're in Makefile's SOURCES list!
