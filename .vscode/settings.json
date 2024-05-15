@@ -4,6 +4,7 @@
         "stdbool.h": "c",
         "stdlib.h": "c",
         "playbackstate.h": "c",
-        "gba_input.h": "c"
+        "gba_input.h": "c",
+        "*.tcc": "cpp"
     }
 }

@@ -1,6 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 #define RATE_LEVELS 3
@@ -17,6 +21,10 @@ void player_stop();
 bool player_isPlaying();
 void player_onVBlank();
 void player_update(int expectedAudioChunk,
-                    void (*onAudioChunks)(unsigned int current));
+                   void (*onAudioChunks)(unsigned int current));
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // PLAYER_H

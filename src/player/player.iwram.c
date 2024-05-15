@@ -301,50 +301,48 @@ CODE_ROM void update_rate() {
 
 void player_update(int expectedAudioChunk,
                    void (*onAudioChunks)(unsigned int current)) {
-  while (1) {
-    // > multiplayer audio sync
-    bool isSynchronized = expectedAudioChunk > 0;
-    int availableAudioChunks = expectedAudioChunk - current_audio_chunk;
-    if (isSynchronized && availableAudioChunks > AUDIO_SYNC_LIMIT) {
-      // underrun (slave is behind master)
-      unsigned int diff = availableAudioChunks - AUDIO_SYNC_LIMIT;
+  // > multiplayer audio sync
+  bool isSynchronized = expectedAudioChunk > 0;
+  int availableAudioChunks = expectedAudioChunk - current_audio_chunk;
+  if (isSynchronized && availableAudioChunks > AUDIO_SYNC_LIMIT) {
+    // underrun (slave is behind master)
+    unsigned int diff = availableAudioChunks - AUDIO_SYNC_LIMIT;
 
-      src_pos += AUDIO_CHUNK_SIZE_GSM * diff;
-      current_audio_chunk += diff;
-      availableAudioChunks = AUDIO_SYNC_LIMIT;
-    }
+    src_pos += AUDIO_CHUNK_SIZE_GSM * diff;
+    current_audio_chunk += diff;
+    availableAudioChunks = AUDIO_SYNC_LIMIT;
+  }
 
-    // > adjust position based on audio rate
-    update_rate();
+  // > adjust position based on audio rate
+  update_rate();
 
-    // > audio processing (back buffer)
-    AUDIO_PROCESS(
-        {
-          if (isSynchronized) {
-            availableAudioChunks--;
+  // > audio processing (back buffer)
+  AUDIO_PROCESS(
+      {
+        if (isSynchronized) {
+          availableAudioChunks--;
 
-            if (availableAudioChunks < -AUDIO_SYNC_LIMIT) {
-              // overrun (master is behind slave)
-              src_pos -= AUDIO_CHUNK_SIZE_GSM;
-              availableAudioChunks = -AUDIO_SYNC_LIMIT;
-            } else
-              current_audio_chunk++;
+          if (availableAudioChunks < -AUDIO_SYNC_LIMIT) {
+            // overrun (master is behind slave)
+            src_pos -= AUDIO_CHUNK_SIZE_GSM;
+            availableAudioChunks = -AUDIO_SYNC_LIMIT;
           } else
             current_audio_chunk++;
-        },
-        {
-          if (PlaybackState.isLooping)
-            player_seek(0);
-          else {
-            player_stop();
-            PlaybackState.hasFinished = true;
-          }
-        });
+        } else
+          current_audio_chunk++;
+      },
+      {
+        if (PlaybackState.isLooping)
+          player_seek(0);
+        else {
+          player_stop();
+          PlaybackState.hasFinished = true;
+        }
+      });
 
-    // > notify multiplayer audio sync cursor
-    onAudioChunks(current_audio_chunk);
+  // > notify multiplayer audio sync cursor
+  onAudioChunks(current_audio_chunk);
 
-    // > calculate played milliseconds
-    PlaybackState.msecs = fracumul(src_pos, AS_MSECS);
-  }
+  // > calculate played milliseconds
+  PlaybackState.msecs = fracumul(src_pos, AS_MSECS);
 }
