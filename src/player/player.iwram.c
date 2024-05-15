@@ -299,13 +299,9 @@ CODE_ROM void update_rate() {
   }
 }
 
-void player_forever(int (*onUpdate)(),
-                    void (*onRender)(),
-                    void (*onAudioChunks)(unsigned int current)) {
+void player_update(int expectedAudioChunk,
+                   void (*onAudioChunks)(unsigned int current)) {
   while (1) {
-    // > main game loop
-    int expectedAudioChunk = onUpdate();
-
     // > multiplayer audio sync
     bool isSynchronized = expectedAudioChunk > 0;
     int availableAudioChunks = expectedAudioChunk - current_audio_chunk;
@@ -350,11 +346,5 @@ void player_forever(int (*onUpdate)(),
 
     // > calculate played milliseconds
     PlaybackState.msecs = fracumul(src_pos, AS_MSECS);
-
-    // > wait for vertical blank
-    VBlankIntrWait();
-
-    // > draw
-    onRender();
   }
 }

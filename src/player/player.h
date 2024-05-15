@@ -16,8 +16,7 @@ void player_setRate(int rate);
 void player_stop();
 bool player_isPlaying();
 void player_onVBlank();
-void player_forever(int (*onUpdate)(),
-                    void (*onRender)(),
+void player_forever(int expectedAudioChunk,
                     void (*onAudioChunks)(unsigned int current));
 
 #endif  // PLAYER_H
