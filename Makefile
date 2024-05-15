@@ -37,6 +37,7 @@ SOURCES     	:=  src \
 					src/assets/fonts \
 					src/player \
 					src/player/core \
+					src/scenes \
 					src/utils \
 					src/utils/gbfs
 INCLUDES    	:=  include
