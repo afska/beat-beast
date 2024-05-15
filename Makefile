@@ -32,7 +32,9 @@ TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
 LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python
-SOURCES     	:=  src
+SOURCES     	:=  src \
+					src/assets \
+					src/assets/fonts
 INCLUDES    	:=  include
 DATA        	:=
 GRAPHICS    	:=  graphics

@@ -4,7 +4,8 @@
             "name": "Butano",
             "includePath": [
                 "${workspaceFolder}/../butano/butano/include",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/src/**/*",
+                "${workspaceFolder}/build"
             ],
             "cStandard": "gnu17",
             "cppStandard": "gnu++20",
