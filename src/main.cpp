@@ -6,6 +6,10 @@
 #include "assets/fonts/fixed_32x64_sprite_font.h"
 #include "assets/fonts/fixed_8x16_sprite_font.h"
 
+extern "C" {
+#include "player/player.h"
+}
+
 void helloWorldScene();
 void ISR_VBlank();
 
@@ -19,6 +23,7 @@ int main() {
 }
 
 BN_CODE_IWRAM void ISR_VBlank() {
+  player_onVBlank();
   bn::core::default_vblank_handler();
 }
 
@@ -31,5 +36,6 @@ void helloWorldScene() {
 
   while (true) {
     bn::core::update();
+    player_update(0, [](unsigned current) {});
   }
 }
