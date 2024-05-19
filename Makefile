@@ -39,7 +39,8 @@ SOURCES     	:=  src \
 					src/player/core \
 					src/scenes \
 					src/utils \
-					src/utils/gbfs
+					src/utils/gbfs \
+					src/phys
 INCLUDES    	:=  include
 DATA        	:=
 GRAPHICS    	:=  graphics
