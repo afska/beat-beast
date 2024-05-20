@@ -1,9 +1,10 @@
 #include "HelloWorldScene.h"
 
 #include "../player/player.h"
+#include "../savefile/SaveFile.h"
+#include "../scenes/CalibrationScene.h"
 #include "../utils/math.h"
 
-#include "../assets/fonts/fixed_32x64_sprite_font.h"
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_keypad.h"
@@ -71,10 +72,14 @@ void HelloWorldScene::update() {
   playerBox.set_position(playerBox.position() + vel);
   sprite.set_position(playerBox.position());
 
+  // start = go to settings / CalibrationScene
+  if (bn::keypad::start_pressed())
+    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene()});
+
   // beats
-  const int AUDIO_LAG = 264;  // emulator/machine-dependent; 0 on real hardware
-  const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
-  int msecs = PlaybackState.msecs - AUDIO_LAG;
+  const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff
+  int audioLag = SaveFile::data.audioLag;  // (0 on real hardware)
+  int msecs = PlaybackState.msecs - audioLag;
   int bpm = 125;
   int tickCount = 2;
   int beat = Math::fastDiv(msecs * bpm, PER_MINUTE);
@@ -91,10 +96,13 @@ void HelloWorldScene::update() {
   // text
   textSprites.clear();
   textGenerator.generate(
+      64, -74, "audioLag=" + bn::to_string<32>(SaveFile::data.audioLag),
+      textSprites);
+  textGenerator.generate(
       0, -8,
       "beat=" + bn::to_string<32>(beat) + ", tick=" + bn::to_string<32>(tick),
       textSprites);
-  textGenerator.generate(0, 8, bn::to_string<16>(msecs), textSprites);
+  textGenerator.generate(0, 8, bn::to_string<32>(msecs), textSprites);
 
   if (hadCol)
     textGenerator.generate(0, 16, "Had Collision!", textSprites);

@@ -235,8 +235,8 @@ CODE_ROM void player_play(const char* name) {
   loadFile(name);
 }
 
-CODE_ROM void player_enableLoop() {
-  PlaybackState.isLooping = true;
+CODE_ROM void player_setLoop(bool enable) {
+  PlaybackState.isLooping = enable;
 }
 
 CODE_ROM void player_seek(unsigned int msecs) {

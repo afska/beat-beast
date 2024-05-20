@@ -5,9 +5,6 @@
 
 #include "../phys/phys.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
-#include "bn_sprite_text_generator.h"
-
-#include <bn_unique_ptr.h>
 
 class HelloWorldScene : Scene {
  public:

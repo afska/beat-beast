@@ -1,14 +1,18 @@
 #include "player/player.h"
 #include "savefile/SaveFile.h"
+#include "scenes/CalibrationScene.h"
 #include "scenes/HelloWorldScene.h"
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_sprite_text_generator.h"
+#include "bn_unique_ptr.h"
 
 void ISR_VBlank();
 static const GBFS_FILE* fs = find_first_gbfs_file(0);
+
+bn::unique_ptr<Scene> scene;
 
 int main() {
   bn::core::init(ISR_VBlank);
@@ -25,11 +29,17 @@ int main() {
 
   player_init();
 
-  HelloWorldScene helloWorld;
-  helloWorld.init();
+  scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene()}
+                    : bn::unique_ptr{(Scene*)new HelloWorldScene()};
+  scene->init();
 
   while (true) {
-    helloWorld.update();
+    scene->update();
+    if (scene->hasNextScene()) {
+      scene = scene->getNextScene();
+      player_stop();
+      scene->init();
+    }
 
     bn::core::update();
     player_update(0, [](unsigned current) {});
