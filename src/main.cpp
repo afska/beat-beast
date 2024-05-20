@@ -17,7 +17,7 @@ int main() {
             "GBFS file not found.\nUse the ROM that ends with .out.gba!");
 
   player_init();
-  player_play("test.gsm");
+  player_play("testboss.gsm");
 
   HelloWorldScene helloWorld;
   helloWorld.init();

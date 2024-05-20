@@ -5,6 +5,7 @@
         "stdlib.h": "c",
         "playbackstate.h": "c",
         "gba_input.h": "c",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "cstdint": "cpp"
     }
 }

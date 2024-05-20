@@ -21,6 +21,12 @@ cd synthbattle/
 make -j12 # 12 = number of CPU cores
 ```
 
+## Build music
+
+```
+ffmpeg -y -i file.mp3 -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm file.gsm
+```
+
 ## VS Code settings
 
 *Preferences: Open User Settings (JSON)*
