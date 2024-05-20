@@ -4,6 +4,7 @@
 #include "Scene.h"
 
 #include "../phys/phys.h"
+#include "bn_regular_bg_position_hbe_ptr.h"
 #include "bn_sprite_text_generator.h"
 
 #include <bn_unique_ptr.h>
@@ -25,6 +26,10 @@ class HelloWorldScene : Scene {
   bn::sprite_ptr other;
   int bounceFrame = 0;
   int lastBeat = 0;
+  bn::fixed layer1 = 0;
+  bn::fixed layer2 = 0;
+  bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
+  bn::regular_bg_position_hbe_ptr horizontalHBE;
 };
 
 #endif  // HELLO_WORLD_SCENE_H

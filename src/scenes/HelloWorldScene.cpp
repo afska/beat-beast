@@ -22,7 +22,10 @@ HelloWorldScene::HelloWorldScene()
       background(bn::regular_bg_items::back.create_bg(0, 0)),
       horse(bn::sprite_items::horse.create_sprite(HORSE_X, HORSE_Y)),
       sprite(bn::sprite_items::box.create_sprite(20, 20)),
-      other(bn::sprite_items::box.create_sprite(40, 40)) {}
+      other(bn::sprite_items::box.create_sprite(40, 40)),
+      horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
+          background,
+          horizontalDeltas)) {}
 
 void HelloWorldScene::init() {
   textGenerator.set_center_alignment();
@@ -84,4 +87,15 @@ void HelloWorldScene::update() {
 
   if (hadCol)
     textGenerator.generate(0, 16, "Had Collision!", textSprites);
+
+  // parallax
+  layer1 += 0.3;
+  layer2 += 0.2;
+  for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
+    if (index <= 65)
+      horizontalDeltas[index] = layer1;
+    else
+      horizontalDeltas[index] = layer2;
+  }
+  horizontalHBE.reload_deltas_ref();
 }
