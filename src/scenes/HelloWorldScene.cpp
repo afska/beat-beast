@@ -105,7 +105,7 @@ void HelloWorldScene::update() {
   textGenerator.generate(0, 8, bn::to_string<32>(msecs), textSprites);
 
   if (hadCol)
-    textGenerator.generate(0, 16, "Had Collision!", textSprites);
+    textGenerator.generate(0, 16, "col", textSprites);
 
   // parallax
   layer1 += 0.3;
