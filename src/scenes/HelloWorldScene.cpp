@@ -99,7 +99,7 @@ void HelloWorldScene::update() {
 
   // parallax
   layer1 += 0.3;
-  layer2 += 0.2;
+  layer2 += 0.8;
   for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
     if (index <= 65)
       horizontalDeltas[index] = layer1;
