@@ -8,7 +8,7 @@
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back.h"
-#include "bn_sprite_items_box.h"
+#include "bn_sprite_items_arrows.h"
 #include "bn_sprite_items_horse.h"
 
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
@@ -21,8 +21,17 @@ HelloWorldScene::HelloWorldScene()
       physWorld(new PhysWorld),
       background(bn::regular_bg_items::back.create_bg(0, 0)),
       horse(bn::sprite_items::horse.create_sprite(HORSE_X, HORSE_Y)),
-      sprite(bn::sprite_items::box.create_sprite(20, 20)),
-      other(bn::sprite_items::box.create_sprite(40, 40)),
+      sprite(bn::sprite_items::arrows.create_sprite(20, 20)),
+      other(bn::sprite_items::arrows.create_sprite(40, 40)),
+      spriteAnimateAction(bn::create_sprite_animate_action_forever(
+          sprite,
+          2,
+          bn::sprite_items::arrows.tiles_item(),
+          10,
+          11,
+          12,
+          13,
+          14)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}
@@ -98,4 +107,9 @@ void HelloWorldScene::update() {
       horizontalDeltas[index] = layer2;
   }
   horizontalHBE.reload_deltas_ref();
+
+  // animation update
+  sprite.set_vertical_flip(true);
+  sprite.set_horizontal_flip(true);
+  spriteAnimateAction.update();
 }

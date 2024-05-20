@@ -24,6 +24,7 @@ class HelloWorldScene : Scene {
   bn::sprite_ptr horse;
   bn::sprite_ptr sprite;
   bn::sprite_ptr other;
+  bn::sprite_animate_action<5> spriteAnimateAction;
   int bounceFrame = 0;
   int lastBeat = 0;
   bn::fixed layer1 = 0;
