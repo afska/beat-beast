@@ -3,8 +3,8 @@
 
 #include "Scene.h"
 
-#include "bn_sprite_text_generator.h"
 #include "../phys/phys.h"
+#include "bn_sprite_text_generator.h"
 
 #include <bn_unique_ptr.h>
 
@@ -18,9 +18,12 @@ class HelloWorldScene : Scene {
   bn::vector<bn::sprite_ptr, 32> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<PhysWorld> physWorld;
-  bn::fixed_rect player_box;
+  bn::fixed_rect playerBox;
+  bn::sprite_ptr horse;
   bn::sprite_ptr sprite;
   bn::sprite_ptr other;
+  int bounceFrame = 0;
+  int lastBeat = 0;
 };
 
 #endif  // HELLO_WORLD_SCENE_H

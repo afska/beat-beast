@@ -6,6 +6,8 @@
         "playbackstate.h": "c",
         "gba_input.h": "c",
         "*.tcc": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "random": "cpp",
+        "limits": "cpp"
     }
 }
