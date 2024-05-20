@@ -40,7 +40,8 @@ SOURCES     	:=  src \
 					src/scenes \
 					src/utils \
 					src/utils/gbfs \
-					src/phys
+					src/phys \
+					src/savefile
 INCLUDES    	:=  include
 DATA        	:=
 GRAPHICS    	:=  graphics

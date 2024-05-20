@@ -1,4 +1,5 @@
 #include "player/player.h"
+#include "savefile/SaveFile.h"
 #include "scenes/HelloWorldScene.h"
 #include "utils/gbfs/gbfs.h"
 
@@ -15,8 +16,14 @@ int main() {
   BN_ASSERT(fs != NULL,
             "GBFS file not found.\nUse the ROM that ends with .out.gba!");
 
+  bool isNewSave = SaveFile::initialize();
+  if (isNewSave) {
+    bool isNewSaveAgain = SaveFile::initialize();
+    BN_ASSERT(!isNewSaveAgain,
+              "SRAM is not working! Check your emulator settings.");
+  }
+
   player_init();
-  player_play("testboss.gsm");
 
   HelloWorldScene helloWorld;
   helloWorld.init();

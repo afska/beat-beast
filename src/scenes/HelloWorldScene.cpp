@@ -1,6 +1,6 @@
 #include "HelloWorldScene.h"
 
-#include "../player/PlaybackState.h"
+#include "../player/player.h"
 #include "../utils/math.h"
 
 #include "../assets/fonts/fixed_32x64_sprite_font.h"
@@ -46,6 +46,8 @@ void HelloWorldScene::init() {
   auto new_obj = bn::fixed_rect(bn::fixed(40), bn::fixed(40), bn::fixed(16),
                                 bn::fixed(16));
   physWorld->add_object(new_obj);
+
+  player_play("testboss.gsm");
 }
 
 void HelloWorldScene::update() {

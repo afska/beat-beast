@@ -8,6 +8,16 @@
         "*.tcc": "cpp",
         "cstdint": "cpp",
         "random": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "string": "cpp",
+        "array": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "functional": "cpp",
+        "format": "cpp",
+        "ostream": "cpp",
+        "span": "cpp",
+        "streambuf": "cpp",
+        "tuple": "cpp"
     }
 }

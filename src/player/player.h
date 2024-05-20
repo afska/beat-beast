@@ -7,6 +7,8 @@ extern "C" {
 
 #include <stdbool.h>
 
+#include "PlaybackState.h"
+
 #define RATE_LEVELS 3
 #define AUDIO_SYNC_LIMIT 2
 
