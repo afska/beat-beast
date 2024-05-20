@@ -19,6 +19,7 @@ class HelloWorldScene : Scene {
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<PhysWorld> physWorld;
   bn::fixed_rect playerBox;
+  bn::regular_bg_ptr background;
   bn::sprite_ptr horse;
   bn::sprite_ptr sprite;
   bn::sprite_ptr other;

@@ -7,6 +7,7 @@
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_keypad.h"
+#include "bn_regular_bg_items_back.h"
 #include "bn_sprite_items_box.h"
 #include "bn_sprite_items_horse.h"
 
@@ -18,6 +19,7 @@ const int HORSE_Y = 40;
 HelloWorldScene::HelloWorldScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
+      background(bn::regular_bg_items::back.create_bg(0, 0)),
       horse(bn::sprite_items::horse.create_sprite(HORSE_X, HORSE_Y)),
       sprite(bn::sprite_items::box.create_sprite(20, 20)),
       other(bn::sprite_items::box.create_sprite(40, 40)) {}

@@ -11,7 +11,6 @@ static const GBFS_FILE* fs = find_first_gbfs_file(0);
 
 int main() {
   bn::core::init(ISR_VBlank);
-  bn::bg_palettes::set_transparent_color(bn::color(16, 16, 16));
 
   BN_ASSERT(fs != NULL,
             "GBFS file not found.\nUse the ROM that ends with .out.gba!");
