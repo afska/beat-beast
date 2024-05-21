@@ -38,6 +38,7 @@ SOURCES     	:=  src \
 					src/player \
 					src/player/core \
 					src/scenes \
+					src/objects \
 					src/utils \
 					src/utils/gbfs \
 					src/phys \

@@ -12,29 +12,13 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
-                                                        8, 7, 5, 3, 0};
-const int HORSE_X = -70;
-const int HORSE_Y = 40;
-
 HelloWorldScene::HelloWorldScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
+      horse(new Horse(20, 90)),
       background(bn::regular_bg_items::back.create_bg(0, 0)),
-      horse(bn::sprite_items::horse.create_sprite(HORSE_X, HORSE_Y)),
       gun(bn::sprite_items::gun.create_sprite(20, 20)),
       otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
-      runAnimation(bn::create_sprite_animate_action_forever(
-          horse,
-          3,
-          bn::sprite_items::horse.tiles_item(),
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}
@@ -66,11 +50,11 @@ void HelloWorldScene::update() {
   else if (bn::keypad::left_held())
     vel.set_x(bn::fixed(-1));
 
+  // collisions
   bool hadCol = false;
   if (physWorld->test_collision(gunBox, vel)) {
     hadCol = true;
   }
-
   gunBox.set_position(gunBox.position() + vel);
   gun.set_position(gunBox.position());
 
@@ -89,12 +73,6 @@ void HelloWorldScene::update() {
   bool isNewBeat = beat != lastBeat;
   lastBeat = beat;
 
-  // bounce effect
-  bounceFrame = bn::max(bounceFrame - 1, 0);
-  if (isNewBeat)
-    bounceFrame = BOUNCE_STEPS.size() - 1;
-  horse.set_x(HORSE_X + BOUNCE_STEPS[bounceFrame]);
-
   // text
   textSprites.clear();
   textGenerator.generate(
@@ -105,11 +83,10 @@ void HelloWorldScene::update() {
       "beat=" + bn::to_string<32>(beat) + ", tick=" + bn::to_string<32>(tick),
       textSprites);
   textGenerator.generate(0, 8, bn::to_string<32>(msecs), textSprites);
-
   if (hadCol)
     textGenerator.generate(0, 16, "col", textSprites);
 
-  // parallax
+  // parallax bg
   layer1 += 0.3;
   layer2 += 0.8;
   for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
@@ -120,8 +97,8 @@ void HelloWorldScene::update() {
   }
   horizontalHBE.reload_deltas_ref();
 
-  // animation update
-  gun.set_vertical_flip(true);
-  gun.set_horizontal_flip(true);
-  runAnimation.update();
+  // update horse object
+  if (isNewBeat)
+    horse->bounce();
+  horse->update();
 }
