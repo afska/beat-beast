@@ -9,7 +9,7 @@
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back.h"
-#include "bn_sprite_items_arrows.h"
+#include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
@@ -22,17 +22,19 @@ HelloWorldScene::HelloWorldScene()
       physWorld(new PhysWorld),
       background(bn::regular_bg_items::back.create_bg(0, 0)),
       horse(bn::sprite_items::horse.create_sprite(HORSE_X, HORSE_Y)),
-      sprite(bn::sprite_items::arrows.create_sprite(20, 20)),
-      other(bn::sprite_items::arrows.create_sprite(40, 40)),
-      spriteAnimateAction(bn::create_sprite_animate_action_forever(
-          sprite,
+      gun(bn::sprite_items::gun.create_sprite(20, 20)),
+      otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
+      runAnimation(bn::create_sprite_animate_action_forever(
+          horse,
+          3,
+          bn::sprite_items::horse.tiles_item(),
+          0,
+          1,
           2,
-          bn::sprite_items::arrows.tiles_item(),
-          10,
-          11,
-          12,
-          13,
-          14)),
+          3,
+          4,
+          5,
+          6)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}
@@ -41,12 +43,12 @@ void HelloWorldScene::init() {
   textGenerator.set_center_alignment();
   textGenerator.generate(0, 0, "Hello world!", textSprites);
 
-  playerBox = bn::fixed_rect(bn::fixed(20), bn::fixed(20), bn::fixed(16),
-                             bn::fixed(16));
+  gunBox = bn::fixed_rect(bn::fixed(20), bn::fixed(20), bn::fixed(32),
+                          bn::fixed(16));
 
-  auto new_obj = bn::fixed_rect(bn::fixed(40), bn::fixed(40), bn::fixed(16),
-                                bn::fixed(16));
-  physWorld->add_object(new_obj);
+  auto newObj = bn::fixed_rect(bn::fixed(40), bn::fixed(40), bn::fixed(32),
+                               bn::fixed(16));
+  physWorld->add_object(newObj);
 
   player_play("testboss.gsm");
 }
@@ -65,12 +67,12 @@ void HelloWorldScene::update() {
     vel.set_x(bn::fixed(-1));
 
   bool hadCol = false;
-  if (physWorld->test_collision(playerBox, vel)) {
+  if (physWorld->test_collision(gunBox, vel)) {
     hadCol = true;
   }
 
-  playerBox.set_position(playerBox.position() + vel);
-  sprite.set_position(playerBox.position());
+  gunBox.set_position(gunBox.position() + vel);
+  gun.set_position(gunBox.position());
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
@@ -119,7 +121,7 @@ void HelloWorldScene::update() {
   horizontalHBE.reload_deltas_ref();
 
   // animation update
-  sprite.set_vertical_flip(true);
-  sprite.set_horizontal_flip(true);
-  spriteAnimateAction.update();
+  gun.set_vertical_flip(true);
+  gun.set_horizontal_flip(true);
+  runAnimation.update();
 }
