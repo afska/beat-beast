@@ -3,7 +3,7 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../scenes/CalibrationScene.h"
-#include "../utils/math.h"
+#include "../utils/Math.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
@@ -32,7 +32,7 @@ void HelloWorldScene::init() {
 
   auto newObj = bn::fixed_rect(bn::fixed(40), bn::fixed(40), bn::fixed(32),
                                bn::fixed(16));
-  physWorld->add_object(newObj);
+  physWorld->addObject(newObj);
 
   player_play("testboss.gsm");
 }
@@ -52,7 +52,7 @@ void HelloWorldScene::update() {
 
   // collisions
   bool hadCol = false;
-  if (physWorld->test_collision(gunBox, vel)) {
+  if (physWorld->testCollision(gunBox, vel)) {
     hadCol = true;
   }
   gunBox.set_position(gunBox.position() + vel);

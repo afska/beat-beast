@@ -1,6 +1,6 @@
 #include "Horse.h"
 
-#include "../utils/math.h"
+#include "../utils/Math.h"
 
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"

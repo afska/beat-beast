@@ -4,7 +4,7 @@
 #include "Scene.h"
 
 #include "../objects/Horse.h"
-#include "../phys/phys.h"
+#include "../phys/PhysWorld.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
 class HelloWorldScene : Scene {
