@@ -2,7 +2,7 @@
 
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
-#include "../scenes/HelloWorldScene.h"
+#include "../scenes/DevPlaygroundScene.h"
 #include "bn_bg_palettes.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
@@ -82,7 +82,7 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
   SaveFile::save();
 
-  setNextScene(bn::unique_ptr{(Scene*)new HelloWorldScene()});
+  setNextScene(bn::unique_ptr{(Scene*)new DevPlaygroundScene()});
 }
 
 void CalibrationScene::cancel() {

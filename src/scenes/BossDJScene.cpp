@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+#include "BossDJScene.h"
 
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
@@ -12,7 +12,7 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-HelloWorldScene::HelloWorldScene()
+BossDJScene::BossDJScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse(20, 90)),
@@ -23,7 +23,7 @@ HelloWorldScene::HelloWorldScene()
           background,
           horizontalDeltas)) {}
 
-void HelloWorldScene::init() {
+void BossDJScene::init() {
   textGenerator.set_center_alignment();
   textGenerator.generate(0, 0, "Hello world!", textSprites);
 
@@ -37,7 +37,7 @@ void HelloWorldScene::init() {
   player_play("testboss.gsm");
 }
 
-void HelloWorldScene::update() {
+void BossDJScene::update() {
   // input
   bn::fixed_point_t vel(bn::fixed(0), bn::fixed(0));
 

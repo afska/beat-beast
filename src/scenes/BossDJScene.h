@@ -1,5 +1,5 @@
-#ifndef HELLO_WORLD_SCENE_H
-#define HELLO_WORLD_SCENE_H
+#ifndef BOSS_DJ_SCENE_H
+#define BOSS_DJ_SCENE_H
 
 #include "Scene.h"
 
@@ -7,9 +7,9 @@
 #include "../phys/PhysWorld.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
-class HelloWorldScene : Scene {
+class BossDJScene : Scene {
  public:
-  HelloWorldScene();
+  BossDJScene();
   void init() override;
   void update() override;
 
@@ -30,4 +30,4 @@ class HelloWorldScene : Scene {
   bn::regular_bg_position_hbe_ptr horizontalHBE;
 };
 
-#endif  // HELLO_WORLD_SCENE_H
+#endif  // BOSS_DJ_SCENE_H

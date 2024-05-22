@@ -1,7 +1,8 @@
 #include "player/player.h"
 #include "savefile/SaveFile.h"
+#include "scenes/BossDJScene.h"
 #include "scenes/CalibrationScene.h"
-#include "scenes/HelloWorldScene.h"
+#include "scenes/DevPlaygroundScene.h"
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
@@ -30,7 +31,7 @@ int main() {
   player_init();
 
   scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene()}
-                    : bn::unique_ptr{(Scene*)new HelloWorldScene()};
+                    : bn::unique_ptr{(Scene*)new BossDJScene()};
   scene->init();
 
   while (true) {
