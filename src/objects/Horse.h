@@ -14,12 +14,13 @@ class Horse : GameObject {
  private:
   bn::sprite_ptr mainSprite;
   bn::sprite_ptr gunSprite;
-  // bn::sprite_ptr ammoSprite;
+  bn::sprite_ptr ammoSprite;
   bn::fixed x;
   bn::fixed y;
 
   bn::sprite_animate_action<7> runAnimation;
   bn::optional<bn::sprite_animate_action<7>> gunAnimation;
+  bn::optional<bn::sprite_animate_action<3>> ammoAnimation;
   int bounceFrame = 0;
 };
 
