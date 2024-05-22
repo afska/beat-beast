@@ -25,8 +25,10 @@ void CalibrationScene::update() {
     case INTRO: {
       if (bn::keypad::a_pressed())
         start();
-      else if (bn::keypad::b_pressed())
+      else if (bn::keypad::b_pressed()) {
+        measuredLag = 0;
         saveAndGoToGame();
+      }
 
       break;
     }
