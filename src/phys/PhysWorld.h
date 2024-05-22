@@ -1,9 +1,9 @@
 #ifndef PHYS_WORLD_H
 #define PHYS_WORLD_H
 
-#include <bn_fixed_point.h>
-#include <bn_fixed_rect.h>
-#include <bn_vector.h>
+#include "bn_fixed_point.h"
+#include "bn_fixed_rect.h"
+#include "bn_vector.h"
 
 #define MAX_OBJECTS 1024
 

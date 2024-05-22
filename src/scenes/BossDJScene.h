@@ -18,16 +18,18 @@ class BossDJScene : Scene {
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<PhysWorld> physWorld;
   bn::unique_ptr<Horse> horse;
-  bn::fixed_rect gunBox;
   bn::regular_bg_ptr background;
-  bn::sprite_ptr gun;
-  bn::sprite_ptr otherGun;
-  int bounceFrame = 0;
   int lastBeat = 0;
+  bool isNewBeat = false;
   bn::fixed layer1 = 0;
   bn::fixed layer2 = 0;
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::regular_bg_position_hbe_ptr horizontalHBE;
+
+  void processInput();
+  void processBeats();
+  void updateBackground();
+  void updateSprites();
 };
 
 #endif  // BOSS_DJ_SCENE_H

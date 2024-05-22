@@ -9,7 +9,7 @@ const unsigned GUN_OFFSET[2] = {35, 28};
 const unsigned AMMO_OFFSET[2] = {59, 25};
 const unsigned GUN_ANIMATION_WAIT = 1;
 
-Horse::Horse(bn::fixed initialX, bn::fixed initialY)
+Horse::Horse(bn::fixed_point initialPosition)
     : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
       gunSprite(bn::sprite_items::gun.create_sprite(0, 0)),
       ammoSprite(bn::sprite_items::gun.create_sprite(0, 0)),
@@ -24,7 +24,7 @@ Horse::Horse(bn::fixed initialX, bn::fixed initialY)
           4,
           5,
           6)) {
-  setPosition(initialX, initialY);
+  setPosition(initialPosition);
   ammoSprite.set_visible(false);
 }
 
@@ -32,7 +32,7 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
-  setPosition(x, y);
+  setPosition(position);
 }
 
 void Horse::bounce() {
@@ -42,20 +42,31 @@ void Horse::bounce() {
       2, 3, 4, 5, 6);
 }
 
-void Horse::setPosition(bn::fixed newX, bn::fixed newY) {
+void Horse::setPosition(bn::fixed_point newPosition) {
   int bounceOffsetX = Math::BOUNCE_STEPS[bounceFrame];
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
+  int gunOffsetX = mainSprite.horizontal_flip() ? 64 - 32 : 0;
+  int gunFactorX = mainSprite.horizontal_flip() ? -1 : 1;
 
-  x = newX;
-  y = newY;
-  mainSprite.set_position(Math::toTopLeftX(newX, 64),
-                          Math::toTopLeftY(newY, 64) + bounceOffsetY);
+  position.set_x(newPosition.x());
+  position.set_y(newPosition.y());
+  mainSprite.set_position(
+      Math::toTopLeftX(newPosition.x(), 64),
+      Math::toTopLeftY(newPosition.y(), 64) + bounceOffsetY);
   gunSprite.set_position(
-      Math::toTopLeftX(newX, 32) + GUN_OFFSET[0] + bounceOffsetX,
-      Math::toTopLeftY(newY, 16) + GUN_OFFSET[1] + bounceOffsetY);
+      Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX +
+          GUN_OFFSET[0] * gunFactorX + bounceOffsetX,
+      Math::toTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
   ammoSprite.set_position(
-      Math::toTopLeftX(newX, 32) + AMMO_OFFSET[0] + bounceOffsetX,
-      Math::toTopLeftY(newY, 16) + AMMO_OFFSET[1] + bounceOffsetY);
+      Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX +
+          AMMO_OFFSET[0] * gunFactorX + bounceOffsetX,
+      Math::toTopLeftY(newPosition.y(), 16) + AMMO_OFFSET[1] + bounceOffsetY);
+}
+
+void Horse::setFlipX(bool flipX) {
+  mainSprite.set_horizontal_flip(flipX);
+  gunSprite.set_horizontal_flip(flipX);
+  ammoSprite.set_horizontal_flip(flipX);
 }
 
 void Horse::updateAnimations() {

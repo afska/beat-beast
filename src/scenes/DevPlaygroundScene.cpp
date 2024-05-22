@@ -15,7 +15,7 @@
 DevPlaygroundScene::DevPlaygroundScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
-      horse(new Horse(20, 90)),
+      horse(new Horse(bn::fixed_point(20, 90))),
       background(bn::regular_bg_items::back.create_bg(0, 0)),
       gun(bn::sprite_items::gun.create_sprite(20, 20)),
       otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
@@ -39,7 +39,7 @@ void DevPlaygroundScene::init() {
 
 void DevPlaygroundScene::update() {
   // input
-  bn::fixed_point_t vel(bn::fixed(0), bn::fixed(0));
+  bn::fixed_point vel(bn::fixed(0), bn::fixed(0));
 
   if (bn::keypad::up_held())
     vel.set_y(bn::fixed(-1));
@@ -49,6 +49,7 @@ void DevPlaygroundScene::update() {
     vel.set_x(bn::fixed(1));
   else if (bn::keypad::left_held())
     vel.set_x(bn::fixed(-1));
+  horse->setPosition(horse->getPosition() + vel);
 
   // collisions
   bool hadCol = false;

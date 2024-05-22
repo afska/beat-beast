@@ -12,92 +12,71 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
+const int BPM = 123;
+const int TICKCOUNT = 2;
+
 BossDJScene::BossDJScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
-      horse(new Horse(20, 90)),
+      horse(new Horse(bn::fixed_point(20, 90))),
       background(bn::regular_bg_items::back.create_bg(0, 0)),
-      gun(bn::sprite_items::gun.create_sprite(20, 20)),
-      otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}
 
 void BossDJScene::init() {
-  textGenerator.set_center_alignment();
-  textGenerator.generate(0, 0, "Hello world!", textSprites);
-
-  gunBox = bn::fixed_rect(bn::fixed(20), bn::fixed(20), bn::fixed(32),
-                          bn::fixed(16));
-
-  auto newObj = bn::fixed_rect(bn::fixed(40), bn::fixed(40), bn::fixed(32),
-                               bn::fixed(16));
-  physWorld->addObject(newObj);
-
   player_play("testboss.gsm");
 }
 
 void BossDJScene::update() {
-  // input
-  bn::fixed_point_t vel(bn::fixed(0), bn::fixed(0));
+  processInput();
+  processBeats();
+  updateBackground();
+  updateSprites();
+}
 
-  if (bn::keypad::up_held())
-    vel.set_y(bn::fixed(-1));
-  else if (bn::keypad::down_held())
-    vel.set_y(bn::fixed(1));
-  if (bn::keypad::right_held())
+void BossDJScene::processInput() {
+  // move horse
+  bn::fixed_point vel(bn::fixed(0), bn::fixed(0));
+  if (bn::keypad::right_held()) {
     vel.set_x(bn::fixed(1));
-  else if (bn::keypad::left_held())
+    horse->setFlipX(false);
+  } else if (bn::keypad::left_held()) {
     vel.set_x(bn::fixed(-1));
-
-  // collisions
-  bool hadCol = false;
-  if (physWorld->testCollision(gunBox, vel)) {
-    hadCol = true;
+    horse->setFlipX(true);
   }
-  gunBox.set_position(gunBox.position() + vel);
-  gun.set_position(gunBox.position());
+
+  horse->setPosition(horse->getPosition() + vel);
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
     setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene()});
+}
 
-  // beats
-  const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff
-  int audioLag = SaveFile::data.audioLag;  // (0 on real hardware)
+void BossDJScene::processBeats() {
+  int audioLag = SaveFile::data.audioLag;
   int msecs = PlaybackState.msecs - audioLag;
-  int bpm = 125;
-  int tickCount = 2;
-  int beat = Math::fastDiv(msecs * bpm, PER_MINUTE);
-  int tick = Math::fastDiv(msecs * bpm * tickCount, PER_MINUTE);
-  bool isNewBeat = beat != lastBeat;
+  int beat = Math::fastDiv(msecs * BPM, Math::PER_MINUTE);
+  // int tick = Math::fastDiv(msecs * BPM * TICKCOUNT, Math::PER_MINUTE);
+  isNewBeat = beat != lastBeat;
   lastBeat = beat;
+}
 
-  // text
-  textSprites.clear();
-  textGenerator.generate(
-      64, -74, "audioLag=" + bn::to_string<32>(SaveFile::data.audioLag),
-      textSprites);
-  textGenerator.generate(
-      0, -8,
-      "beat=" + bn::to_string<32>(beat) + ", tick=" + bn::to_string<32>(tick),
-      textSprites);
-  textGenerator.generate(0, 8, bn::to_string<32>(msecs), textSprites);
-  if (hadCol)
-    textGenerator.generate(0, 16, "col", textSprites);
-
-  // parallax bg
+void BossDJScene::updateBackground() {
   layer1 += 0.3;
   layer2 += 0.8;
+
   for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
     if (index <= 65)
       horizontalDeltas[index] = layer1;
     else
       horizontalDeltas[index] = layer2;
   }
-  horizontalHBE.reload_deltas_ref();
 
-  // update horse object
+  horizontalHBE.reload_deltas_ref();
+}
+
+void BossDJScene::updateSprites() {
   if (isNewBeat)
     horse->bounce();
   horse->update();

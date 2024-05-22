@@ -2,7 +2,7 @@
 
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
-#include "../scenes/DevPlaygroundScene.h"
+#include "../scenes/BossDJScene.h"
 #include "bn_bg_palettes.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
@@ -84,7 +84,7 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
   SaveFile::save();
 
-  setNextScene(bn::unique_ptr{(Scene*)new DevPlaygroundScene()});
+  setNextScene(bn::unique_ptr{(Scene*)new BossDJScene()});
 }
 
 void CalibrationScene::cancel() {

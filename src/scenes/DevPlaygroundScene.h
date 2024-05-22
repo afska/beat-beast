@@ -22,7 +22,6 @@ class DevPlaygroundScene : Scene {
   bn::regular_bg_ptr background;
   bn::sprite_ptr gun;
   bn::sprite_ptr otherGun;
-  int bounceFrame = 0;
   int lastBeat = 0;
   bn::fixed layer1 = 0;
   bn::fixed layer2 = 0;
