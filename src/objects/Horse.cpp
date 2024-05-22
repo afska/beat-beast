@@ -29,29 +29,7 @@ Horse::Horse(bn::fixed initialX, bn::fixed initialY)
 }
 
 void Horse::update() {
-  runAnimation.update();
-
-  if (gunAnimation.has_value()) {
-    int oldFrame = gunAnimation->current_index();
-    gunAnimation->update();
-    int newFrame = gunAnimation->current_index();
-    if (oldFrame == 5 && newFrame == 6) {
-      ammoAnimation = bn::create_sprite_animate_action_once(
-          ammoSprite, GUN_ANIMATION_WAIT, bn::sprite_items::gun.tiles_item(), 7,
-          8, 8);
-      ammoSprite.set_visible(true);
-    }
-    if (gunAnimation->done())
-      gunAnimation.reset();
-  }
-
-  if (ammoAnimation.has_value()) {
-    ammoAnimation->update();
-    if (ammoAnimation->done()) {
-      ammoAnimation.reset();
-      ammoSprite.set_visible(false);
-    }
-  }
+  updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
   setPosition(x, y);
@@ -78,4 +56,30 @@ void Horse::setPosition(bn::fixed newX, bn::fixed newY) {
   ammoSprite.set_position(
       Math::toTopLeftX(newX, 32) + AMMO_OFFSET[0] + bounceOffsetX,
       Math::toTopLeftY(newY, 16) + AMMO_OFFSET[1] + bounceOffsetY);
+}
+
+void Horse::updateAnimations() {
+  runAnimation.update();
+
+  if (gunAnimation.has_value()) {
+    int oldFrame = gunAnimation->current_index();
+    gunAnimation->update();
+    int newFrame = gunAnimation->current_index();
+    if (oldFrame == 5 && newFrame == 6) {
+      ammoAnimation = bn::create_sprite_animate_action_once(
+          ammoSprite, GUN_ANIMATION_WAIT, bn::sprite_items::gun.tiles_item(), 7,
+          8, 8);
+      ammoSprite.set_visible(true);
+    }
+    if (gunAnimation->done())
+      gunAnimation.reset();
+  }
+
+  if (ammoAnimation.has_value()) {
+    ammoAnimation->update();
+    if (ammoAnimation->done()) {
+      ammoAnimation.reset();
+      ammoSprite.set_visible(false);
+    }
+  }
 }

@@ -22,6 +22,8 @@ class Horse : GameObject {
   bn::optional<bn::sprite_animate_action<7>> gunAnimation;
   bn::optional<bn::sprite_animate_action<3>> ammoAnimation;
   int bounceFrame = 0;
+
+  void updateAnimations();
 };
 
 #endif  // HORSE_H
