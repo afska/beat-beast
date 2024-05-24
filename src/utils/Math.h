@@ -26,6 +26,14 @@ inline bn::fixed toTopLeftY(bn::fixed y, bn::fixed height) {
   return -160 / 2 + height / 2 + y;
 }
 
+inline bn::fixed normalizeAngle(bn::fixed angle) {
+  if (angle < 0)
+    angle += 360;
+  if (angle > 360)
+    angle -= 360;
+  return angle;
+}
+
 inline bn::fixed_point rotateFromCustomPivot(bn::fixed_point center,
                                              bn::fixed_point pivotOffset,
                                              bn::fixed angleDegrees) {

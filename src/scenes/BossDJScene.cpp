@@ -46,6 +46,12 @@ void BossDJScene::processInput() {
     horse->setFlipX(true);
   }
 
+  // aim
+  if (bn::keypad::l_held())
+    horse->aim(-1);
+  else if (bn::keypad::r_held())
+    horse->aim(1);
+
   horse->setPosition(horse->getPosition() + vel);
 
   // start = go to settings / CalibrationScene
