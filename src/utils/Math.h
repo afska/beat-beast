@@ -16,6 +16,9 @@ uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
 namespace Math {
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
                                                         8, 7, 5, 3, 0};
+constexpr bn::fixed ANGLE_MATRIX[3][3] = {{135, 90, 45},
+                                          {180, 0, 0},
+                                          {225, 270, 315}};
 const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
 
 inline bn::fixed toTopLeftX(bn::fixed x, bn::fixed width) {

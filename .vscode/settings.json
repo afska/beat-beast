@@ -18,6 +18,7 @@
         "ostream": "cpp",
         "span": "cpp",
         "streambuf": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "cmath": "cpp"
     }
 }
