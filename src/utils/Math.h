@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "bn_array.h"
 #include "bn_fixed.h"
+#include "bn_math.h"
 
 extern "C" {
 // Multiply by a 0.32 fractional number between 0 and 1.
@@ -23,6 +24,21 @@ inline bn::fixed toTopLeftX(bn::fixed x, bn::fixed width) {
 
 inline bn::fixed toTopLeftY(bn::fixed y, bn::fixed height) {
   return -160 / 2 + height / 2 + y;
+}
+
+inline bn::fixed_point rotateFromCustomPivot(bn::fixed_point center,
+                                             bn::fixed_point pivotOffset,
+                                             bn::fixed angleDegrees) {
+  bn::fixed_point pivot = center + pivotOffset;
+  bn::fixed_point translated = center - pivot;
+
+  // translation matrix (Y inverted)
+  bn::fixed rotatedX = translated.x() * bn::degrees_cos(angleDegrees) +
+                       translated.y() * bn::degrees_sin(angleDegrees);
+  bn::fixed rotatedY = -translated.x() * bn::degrees_sin(angleDegrees) +
+                       translated.y() * bn::degrees_cos(angleDegrees);
+
+  return bn::fixed_point(rotatedX + pivot.x(), rotatedY + pivot.y());
 }
 
 inline uint32_t fastDiv(uint32_t x, uint32_t fraction) {

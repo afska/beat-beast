@@ -43,7 +43,8 @@ void Horse::bounce() {
 }
 
 void Horse::setPosition(bn::fixed_point newPosition) {
-  int bounceOffsetX = Math::BOUNCE_STEPS[bounceFrame];
+  int bounceOffsetX =
+      Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
   int gunOffsetX = mainSprite.horizontal_flip() ? 64 - 32 : 0;
   int gunFactorX = mainSprite.horizontal_flip() ? -1 : 1;
@@ -61,6 +62,14 @@ void Horse::setPosition(bn::fixed_point newPosition) {
       Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX +
           AMMO_OFFSET[0] * gunFactorX + bounceOffsetX,
       Math::toTopLeftY(newPosition.y(), 16) + AMMO_OFFSET[1] + bounceOffsetY);
+
+  // TODO: REMOVE TEST
+  // bn::fixed angle = 45;
+  // auto newCenter = Math::rotateFromCustomPivot(gunSprite.position(),
+  //                                              bn::fixed_point(-12, -1), 45);
+  // gunSprite.set_rotation_angle(angle);
+  // gunSprite.set_x(newCenter.x());
+  // gunSprite.set_y(newCenter.y());
 }
 
 void Horse::setFlipX(bool flipX) {
