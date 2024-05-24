@@ -7,6 +7,7 @@
 
 const unsigned GUN_OFFSET[2] = {35, 28};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
+const int GUN_FLIPPED_OFFSET_X = -14;
 const unsigned GUN_ANIMATION_WAIT = 1;
 const bn::fixed GUN_ROTATION_SPEED = 8;
 
@@ -51,9 +52,8 @@ void Horse::aim(bn::fixed_point newDirection) {
 }
 
 void Horse::setPosition(bn::fixed_point newPosition) {
-  int gunOffsetX = mainSprite.horizontal_flip() ? 64 - 32 : 0;
-  int gunFactorX = mainSprite.horizontal_flip() ? -1 : 1;
-  int bounceOffsetX = 0;  // Math::BOUNCE_STEPS[bounceFrame] * gunFactorX;
+  int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
+  int bounceOffsetX = Math::BOUNCE_STEPS[bounceFrame];
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
 
   position.set_x(newPosition.x());
@@ -62,8 +62,8 @@ void Horse::setPosition(bn::fixed_point newPosition) {
       Math::toTopLeftX(newPosition.x(), 64),
       Math::toTopLeftY(newPosition.y(), 64) + bounceOffsetY);
   gunSprite.set_position(
-      Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX +
-          GUN_OFFSET[0] * gunFactorX + bounceOffsetX,
+      Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX + GUN_OFFSET[0] +
+          bounceOffsetX,
       Math::toTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
 
   auto newCenter = Math::rotateFromCustomPivot(
@@ -76,7 +76,6 @@ void Horse::setPosition(bn::fixed_point newPosition) {
 
 void Horse::setFlipX(bool flipX) {
   mainSprite.set_horizontal_flip(flipX);
-  gunSprite.set_horizontal_flip(flipX);
 }
 
 void Horse::updateAnimations() {
