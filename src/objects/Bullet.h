@@ -7,7 +7,7 @@ class Bullet : GameObject {
  public:
   Bullet(bn::fixed_point initialPosition, bn::fixed_point normalizedDirection);
 
-  void update();
+  bool update();
 
  private:
   bn::sprite_ptr sprite;

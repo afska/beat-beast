@@ -16,8 +16,11 @@ Bullet::Bullet(bn::fixed_point initialPosition,
   sprite.set_position(initialPosition.x(), initialPosition.y());
 }
 
-void Bullet::update() {
+bool Bullet::update() {
   sprite.set_position(sprite.position() + direction);
 
   animation.update();
+
+  return sprite.position().x() < -120 || sprite.position().y() < -80 ||
+         sprite.position().x() > 120 || sprite.position().y() > 80;
 }

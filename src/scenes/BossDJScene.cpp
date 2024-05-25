@@ -107,6 +107,12 @@ void BossDJScene::updateSprites() {
   if (isNewBeat)
     horse->bounce();
   horse->update();
-  for (auto& bullet : bullets)
-    bullet->update();
+
+  for (auto it = bullets.begin(); it != bullets.end();) {
+    bool isOut = it->get()->update();
+    if (isOut)
+      it = bullets.erase(it);
+    else
+      ++it;
+  }
 }
