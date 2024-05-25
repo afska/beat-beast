@@ -70,7 +70,8 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
 
   if (isNowMoving != this->isMoving) {
     this->isMoving = isNowMoving;
-    setIdleOrRunningState();
+    if (!isJumping())
+      setIdleOrRunningState();
   }
 }
 

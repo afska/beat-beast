@@ -24,6 +24,8 @@ class Horse : GameObject {
   bn::fixed targetAngle = 0;
   bool isMoving = false;
 
+  bool isJumping() { return jumpingAnimation.has_value(); }
+
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> runningAnimation;
   bn::optional<bn::sprite_animate_action<4>> jumpingAnimation;
