@@ -5,7 +5,7 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-const unsigned GUN_OFFSET[2] = {35, 28};
+const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
 const int GUN_FLIPPED_OFFSET_X = -14;
 const unsigned GUN_ANIMATION_WAIT = 1;
@@ -24,7 +24,8 @@ Horse::Horse(bn::fixed_point initialPosition)
           3,
           4,
           5,
-          6)) {
+          6,
+          7)) {
   setPosition(initialPosition);
 }
 
@@ -53,7 +54,8 @@ void Horse::aim(bn::fixed_point newDirection) {
 
 void Horse::setPosition(bn::fixed_point newPosition) {
   int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
-  int bounceOffsetX = Math::BOUNCE_STEPS[bounceFrame];
+  int bounceOffsetX =
+      Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
 
   position.set_x(newPosition.x());

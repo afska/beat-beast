@@ -22,7 +22,7 @@ class Horse : GameObject {
   bn::fixed_point position;
   bn::fixed targetAngle = 0;
 
-  bn::sprite_animate_action<7> runAnimation;
+  bn::sprite_animate_action<8> runAnimation;
   bn::optional<bn::sprite_animate_action<8>> gunAnimation;
   int bounceFrame = 0;
 
