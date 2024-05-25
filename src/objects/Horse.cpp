@@ -8,7 +8,7 @@
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
 const int GUN_FLIPPED_OFFSET_X = -14;
-const unsigned GUN_ANIMATION_WAIT = 1;
+const unsigned GUN_ANIMATION_WAIT = 0;
 const bn::fixed GUN_ROTATION_SPEED = 10;
 
 Horse::Horse(bn::fixed_point initialPosition)
