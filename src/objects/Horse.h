@@ -33,6 +33,7 @@ class Horse : GameObject {
   void updateAnimations();
   void updateAngle();
 
+  void setIdleOrRunningState();
   void setIdleState();
   void setRunningState();
   void setJumpingState();

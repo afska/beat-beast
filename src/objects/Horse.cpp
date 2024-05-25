@@ -70,11 +70,7 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
 
   if (isNowMoving != this->isMoving) {
     this->isMoving = isNowMoving;
-
-    if (isNowMoving)
-      setRunningState();
-    else
-      setIdleState();
+    setIdleOrRunningState();
   }
 }
 
@@ -93,7 +89,7 @@ void Horse::updateAnimations() {
   if (jumpingAnimation.has_value()) {
     jumpingAnimation->update();
     if (jumpingAnimation->done())
-      setIdleState();
+      setIdleOrRunningState();
   }
 
   if (gunAnimation.has_value()) {
@@ -123,6 +119,13 @@ void Horse::updateAngle() {
 
     gunSprite.set_rotation_angle(currentAngle);
   }
+}
+
+void Horse::setIdleOrRunningState() {
+  if (isMoving)
+    setRunningState();
+  else
+    setIdleState();
 }
 
 void Horse::setIdleState() {
