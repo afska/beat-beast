@@ -8,7 +8,7 @@
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_keypad.h"
-#include "bn_regular_bg_items_back.h"
+#include "bn_regular_bg_items_back_synth.h"
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
@@ -16,7 +16,7 @@ DevPlaygroundScene::DevPlaygroundScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse(bn::fixed_point(20, 90))),
-      background(bn::regular_bg_items::back.create_bg(0, 0)),
+      background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
       gun(bn::sprite_items::gun.create_sprite(20, 20)),
       otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(

@@ -8,7 +8,7 @@
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_keypad.h"
-#include "bn_regular_bg_items_back.h"
+#include "bn_regular_bg_items_back_dj.h"
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
@@ -19,7 +19,7 @@ BossDJScene::BossDJScene()
     : textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse(bn::fixed_point(20, 90))),
-      background(bn::regular_bg_items::back.create_bg(0, 0)),
+      background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}
@@ -82,10 +82,10 @@ void BossDJScene::processBeats() {
 
 void BossDJScene::updateBackground() {
   layer1 += 0.3;
-  layer2 += 0.8;
+  layer2 += 0;
 
   for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
-    if (index <= 65)
+    if (index <= 81)
       horizontalDeltas[index] = layer1;
     else
       horizontalDeltas[index] = layer2;
