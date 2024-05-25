@@ -36,6 +36,10 @@ void Horse::shoot() {
       2, 3, 4, 5, 6, 0);
 }
 
+void Horse::jump() {
+  setJumpingState();
+}
+
 void Horse::aim(bn::fixed_point newDirection) {
   targetAngle =
       Math::ANGLE_MATRIX[(int)newDirection.y() + 1][(int)newDirection.x() + 1];
@@ -84,6 +88,13 @@ void Horse::updateAnimations() {
 
   if (runningAnimation.has_value())
     runningAnimation->update();
+
+  gunSprite.set_visible(!jumpingAnimation.has_value());
+  if (jumpingAnimation.has_value()) {
+    jumpingAnimation->update();
+    if (jumpingAnimation->done())
+      setIdleState();
+  }
 
   if (gunAnimation.has_value()) {
     gunAnimation->update();
@@ -146,7 +157,7 @@ bn::sprite_animate_action<8> Horse::createRunningAnimation() {
       7);
 }
 
-bn::sprite_animate_action<3> Horse::createJumpingAnimation() {
-  return bn::create_sprite_animate_action_forever(
-      mainSprite, 3, bn::sprite_items::horse.tiles_item(), 10, 11, 12);
+bn::sprite_animate_action<4> Horse::createJumpingAnimation() {
+  return bn::create_sprite_animate_action_once(
+      mainSprite, 5, bn::sprite_items::horse.tiles_item(), 10, 11, 12, 12);
 }

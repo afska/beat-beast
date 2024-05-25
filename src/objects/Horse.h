@@ -11,6 +11,7 @@ class Horse : GameObject {
   void update();
   void bounce();
   void shoot();
+  void jump();
   void aim(bn::fixed_point newDirection);
   void setPosition(bn::fixed_point newPosition, bool isNowMoving);
   void setFlipX(bool flipX);
@@ -25,7 +26,7 @@ class Horse : GameObject {
 
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> runningAnimation;
-  bn::optional<bn::sprite_animate_action<3>> jumpingAnimation;
+  bn::optional<bn::sprite_animate_action<4>> jumpingAnimation;
   bn::optional<bn::sprite_animate_action<8>> gunAnimation;
   int bounceFrame = 0;
 
@@ -39,7 +40,7 @@ class Horse : GameObject {
   void resetAnimations();
   bn::sprite_animate_action<2> createIdleAnimation();
   bn::sprite_animate_action<8> createRunningAnimation();
-  bn::sprite_animate_action<3> createJumpingAnimation();
+  bn::sprite_animate_action<4> createJumpingAnimation();
 };
 
 #endif  // HORSE_H

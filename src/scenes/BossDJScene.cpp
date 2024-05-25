@@ -66,6 +66,10 @@ void BossDJScene::processInput() {
   if (bn::keypad::b_pressed())
     horse->shoot();
 
+  // jump
+  if (bn::keypad::a_pressed())
+    horse->jump();
+
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
     setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene()});
