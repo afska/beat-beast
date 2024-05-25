@@ -13,20 +13,9 @@ const bn::fixed GUN_ROTATION_SPEED = 10;
 
 Horse::Horse(bn::fixed_point initialPosition)
     : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
-      gunSprite(bn::sprite_items::gun.create_sprite(0, 0)),
-      runAnimation(bn::create_sprite_animate_action_forever(
-          mainSprite,
-          3,
-          bn::sprite_items::horse.tiles_item(),
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7)) {
-  setPosition(initialPosition);
+      gunSprite(bn::sprite_items::gun.create_sprite(0, 0)) {
+  setPosition(initialPosition, false);
+  setIdleState();
 }
 
 void Horse::update() {
@@ -34,7 +23,7 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
-  setPosition(position);
+  setPosition(position, isMoving);
 }
 
 void Horse::bounce() {
@@ -52,7 +41,7 @@ void Horse::aim(bn::fixed_point newDirection) {
       Math::ANGLE_MATRIX[(int)newDirection.y() + 1][(int)newDirection.x() + 1];
 }
 
-void Horse::setPosition(bn::fixed_point newPosition) {
+void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
   int bounceOffsetX =
       Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
@@ -74,6 +63,15 @@ void Horse::setPosition(bn::fixed_point newPosition) {
       gunSprite.rotation_angle());
   gunSprite.set_x(newCenter.x());
   gunSprite.set_y(newCenter.y());
+
+  if (isNowMoving != this->isMoving) {
+    this->isMoving = isNowMoving;
+
+    if (isNowMoving)
+      setRunningState();
+    else
+      setIdleState();
+  }
 }
 
 void Horse::setFlipX(bool flipX) {
@@ -81,7 +79,11 @@ void Horse::setFlipX(bool flipX) {
 }
 
 void Horse::updateAnimations() {
-  runAnimation.update();
+  if (idleAnimation.has_value())
+    idleAnimation->update();
+
+  if (runningAnimation.has_value())
+    runningAnimation->update();
 
   if (gunAnimation.has_value()) {
     gunAnimation->update();
@@ -110,4 +112,41 @@ void Horse::updateAngle() {
 
     gunSprite.set_rotation_angle(currentAngle);
   }
+}
+
+void Horse::setIdleState() {
+  resetAnimations();
+  idleAnimation = createIdleAnimation();
+}
+
+void Horse::setRunningState() {
+  resetAnimations();
+  runningAnimation = createRunningAnimation();
+}
+
+void Horse::setJumpingState() {
+  resetAnimations();
+  jumpingAnimation = createJumpingAnimation();
+}
+
+void Horse::resetAnimations() {
+  idleAnimation.reset();
+  runningAnimation.reset();
+  jumpingAnimation.reset();
+}
+
+bn::sprite_animate_action<2> Horse::createIdleAnimation() {
+  return bn::create_sprite_animate_action_forever(
+      mainSprite, 5, bn::sprite_items::horse.tiles_item(), 8, 9);
+}
+
+bn::sprite_animate_action<8> Horse::createRunningAnimation() {
+  return bn::create_sprite_animate_action_forever(
+      mainSprite, 3, bn::sprite_items::horse.tiles_item(), 0, 1, 2, 3, 4, 5, 6,
+      7);
+}
+
+bn::sprite_animate_action<3> Horse::createJumpingAnimation() {
+  return bn::create_sprite_animate_action_forever(
+      mainSprite, 3, bn::sprite_items::horse.tiles_item(), 10, 11, 12);
 }

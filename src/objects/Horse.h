@@ -12,7 +12,7 @@ class Horse : GameObject {
   void bounce();
   void shoot();
   void aim(bn::fixed_point newDirection);
-  void setPosition(bn::fixed_point newPosition);
+  void setPosition(bn::fixed_point newPosition, bool isNowMoving);
   void setFlipX(bool flipX);
   bn::fixed_point getPosition() { return position; }
 
@@ -21,13 +21,25 @@ class Horse : GameObject {
   bn::sprite_ptr gunSprite;
   bn::fixed_point position;
   bn::fixed targetAngle = 0;
+  bool isMoving = false;
 
-  bn::sprite_animate_action<8> runAnimation;
+  bn::optional<bn::sprite_animate_action<2>> idleAnimation;
+  bn::optional<bn::sprite_animate_action<8>> runningAnimation;
+  bn::optional<bn::sprite_animate_action<3>> jumpingAnimation;
   bn::optional<bn::sprite_animate_action<8>> gunAnimation;
   int bounceFrame = 0;
 
   void updateAnimations();
   void updateAngle();
+
+  void setIdleState();
+  void setRunningState();
+  void setJumpingState();
+
+  void resetAnimations();
+  bn::sprite_animate_action<2> createIdleAnimation();
+  bn::sprite_animate_action<8> createRunningAnimation();
+  bn::sprite_animate_action<3> createJumpingAnimation();
 };
 
 #endif  // HORSE_H

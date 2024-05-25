@@ -45,7 +45,7 @@ void BossDJScene::processInput() {
     velocity.set_x(bn::fixed(-1));
     horse->setFlipX(true);
   }
-  horse->setPosition(horse->getPosition() + velocity);
+  horse->setPosition(horse->getPosition() + velocity, velocity.x() != 0);
 
   // aim (D-pad)
   if (bn::keypad::up_held())

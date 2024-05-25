@@ -49,7 +49,7 @@ void DevPlaygroundScene::update() {
     vel.set_x(bn::fixed(1));
   else if (bn::keypad::left_held())
     vel.set_x(bn::fixed(-1));
-  horse->setPosition(horse->getPosition() + vel);
+  horse->setPosition(horse->getPosition() + vel, vel.x() != 0);
 
   // collisions
   bool hadCol = false;
