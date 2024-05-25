@@ -25,6 +25,7 @@ make -j12 # 12 = number of CPU cores
 
 ```
 ffmpeg -y -i file.mp3 -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm file.gsm
+ffplay -ar 18157 file.gsm
 ```
 
 ## VS Code settings

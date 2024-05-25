@@ -12,7 +12,7 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-const int BPM = 123;
+const int BPM = 115;
 const int TICKCOUNT = 2;
 
 BossDJScene::BossDJScene()
@@ -25,7 +25,7 @@ BossDJScene::BossDJScene()
           horizontalDeltas)) {}
 
 void BossDJScene::init() {
-  player_play("testboss.gsm");
+  player_play("dj.gsm");
 }
 
 void BossDJScene::update() {
