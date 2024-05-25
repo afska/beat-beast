@@ -64,7 +64,7 @@ void BossDJScene::processInput() {
   horse->aim(direction);
 
   // shoot
-  if (bn::keypad::b_pressed()) {
+  if (bn::keypad::b_pressed() && !bullets.full()) {
     horse->shoot();
     auto bullet = bn::make_unique<Bullet>(horse->getShootingPoint(),
                                           horse->getShootingDirection());

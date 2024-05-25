@@ -37,19 +37,23 @@ inline bn::fixed normalizeAngle(bn::fixed angle) {
   return angle;
 }
 
+inline bn::fixed_point rotate(bn::fixed_point point, bn::fixed angleDegrees) {
+  // translation matrix (Y inverted)
+  bn::fixed rotatedX = point.x() * bn::degrees_cos(angleDegrees) +
+                       point.y() * bn::degrees_sin(angleDegrees);
+  bn::fixed rotatedY = -point.x() * bn::degrees_sin(angleDegrees) +
+                       point.y() * bn::degrees_cos(angleDegrees);
+
+  return bn::fixed_point(rotatedX, rotatedY);
+}
+
 inline bn::fixed_point rotateFromCustomPivot(bn::fixed_point center,
                                              bn::fixed_point pivotOffset,
                                              bn::fixed angleDegrees) {
   bn::fixed_point pivot = center + pivotOffset;
   bn::fixed_point translated = center - pivot;
-
-  // translation matrix (Y inverted)
-  bn::fixed rotatedX = translated.x() * bn::degrees_cos(angleDegrees) +
-                       translated.y() * bn::degrees_sin(angleDegrees);
-  bn::fixed rotatedY = -translated.x() * bn::degrees_sin(angleDegrees) +
-                       translated.y() * bn::degrees_cos(angleDegrees);
-
-  return bn::fixed_point(rotatedX + pivot.x(), rotatedY + pivot.y());
+  bn::fixed_point rotated = rotate(translated, angleDegrees);
+  return rotated + pivot;
 }
 
 inline uint32_t fastDiv(uint32_t x, uint32_t fraction) {

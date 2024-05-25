@@ -13,10 +13,11 @@ Bullet::Bullet(bn::fixed_point initialPosition,
           0,
           1)),
       direction(normalizedDirection) {
-  sprite.set_position(Math::toTopLeftX(initialPosition.x(), 16),
-                      Math::toTopLeftY(initialPosition.y(), 16));
+  sprite.set_position(initialPosition.x(), initialPosition.y());
 }
 
 void Bullet::update() {
+  sprite.set_position(sprite.position() + direction);
+
   animation.update();
 }

@@ -7,6 +7,7 @@
 
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
+const int GUN_SHOOTING_POINT_OFFSET[2] = {10, -1};
 const int GUN_FLIPPED_OFFSET_X = -14;
 const unsigned GUN_ANIMATION_WAIT = 0;
 const bn::fixed GUN_ROTATION_SPEED = 10;
@@ -80,7 +81,10 @@ void Horse::setFlipX(bool flipX) {
 }
 
 bn::fixed_point Horse::getShootingPoint() {
-  return bn::fixed_point(10, 10);
+  auto offset = Math::rotate(bn::fixed_point(GUN_SHOOTING_POINT_OFFSET[0],
+                                             GUN_SHOOTING_POINT_OFFSET[1]),
+                             gunSprite.rotation_angle());
+  return gunSprite.position() + offset;
 }
 
 bn::fixed_point Horse::getShootingDirection() {
