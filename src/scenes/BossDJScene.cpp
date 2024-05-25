@@ -87,6 +87,18 @@ void BossDJScene::processBeats() {
   // int tick = Math::fastDiv(msecs * BPM * TICKCOUNT, Math::PER_MINUTE);
   isNewBeat = beat != lastBeat;
   lastBeat = beat;
+
+  if (isNewBeat) {
+    beatCount++;
+    if (beatCount == 2) {
+      beatCount = 0;
+      if (!vinyls.full()) {
+        auto vinyl = bn::make_unique<Vinyl>(bn::fixed_point(-120, 60),
+                                            bn::fixed_point(3, 0));
+        vinyls.push_back(bn::move(vinyl));
+      }
+    }
+  }
 }
 
 void BossDJScene::updateBackground() {
@@ -112,6 +124,14 @@ void BossDJScene::updateSprites() {
     bool isOut = it->get()->update();
     if (isOut)
       it = bullets.erase(it);
+    else
+      ++it;
+  }
+
+  for (auto it = vinyls.begin(); it != vinyls.end();) {
+    bool isOut = it->get()->update();
+    if (isOut)
+      it = vinyls.erase(it);
     else
       ++it;
   }

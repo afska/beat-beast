@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/Horse.h"
+#include "../objects/Vinyl.h"
 #include "../phys/PhysWorld.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
@@ -21,6 +22,7 @@ class BossDJScene : Scene {
   bn::unique_ptr<Horse> horse;
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
+  bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   int lastBeat = 0;
   bool isNewBeat = false;
   bn::fixed layer1 = 0;
@@ -28,6 +30,7 @@ class BossDJScene : Scene {
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::regular_bg_position_hbe_ptr horizontalHBE;
   bn::fixed_point direction = bn::fixed_point(0, 0);
+  int beatCount = 0;
 
   void processInput();
   void processBeats();
