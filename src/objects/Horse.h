@@ -2,7 +2,6 @@
 #define HORSE_H
 
 #include "GameObject.h"
-#include "bn_fixed_point.h"
 
 class Horse : GameObject {
  public:
@@ -16,6 +15,8 @@ class Horse : GameObject {
   void setPosition(bn::fixed_point newPosition, bool isNowMoving);
   void setFlipX(bool flipX);
   bn::fixed_point getPosition() { return position; }
+  bn::fixed_point getShootingPoint();
+  bn::fixed_point getShootingDirection();
 
  private:
   bn::sprite_ptr mainSprite;

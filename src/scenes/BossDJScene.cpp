@@ -9,6 +9,7 @@
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
+#include "bn_sprite_items_bullet.h"
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
@@ -63,8 +64,12 @@ void BossDJScene::processInput() {
   horse->aim(direction);
 
   // shoot
-  if (bn::keypad::b_pressed())
+  if (bn::keypad::b_pressed()) {
     horse->shoot();
+    auto bullet = bn::make_unique<Bullet>(horse->getShootingPoint(),
+                                          horse->getShootingDirection());
+    bullets.push_back(bn::move(bullet));
+  }
 
   // jump
   if (bn::keypad::a_pressed())
@@ -102,4 +107,6 @@ void BossDJScene::updateSprites() {
   if (isNewBeat)
     horse->bounce();
   horse->update();
+  for (auto& bullet : bullets)
+    bullet->update();
 }

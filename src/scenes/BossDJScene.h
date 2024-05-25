@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 
+#include "../objects/Bullet.h"
 #include "../objects/Horse.h"
 #include "../phys/PhysWorld.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
@@ -19,6 +20,7 @@ class BossDJScene : Scene {
   bn::unique_ptr<PhysWorld> physWorld;
   bn::unique_ptr<Horse> horse;
   bn::regular_bg_ptr background;
+  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   int lastBeat = 0;
   bool isNewBeat = false;
   bn::fixed layer1 = 0;

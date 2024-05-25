@@ -79,6 +79,15 @@ void Horse::setFlipX(bool flipX) {
   mainSprite.set_horizontal_flip(flipX);
 }
 
+bn::fixed_point Horse::getShootingPoint() {
+  return bn::fixed_point(10, 10);
+}
+
+bn::fixed_point Horse::getShootingDirection() {
+  auto angle = gunSprite.rotation_angle();
+  return bn::fixed_point(bn::degrees_cos(angle), -bn::degrees_sin(angle));
+}
+
 void Horse::updateAnimations() {
   if (idleAnimation.has_value())
     idleAnimation->update();
