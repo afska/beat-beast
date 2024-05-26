@@ -21,6 +21,13 @@ cd synthbattle/
 make -j12 # 12 = number of CPU cores
 ```
 
+## Import levels
+
+```bash
+# cd importer && npm install && cd ..
+cd importer && node src/importer.js && cd ..
+```
+
 ## Build music
 
 ```bash
@@ -38,7 +45,7 @@ done
 
 ## VS Code settings
 
-*Preferences: Open User Settings (JSON)*
+_Preferences: Open User Settings (JSON)_
 
 ```json
 {

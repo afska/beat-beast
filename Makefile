@@ -37,6 +37,8 @@ SOURCES     	:=  src \
 					src/assets/fonts \
 					src/player \
 					src/player/core \
+					src/rhythm \
+					src/rhythm/models \
 					src/scenes \
 					src/objects \
 					src/utils \
