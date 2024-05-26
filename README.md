@@ -23,9 +23,17 @@ make -j12 # 12 = number of CPU cores
 
 ## Build music
 
-```
-ffmpeg -y -i file.mp3 -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm file.gsm
+```bash
+# GSM (music)
+ffmpeg -y -i file.wav -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm file.gsm
 ffplay -ar 18157 file.gsm
+# PCM (sfx)
+ffmpeg -y -i file.wav -ac 1 -ar 36314 -f s8 file.pcm
+# Batch:
+for file in *.wav; do
+  output="${file%.wav}.pcm"
+  ffmpeg -y -i "$file" -ac 1 -ar 36314 -f s8 "$output"
+done
 ```
 
 ## VS Code settings

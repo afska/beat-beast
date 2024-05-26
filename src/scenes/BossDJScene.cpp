@@ -1,6 +1,7 @@
 #include "BossDJScene.h"
 
 #include "../player/player.h"
+#include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 #include "../scenes/CalibrationScene.h"
 #include "../utils/Math.h"
@@ -66,6 +67,9 @@ void BossDJScene::processInput() {
   // shoot
   if (bn::keypad::b_pressed() && !bullets.full()) {
     horse->shoot();
+    int sound = random.get_int(1, 7);
+    player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm")
+                        .c_str());  // TODO: seek(audioLag) for emulators
     auto bullet = bn::make_unique<Bullet>(horse->getShootingPoint(),
                                           horse->getShootingDirection());
     bullets.push_back(bn::move(bullet));

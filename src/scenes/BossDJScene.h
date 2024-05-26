@@ -31,6 +31,7 @@ class BossDJScene : Scene {
   bn::regular_bg_position_hbe_ptr horizontalHBE;
   bn::fixed_point direction = bn::fixed_point(0, 0);
   int beatCount = 0;
+  bn::random random;
 
   void processInput();
   void processBeats();

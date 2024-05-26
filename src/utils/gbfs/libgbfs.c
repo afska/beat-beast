@@ -105,11 +105,15 @@ const void* gbfs_get_obj(const GBFS_FILE* file, const char* name, u32* len) {
   const GBFS_ENTRY* dirbase =
       (const GBFS_ENTRY*)((const char*)file + file->dir_off);
   size_t n_entries = file->dir_nmemb;
-  const GBFS_ENTRY* here;
+  const GBFS_ENTRY* here = NULL;
 
   strncpy(key, name, 24);
 
-  here = bsearch(key, dirbase, n_entries, sizeof(GBFS_ENTRY), namecmp);
+  // [!] Replaced bsearch with for loop
+  for (int i = 0; i < (int)n_entries; i++) {
+    if (namecmp(dirbase[i].name, key) == 0)
+      here = &dirbase[i];
+  }
   if (!here)
     return NULL;
 

@@ -1,4 +1,5 @@
 #include "player/player.h"
+#include "player/player_sfx.h"
 #include "savefile/SaveFile.h"
 #include "scenes/BossDJScene.h"
 #include "scenes/CalibrationScene.h"
@@ -29,6 +30,7 @@ int main() {
   }
 
   player_init();
+  player_sfx_init();
 
   scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene()}
                     : bn::unique_ptr{(Scene*)new BossDJScene()};
@@ -40,15 +42,18 @@ int main() {
     if (scene->hasNextScene()) {
       scene = scene->getNextScene();
       player_stop();
+      player_sfx_stop();
       scene->init();
     }
 
     bn::core::update();
     player_update(0, [](unsigned current) {});
+    player_sfx_update();
   }
 }
 
 BN_CODE_IWRAM void ISR_VBlank() {
   player_onVBlank();
+  player_sfx_onVBlank();
   bn::core::default_vblank_handler();
 }

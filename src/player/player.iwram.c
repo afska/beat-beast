@@ -16,10 +16,7 @@
 #include "core/private.h" /* for sizeof(struct gsm_state) */
 
 #define TIMER_16MHZ 0
-#define FIFO_ADDR_A 0x040000a0
 #define FIFO_ADDR_B 0x040000A4
-#define CHANNEL_A_MUTE 0xfcff   /*0b1111110011111111*/
-#define CHANNEL_A_UNMUTE 0x300  /*0b0000001100000000*/
 #define CHANNEL_B_MUTE 0xcfff   /*0b1100111111111111*/
 #define CHANNEL_B_UNMUTE 0x3000 /*0b0011000000000000*/
 #define AUDIO_CHUNK_SIZE_GSM 33
@@ -38,7 +35,11 @@
 
 Playback PlaybackState;
 
+// ----------------------------
+// Music player (for GSM files)
+// ----------------------------
 // Audio is taken from the embedded GBFS file in ROM.
+// FIFO channel B, Timer 1 and DMA 2 are used.
 // The sample rate is 18157hz, linearly interpolated to 36314hz.
 // Each GSM chunk is 33 bytes and represents 304 samples.
 // Two chunks are copied per frame, filling the 608 entries of the buffer.
@@ -226,10 +227,6 @@ CODE_ROM void player_init() {
 CODE_ROM void player_unload() {
   disable_audio_dma();
 }
-
-// CODE_ROM void player_playSfx(const char* name) {
-//   // TODO: IMPLEMENT `CHANNEL A` (UNCOMPRESSED PCM)
-// }
 
 CODE_ROM void player_play(const char* name) {
   loadFile(name);
