@@ -58,11 +58,11 @@ static bool did_run = false;
 uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
 static const GBFS_FILE* fs;
 static const unsigned char* src = NULL;
-static uint32_t src_len = 0;
-static uint32_t src_pos = 0;
-static signed char double_buffers[2][608] __attribute__((aligned(4)));
-static unsigned int cur_buffer = 0;
-static signed char* buffer;
+static u32 src_len = 0;
+static u32 src_pos = 0;
+static s8 double_buffers[2][608] __attribute__((aligned(4)));
+static u32 cur_buffer = 0;
+static s8* buffer;
 
 INLINE void mute() {
   DSOUNDCTRL = DSOUNDCTRL & CHANNEL_A_MUTE;
