@@ -11,8 +11,12 @@
 #include "bn_unique_ptr.h"
 #include "bn_vector.h"
 
+#include "../utils/gbfs/gbfs.h"
+
 class Scene {
  public:
+  Scene(const GBFS_FILE* _fs) : fs(_fs) {}
+
   virtual void init() = 0;
   virtual void update() = 0;
 
@@ -26,6 +30,7 @@ class Scene {
 
  protected:
   bn::unique_ptr<Scene> nextScene;
+  const GBFS_FILE* fs;
 };
 
 #endif  // SCENE_H

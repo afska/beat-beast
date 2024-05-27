@@ -7,11 +7,12 @@
 #include "../objects/Horse.h"
 #include "../objects/Vinyl.h"
 #include "../phys/PhysWorld.h"
+#include "../rhythm/ChartReader.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
 class BossDJScene : Scene {
  public:
-  BossDJScene();
+  BossDJScene(const GBFS_FILE* _fs);
   void init() override;
   void update() override;
 
@@ -19,6 +20,7 @@ class BossDJScene : Scene {
   bn::vector<bn::sprite_ptr, 32> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<PhysWorld> physWorld;
+  bn::unique_ptr<ChartReader> chartReader;
   bn::unique_ptr<Horse> horse;
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;

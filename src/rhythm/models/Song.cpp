@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define DATA_EWRAM __attribute__((section(".ewram")))
-#define MAX_EVENTS 3000  // TODO: CHECK MAX EVENTS AND ADJUST
+#define MAX_EVENTS 3000  // TODO: check max events and adjust
 
 typedef struct {
   Event events[MAX_EVENTS];
@@ -34,16 +34,6 @@ Song SONG_parse(const GBFS_FILE* fs, bn::string<32> filePath) {
   }
 
   return song;
-}
-
-u32 SONG_findChartIndexByDifficultyLevel(Song* song,
-                                         DifficultyLevel difficultyLevel) {
-  for (u32 i = 0; i < song->chartCount; i++) {
-    if (song->charts[i].difficulty == difficultyLevel)
-      return i;
-  }
-
-  return 0;
 }
 
 Chart SONG_findChartByDifficultyLevel(Song song,

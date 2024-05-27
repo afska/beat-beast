@@ -32,9 +32,9 @@ int main() {
   player_init();
   player_sfx_init();
 
-  scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene()}
-                    : bn::unique_ptr{(Scene*)new BossDJScene()};
-  //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene()};
+  scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene(fs)}
+                    : bn::unique_ptr{(Scene*)new BossDJScene(fs)};
+  //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->init();
 
   while (true) {

@@ -5,7 +5,7 @@
 
 class CalibrationScene : Scene {
  public:
-  CalibrationScene();
+  CalibrationScene(const GBFS_FILE* _fs);
   void init() override;
   void update() override;
 

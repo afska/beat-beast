@@ -12,8 +12,9 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-DevPlaygroundScene::DevPlaygroundScene()
-    : textGenerator(fixed_8x16_sprite_font),
+DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
+    : Scene(_fs),
+      textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse(bn::fixed_point(20, 90))),
       background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
@@ -61,7 +62,7 @@ void DevPlaygroundScene::update() {
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
-    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene()});
+    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene(fs)});
 
   // beats
   const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff

@@ -11,7 +11,8 @@
 
 const unsigned TARGET_BEAT_MS = 2000;
 
-CalibrationScene::CalibrationScene() : textGenerator(fixed_8x16_sprite_font) {}
+CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
+    : Scene(_fs), textGenerator(fixed_8x16_sprite_font) {}
 
 void CalibrationScene::init() {
   bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
@@ -84,7 +85,7 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
   SaveFile::save();
 
-  setNextScene(bn::unique_ptr{(Scene*)new BossDJScene()});
+  setNextScene(bn::unique_ptr{(Scene*)new BossDJScene(fs)});
 }
 
 void CalibrationScene::cancel() {

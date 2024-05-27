@@ -9,7 +9,7 @@
 
 class DevPlaygroundScene : Scene {
  public:
-  DevPlaygroundScene();
+  DevPlaygroundScene(const GBFS_FILE* _fs);
   void init() override;
   void update() override;
 

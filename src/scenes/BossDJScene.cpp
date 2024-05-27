@@ -14,17 +14,19 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-const int BPM = 115;
-const int TICKCOUNT = 2;
-
-BossDJScene::BossDJScene()
-    : textGenerator(fixed_8x16_sprite_font),
+BossDJScene::BossDJScene(const GBFS_FILE* _fs)
+    : Scene(_fs),
+      textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse(bn::fixed_point(20, 90))),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
-          horizontalDeltas)) {}
+          horizontalDeltas)) {
+  auto song = SONG_parse(_fs, "dj.boss");
+  auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
+  chartReader = bn::make_unique<ChartReader>(song, chart);
+}
 
 void BossDJScene::init() {
   player_play("dj.gsm");
@@ -62,7 +64,7 @@ void BossDJScene::processInput() {
     direction.set_x(1);
   else if (bn::keypad::up_held() || bn::keypad::down_held())
     direction.set_x(0);
-  horse->aim(direction);
+  horse->aim(direction);  // TODO: fix straight angles
 
   // shoot
   if (bn::keypad::b_pressed() && !bullets.full()) {
@@ -81,14 +83,16 @@ void BossDJScene::processInput() {
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
-    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene()});
+    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene(fs)});
 }
 
 void BossDJScene::processBeats() {
   int audioLag = SaveFile::data.audioLag;
   int msecs = PlaybackState.msecs - audioLag;
-  int beat = Math::fastDiv(msecs * BPM, Math::PER_MINUTE);
-  // int tick = Math::fastDiv(msecs * BPM * TICKCOUNT, Math::PER_MINUTE);
+  int beat =
+      Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
+  // int tick = Math::fastDiv(msecs * BPM * chartReader->getSong()->tickcount,
+  // Math::PER_MINUTE);
   isNewBeat = beat != lastBeat;
   lastBeat = beat;
 
