@@ -25,7 +25,8 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
           horizontalDeltas)) {
   auto song = SONG_parse(_fs, "dj.boss");
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
-  chartReader = bn::make_unique<ChartReader>(song, chart);
+  chartReader =
+      bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
 }
 
 void BossDJScene::init() {
@@ -35,6 +36,7 @@ void BossDJScene::init() {
 void BossDJScene::update() {
   processInput();
   processBeats();
+  processChart();
   updateBackground();
   updateSprites();
 }
@@ -72,8 +74,8 @@ void BossDJScene::processInput() {
     int sound = random.get_int(1, 7);
     player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm")
                         .c_str());  // TODO: seek(audioLag) for emulators
-    auto bullet = bn::make_unique<Bullet>(horse->getShootingPoint(),
-                                          horse->getShootingDirection());
+    auto bullet = bn::unique_ptr{
+        new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
     bullets.push_back(bn::move(bullet));
   }
 
@@ -92,17 +94,22 @@ void BossDJScene::processBeats() {
   int beat =
       Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
   // int tick = Math::fastDiv(msecs * BPM * chartReader->getSong()->tickcount,
-  // Math::PER_MINUTE);
+  // Math::PER_MINUTE); // TODO: Predict and use ticks
   isNewBeat = beat != lastBeat;
   lastBeat = beat;
+}
 
-  if (isNewBeat) {
-    beatCount++;
-    if (beatCount == 2) {
-      beatCount = 0;
+void BossDJScene::processChart() {
+  int audioLag = SaveFile::data.audioLag;
+  chartReader->update(PlaybackState.msecs -
+                      audioLag);  // TODO: Duplicated (see processBeat)
+
+  for (auto& event : chartReader->pendingEvents) {
+    // TODO: Act based on event type
+    if (event->isRegular()) {
       if (!vinyls.full()) {
-        auto vinyl = bn::make_unique<Vinyl>(bn::fixed_point(-120, 60),
-                                            bn::fixed_point(3, 0));
+        auto vinyl = bn::unique_ptr{
+            new Vinyl(bn::fixed_point(-120, 60), bn::fixed_point(3, 0))};
         vinyls.push_back(bn::move(vinyl));
       }
     }

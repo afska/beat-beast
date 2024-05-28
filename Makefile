@@ -74,3 +74,9 @@ endif
 # Include main makefile:
 #---------------------------------------------------------------------------------------------------------------------
 include $(LIBBUTANOABS)/butano.mak
+
+.PHONY: rebuild
+
+rebuild: clean
+	node importer/src/importer.js
+	make -j12
