@@ -9,12 +9,8 @@ ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
 
 void ChartReader::update(int msecs) {
   pendingEvents.clear();
-  processEvents(msecs + beatDurationMs,
-                [&msecs, this](Event* event, bool* stop) {
-                  if (event->isRegular() || event->timestamp >= msecs) {
-                    pendingEvents.push_back(event);
-                    return true;
-                  } else
-                    return false;
-                });
+  processEvents(msecs, [&msecs, this](Event* event, bool* stop) {
+    pendingEvents.push_back(event);
+    return true;
+  });
 }

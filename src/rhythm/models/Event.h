@@ -9,10 +9,9 @@ typedef struct {
 
   bool handled = false;
 
-  // REGULAR events are predictible (launched ahead of time) and
-  // can be launched simultaneously: up to 7 regular events per
-  // beat. SPECIAL events are immediate and they can be up to
-  // 127 different types. All events are user-defined.
+  // REGULAR events: 7 types. Can be used simultaneosly.
+  // SPECIAL events: 127 types. One per beat.
+  // All events are user-defined (depend on the scene).
 
   bool isRegular() { return (data & (1 << 7)) == 0; }
   bool isSpecial() { return !isRegular(); }
