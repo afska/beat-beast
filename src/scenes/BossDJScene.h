@@ -25,7 +25,7 @@ class BossDJScene : Scene {
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
-  int lastBeat = 0;
+  int lastBeat = -1;
   bool isNewBeat = false;
   bn::fixed layer1 = 0;
   bn::fixed layer2 = 0;

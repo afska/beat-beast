@@ -95,8 +95,10 @@ void BossDJScene::processBeats() {
       Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
   // int tick = Math::fastDiv(msecs * BPM * chartReader->getSong()->tickcount,
   // Math::PER_MINUTE); // TODO: Predict and use ticks
-  isNewBeat = beat != lastBeat;
+  isNewBeat =
+      (lastBeat < 0 && beat >= 0) || (lastBeat >= 0 && beat != lastBeat);
   lastBeat = beat;
+  // BN_LOG("m=" + bn::to_string<32>(msecs) + ", b=" + bn::to_string<32>(beat));
 }
 
 void BossDJScene::processChart() {
