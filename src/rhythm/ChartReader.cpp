@@ -9,7 +9,7 @@ ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
 
 void ChartReader::update(int msecs) {
   pendingEvents.clear();
-  processEvents(msecs, [&msecs, this](Event* event, bool* stop) {
+  processEvents(msecs + audioLag, [&msecs, this](Event* event, bool* stop) {
     pendingEvents.push_back(event);
     return true;
   });

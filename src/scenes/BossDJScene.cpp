@@ -71,9 +71,6 @@ void BossDJScene::processInput() {
   // shoot
   if (bn::keypad::b_pressed() && !bullets.full()) {
     horse->shoot();
-    int sound = random.get_int(1, 7);
-    player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm")
-                        .c_str());  // TODO: seek(audioLag) for emulators
     auto bullet = bn::unique_ptr{
         new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
     bullets.push_back(bn::move(bullet));
@@ -113,6 +110,10 @@ void BossDJScene::processChart() {
         auto vinyl = bn::unique_ptr{
             new Vinyl(bn::fixed_point(-120, 60), bn::fixed_point(3, 0))};
         vinyls.push_back(bn::move(vinyl));
+
+        int sound = random.get_int(1, 7);
+        player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm")
+                            .c_str());  // TODO: seek(audioLag) for emulators
       }
     }
   }
