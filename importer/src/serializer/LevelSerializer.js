@@ -23,11 +23,14 @@ module.exports = class LevelSerializer {
   _defineTypes() {
     this.protocol.define("Chart", {
       write: function (chart) {
-        const events = chart.events;
-
-        this.UInt8(DifficultyLevels[chart.header.difficulty]).EventArray(
-          events
+        const [rhythmEvents, events] = _.partition(
+          chart.events,
+          (it) => it.isRhythmEvent
         );
+
+        this.UInt8(DifficultyLevels[chart.header.difficulty])
+          .EventArray(rhythmEvents)
+          .EventArray(events);
       },
     });
 

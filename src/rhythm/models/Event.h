@@ -15,7 +15,8 @@ typedef struct {
 
   bool isRegular() { return (data & (1 << 7)) == 0; }
   bool isSpecial() { return !isRegular(); }
-  u8 getType() { return data >> 1; }
+  bool isTick() { return isSpecial() && getType() == 0; }
+  u8 getType() { return data & ~(1 << 7); }
 } Event;
 
 #endif  // EVENT_H

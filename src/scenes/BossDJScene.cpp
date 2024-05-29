@@ -35,8 +35,8 @@ void BossDJScene::init() {
 
 void BossDJScene::update() {
   processInput();
-  processBeats();
   processChart();
+  processBeats();
   updateBackground();
   updateSprites();
 }
@@ -85,23 +85,9 @@ void BossDJScene::processInput() {
     setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene(fs)});
 }
 
-void BossDJScene::processBeats() {
-  int audioLag = SaveFile::data.audioLag;
-  int msecs = PlaybackState.msecs - audioLag;
-  int beat =
-      Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
-  // int tick = Math::fastDiv(msecs * BPM * chartReader->getSong()->tickcount,
-  // Math::PER_MINUTE); // TODO: Predict and use ticks
-  isNewBeat =
-      (lastBeat < 0 && beat >= 0) || (lastBeat >= 0 && beat != lastBeat);
-  lastBeat = beat;
-  // BN_LOG("m=" + bn::to_string<32>(msecs) + ", b=" + bn::to_string<32>(beat));
-}
-
 void BossDJScene::processChart() {
   int audioLag = SaveFile::data.audioLag;
-  chartReader->update(PlaybackState.msecs -
-                      audioLag);  // TODO: Duplicated (see processBeat)
+  chartReader->update(PlaybackState.msecs - audioLag);
 
   for (auto& event : chartReader->pendingEvents) {
     // TODO: Act based on event type
@@ -117,6 +103,17 @@ void BossDJScene::processChart() {
       }
     }
   }
+}
+
+void BossDJScene::processBeats() {
+  int audioLag = SaveFile::data.audioLag;
+  int msecs = PlaybackState.msecs - audioLag;
+  int beat =
+      Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
+  isNewBeat =
+      (lastBeat < 0 && beat >= 0) || (lastBeat >= 0 && beat != lastBeat);
+  lastBeat = beat;
+  // BN_LOG("m=" + bn::to_string<32>(msecs) + ", b=" + bn::to_string<32>(beat));
 }
 
 void BossDJScene::updateBackground() {

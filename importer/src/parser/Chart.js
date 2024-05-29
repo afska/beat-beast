@@ -13,8 +13,25 @@ module.exports = class Chart {
    * Events are user-defined.
    */
   get events() {
+    const rhythmEvents = this._getRhythmEvents();
     const noteEvents = this._getNoteEvents();
-    return this._sort(noteEvents);
+    return this._sort([...rhythmEvents, ...noteEvents]);
+  }
+
+  /** Generates one event per beat/tick based on #BPM and #TICKCOUNT. */
+  _getRhythmEvents() {
+    const measures = this._getMeasures();
+    const ticks = measures.length * BEAT_UNIT * this.metadata.tickcount;
+    const tickDuration =
+      this._getNoteDuration(0, 1 / BEAT_UNIT) / this.metadata.tickcount;
+
+    return _.range(0, ticks).map((tick) => ({
+      id: -1,
+      timestamp: tick * tickDuration,
+      data: 0b10000000,
+      isRhythmEvent: true,
+      // special event #0 = tick
+    }));
   }
 
   /** Generates events specifically from note data. */
@@ -31,7 +48,7 @@ module.exports = class Chart {
 
         return _.flatMap(lines, (line, noteIndex) => {
           const beat = (measureIndex + noteIndex * subdivision) * BEAT_UNIT;
-          const noteDuration = this._getNoteDuration(beat, subdivision); // (this calculates the actual note duration)
+          const noteDuration = this._getNoteDuration(beat, subdivision);
 
           const timestamp = cursor;
           cursor += noteDuration;
@@ -41,7 +58,6 @@ module.exports = class Chart {
           const id = currentId++;
           return {
             id,
-            beat,
             timestamp,
             data: parseInt(line, 2),
           };
@@ -55,11 +71,7 @@ module.exports = class Chart {
 
   /** Sorts events by timestamp => type => id. */
   _sort(events) {
-    return _.sortBy(events, [
-      (it) => Math.round(it.timestamp),
-      (it) => it.type,
-      (it) => it.id,
-    ]);
+    return _.sortBy(events, [(it) => Math.round(it.timestamp), (it) => it.id]);
   }
 
   /** Returns a list of measures (raw data). */

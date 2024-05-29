@@ -10,6 +10,9 @@ enum DifficultyLevel { EASY, NORMAL, HARD };
 typedef struct {
   DifficultyLevel difficulty;  // u8
 
+  u32 rhythmEventCount;
+  Event* rhythmEvents;  // ("rhythmEventCount" times)
+
   u32 eventCount;
   Event* events;  // ("eventCount" times)
 } Chart;

@@ -28,8 +28,12 @@ Song SONG_parse(const GBFS_FILE* fs, bn::string<32> filePath) {
 
     chart->difficulty = static_cast<DifficultyLevel>(parse_u8(data, &cursor));
 
+    chart->rhythmEventCount = parse_u32le(data, &cursor);
+    chart->rhythmEvents = chartAllocation.events;
+    parseEvents(chart->rhythmEvents, chart->rhythmEventCount, data, &cursor);
+
     chart->eventCount = parse_u32le(data, &cursor);
-    chart->events = chartAllocation.events;
+    chart->events = chartAllocation.events + chart->rhythmEventCount;
     parseEvents(chart->events, chart->eventCount, data, &cursor);
   }
 
@@ -43,8 +47,11 @@ Chart SONG_findChartByDifficultyLevel(Song song,
       return song.charts[i];
   }
 
-  return Chart{
-      .difficulty = DifficultyLevel::NORMAL, .eventCount = 0, .events = NULL};
+  return Chart{.difficulty = DifficultyLevel::NORMAL,
+               .rhythmEventCount = 0,
+               .rhythmEvents = NULL,
+               .eventCount = 0,
+               .events = NULL};
 }
 
 void parseEvents(Event* events, u32 count, u8* data, u32* cursor) {
