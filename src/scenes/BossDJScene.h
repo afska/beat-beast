@@ -31,7 +31,6 @@ class BossDJScene : Scene {
   bn::fixed layer2 = 0;
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::regular_bg_position_hbe_ptr horizontalHBE;
-  bn::fixed_point direction = bn::fixed_point(0, 0);
   bn::random random;
 
   void processInput();

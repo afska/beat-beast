@@ -42,34 +42,32 @@ void BossDJScene::update() {
 }
 
 void BossDJScene::processInput() {
-  // move horse (L/R)
+  // move horse (left/right)
   bn::fixed_point velocity(bn::fixed(0), bn::fixed(0));
-  if (bn::keypad::r_held()) {
-    velocity.set_x(bn::fixed(1));
-    horse->setFlipX(false);
-  } else if (bn::keypad::l_held()) {
+  if (bn::keypad::left_held()) {
     velocity.set_x(bn::fixed(-1));
     horse->setFlipX(true);
+  } else if (bn::keypad::right_held()) {
+    velocity.set_x(bn::fixed(1));
+    horse->setFlipX(false);
   }
   horse->setPosition(horse->getPosition() + velocity, velocity.x() != 0);
 
-  // aim (D-pad)
-  if (bn::keypad::up_held())
-    direction.set_y(-1);
-  else if (bn::keypad::down_held())
-    direction.set_y(1);
-  else if (bn::keypad::left_held() || bn::keypad::right_held())
-    direction.set_y(0);
-  if (bn::keypad::left_held())
-    direction.set_x(-1);
-  else if (bn::keypad::right_held())
-    direction.set_x(1);
-  else if (bn::keypad::up_held() || bn::keypad::down_held())
-    direction.set_x(0);
-  horse->aim(direction);  // TODO: fix straight angles
+  // move aim when flipping
+  if (bn::keypad::up_pressed())
+    horse->aim(bn::fixed_point(0, 1));
+  if (bn::keypad::left_pressed())
+    horse->aim(bn::fixed_point(-1, 0));
+  else if (bn::keypad::right_pressed())
+    horse->aim(bn::fixed_point(1, 0));
 
-  // shoot
-  if (bn::keypad::b_pressed() && !bullets.full()) {
+  // aim & shoot (L/R)
+  if (bn::keypad::l_pressed() || bn::keypad::r_pressed()) {
+    if (bn::keypad::l_pressed())
+      horse->aim(bn::fixed_point(-1, -1));
+    else
+      horse->aim(bn::fixed_point(1, -1));
+
     if (chartReader->canHitNotes()) {
       horse->shoot();
       auto bullet = bn::unique_ptr{

@@ -1,6 +1,6 @@
 #include "ChartReader.h"
 
-#define TIMING_WINDOW_MS 48
+#define TIMING_WINDOW_MS 66
 #define MINUTE 60000
 
 ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)

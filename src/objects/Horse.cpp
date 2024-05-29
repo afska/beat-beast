@@ -83,12 +83,12 @@ void Horse::setFlipX(bool flipX) {
 bn::fixed_point Horse::getShootingPoint() {
   auto offset = Math::rotate(bn::fixed_point(GUN_SHOOTING_POINT_OFFSET[0],
                                              GUN_SHOOTING_POINT_OFFSET[1]),
-                             gunSprite.rotation_angle());
+                             targetAngle);
   return gunSprite.position() + offset;
 }
 
 bn::fixed_point Horse::getShootingDirection() {
-  auto angle = gunSprite.rotation_angle();
+  auto angle = targetAngle;
   return bn::fixed_point(bn::degrees_cos(angle), -bn::degrees_sin(angle));
 }
 
