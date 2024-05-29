@@ -33,6 +33,7 @@ class Horse : GameObject {
   bn::optional<bn::sprite_animate_action<4>> jumpingAnimation;
   bn::optional<bn::sprite_animate_action<8>> gunAnimation;
   int bounceFrame = 0;
+  int jumpFrame = 0;
 
   void updateAnimations();
   void updateAngle();

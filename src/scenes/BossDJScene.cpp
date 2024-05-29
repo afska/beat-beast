@@ -14,11 +14,14 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
+bn::fixed HORSE_X = 20;
+bn::fixed HORSE_Y = 90;
+
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(_fs),
       textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
-      horse(new Horse(bn::fixed_point(20, 90))),
+      horse(new Horse(bn::fixed_point(HORSE_X, HORSE_Y))),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
@@ -43,15 +46,16 @@ void BossDJScene::update() {
 
 void BossDJScene::processInput() {
   // move horse (left/right)
-  bn::fixed_point velocity(bn::fixed(0), bn::fixed(0));
+  bn::fixed speedX;
   if (bn::keypad::left_held()) {
-    velocity.set_x(bn::fixed(-1));
+    speedX = -1;
     horse->setFlipX(true);
   } else if (bn::keypad::right_held()) {
-    velocity.set_x(bn::fixed(1));
+    speedX = 1;
     horse->setFlipX(false);
   }
-  horse->setPosition(horse->getPosition() + velocity, velocity.x() != 0);
+  horse->setPosition(
+      bn::fixed_point(horse->getPosition().x() + speedX, HORSE_Y), speedX != 0);
 
   // move aim when flipping
   if (bn::keypad::up_pressed())

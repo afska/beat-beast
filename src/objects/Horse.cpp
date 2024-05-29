@@ -5,6 +5,9 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
+bn::array<bn::fixed, 14> jumpYOffset = {-1, -3, -5, -7, -9, -10, -8,
+                                        -7, -6, -5, -4, -3, -2,  -1};
+
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
 const int GUN_SHOOTING_POINT_OFFSET[2] = {10, -1};
@@ -24,6 +27,11 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
+  if (jumpingAnimation.has_value()) {
+    if (jumpFrame < jumpYOffset.size())
+      position.set_y(position.y() + jumpYOffset[jumpFrame]);
+    jumpFrame++;
+  }
   setPosition(position, isMoving);
 }
 
@@ -38,7 +46,11 @@ void Horse::shoot() {
 }
 
 void Horse::jump() {
+  if (jumpingAnimation.has_value())
+    return;
+
   setJumpingState();
+  jumpFrame = 0;
 }
 
 void Horse::aim(bn::fixed_point newDirection) {
