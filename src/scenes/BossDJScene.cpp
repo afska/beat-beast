@@ -55,20 +55,21 @@ void BossDJScene::processInput() {
 
   // move aim when flipping
   if (bn::keypad::up_pressed())
-    horse->aim(bn::fixed_point(0, 1));
+    horse->aim(bn::fixed_point(0, -1));
   if (bn::keypad::left_pressed())
     horse->aim(bn::fixed_point(-1, 0));
   else if (bn::keypad::right_pressed())
     horse->aim(bn::fixed_point(1, 0));
 
   // aim & shoot (L/R)
-  if (bn::keypad::l_pressed() || bn::keypad::r_pressed()) {
+  if (bn::keypad::l_pressed() || bn::keypad::r_pressed() ||
+      bn::keypad::b_pressed()) {
     if (bn::keypad::l_pressed())
       horse->aim(bn::fixed_point(-1, -1));
-    else
+    else if (bn::keypad::r_pressed())
       horse->aim(bn::fixed_point(1, -1));
 
-    if (chartReader->canHitNotes()) {
+    if (chartReader->isInsideTimingWindow()) {
       horse->shoot();
       auto bullet = bn::unique_ptr{
           new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};

@@ -19,9 +19,9 @@ void ChartReader::processRhythmEvents(int msecs) {
                        : 0xffffff;
 
   if (msecs >= nextTickMs - TIMING_WINDOW_MS)
-    _canHitNotes = true;
+    _isInsideTimingWindow = true;
   if (msecs >= nextTickMs + TIMING_WINDOW_MS) {
-    _canHitNotes = false;
+    _isInsideTimingWindow = false;
     rhythmEventIndex++;
   }
 }

@@ -12,7 +12,7 @@ class ChartReader {
 
   Song* getSong() { return &song; }
   Chart* getChart() { return &chart; }
-  bool canHitNotes() { return _canHitNotes; }
+  bool isInsideTimingWindow() { return _isInsideTimingWindow; }
 
   void update(int msecs);
 
@@ -26,7 +26,7 @@ class ChartReader {
   u32 rhythmEventIndex = 0;
   u32 eventIndex = 0;
   int nextTick = -1;
-  bool _canHitNotes = false;
+  bool _isInsideTimingWindow = false;
 
   void processRhythmEvents(int msecs);
   void processNextEvents(int msecs);
