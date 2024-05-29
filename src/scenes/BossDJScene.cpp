@@ -100,7 +100,7 @@ void BossDJScene::processChart() {
     if (event->isRegular()) {
       if (!vinyls.full()) {
         auto vinyl = bn::unique_ptr{
-            new Vinyl(bn::fixed_point(-120, 60), bn::fixed_point(3, 0))};
+            new Vinyl(bn::fixed_point(-120, 70), bn::fixed_point(3, 0), event)};
         vinyls.push_back(bn::move(vinyl));
 
         int sound = random.get_int(1, 7);
@@ -112,8 +112,7 @@ void BossDJScene::processChart() {
 }
 
 void BossDJScene::processBeats() {
-  int audioLag = SaveFile::data.audioLag;
-  int msecs = PlaybackState.msecs - audioLag;
+  int msecs = chartReader->getMsecs();
   int beat =
       Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
   isNewBeat =
@@ -150,7 +149,9 @@ void BossDJScene::updateSprites() {
   }
 
   for (auto it = vinyls.begin(); it != vinyls.end();) {
-    bool isOut = it->get()->update();
+    bool isOut = it->get()->update(chartReader->getMsecs(),
+                                   chartReader->getBeatDurationMs(),
+                                   horse->getPosition().x().ceil_integer());
     if (isOut)
       it = vinyls.erase(it);
     else

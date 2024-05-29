@@ -12,6 +12,8 @@ class ChartReader {
 
   Song* getSong() { return &song; }
   Chart* getChart() { return &chart; }
+  int getMsecs() { return msecs; }
+  u32 getBeatDurationMs() { return beatDurationMs; }
   bool isInsideTimingWindow() { return _isInsideTimingWindow; }
 
   void update(int msecs);
@@ -21,6 +23,7 @@ class ChartReader {
  private:
   Song song;
   Chart chart;
+  int msecs = 0;
   int audioLag;
   u32 beatDurationMs;
   u32 rhythmEventIndex = 0;
@@ -28,8 +31,8 @@ class ChartReader {
   int nextTick = -1;
   bool _isInsideTimingWindow = false;
 
-  void processRhythmEvents(int msecs);
-  void processNextEvents(int msecs);
+  void processRhythmEvents();
+  void processNextEvents();
 
   template <typename F>
   inline void processEvents(Event* events,

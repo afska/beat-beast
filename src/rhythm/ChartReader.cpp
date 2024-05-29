@@ -8,12 +8,13 @@ ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
   this->beatDurationMs = MINUTE / song.bpm;
 }
 
-void ChartReader::update(int msecs) {
-  processRhythmEvents(msecs);
-  processNextEvents(msecs);
+void ChartReader::update(int _msecs) {
+  this->msecs = _msecs;
+  processRhythmEvents();
+  processNextEvents();
 }
 
-void ChartReader::processRhythmEvents(int msecs) {
+void ChartReader::processRhythmEvents() {
   int nextTickMs = rhythmEventIndex < chart.rhythmEventCount
                        ? chart.rhythmEvents[rhythmEventIndex].timestamp
                        : 0xffffff;
@@ -26,14 +27,14 @@ void ChartReader::processRhythmEvents(int msecs) {
   }
 }
 
-void ChartReader::processNextEvents(int msecs) {
+void ChartReader::processNextEvents() {
   pendingEvents.clear();
 
   // REGULAR events are processed ahead of time (`audioLag` ms before)
   // SPECIAL events are processed at the right time
 
   processEvents(chart.events, chart.eventCount, eventIndex, msecs + audioLag,
-                [&msecs, this](Event* event, bool* stop) {
+                [this](Event* event, bool* stop) {
                   if (event->isRegular() || event->timestamp >= msecs) {
                     pendingEvents.push_back(event);
                     return true;
