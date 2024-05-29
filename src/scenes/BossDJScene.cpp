@@ -70,10 +70,12 @@ void BossDJScene::processInput() {
 
   // shoot
   if (bn::keypad::b_pressed() && !bullets.full()) {
-    horse->shoot();
-    auto bullet = bn::unique_ptr{
-        new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
-    bullets.push_back(bn::move(bullet));
+    if (chartReader->canHitNotes()) {
+      horse->shoot();
+      auto bullet = bn::unique_ptr{
+          new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
+      bullets.push_back(bn::move(bullet));
+    }
   }
 
   // jump

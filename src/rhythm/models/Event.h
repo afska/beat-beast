@@ -7,7 +7,7 @@ typedef struct {
   int timestamp;
   u8 data;
 
-  bool handled = false;
+  bool handled;
 
   // REGULAR events: 7 types. Can be used simultaneosly.
   // SPECIAL events: 127 types. One per beat.

@@ -12,14 +12,9 @@ class ChartReader {
 
   Song* getSong() { return &song; }
   Chart* getChart() { return &chart; }
+  bool canHitNotes() { return _canHitNotes; }
 
   void update(int msecs);
-
-  int getNextTickMs() {
-    return rhythmEventIndex < chart.rhythmEventCount
-               ? chart.rhythmEvents[rhythmEventIndex].timestamp
-               : 0xffffff;
-  }
 
   bn::vector<Event*, MAX_PENDING_EVENTS> pendingEvents;
 
@@ -31,6 +26,7 @@ class ChartReader {
   u32 rhythmEventIndex = 0;
   u32 eventIndex = 0;
   int nextTick = -1;
+  bool _canHitNotes = false;
 
   void processRhythmEvents(int msecs);
   void processNextEvents(int msecs);

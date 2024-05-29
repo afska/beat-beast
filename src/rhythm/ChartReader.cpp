@@ -1,5 +1,6 @@
 #include "ChartReader.h"
 
+#define TIMING_WINDOW_MS 48
 #define MINUTE 60000
 
 ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
@@ -13,12 +14,16 @@ void ChartReader::update(int msecs) {
 }
 
 void ChartReader::processRhythmEvents(int msecs) {
-  processEvents(chart.rhythmEvents, chart.rhythmEventCount, rhythmEventIndex,
-                msecs, [&msecs, this](Event* event, bool* stop) {
-                  BN_ASSERT(event->isTick(),
-                            "All rhythm events should be tick events.");
-                  return true;
-                });
+  int nextTickMs = rhythmEventIndex < chart.rhythmEventCount
+                       ? chart.rhythmEvents[rhythmEventIndex].timestamp
+                       : 0xffffff;
+
+  if (msecs >= nextTickMs - TIMING_WINDOW_MS)
+    _canHitNotes = true;
+  if (msecs >= nextTickMs + TIMING_WINDOW_MS) {
+    _canHitNotes = false;
+    rhythmEventIndex++;
+  }
 }
 
 void ChartReader::processNextEvents(int msecs) {
