@@ -74,7 +74,8 @@ void BossDJScene::processInput() {
       auto bullet = bn::unique_ptr{
           new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
       bullets.push_back(bn::move(bullet));
-    }
+    } else
+      showCross();
   }
 
   // jump
@@ -151,4 +152,14 @@ void BossDJScene::updateSprites() {
     else
       ++it;
   }
+
+  if (cross.has_value()) {
+    if (cross->get()->update())
+      cross.reset();
+  }
+}
+
+void BossDJScene::showCross() {
+  cross.reset();
+  cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
 }

@@ -1,5 +1,4 @@
 #include "Bullet.h"
-#include "../utils/Math.h"
 
 #include "bn_sprite_items_bullet.h"
 

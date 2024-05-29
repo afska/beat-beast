@@ -15,6 +15,7 @@ class Horse : GameObject {
   void setPosition(bn::fixed_point newPosition, bool isNowMoving);
   void setFlipX(bool flipX);
   bn::fixed_point getPosition() { return position; }
+  bn::fixed_point getCenteredPosition() { return mainSprite.position(); }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
 

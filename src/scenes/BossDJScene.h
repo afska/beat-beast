@@ -6,6 +6,7 @@
 #include "../objects/Bullet.h"
 #include "../objects/Horse.h"
 #include "../objects/Vinyl.h"
+#include "../objects/ui/Cross.h"
 #include "../phys/PhysWorld.h"
 #include "../rhythm/ChartReader.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
@@ -25,6 +26,7 @@ class BossDJScene : Scene {
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
+  bn::optional<bn::unique_ptr<Cross>> cross;
   int lastBeat = -1;
   bool isNewBeat = false;
   bn::fixed layer1 = 0;
@@ -38,6 +40,8 @@ class BossDJScene : Scene {
   void processChart();
   void updateBackground();
   void updateSprites();
+
+  void showCross();
 };
 
 #endif  // BOSS_DJ_SCENE_H

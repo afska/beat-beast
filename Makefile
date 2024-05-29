@@ -41,6 +41,7 @@ SOURCES     	:=  src \
 					src/rhythm/models \
 					src/scenes \
 					src/objects \
+					src/objects/ui \
 					src/utils \
 					src/utils/gbfs \
 					src/phys \
