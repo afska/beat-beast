@@ -14,7 +14,8 @@ class ChartReader {
   Chart* getChart() { return &chart; }
   int getMsecs() { return msecs; }
   u32 getBeatDurationMs() { return beatDurationMs; }
-  bool isInsideTimingWindow() { return _isInsideTimingWindow; }
+  bool isInsideBeat() { return _isInsideBeat; }
+  bool isInsideTick() { return _isInsideTick; }
 
   void update(int msecs);
 
@@ -26,10 +27,11 @@ class ChartReader {
   int msecs = 0;
   int audioLag;
   u32 beatDurationMs;
-  u32 rhythmEventIndex = 0;
+  int beatIndex = 0;
+  int tickIndex = 0;
   u32 eventIndex = 0;
-  int nextTick = -1;
-  bool _isInsideTimingWindow = false;
+  bool _isInsideBeat = false;
+  bool _isInsideTick = false;
 
   void processRhythmEvents();
   void processNextEvents();

@@ -15,15 +15,42 @@ void ChartReader::update(int _msecs) {
 }
 
 void ChartReader::processRhythmEvents() {
-  int nextTickMs = rhythmEventIndex < chart.rhythmEventCount
-                       ? chart.rhythmEvents[rhythmEventIndex].timestamp
-                       : 0xffffff;
+  if (beatIndex < (int)chart.rhythmEventCount) {
+    Event nextBeatEvent;
+    do {
+      nextBeatEvent = chart.rhythmEvents[beatIndex];
+    } while (!nextBeatEvent.isBeat() &&
+             ++beatIndex < (int)chart.rhythmEventCount);
 
-  if (msecs >= nextTickMs - TIMING_WINDOW_MS)
-    _isInsideTimingWindow = true;
-  if (msecs >= nextTickMs + TIMING_WINDOW_MS) {
-    _isInsideTimingWindow = false;
-    rhythmEventIndex++;
+    int nextBeatMs = nextBeatEvent.timestamp;
+
+    if (msecs >= nextBeatMs - TIMING_WINDOW_MS)
+      _isInsideBeat = true;
+    if (msecs >= nextBeatMs + TIMING_WINDOW_MS) {
+      _isInsideBeat = false;
+      do {
+        nextBeatEvent = chart.rhythmEvents[beatIndex];
+      } while (++beatIndex < (int)chart.rhythmEventCount &&
+               !nextBeatEvent.isBeat());
+    }
+  } else {
+    _isInsideBeat = false;
+  }
+
+  // TODO: DEDUPLICATE (move to template?)
+
+  if (tickIndex < (int)chart.rhythmEventCount) {
+    Event nextTickEvent = chart.rhythmEvents[tickIndex];
+    int nextTickMs = nextTickEvent.timestamp;
+
+    if (msecs >= nextTickMs - TIMING_WINDOW_MS)
+      _isInsideTick = true;
+    if (msecs >= nextTickMs + TIMING_WINDOW_MS) {
+      _isInsideTick = false;
+      tickIndex++;
+    }
+  } else {
+    _isInsideTick = false;
   }
 }
 

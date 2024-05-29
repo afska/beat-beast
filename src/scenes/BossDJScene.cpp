@@ -39,7 +39,6 @@ void BossDJScene::init() {
 void BossDJScene::update() {
   processInput();
   processChart();
-  processBeats();
   updateBackground();
   updateSprites();
 }
@@ -73,7 +72,7 @@ void BossDJScene::processInput() {
     else if (bn::keypad::r_pressed())
       horse->aim(bn::fixed_point(1, -1));
 
-    if (chartReader->isInsideTimingWindow()) {
+    if (chartReader->isInsideTick()) {
       horse->shoot();
       auto bullet = bn::unique_ptr{
           new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
@@ -93,7 +92,9 @@ void BossDJScene::processInput() {
 
 void BossDJScene::processChart() {
   int audioLag = SaveFile::data.audioLag;
+  bool wasInsideBeat = chartReader->isInsideBeat();
   chartReader->update(PlaybackState.msecs - audioLag);
+  isNewBeat = !wasInsideBeat && chartReader->isInsideBeat();
 
   for (auto& event : chartReader->pendingEvents) {
     // TODO: Act based on event type
@@ -111,18 +112,8 @@ void BossDJScene::processChart() {
   }
 }
 
-void BossDJScene::processBeats() {
-  int msecs = chartReader->getMsecs();
-  int beat =
-      Math::fastDiv(msecs * chartReader->getSong()->bpm, Math::PER_MINUTE);
-  isNewBeat =
-      (lastBeat < 0 && beat >= 0) || (lastBeat >= 0 && beat != lastBeat);
-  lastBeat = beat;
-  // BN_LOG("m=" + bn::to_string<32>(msecs) + ", b=" + bn::to_string<32>(beat));
-}
-
 void BossDJScene::updateBackground() {
-  layer1 += 0.3;
+  layer1 += 0.3 + (chartReader->isInsideBeat() ? 3 : 0);
   layer2 += 0;
 
   for (int index = 0, limit = bn::display::height(); index < limit; ++index) {

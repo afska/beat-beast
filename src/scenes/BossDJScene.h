@@ -36,7 +36,6 @@ class BossDJScene : Scene {
   bn::random random;
 
   void processInput();
-  void processBeats();
   void processChart();
   void updateBackground();
   void updateSprites();

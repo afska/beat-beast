@@ -28,9 +28,10 @@ module.exports = class Chart {
     return _.range(0, ticks).map((tick) => ({
       id: -1,
       timestamp: tick * tickDuration,
-      data: 0b10000000,
+      data: tick % this.metadata.tickcount === 0 ? 0b10000000 : 0b10000001,
       isRhythmEvent: true,
-      // special event #0 = tick
+      // special event #0 = beat
+      // special event #1 = tick
     }));
   }
 
