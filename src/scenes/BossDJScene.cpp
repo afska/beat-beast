@@ -8,6 +8,7 @@
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 
+#include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
 #include "bn_sprite_items_bullet.h"
@@ -30,6 +31,8 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =
       bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
+  background.set_blending_enabled(true);
+  bn::blending::set_fade_alpha(0.3);
 }
 
 void BossDJScene::init() {
@@ -118,6 +121,9 @@ void BossDJScene::updateBackground() {
   }
 
   horizontalHBE.reload_deltas_ref();
+
+  bn::blending::set_fade_alpha(
+      Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 }
 
 void BossDJScene::updateSprites() {

@@ -18,6 +18,7 @@ class Horse : GameObject {
   bn::fixed_point getCenteredPosition() { return mainSprite.position(); }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
+  int getBounceFrame() { return bounceFrame; }
 
  private:
   bn::sprite_ptr mainSprite;

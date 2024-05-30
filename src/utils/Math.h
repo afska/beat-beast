@@ -16,6 +16,8 @@ uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
 namespace Math {
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
                                                         8, 7, 5, 3, 0};
+constexpr const bn::array<bn::fixed, 10> BOUNCE_BLENDING_STEPS = {
+    0.3, 0.25, 0.2, 0.15, 0.1, 0.05, 0, 0.1, 0.2, 0.25};
 constexpr bn::fixed ANGLE_MATRIX[3][3] = {{135, 90, 45},
                                           {180, 0, 0},
                                           {225, 270, 315}};
