@@ -3,10 +3,12 @@
 #include "../utils/Math.h"
 
 #include "bn_sprite_items_gun.h"
+#include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_horse.h"
 
-bn::array<bn::fixed, 14> jumpYOffset = {-1, -3, -5, -7, -9, -10, -8,
-                                        -7, -6, -5, -4, -3, -2,  -1};
+bn::array<bn::fixed, 20> jumpYOffset = {-1,  -5,  -7,  -9,  -13, -15, -18,
+                                        -20, -18, -17, -15, -13, -11, -10,
+                                        -8,  -6,  -4,  -3,  -2,  -1};
 
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
@@ -19,6 +21,7 @@ Horse::Horse(bn::fixed_point initialPosition)
     : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
       gunSprite(bn::sprite_items::gun.create_sprite(0, 0)) {
   boundingBox.set_dimensions(mainSprite.dimensions());
+  // boundingBoxPreview = bn::sprite_items::hitbox.create_sprite(0, 8); // DEBUG
   setPosition(initialPosition, false);
   setIdleState();
 }
@@ -120,7 +123,7 @@ void Horse::updateAnimations() {
       setIdleOrRunningState();
 
     if (jumpFrame < jumpYOffset.size())
-      position.set_y(position.y() + jumpYOffset[jumpFrame]);
+      position.set_y(position.y() + jumpYOffset[jumpFrame] * 2);
     jumpFrame++;
   }
 

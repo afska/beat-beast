@@ -145,8 +145,10 @@ void BossDJScene::updateSprites() {
                                    horse->getPosition().x().ceil_integer());
 
     if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
-      horse->hurt();
-      isOut = true;
+      if (it->get()->getBoundingBox().x() < horse->getBoundingBox().x()) {
+        horse->hurt();
+        isOut = true;
+      }
     }
 
     if (isOut)

@@ -10,10 +10,16 @@
 
 class GameObject {
  public:
-  bn::fixed_rect getBoundingBox() { return boundingBox; }
+  bn::fixed_rect getBoundingBox() {
+    if (boundingBoxPreview.has_value())  // (for debug)
+      boundingBoxPreview.get()->set_position(boundingBox.position());
+
+    return boundingBox;
+  }
 
  protected:
   bn::fixed_rect boundingBox;
+  bn::optional<bn::sprite_ptr> boundingBoxPreview;  // (for debug)
 };
 
 #endif  // GAME_OBJECT_H
