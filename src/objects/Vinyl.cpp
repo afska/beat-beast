@@ -9,6 +9,8 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
     : sprite(bn::sprite_items::vinyl.create_sprite(0, 0)),
       direction(normalizedDirection),
       event(_event) {
+  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_position(initialPosition);
   sprite.set_position(initialPosition.x(), initialPosition.y());
 }
 
@@ -27,6 +29,8 @@ bool Vinyl::update(int msecs, u32 beatDurationMs, int horseX) {
   }
 
   sprite.set_rotation_angle(Math::normalizeAngle(sprite.rotation_angle() - 3));
+
+  boundingBox.set_position(sprite.position());
 
   return sprite.position().y() < -80 || sprite.position().x() > 120 ||
          sprite.position().y() > 80;

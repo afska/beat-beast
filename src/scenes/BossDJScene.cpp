@@ -67,10 +67,6 @@ void BossDJScene::processInput() {
   else if (bn::keypad::up_held())
     horse->aim(bn::fixed_point(0, -1));
 
-  // test hurt animation (R)
-  if (bn::keypad::r_pressed())
-    horse->hurt();
-
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (chartReader->isInsideTick()) {
@@ -147,10 +143,17 @@ void BossDJScene::updateSprites() {
     bool isOut = it->get()->update(chartReader->getMsecs(),
                                    chartReader->getBeatDurationMs(),
                                    horse->getPosition().x().ceil_integer());
+
+    if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
+      horse->hurt();
+      isOut = true;
+    }
+
     if (isOut)
       it = vinyls.erase(it);
-    else
+    else {
       ++it;
+    }
   }
 
   if (cross.has_value()) {

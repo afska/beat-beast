@@ -4,7 +4,7 @@
 #include "../rhythm/models/Event.h"
 #include "GameObject.h"
 
-class Vinyl : GameObject {
+class Vinyl : public GameObject {
  public:
   Vinyl(bn::fixed_point initialPosition,
         bn::fixed_point normalizedDirection,

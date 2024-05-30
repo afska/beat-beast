@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-class Horse : GameObject {
+class Horse : public GameObject {
  public:
   Horse(bn::fixed_point initialPosition);
 

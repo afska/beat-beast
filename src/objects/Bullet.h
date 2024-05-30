@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-class Bullet : GameObject {
+class Bullet : public GameObject {
  public:
   Bullet(bn::fixed_point initialPosition, bn::fixed_point normalizedDirection);
 

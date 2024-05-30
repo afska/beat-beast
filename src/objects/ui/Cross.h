@@ -3,7 +3,7 @@
 
 #include "../GameObject.h"
 
-class Cross : GameObject {
+class Cross : public GameObject {
  public:
   Cross(bn::fixed_point initialPositionn);
 

@@ -18,6 +18,7 @@ const bn::fixed GUN_ROTATION_SPEED = 10;
 Horse::Horse(bn::fixed_point initialPosition)
     : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
       gunSprite(bn::sprite_items::gun.create_sprite(0, 0)) {
+  boundingBox.set_dimensions(mainSprite.dimensions());
   setPosition(initialPosition, false);
   setIdleState();
 }
@@ -84,6 +85,8 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
     if (!isBusy())
       setIdleOrRunningState();
   }
+
+  boundingBox.set_position(mainSprite.position());
 }
 
 void Horse::setFlipX(bool flipX) {
