@@ -67,8 +67,12 @@ void BossDJScene::processInput() {
   else if (bn::keypad::up_held())
     horse->aim(bn::fixed_point(0, -1));
 
+  // test hurt animation (R)
+  if (bn::keypad::r_pressed())
+    horse->hurt();
+
   // shoot
-  if (bn::keypad::b_pressed()) {
+  if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (chartReader->isInsideTick()) {
       horse->shoot();
       auto bullet = bn::unique_ptr{

@@ -27,11 +27,6 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
-  if (jumpingAnimation.has_value()) {
-    if (jumpFrame < jumpYOffset.size())
-      position.set_y(position.y() + jumpYOffset[jumpFrame]);
-    jumpFrame++;
-  }
   setPosition(position, isMoving);
 }
 
@@ -46,11 +41,14 @@ void Horse::shoot() {
 }
 
 void Horse::jump() {
-  if (jumpingAnimation.has_value())
+  if (isBusy())
     return;
 
   setJumpingState();
-  jumpFrame = 0;
+}
+
+void Horse::hurt() {
+  setHurtState();
 }
 
 void Horse::aim(bn::fixed_point newDirection) {
@@ -83,7 +81,7 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
 
   if (isNowMoving != this->isMoving) {
     this->isMoving = isNowMoving;
-    if (!isJumping())
+    if (!isBusy())
       setIdleOrRunningState();
   }
 }
@@ -105,17 +103,38 @@ bn::fixed_point Horse::getShootingDirection() {
 }
 
 void Horse::updateAnimations() {
+  gunSprite.set_visible(!isBusy());
+
   if (idleAnimation.has_value())
     idleAnimation->update();
 
   if (runningAnimation.has_value())
     runningAnimation->update();
 
-  gunSprite.set_visible(!jumpingAnimation.has_value());
   if (jumpingAnimation.has_value()) {
     jumpingAnimation->update();
     if (jumpingAnimation->done())
       setIdleOrRunningState();
+
+    if (jumpFrame < jumpYOffset.size())
+      position.set_y(position.y() + jumpYOffset[jumpFrame]);
+    jumpFrame++;
+  }
+
+  if (hurtAnimation.has_value()) {
+    hurtAnimation->update();
+    if (hurtAnimation->done())
+      setIdleOrRunningState();
+
+    if (hurtFrame < Math::SCALE_STEPS.size()) {
+      bn::fixed scale =
+          Math::SCALE_STEPS[Math::SCALE_STEPS.size() - 1 - hurtFrame];
+      mainSprite.set_scale(scale);
+      mainSprite.set_rotation_angle(Math::normalizeAngle(
+          mainSprite.rotation_angle() +
+          bn::fixed(1.5) * (mainSprite.horizontal_flip() ? 1 : -1)));
+    }
+    hurtFrame++;
   }
 
   if (gunAnimation.has_value()) {
@@ -167,12 +186,23 @@ void Horse::setRunningState() {
 void Horse::setJumpingState() {
   resetAnimations();
   jumpingAnimation = createJumpingAnimation();
+  jumpFrame = 0;
+}
+
+void Horse::setHurtState() {
+  resetAnimations();
+  hurtAnimation = createHurtAnimation();
+  hurtFrame = 0;
 }
 
 void Horse::resetAnimations() {
+  mainSprite.set_scale(1.0);
+  mainSprite.set_rotation_angle(0.0);
+
   idleAnimation.reset();
   runningAnimation.reset();
   jumpingAnimation.reset();
+  hurtAnimation.reset();
 }
 
 bn::sprite_animate_action<2> Horse::createIdleAnimation() {
@@ -189,4 +219,10 @@ bn::sprite_animate_action<8> Horse::createRunningAnimation() {
 bn::sprite_animate_action<4> Horse::createJumpingAnimation() {
   return bn::create_sprite_animate_action_once(
       mainSprite, 5, bn::sprite_items::horse.tiles_item(), 10, 11, 12, 12);
+}
+
+bn::sprite_animate_action<8> Horse::createHurtAnimation() {
+  return bn::create_sprite_animate_action_once(
+      mainSprite, 2, bn::sprite_items::horse.tiles_item(), 13, 10, 13, 10, 13,
+      10, 13, 10);
 }
