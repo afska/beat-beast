@@ -6,9 +6,11 @@
 #include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_horse.h"
 
-bn::array<bn::fixed, 20> jumpYOffset = {-1,  -5,  -7,  -9,  -13, -15, -18,
-                                        -20, -18, -17, -15, -13, -11, -10,
-                                        -8,  -6,  -4,  -3,  -2,  -1};
+#define HITBOX_Y 8
+
+bn::array<bn::fixed, 18> jumpYOffset = {-3,  -7,  -10, -13, -15, -13,
+                                        -12, -11, -10, -9,  -8,  -7,
+                                        -6,  -5,  -4,  -3,  -2,  -1};
 
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
@@ -20,8 +22,9 @@ const bn::fixed GUN_ROTATION_SPEED = 10;
 Horse::Horse(bn::fixed_point initialPosition)
     : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
       gunSprite(bn::sprite_items::gun.create_sprite(0, 0)) {
-  boundingBox.set_dimensions(mainSprite.dimensions());
-  // boundingBoxPreview = bn::sprite_items::hitbox.create_sprite(0, 8); // DEBUG
+  boundingBox.set_dimensions(bn::fixed_size(32, 32));
+  // boundingBoxPreview =
+  //     bn::sprite_items::hitbox.create_sprite(0, HITBOX_Y);  // DEBUG
   setPosition(initialPosition, false);
   setIdleState();
 }
@@ -89,7 +92,8 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
       setIdleOrRunningState();
   }
 
-  boundingBox.set_position(mainSprite.position());
+  boundingBox.set_position(mainSprite.position() +
+                           bn::fixed_point(0, HITBOX_Y));
 }
 
 void Horse::setFlipX(bool flipX) {
