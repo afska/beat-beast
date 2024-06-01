@@ -5,7 +5,7 @@
 
 class Cross : public GameObject {
  public:
-  Cross(bn::fixed_point initialPositionn);
+  Cross(bn::fixed_point initialPosition);
 
   bool update();
 

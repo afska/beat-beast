@@ -7,6 +7,7 @@
 #include "../objects/Horse.h"
 #include "../objects/Vinyl.h"
 #include "../objects/ui/Cross.h"
+#include "../objects/ui/LifeBar.h"
 #include "../phys/PhysWorld.h"
 #include "../rhythm/ChartReader.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
@@ -20,12 +21,12 @@ class BossDJScene : Scene {
  private:
   bn::vector<bn::sprite_ptr, 32> textSprites;
   bn::sprite_text_generator textGenerator;
-  bn::unique_ptr<PhysWorld> physWorld;
   bn::unique_ptr<ChartReader> chartReader;
   bn::unique_ptr<Horse> horse;
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
+  bn::unique_ptr<LifeBar> lifeBar;
   bn::optional<bn::unique_ptr<Cross>> cross;
   int lastBeat = -1;
   bool isNewBeat = false;

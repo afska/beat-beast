@@ -21,9 +21,10 @@ bn::fixed HORSE_Y = 90;
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(_fs),
       textGenerator(fixed_8x16_sprite_font),
-      physWorld(new PhysWorld),
       horse(new Horse(bn::fixed_point(HORSE_X, HORSE_Y))),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
+      lifeBar(new LifeBar(
+          bn::fixed_point(Math::toTopLeftX(0, 16), Math::toTopLeftY(0, 16)))),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {
@@ -127,10 +128,12 @@ void BossDJScene::updateBackground() {
 }
 
 void BossDJScene::updateSprites() {
+  // Horse
   if (isNewBeat)
     horse->bounce();
   horse->update();
 
+  // Attacks
   for (auto it = bullets.begin(); it != bullets.end();) {
     bool isOut = it->get()->update();
     if (isOut)
@@ -157,6 +160,9 @@ void BossDJScene::updateSprites() {
       ++it;
     }
   }
+
+  // UI
+  lifeBar->update();
 
   if (cross.has_value()) {
     if (cross->get()->update())
