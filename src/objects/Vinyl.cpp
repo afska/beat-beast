@@ -3,6 +3,8 @@
 
 #include "bn_sprite_items_vinyl.h"
 
+#define SPEED 3
+
 Vinyl::Vinyl(bn::fixed_point initialPosition,
              bn::fixed_point normalizedDirection,
              Event* _event)
@@ -26,7 +28,7 @@ bool Vinyl::update(int msecs,
                                   oneDivBeatDurationMs);
     sprite.set_x(Math::toAbsTopLeftX(expectedX, 16));
   } else {
-    sprite.set_x(sprite.x() + direction.x());
+    sprite.set_x(sprite.x() + direction.x() * SPEED);
   }
 
   sprite.set_rotation_angle(Math::normalizeAngle(sprite.rotation_angle() - 3));

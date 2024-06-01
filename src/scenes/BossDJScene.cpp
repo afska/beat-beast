@@ -101,7 +101,7 @@ void BossDJScene::processChart() {
     // TODO: Act based on event type
     if (event->isRegular()) {
       if (!vinyls.full()) {
-        auto vinyl = bn::unique_ptr{new Vinyl({-120, 70}, {3, 0}, event)};
+        auto vinyl = bn::unique_ptr{new Vinyl({-120, 70}, {1, 0}, event)};
         vinyls.push_back(bn::move(vinyl));
 
         int sound = random.get_int(1, 7);
