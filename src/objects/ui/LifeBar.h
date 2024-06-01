@@ -3,7 +3,7 @@
 
 #include "../GameObject.h"
 
-#define MAX_LIVES 5
+// (LifeBar uses the top-left system internally)
 
 class LifeBar : public GameObject {
  public:
@@ -14,8 +14,10 @@ class LifeBar : public GameObject {
   void removeLife();
 
  private:
-  bn::vector<bn::sprite_ptr, MAX_LIVES> sprites;
-  int animationIndex = -1;
+  bn::sprite_ptr icon;
+  bn::sprite_ptr border;
+  bn::sprite_ptr fill;
+  int animationIndex = 0;
 };
 
 #endif  // LIFE_BAR_H

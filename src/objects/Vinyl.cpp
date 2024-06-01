@@ -6,12 +6,11 @@
 Vinyl::Vinyl(bn::fixed_point initialPosition,
              bn::fixed_point normalizedDirection,
              Event* _event)
-    : sprite(bn::sprite_items::vinyl.create_sprite(0, 0)),
+    : sprite(bn::sprite_items::vinyl.create_sprite(initialPosition)),
       direction(normalizedDirection),
       event(_event) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
-  sprite.set_position(initialPosition.x(), initialPosition.y());
 }
 
 bool Vinyl::update(int msecs, u32 beatDurationMs, int horseX) {
