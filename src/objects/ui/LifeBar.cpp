@@ -56,7 +56,6 @@ void LifeBar::update() {
   unsigned visualLife = life == MAX_LIFE
                             ? MAX_LIFE
                             : (unsigned)bn::max((int)life + animationOffset, 1);
-  BN_LOG(visualLife);
   updateFill(visualLife);
 }
 

@@ -8,9 +8,10 @@
 
 #define HITBOX_Y 8
 
-bn::array<bn::fixed, 18> jumpYOffset = {-3,  -7,  -10, -13, -15, -13,
-                                        -12, -11, -10, -9,  -8,  -7,
-                                        -6,  -5,  -4,  -3,  -2,  -1};
+const bn::fixed SCREEN_LIMIT_X = 10;
+const bn::array<bn::fixed, 18> jumpYOffset = {-3,  -7,  -10, -13, -15, -13,
+                                              -12, -11, -10, -9,  -8,  -7,
+                                              -6,  -5,  -4,  -3,  -2,  -1};
 
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
@@ -65,6 +66,13 @@ void Horse::aim(bn::fixed_point newDirection) {
 }
 
 void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
+  if (newPosition.x() < SCREEN_LIMIT_X)
+    newPosition.set_x(SCREEN_LIMIT_X);
+  if (newPosition.x() >
+      Math::SCREEN_WIDTH - mainSprite.dimensions().width() - SCREEN_LIMIT_X)
+    newPosition.set_x(Math::SCREEN_WIDTH - mainSprite.dimensions().width() -
+                      SCREEN_LIMIT_X);
+
   int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
   int bounceOffsetX =
       Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
