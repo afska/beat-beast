@@ -25,6 +25,7 @@ Horse::Horse(bn::fixed_point initialPosition)
   boundingBox.set_dimensions(bn::fixed_size(32, 32));
   // boundingBoxPreview = bn::sprite_items::hitbox.create_sprite(0, HITBOX_Y);
   // DEBUG (uncomment this to see the bounding box ^^^^^)
+
   setPosition(initialPosition, false);
   setIdleState();
 }

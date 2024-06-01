@@ -3,6 +3,8 @@
 
 #include "GameObject.h"
 
+// (Horse uses the top-left system internally)
+
 class Horse : public GameObject {
  public:
   Horse(bn::fixed_point initialPosition);
