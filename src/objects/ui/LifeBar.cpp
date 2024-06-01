@@ -6,7 +6,6 @@
 
 #include "../../utils/Math.h"
 
-// TODO: FIX NEGATIVE VALUE?
 // TODO: Use implicit bn::fixed_point constructors
 
 constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_LIFE][2] = {
@@ -58,7 +57,8 @@ void LifeBar::update() {
 
   unsigned visualLife = life == MAX_LIFE
                             ? MAX_LIFE
-                            : (unsigned)bn::max((int)life + animationOffset, 0);
+                            : (unsigned)bn::max((int)life + animationOffset, 1);
+  BN_LOG(visualLife);
   updateFill(visualLife);
 }
 
