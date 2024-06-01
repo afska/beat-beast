@@ -45,7 +45,9 @@ done
 
 ## VS Code settings
 
-_Preferences: Open User Settings (JSON)_
+**Extensions**: _C/C++, EditorConfig for VS Code_
+
+**Preferences**: _Open User Settings (JSON)_
 
 ```json
 {
