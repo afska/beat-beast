@@ -129,8 +129,10 @@ void BossDJScene::updateBackground() {
 
 void BossDJScene::updateSprites() {
   // Horse
-  if (isNewBeat)
+  if (isNewBeat) {
     horse->bounce();
+    lifeBar->bounce();
+  }
   horse->update();
 
   // Attacks
@@ -150,6 +152,7 @@ void BossDJScene::updateSprites() {
     if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
       if (it->get()->getBoundingBox().x() < horse->getBoundingBox().x()) {
         horse->hurt();
+        lifeBar->setLife(lifeBar->getLife() - 1);
         isOut = true;
       }
     }

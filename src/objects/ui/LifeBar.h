@@ -5,19 +5,30 @@
 
 // (LifeBar uses the top-left system internally)
 
+#define MAX_LIFE 20
+
 class LifeBar : public GameObject {
  public:
   LifeBar(bn::fixed_point initialPosition);
 
-  bool update();
-  void addLife();
-  void removeLife();
+  unsigned getLife() { return life; }
+  void setLife(unsigned _life);
+
+  void update();
+  void bounce();
 
  private:
   bn::sprite_ptr icon;
   bn::sprite_ptr border;
   bn::sprite_ptr fill;
-  int animationIndex = 0;
+  unsigned life = MAX_LIFE;
+  int animationIndex = -1;
+  int animationOffset = 0;
+  unsigned animationWait = 0;
+  bool animationFlag = false;
+  bn::fixed_point defaultFillPosition;
+
+  void updateFill(unsigned visualLife);
 };
 
 #endif  // LIFE_BAR_H
