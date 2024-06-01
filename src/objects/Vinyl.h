@@ -10,7 +10,10 @@ class Vinyl : public GameObject {
         bn::fixed_point normalizedDirection,
         Event* _event);
 
-  bool update(int msecs, u32 beatDurationMs, int horseX);
+  bool update(int msecs,
+              u32 beatDurationMs,
+              u32 oneDivBeatDurationMs,
+              int horseX);
 
  private:
   bn::sprite_ptr sprite;

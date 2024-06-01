@@ -14,9 +14,13 @@ module.exports = class LevelSerializer {
     const buffer = this.protocol.write();
     const { metadata, charts } = this.simfile;
 
+    const beatDurationMs = MINUTE / metadata.bpm;
+    const oneDivBeatDurationMs = INFINITY * (1 / beatDurationMs);
+
     return buffer
       .UInt8(metadata.bpm)
       .UInt8(metadata.tickcount)
+      .UInt32LE(oneDivBeatDurationMs)
       .ChartArray(charts).result;
   }
 
@@ -59,4 +63,5 @@ const normalizeInt = (number) => {
   return Math.round(number);
 };
 
+const MINUTE = 60000;
 const INFINITY = 0xffffffff;

@@ -13,15 +13,17 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
   boundingBox.set_position(initialPosition);
 }
 
-bool Vinyl::update(int msecs, u32 beatDurationMs, int horseX) {
+bool Vinyl::update(int msecs,
+                   u32 beatDurationMs,
+                   u32 oneDivBeatDurationMs,
+                   int horseX) {
   // TODO: SUPPORT BOTH DIRECTIONS
 
   if (msecs < event->timestamp + (int)beatDurationMs) {
     // beatDurationMs --------------- horseX
     // (msecs - event->timestamp) --- ???
-    int expectedX = (msecs - event->timestamp) * horseX /
-                    beatDurationMs;  // TODO: This can be precalculated in the
-                                     // importer and use Math::fastDiv
+    int expectedX = Math::fastDiv((msecs - event->timestamp) * horseX,
+                                  oneDivBeatDurationMs);
     sprite.set_x(Math::toTopLeftX(expectedX, 16));
   } else {
     sprite.set_x(sprite.x() + direction.x());

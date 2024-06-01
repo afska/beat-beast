@@ -13,6 +13,7 @@
 typedef struct {
   u8 bpm;
   u8 tickcount;
+  u32 oneDivBeatDurationMs;
   u8 chartCount;
   Chart charts[3];
 } Song;

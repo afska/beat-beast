@@ -109,8 +109,7 @@ void BossDJScene::processChart() {
         vinyls.push_back(bn::move(vinyl));
 
         int sound = random.get_int(1, 7);
-        player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm")
-                            .c_str());  // TODO: seek(audioLag) for emulators
+        player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
       }
     }
   }
@@ -153,6 +152,7 @@ void BossDJScene::updateSprites() {
   for (auto it = vinyls.begin(); it != vinyls.end();) {
     bool isOut = it->get()->update(chartReader->getMsecs(),
                                    chartReader->getBeatDurationMs(),
+                                   chartReader->getSong()->oneDivBeatDurationMs,
                                    horse->getPosition().x().ceil_integer());
 
     if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
