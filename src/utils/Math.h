@@ -14,6 +14,9 @@ uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
 }
 
 namespace Math {
+const unsigned SCREEN_WIDTH = 240;
+const unsigned SCREEN_HEIGHT = 160;
+
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
                                                         8, 7, 5, 3, 0};
 constexpr const bn::array<bn::fixed, 10> BOUNCE_BLENDING_STEPS = {
@@ -29,11 +32,33 @@ constexpr bn::fixed ANGLE_MATRIX[3][3] = {{135, 90, 45},
 const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
 
 inline bn::fixed toTopLeftX(bn::fixed x, bn::fixed width) {
-  return -240 / 2 + width / 2 + x;
+  return width / 2 + x;
 }
 
 inline bn::fixed toTopLeftY(bn::fixed y, bn::fixed height) {
-  return -160 / 2 + height / 2 + y;
+  return height / 2 + y;
+}
+
+inline bn::fixed_point toTopLeft(bn::fixed_point position,
+                                 bn::fixed width,
+                                 bn::fixed height) {
+  return bn::fixed_point(toTopLeftX(position.x(), width),
+                         toTopLeftY(position.y(), height));
+}
+
+inline bn::fixed toAbsTopLeftX(bn::fixed x, bn::fixed width = 0) {
+  return -SCREEN_WIDTH / 2 + toTopLeftX(x, width);
+}
+
+inline bn::fixed toAbsTopLeftY(bn::fixed y, bn::fixed height = 0) {
+  return -SCREEN_HEIGHT / 2 + toTopLeftY(y, height);
+}
+
+inline bn::fixed_point toAbsTopLeft(bn::fixed_point position,
+                                    bn::fixed width = 0,
+                                    bn::fixed height = 0) {
+  return bn::fixed_point(toAbsTopLeftX(position.x(), width),
+                         toAbsTopLeftY(position.y(), height));
 }
 
 inline bn::fixed normalizeAngle(bn::fixed angle) {

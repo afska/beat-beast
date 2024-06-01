@@ -24,7 +24,7 @@ bool Vinyl::update(int msecs,
     // (msecs - event->timestamp) --- ???
     int expectedX = Math::fastDiv((msecs - event->timestamp) * horseX,
                                   oneDivBeatDurationMs);
-    sprite.set_x(Math::toTopLeftX(expectedX, 16));
+    sprite.set_x(Math::toAbsTopLeftX(expectedX, 16));
   } else {
     sprite.set_x(sprite.x() + direction.x());
   }

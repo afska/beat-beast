@@ -24,7 +24,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
       horse(new Horse(bn::fixed_point(HORSE_X, HORSE_Y))),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       lifeBar(new LifeBar(
-          bn::fixed_point(Math::toTopLeftX(0, 16), Math::toTopLeftY(0, 16)))),
+          bn::fixed_point(Math::toAbsTopLeftX(0), Math::toAbsTopLeftY(0)))),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {

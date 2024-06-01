@@ -3,8 +3,6 @@
 
 #include "../GameObject.h"
 
-// (LifeBar uses the top-left system internally)
-
 #define MAX_LIFE 20
 
 class LifeBar : public GameObject {

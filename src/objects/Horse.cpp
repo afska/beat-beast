@@ -73,12 +73,12 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   position.set_x(newPosition.x());
   position.set_y(newPosition.y());
   mainSprite.set_position(
-      Math::toTopLeftX(newPosition.x(), 64),
-      Math::toTopLeftY(newPosition.y(), 64) + bounceOffsetY);
+      Math::toAbsTopLeftX(newPosition.x(), 64),
+      Math::toAbsTopLeftY(newPosition.y(), 64) + bounceOffsetY);
   gunSprite.set_position(
-      Math::toTopLeftX(newPosition.x(), 32) + gunOffsetX + GUN_OFFSET[0] +
+      Math::toAbsTopLeftX(newPosition.x(), 32) + gunOffsetX + GUN_OFFSET[0] +
           bounceOffsetX,
-      Math::toTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
+      Math::toAbsTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
 
   auto newCenter = Math::rotateFromCustomPivot(
       gunSprite.position(),
