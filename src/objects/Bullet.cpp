@@ -13,8 +13,8 @@ Bullet::Bullet(bn::fixed_point initialPosition,
           1)),
       direction(normalizedDirection) {}
 
-bool Bullet::update() {
-  sprite.set_position(sprite.position() + direction);
+bool Bullet::update(bool isInsideBeat) {
+  sprite.set_position(sprite.position() + direction * (isInsideBeat ? 2 : 1));
 
   animation.update();
 

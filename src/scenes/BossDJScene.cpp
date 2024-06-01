@@ -138,7 +138,7 @@ void BossDJScene::updateSprites() {
 
   // Attacks
   for (auto it = bullets.begin(); it != bullets.end();) {
-    bool isOut = it->get()->update();
+    bool isOut = it->get()->update(chartReader->isInsideBeat());
     if (isOut)
       it = bullets.erase(it);
     else
