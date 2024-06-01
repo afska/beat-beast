@@ -57,10 +57,24 @@ module.exports = class Chart {
           if (line === "00000000") return null;
 
           const id = currentId++;
+          let data = 0;
+          if (line.startsWith("!")) {
+            const d = new Uint32Array(1);
+            d[0] = parseInt(line.replace("!", "")) | (1 << 31);
+            data = d[0];
+          } else {
+            const chars = line.split("");
+            const charsAsBinary = chars.map((it) =>
+              parseInt(it).toString(2).padStart(4, "0")
+            );
+            const joinedBinary = charsAsBinary.join("");
+            data = parseInt(joinedBinary, 2);
+          }
+
           return {
             id,
             timestamp,
-            data: parseInt(line, 2),
+            data,
           };
         });
       })
@@ -91,7 +105,7 @@ module.exports = class Chart {
       .map((it) => it.trim())
       .filter((it) => !_.isEmpty(it))
       .filter((it) => {
-        const isValid = NOTE_DATA_SINGLE.test(it);
+        const isValid = NOTE_DATA_SINGLE.test(it) || SPECIAL_EVENT.test(it);
         if (!isValid) throw new Error("invalid_line: " + it);
         return true;
       });
@@ -161,4 +175,5 @@ module.exports = class Chart {
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const BEAT_UNIT = 4;
+const SPECIAL_EVENT = /^![\dF][\dF]?[\dF]?$/;
 const NOTE_DATA_SINGLE = /^[\dF][\dF][\dF][\dF][\dF][\dF][\dF][\dF]$/;

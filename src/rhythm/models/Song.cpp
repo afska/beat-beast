@@ -60,7 +60,7 @@ void parseEvents(Event* events, u32 count, u8* data, u32* cursor) {
     auto event = events + j;
 
     event->timestamp = (int)parse_u32le(data, cursor);
-    event->data = parse_u8(data, cursor);
+    event->data = parse_u32le(data, cursor);
     event->handled = false;
   }
 }

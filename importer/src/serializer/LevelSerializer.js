@@ -40,7 +40,7 @@ module.exports = class LevelSerializer {
 
     this.protocol.define("Event", {
       write: function (event) {
-        this.UInt32LE(normalizeInt(event.timestamp)).UInt8(event.data);
+        this.UInt32LE(normalizeInt(event.timestamp)).UInt32LE(event.data);
       },
     });
 

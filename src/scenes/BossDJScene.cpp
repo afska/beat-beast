@@ -107,6 +107,10 @@ void BossDJScene::processChart() {
         int sound = random.get_int(1, 7);
         player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
       }
+    } else {
+      if (event->getType() == 50) {
+        // BN_ASSERT(false, "special event 50 detected :D");
+      }
     }
   }
 }
