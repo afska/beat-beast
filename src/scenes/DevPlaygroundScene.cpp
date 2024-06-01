@@ -16,7 +16,7 @@ DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
     : Scene(_fs),
       textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
-      horse(new Horse(bn::fixed_point(20, 90))),
+      horse(new Horse({20, 90})),
       background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
       gun(bn::sprite_items::gun.create_sprite(20, 20)),
       otherGun(bn::sprite_items::gun.create_sprite(40, 40)),

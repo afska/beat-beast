@@ -21,7 +21,7 @@ const bn::fixed HORSE_Y = 90;
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(_fs),
       textGenerator(fixed_8x16_sprite_font),
-      horse(new Horse(bn::fixed_point(HORSE_INITIAL_X, HORSE_Y))),
+      horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       lifeBar(new LifeBar({0, 0})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
@@ -57,21 +57,19 @@ void BossDJScene::processInput() {
       speedX = 1;
       horse->setFlipX(false);
     }
-    horse->setPosition(
-        bn::fixed_point(horse->getPosition().x() + speedX, HORSE_Y),
-        speedX != 0);
-  } else {
-    horse->setPosition(bn::fixed_point(horse->getPosition().x(), HORSE_Y),
+    horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y},
                        speedX != 0);
+  } else {
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, speedX != 0);
   }
 
   // move aim
   if (bn::keypad::left_held())
-    horse->aim(bn::fixed_point(-1, bn::keypad::up_held() ? -1 : 0));
+    horse->aim({-1, bn::keypad::up_held() ? -1 : 0});
   else if (bn::keypad::right_held())
-    horse->aim(bn::fixed_point(1, bn::keypad::up_held() ? -1 : 0));
+    horse->aim({1, bn::keypad::up_held() ? -1 : 0});
   else if (bn::keypad::up_held())
-    horse->aim(bn::fixed_point(0, -1));
+    horse->aim({0, -1});
 
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
@@ -103,8 +101,7 @@ void BossDJScene::processChart() {
     // TODO: Act based on event type
     if (event->isRegular()) {
       if (!vinyls.full()) {
-        auto vinyl = bn::unique_ptr{
-            new Vinyl(bn::fixed_point(-120, 70), bn::fixed_point(3, 0), event)};
+        auto vinyl = bn::unique_ptr{new Vinyl({-120, 70}, {3, 0}, event)};
         vinyls.push_back(bn::move(vinyl));
 
         int sound = random.get_int(1, 7);

@@ -79,8 +79,7 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
       Math::toAbsTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
 
   gunSprite.set_position(Math::rotateFromCustomPivot(
-      gunSprite.position(),
-      bn::fixed_point(GUN_PIVOT_OFFSET[0], GUN_PIVOT_OFFSET[1]),
+      gunSprite.position(), {GUN_PIVOT_OFFSET[0], GUN_PIVOT_OFFSET[1]},
       gunSprite.rotation_angle()));
 
   setIsMoving(isNowMoving);
@@ -94,15 +93,15 @@ void Horse::setFlipX(bool flipX) {
 }
 
 bn::fixed_point Horse::getShootingPoint() {
-  auto offset = Math::rotate(bn::fixed_point(GUN_SHOOTING_POINT_OFFSET[0],
-                                             GUN_SHOOTING_POINT_OFFSET[1]),
-                             targetAngle);
+  auto offset =
+      Math::rotate({GUN_SHOOTING_POINT_OFFSET[0], GUN_SHOOTING_POINT_OFFSET[1]},
+                   targetAngle);
   return gunSprite.position() + offset;
 }
 
 bn::fixed_point Horse::getShootingDirection() {
   auto angle = targetAngle;
-  return bn::fixed_point(bn::degrees_cos(angle), -bn::degrees_sin(angle));
+  return {bn::degrees_cos(angle), -bn::degrees_sin(angle)};
 }
 
 void Horse::setIsMoving(bool isNowMoving) {

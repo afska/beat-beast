@@ -6,15 +6,13 @@
 
 #include "../../utils/Math.h"
 
-// TODO: Use implicit bn::fixed_point constructors
-
 constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_LIFE][2] = {
     {0.05, -14}, {0.1, -13},  {0.15, -12}, {0.2, -12}, {0.25, -11},
     {0.3, -10},  {0.35, -10}, {0.4, -9},   {0.45, -8}, {0.5, -7},
     {0.55, -7},  {0.6, -6},   {0.65, -5},  {0.7, -5},  {0.75, -4},
     {0.8, -3},   {0.85, -3},  {0.9, -2},   {0.95, -1}, {1, 0}};
 
-const bn::fixed_point MARGIN_BORDER = bn::fixed_point(2, 2);
+const bn::fixed_point MARGIN_BORDER = {2, 2};
 const bn::fixed MARGIN_ITEMS = 4;
 
 const int ANIMATION_OFFSET = 3;

@@ -42,8 +42,7 @@ inline bn::fixed toTopLeftY(bn::fixed y, bn::fixed height) {
 inline bn::fixed_point toTopLeft(bn::fixed_point position,
                                  bn::fixed width,
                                  bn::fixed height) {
-  return bn::fixed_point(toTopLeftX(position.x(), width),
-                         toTopLeftY(position.y(), height));
+  return {toTopLeftX(position.x(), width), toTopLeftY(position.y(), height)};
 }
 
 inline bn::fixed toAbsTopLeftX(bn::fixed x, bn::fixed width = 0) {
@@ -57,8 +56,8 @@ inline bn::fixed toAbsTopLeftY(bn::fixed y, bn::fixed height = 0) {
 inline bn::fixed_point toAbsTopLeft(bn::fixed_point position,
                                     bn::fixed width = 0,
                                     bn::fixed height = 0) {
-  return bn::fixed_point(toAbsTopLeftX(position.x(), width),
-                         toAbsTopLeftY(position.y(), height));
+  return {toAbsTopLeftX(position.x(), width),
+          toAbsTopLeftY(position.y(), height)};
 }
 
 inline bn::fixed normalizeAngle(bn::fixed angle) {
@@ -76,7 +75,7 @@ inline bn::fixed_point rotate(bn::fixed_point point, bn::fixed angleDegrees) {
   bn::fixed rotatedY = -point.x() * bn::degrees_sin(angleDegrees) +
                        point.y() * bn::degrees_cos(angleDegrees);
 
-  return bn::fixed_point(rotatedX, rotatedY);
+  return {rotatedX, rotatedY};
 }
 
 inline bn::fixed_point rotateFromCustomPivot(bn::fixed_point center,
