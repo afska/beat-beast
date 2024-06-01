@@ -25,14 +25,19 @@ module.exports = class Chart {
     const tickDuration =
       this._getNoteDuration(0, 1 / BEAT_UNIT) / this.metadata.tickcount;
 
-    return _.range(0, ticks).map((tick) => ({
-      id: -1,
-      timestamp: tick * tickDuration,
-      data: tick % this.metadata.tickcount === 0 ? 0b10000000 : 0b10000001,
-      isRhythmEvent: true,
-      // special event #0 = beat
-      // special event #1 = tick
-    }));
+    return _.range(0, ticks).map((tick) => {
+      const d = new Uint32Array(1);
+      d[0] = tick % this.metadata.tickcount === 0 ? 1 << 31 : (1 << 31) | 1;
+
+      return {
+        id: -1,
+        timestamp: tick * tickDuration,
+        data: d[0],
+        isRhythmEvent: true,
+        // special event #0 = beat
+        // special event #1 = tick
+      };
+    });
   }
 
   /** Generates events specifically from note data. */
