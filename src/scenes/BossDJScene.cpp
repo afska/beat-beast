@@ -57,6 +57,8 @@ void BossDJScene::processInput() {
       speedX = 1;
       horse->setFlipX(false);
     }
+    if (speedX != 0 && chartReader->isInsideBeat())
+      speedX *= 2;  // rhythmic movement?
     horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y},
                        speedX != 0);
   } else {
@@ -101,7 +103,8 @@ void BossDJScene::processChart() {
     // TODO: Act based on event type
     if (event->isRegular()) {
       if (!vinyls.full()) {
-        auto vinyl = bn::unique_ptr{new Vinyl({-120, 70}, {1, 0}, event)};
+        auto vinyl = bn::unique_ptr{
+            new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)};
         vinyls.push_back(bn::move(vinyl));
 
         int sound = random.get_int(1, 7);
