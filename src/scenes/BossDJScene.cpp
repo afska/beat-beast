@@ -50,15 +50,21 @@ void BossDJScene::update() {
 void BossDJScene::processInput() {
   // move horse (left/right)
   bn::fixed speedX;
-  if (bn::keypad::left_held()) {
-    speedX = -1;
-    horse->setFlipX(true);
-  } else if (bn::keypad::right_held()) {
-    speedX = 1;
-    horse->setFlipX(false);
+  if (!bn::keypad::r_held()) {  // (R locks target)
+    if (bn::keypad::left_held()) {
+      speedX = -1;
+      horse->setFlipX(true);
+    } else if (bn::keypad::right_held()) {
+      speedX = 1;
+      horse->setFlipX(false);
+    }
+    horse->setPosition(
+        bn::fixed_point(horse->getPosition().x() + speedX, HORSE_Y),
+        speedX != 0);
+  } else {
+    horse->setPosition(bn::fixed_point(horse->getPosition().x(), HORSE_Y),
+                       speedX != 0);
   }
-  horse->setPosition(
-      bn::fixed_point(horse->getPosition().x() + speedX, HORSE_Y), speedX != 0);
 
   // move aim
   if (bn::keypad::left_held())

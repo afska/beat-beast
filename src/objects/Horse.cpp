@@ -87,11 +87,7 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   gunSprite.set_x(newCenter.x());
   gunSprite.set_y(newCenter.y());
 
-  if (isNowMoving != this->isMoving) {
-    this->isMoving = isNowMoving;
-    if (!isBusy())
-      setIdleOrRunningState();
-  }
+  setIsMoving(isNowMoving);
 
   boundingBox.set_position(mainSprite.position() +
                            bn::fixed_point(0, HITBOX_Y));
@@ -111,6 +107,14 @@ bn::fixed_point Horse::getShootingPoint() {
 bn::fixed_point Horse::getShootingDirection() {
   auto angle = targetAngle;
   return bn::fixed_point(bn::degrees_cos(angle), -bn::degrees_sin(angle));
+}
+
+void Horse::setIsMoving(bool isNowMoving) {
+  if (isNowMoving != this->isMoving) {
+    this->isMoving = isNowMoving;
+    if (!isBusy())
+      setIdleOrRunningState();
+  }
 }
 
 void Horse::updateAnimations() {

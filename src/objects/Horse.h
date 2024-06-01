@@ -33,6 +33,7 @@ class Horse : public GameObject {
 
   bool isJumping() { return jumpingAnimation.has_value(); }
   bool isHurt() { return hurtAnimation.has_value(); }
+  void setIsMoving(bool isNowMoving);
 
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> runningAnimation;

@@ -28,6 +28,9 @@ LifeBar::LifeBar(bn::fixed_point initialPosition)
 }
 
 void LifeBar::setLife(unsigned _life) {
+  if (_life <= 0 || _life > MAX_LIFE)
+    return;
+
   life = _life;
   animationIndex = Math::SCALE_STEPS.size() - 1;
 }
