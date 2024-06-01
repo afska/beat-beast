@@ -13,7 +13,7 @@ class ChartReader {
   Song* getSong() { return &song; }
   Chart* getChart() { return &chart; }
   int getMsecs() { return msecs; }
-  u32 getBeatDurationMs() { return beatDurationMs; }
+  unsigned getBeatDurationMs() { return beatDurationMs; }
   bool isInsideBeat() { return _isInsideBeat; }
   bool isInsideTick() { return _isInsideTick; }
 
@@ -26,10 +26,10 @@ class ChartReader {
   Chart chart;
   int msecs = 0;
   int audioLag;
-  u32 beatDurationMs;
+  unsigned beatDurationMs;
   int beatIndex = 0;
   int tickIndex = 0;
-  u32 eventIndex = 0;
+  unsigned eventIndex = 0;
   bool _isInsideBeat = false;
   bool _isInsideTick = false;
 
@@ -38,11 +38,11 @@ class ChartReader {
 
   template <typename F>
   inline void processEvents(Event* events,
-                            u32 count,
-                            u32& index,
+                            unsigned count,
+                            unsigned& index,
                             int targetMsecs,
                             F action) {
-    u32 currentIndex = index;
+    unsigned currentIndex = index;
     bool skipped = false;
 
     while (targetMsecs >= events[currentIndex].timestamp &&

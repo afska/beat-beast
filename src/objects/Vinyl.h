@@ -11,8 +11,8 @@ class Vinyl : public GameObject {
         Event* _event);
 
   bool update(int msecs,
-              u32 beatDurationMs,
-              u32 oneDivBeatDurationMs,
+              unsigned beatDurationMs,
+              unsigned oneDivBeatDurationMs,
               int horseX);
 
  private:

@@ -14,8 +14,8 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
 }
 
 bool Vinyl::update(int msecs,
-                   u32 beatDurationMs,
-                   u32 oneDivBeatDurationMs,
+                   unsigned beatDurationMs,
+                   unsigned oneDivBeatDurationMs,
                    int horseX) {
   // TODO: SUPPORT BOTH DIRECTIONS
 

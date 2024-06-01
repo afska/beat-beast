@@ -7,7 +7,6 @@
 #include "../../utils/Math.h"
 
 // TODO: FIX NEGATIVE VALUE?
-// TODO: STOP USING u32
 // TODO: Use implicit bn::fixed_point constructors
 
 constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_LIFE][2] = {
