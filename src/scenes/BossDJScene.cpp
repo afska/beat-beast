@@ -15,6 +15,9 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
+#define ATTACK_LEFT_VINYL 1
+#define ATTACK_RIGHT_VINYL 2
+
 const bn::fixed HORSE_INITIAL_X = 20;
 const bn::fixed HORSE_Y = 90;
 
@@ -100,15 +103,34 @@ void BossDJScene::processChart() {
   isNewBeat = !wasInsideBeat && chartReader->isInsideBeat();
 
   for (auto& event : chartReader->pendingEvents) {
-    // TODO: Act based on event type
     if (event->isRegular()) {
-      if (!vinyls.full()) {
-        auto vinyl = bn::unique_ptr{
-            new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)};
-        vinyls.push_back(bn::move(vinyl));
+      switch (event->getType()) {
+        case ATTACK_LEFT_VINYL: {
+          if (!vinyls.full()) {
+            auto vinyl = bn::unique_ptr{
+                new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)};
+            vinyls.push_back(bn::move(vinyl));
 
-        int sound = random.get_int(1, 7);
-        player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+            int sound = random.get_int(1, 7);
+            player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+          }
+          break;
+        }
+        case ATTACK_RIGHT_VINYL: {
+          // TODO: Implement vinyls from right to left (they currently don't
+          // work)
+          if (!vinyls.full()) {
+            auto vinyl = bn::unique_ptr{
+                new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)};
+            vinyls.push_back(bn::move(vinyl));
+
+            int sound = random.get_int(1, 7);
+            player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+          }
+          break;
+          default: {
+          }
+        }
       }
     } else {
       if (event->getType() == 50) {

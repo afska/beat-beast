@@ -13,6 +13,8 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
       event(_event) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
+  if (normalizedDirection.x() < 0)
+    sprite.set_scale(2);  // TODO: REMOVE test code and support both directions
 }
 
 bool Vinyl::update(int msecs,
