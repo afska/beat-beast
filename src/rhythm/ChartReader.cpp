@@ -37,8 +37,6 @@ void ChartReader::processRhythmEvents() {
     _isInsideBeat = false;
   }
 
-  // TODO: DEDUPLICATE (move to template?)
-
   if (tickIndex < (int)chart.rhythmEventCount) {
     Event nextTickEvent = chart.rhythmEvents[tickIndex];
     int nextTickMs = nextTickEvent.timestamp;
