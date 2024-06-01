@@ -12,7 +12,7 @@
 #include "../rhythm/ChartReader.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
-class BossDJScene : Scene {
+class BossDJScene : public Scene {
  public:
   BossDJScene(const GBFS_FILE* _fs);
   void init() override;

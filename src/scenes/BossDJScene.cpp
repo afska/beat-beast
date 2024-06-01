@@ -15,16 +15,15 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_horse.h"
 
-bn::fixed HORSE_X = 20;
-bn::fixed HORSE_Y = 90;
+const bn::fixed HORSE_INITIAL_X = 20;
+const bn::fixed HORSE_Y = 90;
 
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(_fs),
       textGenerator(fixed_8x16_sprite_font),
-      horse(new Horse(bn::fixed_point(HORSE_X, HORSE_Y))),
+      horse(new Horse(bn::fixed_point(HORSE_INITIAL_X, HORSE_Y))),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      lifeBar(new LifeBar(
-          bn::fixed_point(Math::toAbsTopLeftX(0), Math::toAbsTopLeftY(0)))),
+      lifeBar(new LifeBar({0, 0})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {

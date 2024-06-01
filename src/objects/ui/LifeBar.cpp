@@ -8,6 +8,7 @@
 
 // TODO: FIX NEGATIVE VALUE?
 // TODO: STOP USING u32
+// TODO: Use implicit bn::fixed_point constructors
 
 constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_LIFE][2] = {
     {0.05, -14}, {0.1, -13},  {0.15, -12}, {0.2, -12}, {0.25, -11},
@@ -22,15 +23,15 @@ const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
 LifeBar::LifeBar(bn::fixed_point initialPosition)
-    : icon(bn::sprite_items::icon_horse.create_sprite(0, 0)),
-      border(bn::sprite_items::lifebar.create_sprite(0, 0)),
+    : TopLeftGameObject(bn::sprite_items::lifebar.create_sprite(0, 0)),
+      icon(bn::sprite_items::icon_horse.create_sprite(0, 0)),
       fill(bn::sprite_items::lifebar_fill.create_sprite(0, 0)) {
-  icon.set_position(initialPosition + Math::toTopLeft(MARGIN_BORDER, 16, 16));
-  defaultFillPosition =
-      initialPosition +
-      Math::toTopLeft(MARGIN_BORDER + bn::fixed_point(16 + MARGIN_ITEMS, 0), 32,
-                      16);
-  border.set_position(defaultFillPosition);
+  icon.set_position(
+      Math::toAbsTopLeft(initialPosition + MARGIN_BORDER, 16, 16));
+
+  setTopLeftPosition(initialPosition + MARGIN_BORDER +
+                     bn::fixed_point(16 + MARGIN_ITEMS, 0));
+  defaultFillPosition = getCenteredPosition();
   fill.set_position(defaultFillPosition);
 }
 
@@ -45,7 +46,7 @@ void LifeBar::setLife(unsigned _life) {
 void LifeBar::update() {
   if (animationIndex > -1) {
     auto scale = Math::SCALE_STEPS[animationIndex];
-    border.set_scale(scale);
+    mainSprite.set_scale(scale);
     fill.set_scale(scale);
     animationIndex--;
   }

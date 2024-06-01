@@ -1,11 +1,11 @@
 #ifndef LIFE_BAR_H
 #define LIFE_BAR_H
 
-#include "../GameObject.h"
+#include "../TopLeftGameObject.h"
 
 #define MAX_LIFE 20
 
-class LifeBar : public GameObject {
+class LifeBar : public TopLeftGameObject {
  public:
   LifeBar(bn::fixed_point initialPosition);
 
@@ -17,7 +17,6 @@ class LifeBar : public GameObject {
 
  private:
   bn::sprite_ptr icon;
-  bn::sprite_ptr border;
   bn::sprite_ptr fill;
   unsigned life = MAX_LIFE;
   int animationIndex = -1;

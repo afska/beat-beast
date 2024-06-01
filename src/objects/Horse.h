@@ -1,11 +1,9 @@
 #ifndef HORSE_H
 #define HORSE_H
 
-#include "GameObject.h"
+#include "TopLeftGameObject.h"
 
-// (Horse uses the top-left system internally)
-
-class Horse : public GameObject {
+class Horse : public TopLeftGameObject {
  public:
   Horse(bn::fixed_point initialPosition);
 
@@ -16,18 +14,15 @@ class Horse : public GameObject {
   void hurt();
   void aim(bn::fixed_point newDirection);
   void setPosition(bn::fixed_point newPosition, bool isNowMoving);
+  bn::fixed_point getPosition() { return topLeftPosition; }
   void setFlipX(bool flipX);
   bool isBusy() { return isJumping() || isHurt(); }
-  bn::fixed_point getPosition() { return position; }
-  bn::fixed_point getCenteredPosition() { return mainSprite.position(); }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
   int getBounceFrame() { return bounceFrame; }
 
  private:
-  bn::sprite_ptr mainSprite;
   bn::sprite_ptr gunSprite;
-  bn::fixed_point position;
   bn::fixed targetAngle = 0;
   bool isMoving = false;
 

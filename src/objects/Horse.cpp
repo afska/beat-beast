@@ -20,7 +20,7 @@ const unsigned GUN_ANIMATION_WAIT = 0;
 const bn::fixed GUN_ROTATION_SPEED = 10;
 
 Horse::Horse(bn::fixed_point initialPosition)
-    : mainSprite(bn::sprite_items::horse.create_sprite(0, 0)),
+    : TopLeftGameObject(bn::sprite_items::horse.create_sprite(0, 0)),
       gunSprite(bn::sprite_items::gun.create_sprite(0, 0)) {
   boundingBox.set_dimensions(bn::fixed_size(32, 32));
   // boundingBoxPreview = bn::sprite_items::hitbox.create_sprite(0, HITBOX_Y);
@@ -35,7 +35,7 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
-  setPosition(position, isMoving);
+  setPosition(topLeftPosition, isMoving);
 }
 
 void Horse::bounce() {
@@ -70,26 +70,22 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
       Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
 
-  position.set_x(newPosition.x());
-  position.set_y(newPosition.y());
-  mainSprite.set_position(
-      Math::toAbsTopLeftX(newPosition.x(), 64),
-      Math::toAbsTopLeftY(newPosition.y(), 64) + bounceOffsetY);
+  setTopLeftPosition(newPosition);
+  mainSprite.set_y(getCenteredPosition().y() + bounceOffsetY);
+
   gunSprite.set_position(
       Math::toAbsTopLeftX(newPosition.x(), 32) + gunOffsetX + GUN_OFFSET[0] +
           bounceOffsetX,
       Math::toAbsTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
 
-  auto newCenter = Math::rotateFromCustomPivot(
+  gunSprite.set_position(Math::rotateFromCustomPivot(
       gunSprite.position(),
       bn::fixed_point(GUN_PIVOT_OFFSET[0], GUN_PIVOT_OFFSET[1]),
-      gunSprite.rotation_angle());
-  gunSprite.set_x(newCenter.x());
-  gunSprite.set_y(newCenter.y());
+      gunSprite.rotation_angle()));
 
   setIsMoving(isNowMoving);
 
-  boundingBox.set_position(mainSprite.position() +
+  boundingBox.set_position(getCenteredPosition() +
                            bn::fixed_point(0, HITBOX_Y));
 }
 
@@ -132,7 +128,7 @@ void Horse::updateAnimations() {
       setIdleOrRunningState();
 
     if (jumpFrame < jumpYOffset.size())
-      position.set_y(position.y() + jumpYOffset[jumpFrame] * 2);
+      topLeftPosition.set_y(topLeftPosition.y() + jumpYOffset[jumpFrame] * 2);
     jumpFrame++;
   }
 

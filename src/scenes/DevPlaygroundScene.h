@@ -7,7 +7,7 @@
 #include "../phys/PhysWorld.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
-class DevPlaygroundScene : Scene {
+class DevPlaygroundScene : public Scene {
  public:
   DevPlaygroundScene(const GBFS_FILE* _fs);
   void init() override;

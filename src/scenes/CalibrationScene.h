@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 
-class CalibrationScene : Scene {
+class CalibrationScene : public Scene {
  public:
   CalibrationScene(const GBFS_FILE* _fs);
   void init() override;
