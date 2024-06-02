@@ -11,6 +11,7 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
+#include "bn_sprite_items_dj_icon_octopus.h"
 
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
@@ -24,7 +25,8 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
       horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
       octopus(new Octopus({40, -30})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      lifeBar(new LifeBar({0, 0})),
+      lifeBar(new LifeBar({0, 0}, SpriteProvider::iconHorse())),
+      enemyLifeBar(new LifeBar({184, 0}, bn::sprite_items::dj_icon_octopus)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {
@@ -153,6 +155,7 @@ void BossDJScene::updateSprites() {
   if (isNewBeat) {
     horse->bounce();
     lifeBar->bounce();
+    enemyLifeBar->bounce();
     octopus->bounce();
   }
   horse->update();
@@ -192,6 +195,7 @@ void BossDJScene::updateSprites() {
 
   // UI
   lifeBar->update();
+  enemyLifeBar->update();
 
   if (cross.has_value()) {
     if (cross->get()->update())

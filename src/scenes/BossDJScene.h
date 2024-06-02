@@ -29,6 +29,7 @@ class BossDJScene : public Scene {
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   bn::unique_ptr<LifeBar> lifeBar;
+  bn::unique_ptr<LifeBar> enemyLifeBar;
   bn::optional<bn::unique_ptr<Cross>> cross;
   int lastBeat = -1;
   bool isNewBeat = false;
