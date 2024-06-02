@@ -88,8 +88,10 @@ void BossDJScene::processInput() {
       auto bullet = bn::unique_ptr{
           new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
       bullets.push_back(bn::move(bullet));
-    } else
+    } else {
+      horse->hurt();
       showCross();
+    }
   }
 
   // jump
