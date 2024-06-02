@@ -3,23 +3,25 @@
 #include "../../utils/Math.h"
 #include "bn_sprite_items_dj_octopus.h"
 
-Octopus::Octopus() : sprite(bn::sprite_items::dj_octopus.create_sprite(0, 0)) {
+Octopus::Octopus(bn::fixed_point initialPosition)
+    : sprite(bn::sprite_items::dj_octopus.create_sprite(initialPosition)) {
   setIdleState();
-
   sprite.set_z_order(1);
 
   // upleft:
-  tentacles.push_back(bn::unique_ptr{new Tentacle({-45, 10}, 0, true)});
+  tentacles.push_back(bn::unique_ptr{new Tentacle({0, 0}, 0, true)});
   // downleft:
-  tentacles.push_back(bn::unique_ptr{new Tentacle({20, 38}, 270, false)});
+  tentacles.push_back(bn::unique_ptr{new Tentacle({0, 0}, 270, false)});
   // upright:
-  tentacles.push_back(bn::unique_ptr{new Tentacle({0, -45}, 90, false)});
+  tentacles.push_back(bn::unique_ptr{new Tentacle({0, 0}, 90, false)});
   // updown:
-  tentacles.push_back(bn::unique_ptr{new Tentacle({45, -10}, 0, false)});
+  tentacles.push_back(bn::unique_ptr{new Tentacle({0, 0}, 0, false)});
   // upleft:
-  turntables.push_back(bn::unique_ptr{new Turntable({-44, 17})});
+  turntables.push_back(bn::unique_ptr{new Turntable({0, 0})});
   // downleft:
-  turntables.push_back(bn::unique_ptr{new Turntable({20, 35})});
+  turntables.push_back(bn::unique_ptr{new Turntable({0, 0})});
+
+  setPosition(initialPosition);
 }
 
 void Octopus::update() {
@@ -30,6 +32,17 @@ void Octopus::update() {
   for (auto& turntable : turntables) {
     turntable->update();
   }
+}
+
+void Octopus::setPosition(bn::fixed_point newPosition) {
+  sprite.set_position(newPosition);
+
+  tentacles[0]->setPosition(newPosition + bn::fixed_point(-45, 10));
+  tentacles[1]->setPosition(newPosition + bn::fixed_point(20, 38));
+  tentacles[2]->setPosition(newPosition + bn::fixed_point(0, -45));
+  tentacles[3]->setPosition(newPosition + bn::fixed_point(45, -10));
+  turntables[0]->setPosition(newPosition + bn::fixed_point(-44, 17));
+  turntables[1]->setPosition(newPosition + bn::fixed_point(20, 35));
 }
 
 void Octopus::bounce() {

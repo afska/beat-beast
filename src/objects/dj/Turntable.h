@@ -7,6 +7,9 @@ class Turntable : public GameObject {
  public:
   Turntable(bn::fixed_point position);
   void update();
+  void setPosition(bn::fixed_point newPosition) {
+    sprite.set_position(newPosition);
+  }
 
  private:
   bn::sprite_ptr sprite;

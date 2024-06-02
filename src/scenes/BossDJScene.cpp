@@ -22,7 +22,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::DJ, _fs),
       textGenerator(fixed_8x16_sprite_font),
       horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
-      octopus(new Octopus()),
+      octopus(new Octopus({40, -30})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       lifeBar(new LifeBar({0, 0})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(

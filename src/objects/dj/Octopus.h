@@ -7,9 +7,11 @@
 
 class Octopus : public GameObject {
  public:
-  Octopus();
+  Octopus(bn::fixed_point initialPosition);
   void update();
   void bounce();
+  void setPosition(bn::fixed_point newPosition);
+  bn::fixed_point getPosition() { return sprite.position(); }
 
  private:
   bn::sprite_ptr sprite;
