@@ -11,12 +11,17 @@ Bullet::Bullet(bn::fixed_point initialPosition,
           SpriteProvider::bullet().tiles_item(),
           0,
           1)),
-      direction(normalizedDirection) {}
+      direction(normalizedDirection) {
+  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_position(initialPosition);
+}
 
 bool Bullet::update(bool isInsideBeat) {
   sprite.set_position(sprite.position() + direction * (isInsideBeat ? 2 : 1));
 
   animation.update();
+
+  boundingBox.set_position(sprite.position());
 
   return sprite.position().x() < -120 || sprite.position().y() < -80 ||
          sprite.position().x() > 120 || sprite.position().y() > 80;

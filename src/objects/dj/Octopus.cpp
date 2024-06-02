@@ -23,6 +23,9 @@ Octopus::Octopus(bn::fixed_point initialPosition)
 
   setPosition(initialPosition);
   targetPosition = initialPosition;
+
+  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_position(initialPosition);
 }
 
 void Octopus::update(bool isInsideBeat) {
@@ -36,6 +39,8 @@ void Octopus::update(bool isInsideBeat) {
   int speed = isInsideBeat ? 3 : 1;
   Math::moveSpriteTowards(sprite, targetPosition, speed);
   setPosition(sprite.position());
+
+  boundingBox.set_position(sprite.position());
 }
 
 void Octopus::setTargetPosition(bn::fixed_point newTargetPosition) {

@@ -171,6 +171,13 @@ void BossDJScene::updateSprites() {
   // Attacks
   for (auto it = bullets.begin(); it != bullets.end();) {
     bool isOut = it->get()->update(chartReader->isInsideBeat());
+
+    if (it->get()->getBoundingBox().intersects(octopus->getBoundingBox())) {
+      octopus->hurt();
+      enemyLifeBar->setLife(enemyLifeBar->getLife() - 1);
+      isOut = true;
+    }
+
     if (isOut)
       it = bullets.erase(it);
     else
