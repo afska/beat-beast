@@ -1,7 +1,7 @@
 #include "Vinyl.h"
 #include "../utils/Math.h"
 
-#include "bn_sprite_items_vinyl.h"
+#include "bn_sprite_items_dj_vinyl.h"
 
 #define SPEED 3
 #define NEGATIVE_TARGET_OFFSET 16
@@ -9,7 +9,7 @@
 Vinyl::Vinyl(bn::fixed_point initialPosition,
              bn::fixed_point normalizedDirection,
              Event* _event)
-    : sprite(bn::sprite_items::vinyl.create_sprite(initialPosition)),
+    : sprite(bn::sprite_items::dj_vinyl.create_sprite(initialPosition)),
       direction(normalizedDirection),
       event(_event) {
   boundingBox.set_dimensions(sprite.dimensions());

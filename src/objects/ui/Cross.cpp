@@ -1,6 +1,6 @@
 #include "Cross.h"
 
-#include "bn_sprite_items_cross.h"
+#include "bn_sprite_items_dj_cross.h"
 
 #include "../../utils/Math.h"
 
@@ -8,7 +8,7 @@ const bn::array<bn::fixed, 14> yAnimation = {-1, -2, -3, -4, -3, -2, -1,
                                              0,  0,  0,  0,  0,  0,  0};
 
 Cross::Cross(bn::fixed_point initialPosition)
-    : sprite(bn::sprite_items::cross.create_sprite(initialPosition)) {}
+    : sprite(bn::sprite_items::dj_cross.create_sprite(initialPosition)) {}
 
 bool Cross::update() {
   sprite.set_scale(Math::SCALE_OUT_ANIMATION[animationIndex]);

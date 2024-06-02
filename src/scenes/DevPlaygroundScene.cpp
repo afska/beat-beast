@@ -9,8 +9,8 @@
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_synth.h"
-#include "bn_sprite_items_gun.h"
-#include "bn_sprite_items_horse.h"
+#include "bn_sprite_items_dj_gun.h"
+#include "bn_sprite_items_dj_horse.h"
 
 DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
     : Scene(_fs),
@@ -18,8 +18,8 @@ DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
       physWorld(new PhysWorld),
       horse(new Horse({20, 90})),
       background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
-      gun(bn::sprite_items::gun.create_sprite(20, 20)),
-      otherGun(bn::sprite_items::gun.create_sprite(40, 40)),
+      gun(bn::sprite_items::dj_gun.create_sprite(20, 20)),
+      otherGun(bn::sprite_items::dj_gun.create_sprite(40, 40)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}

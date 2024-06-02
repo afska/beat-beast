@@ -1,8 +1,8 @@
 #include "LifeBar.h"
 
-#include "bn_sprite_items_icon_horse.h"
-#include "bn_sprite_items_lifebar.h"
-#include "bn_sprite_items_lifebar_fill.h"
+#include "bn_sprite_items_dj_icon_horse.h"
+#include "bn_sprite_items_dj_lifebar.h"
+#include "bn_sprite_items_dj_lifebar_fill.h"
 
 #include "../../utils/Math.h"
 
@@ -19,9 +19,9 @@ const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
 LifeBar::LifeBar(bn::fixed_point initialPosition)
-    : TopLeftGameObject(bn::sprite_items::lifebar.create_sprite(0, 0)),
-      icon(bn::sprite_items::icon_horse.create_sprite(0, 0)),
-      fill(bn::sprite_items::lifebar_fill.create_sprite(0, 0)) {
+    : TopLeftGameObject(bn::sprite_items::dj_lifebar.create_sprite(0, 0)),
+      icon(bn::sprite_items::dj_icon_horse.create_sprite(0, 0)),
+      fill(bn::sprite_items::dj_lifebar_fill.create_sprite(0, 0)) {
   icon.set_position(
       Math::toAbsTopLeft(initialPosition + MARGIN_BORDER, 16, 16));
 

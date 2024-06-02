@@ -11,9 +11,9 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
-#include "bn_sprite_items_bullet.h"
-#include "bn_sprite_items_gun.h"
-#include "bn_sprite_items_horse.h"
+#include "bn_sprite_items_dj_bullet.h"
+#include "bn_sprite_items_dj_gun.h"
+#include "bn_sprite_items_dj_horse.h"
 
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
