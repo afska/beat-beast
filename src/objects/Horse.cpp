@@ -69,8 +69,8 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   if (newPosition.x() < SCREEN_LIMIT_X)
     newPosition.set_x(SCREEN_LIMIT_X);
   if (newPosition.x() >
-      Math::SCREEN_WIDTH - mainSprite.dimensions().width() - SCREEN_LIMIT_X)
-    newPosition.set_x(Math::SCREEN_WIDTH - mainSprite.dimensions().width() -
+      Math::SCREEN_WIDTH - mainSpriteDimensions.width() - SCREEN_LIMIT_X)
+    newPosition.set_x(Math::SCREEN_WIDTH - mainSpriteDimensions.width() -
                       SCREEN_LIMIT_X);
 
   int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
