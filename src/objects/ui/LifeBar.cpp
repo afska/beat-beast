@@ -31,12 +31,15 @@ LifeBar::LifeBar(bn::fixed_point initialPosition,
   fill.set_position(defaultFillPosition);
 }
 
-void LifeBar::setLife(unsigned _life) {
-  if (_life <= 0 || _life > MAX_LIFE)
-    return;
+bool LifeBar::setLife(unsigned _life) {
+  if (_life <= 0)
+    return true;
+  if (_life > MAX_LIFE)
+    return false;
 
   life = _life;
   animationIndex = Math::SCALE_STEPS.size() - 1;
+  return false;
 }
 
 void LifeBar::update() {

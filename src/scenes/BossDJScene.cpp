@@ -174,7 +174,10 @@ void BossDJScene::updateSprites() {
 
     if (it->get()->getBoundingBox().intersects(octopus->getBoundingBox())) {
       octopus->hurt();
-      enemyLifeBar->setLife(enemyLifeBar->getLife() - 1);
+      if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
+        BN_ASSERT(false, "GANASTE!!!");
+      }
+
       isOut = true;
     }
 
@@ -193,7 +196,9 @@ void BossDJScene::updateSprites() {
     if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
       if (it->get()->getBoundingBox().x() < horse->getBoundingBox().x()) {
         horse->hurt();
-        lifeBar->setLife(lifeBar->getLife() - 1);
+        if (lifeBar->setLife(lifeBar->getLife() - 1)) {
+          BN_ASSERT(false, "SOS MALISIMO");
+        }
         isOut = true;
       }
     }

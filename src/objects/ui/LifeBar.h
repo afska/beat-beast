@@ -12,7 +12,7 @@ class LifeBar : public TopLeftGameObject {
           bn::sprite_item _fill);
 
   unsigned getLife() { return life; }
-  void setLife(unsigned _life);
+  bool setLife(unsigned _life);
 
   void update();
   void bounce();
