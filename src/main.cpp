@@ -8,13 +8,27 @@
 
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
+#include "bn_optional.h"
 #include "bn_sprite_text_generator.h"
 #include "bn_unique_ptr.h"
 
 void ISR_VBlank();
 static const GBFS_FILE* fs = find_first_gbfs_file(0);
 
-bn::unique_ptr<Scene> scene;
+bn::optional<bn::unique_ptr<Scene>> scene;
+
+bn::unique_ptr<Scene> getNextScene(GameState::Screen nextScreen) {
+  switch (nextScreen) {
+    case GameState::Screen::CALIBRATION:
+      return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
+    case GameState::Screen::DJ:
+      return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
+    default: {
+      BN_ASSERT(false, "Next screen not found?");
+      return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
+    }
+  }
+}
 
 int main() {
   bn::core::init(ISR_VBlank);
@@ -32,18 +46,21 @@ int main() {
   player_init();
   player_sfx_init();
 
-  scene = isNewSave ? bn::unique_ptr{(Scene*)new CalibrationScene(fs)}
-                    : bn::unique_ptr{(Scene*)new BossDJScene(fs)};
+  scene = isNewSave ? getNextScene(GameState::Screen::CALIBRATION)
+                    : getNextScene(GameState::Screen::DJ);
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
-  scene->init();
+  scene->get()->init();
 
   while (true) {
-    scene->update();
-    if (scene->hasNextScene()) {
-      scene = scene->getNextScene();
+    scene->get()->update();
+    if (scene->get()->hasNextScreen()) {
+      auto nextScreen = scene->get()->getNextScreen();
+      scene.reset();
+      scene = getNextScene(nextScreen);
+
       player_stop();
       player_sfx_stop();
-      scene->init();
+      scene->get()->init();
     }
 
     bn::core::update();

@@ -26,14 +26,12 @@ class Scene {
 
   virtual ~Scene() = default;
 
-  void setNextScene(bn::unique_ptr<Scene> scene) {
-    nextScene = bn::move(scene);
-  }
-  bool hasNextScene() { return nextScene != nullptr; }
-  bn::unique_ptr<Scene> getNextScene() { return bn::move(nextScene); }
+  void setNextScreen(GameState::Screen screen) { nextScreen = screen; }
+  bool hasNextScreen() { return nextScreen != GameState::Screen::NO; }
+  GameState::Screen getNextScreen() { return nextScreen; }
 
  protected:
-  bn::unique_ptr<Scene> nextScene;
+  GameState::Screen nextScreen;
   const GBFS_FILE* fs;
 };
 

@@ -5,10 +5,10 @@
 
 namespace GameState {
 
-enum Screen { OTHER, DJ };
+enum Screen { NO, CALIBRATION, DJ };
 
 struct GameStateData {
-  Screen currentScreen = Screen::OTHER;
+  Screen currentScreen = Screen::NO;
 };
 
 extern GameStateData data;

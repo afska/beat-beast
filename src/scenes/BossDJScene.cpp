@@ -4,7 +4,6 @@
 #include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
-#include "../scenes/CalibrationScene.h"
 #include "../utils/Math.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
@@ -92,7 +91,7 @@ void BossDJScene::processInput() {
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
-    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene(fs)});
+    setNextScreen(GameState::Screen::CALIBRATION);
 }
 
 void BossDJScene::processChart() {

@@ -2,7 +2,6 @@
 
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
-#include "../scenes/BossDJScene.h"
 #include "bn_bg_palettes.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
@@ -12,7 +11,7 @@
 const unsigned TARGET_BEAT_MS = 2000;
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
-    : Scene(GameState::Screen::OTHER, _fs),
+    : Scene(GameState::Screen::CALIBRATION, _fs),
       textGenerator(fixed_8x16_sprite_font) {}
 
 void CalibrationScene::init() {
@@ -86,7 +85,7 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
   SaveFile::save();
 
-  setNextScene(bn::unique_ptr{(Scene*)new BossDJScene(fs)});
+  setNextScreen(GameState::Screen::DJ);
 }
 
 void CalibrationScene::cancel() {

@@ -62,7 +62,7 @@ void DevPlaygroundScene::update() {
 
   // start = go to settings / CalibrationScene
   if (bn::keypad::start_pressed())
-    setNextScene(bn::unique_ptr{(Scene*)new CalibrationScene(fs)});
+    setNextScreen(GameState::Screen::CALIBRATION);
 
   // beats
   const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff
