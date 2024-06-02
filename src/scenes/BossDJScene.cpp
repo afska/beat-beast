@@ -1,5 +1,6 @@
 #include "BossDJScene.h"
 
+#include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
@@ -11,9 +12,6 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
-#include "bn_sprite_items_dj_bullet.h"
-#include "bn_sprite_items_dj_gun.h"
-#include "bn_sprite_items_dj_horse.h"
 
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
@@ -22,7 +20,7 @@ const bn::fixed HORSE_INITIAL_X = 20;
 const bn::fixed HORSE_Y = 90;
 
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
-    : Scene(_fs),
+    : Scene(GameState::Screen::DJ, _fs),
       textGenerator(fixed_8x16_sprite_font),
       horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),

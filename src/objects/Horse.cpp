@@ -2,9 +2,7 @@
 
 #include "../utils/Math.h"
 
-#include "bn_sprite_items_dj_gun.h"
-#include "bn_sprite_items_dj_hitbox.h"
-#include "bn_sprite_items_dj_horse.h"
+#include "../assets/SpriteProvider.h"
 
 #define HITBOX_Y 8
 
@@ -21,11 +19,11 @@ const unsigned GUN_ANIMATION_WAIT = 0;
 const bn::fixed GUN_ROTATION_SPEED = 10;
 
 Horse::Horse(bn::fixed_point initialPosition)
-    : TopLeftGameObject(bn::sprite_items::dj_horse.create_sprite(0, 0)),
-      gunSprite(bn::sprite_items::dj_gun.create_sprite(0, 0)) {
+    : TopLeftGameObject(SpriteProvider::horse().create_sprite(0, 0)),
+      gunSprite(SpriteProvider::gun().create_sprite(0, 0)) {
   boundingBox.set_dimensions(bn::fixed_size(32, 32));
-  // boundingBoxPreview = bn::sprite_items::dj_hitbox.create_sprite(0,
-  // HITBOX_Y); DEBUG (uncomment this to see the bounding box ^^^^^)
+  // boundingBoxPreview = SpriteProvider::hitbox().create_sprite(0, HITBOX_Y);
+  // DEBUG (uncomment this to see the bounding box ^^^^^)
 
   setPosition(initialPosition, false);
   setIdleState();
@@ -45,8 +43,8 @@ void Horse::bounce() {
 
 void Horse::shoot() {
   gunAnimation = bn::create_sprite_animate_action_once(
-      gunSprite, GUN_ANIMATION_WAIT, bn::sprite_items::dj_gun.tiles_item(), 0,
-      1, 2, 3, 4, 5, 6, 0);
+      gunSprite, GUN_ANIMATION_WAIT, SpriteProvider::gun().tiles_item(), 0, 1,
+      2, 3, 4, 5, 6, 0);
 }
 
 void Horse::jump() {
@@ -225,22 +223,22 @@ void Horse::resetAnimations() {
 
 bn::sprite_animate_action<2> Horse::createIdleAnimation() {
   return bn::create_sprite_animate_action_forever(
-      mainSprite, 5, bn::sprite_items::dj_horse.tiles_item(), 8, 9);
+      mainSprite, 5, SpriteProvider::horse().tiles_item(), 8, 9);
 }
 
 bn::sprite_animate_action<8> Horse::createRunningAnimation() {
   return bn::create_sprite_animate_action_forever(
-      mainSprite, 3, bn::sprite_items::dj_horse.tiles_item(), 0, 1, 2, 3, 4, 5,
-      6, 7);
+      mainSprite, 3, SpriteProvider::horse().tiles_item(), 0, 1, 2, 3, 4, 5, 6,
+      7);
 }
 
 bn::sprite_animate_action<4> Horse::createJumpingAnimation() {
   return bn::create_sprite_animate_action_once(
-      mainSprite, 5, bn::sprite_items::dj_horse.tiles_item(), 10, 11, 12, 12);
+      mainSprite, 5, SpriteProvider::horse().tiles_item(), 10, 11, 12, 12);
 }
 
 bn::sprite_animate_action<8> Horse::createHurtAnimation() {
   return bn::create_sprite_animate_action_once(
-      mainSprite, 2, bn::sprite_items::dj_horse.tiles_item(), 13, 10, 13, 10,
-      13, 10, 13, 10);
+      mainSprite, 2, SpriteProvider::horse().tiles_item(), 13, 10, 13, 10, 13,
+      10, 13, 10);
 }

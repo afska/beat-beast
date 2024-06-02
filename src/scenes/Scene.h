@@ -11,11 +11,15 @@
 #include "bn_unique_ptr.h"
 #include "bn_vector.h"
 
+#include "../savefile/GameState.h"
+
 #include "../utils/gbfs/gbfs.h"
 
 class Scene {
  public:
-  Scene(const GBFS_FILE* _fs) : fs(_fs) {}
+  Scene(GameState::Screen screen, const GBFS_FILE* _fs) : fs(_fs) {
+    GameState::data.currentScreen = screen;
+  }
 
   virtual void init() = 0;
   virtual void update() = 0;

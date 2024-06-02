@@ -1,14 +1,14 @@
 #include "Bullet.h"
 
-#include "bn_sprite_items_dj_bullet.h"
+#include "../assets/SpriteProvider.h"
 
 Bullet::Bullet(bn::fixed_point initialPosition,
                bn::fixed_point normalizedDirection)
-    : sprite(bn::sprite_items::dj_bullet.create_sprite(initialPosition)),
+    : sprite(SpriteProvider::bullet().create_sprite(initialPosition)),
       animation(bn::create_sprite_animate_action_forever(
           sprite,
           5,
-          bn::sprite_items::dj_bullet.tiles_item(),
+          SpriteProvider::bullet().tiles_item(),
           0,
           1)),
       direction(normalizedDirection) {}

@@ -13,7 +13,7 @@
 #include "bn_sprite_items_dj_horse.h"
 
 DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
-    : Scene(_fs),
+    : Scene(GameState::Screen::DJ, _fs),
       textGenerator(fixed_8x16_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse({20, 90})),
