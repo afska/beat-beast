@@ -104,6 +104,31 @@ inline int fastDiv(int x, uint32_t fraction) {
                 : -fastDiv((uint32_t)(-x), fraction);
 }
 
+inline void moveSpriteTowards(bn::sprite_ptr sprite,
+                              bn::fixed_point targetPosition,
+                              int speed) {
+  if (sprite.position().x() < targetPosition.x()) {
+    sprite.set_x(sprite.position().x() + speed);
+    if (sprite.position().x() > targetPosition.x())
+      sprite.set_x(targetPosition.x());
+  }
+  if (sprite.position().x() > targetPosition.x()) {
+    sprite.set_x(sprite.position().x() - speed);
+    if (sprite.position().x() < targetPosition.x())
+      sprite.set_x(targetPosition.x());
+  }
+  if (sprite.position().y() < targetPosition.y()) {
+    sprite.set_y(sprite.position().y() + speed);
+    if (sprite.position().y() > targetPosition.y())
+      sprite.set_y(targetPosition.y());
+  }
+  if (sprite.position().y() > targetPosition.y()) {
+    sprite.set_y(sprite.position().y() - speed);
+    if (sprite.position().y() < targetPosition.y())
+      sprite.set_y(targetPosition.y());
+  }
+}
+
 }  // namespace Math
 
 #endif  // MATH_H

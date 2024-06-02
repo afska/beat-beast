@@ -104,6 +104,8 @@ void BossDJScene::processChart() {
     if (event->isRegular()) {
       switch (event->getType()) {
         case ATTACK_LEFT_VINYL: {
+          octopus->setTargetPosition({-50, -30});
+
           if (!vinyls.full()) {
             throwVinyl(bn::unique_ptr{
                 new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
@@ -111,6 +113,7 @@ void BossDJScene::processChart() {
           break;
         }
         case ATTACK_RIGHT_VINYL: {
+          octopus->setTargetPosition({50, -50});
           if (!vinyls.full()) {
             throwVinyl(bn::unique_ptr{
                 new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
@@ -155,7 +158,7 @@ void BossDJScene::updateSprites() {
   horse->update();
 
   // Octopus
-  octopus->update();
+  octopus->update(chartReader->isInsideBeat());
 
   // Attacks
   for (auto it = bullets.begin(); it != bullets.end();) {

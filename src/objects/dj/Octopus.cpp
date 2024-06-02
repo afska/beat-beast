@@ -22,16 +22,24 @@ Octopus::Octopus(bn::fixed_point initialPosition)
   turntables.push_back(bn::unique_ptr{new Turntable({0, 0})});
 
   setPosition(initialPosition);
+  targetPosition = initialPosition;
 }
 
-void Octopus::update() {
+void Octopus::update(bool isInsideBeat) {
   updateAnimations();
 
   for (auto& tentacle : tentacles)
     tentacle->update();
-  for (auto& turntable : turntables) {
+  for (auto& turntable : turntables)
     turntable->update();
-  }
+
+  int speed = isInsideBeat ? 3 : 1;
+  Math::moveSpriteTowards(sprite, targetPosition, speed);
+  setPosition(sprite.position());
+}
+
+void Octopus::setTargetPosition(bn::fixed_point newTargetPosition) {
+  targetPosition = newTargetPosition;
 }
 
 void Octopus::setPosition(bn::fixed_point newPosition) {
