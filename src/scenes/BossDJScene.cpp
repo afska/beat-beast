@@ -115,8 +115,6 @@ void BossDJScene::processChart() {
           break;
         }
         case ATTACK_RIGHT_VINYL: {
-          // TODO: Implement vinyls from right to left (they currently don't
-          // work)
           if (!vinyls.full()) {
             auto vinyl = bn::unique_ptr{
                 new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)};

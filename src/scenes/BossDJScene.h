@@ -5,7 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/Horse.h"
-#include "../objects/Vinyl.h"
+#include "../objects/dj/Vinyl.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
 #include "../phys/PhysWorld.h"
