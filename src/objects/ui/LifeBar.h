@@ -7,7 +7,9 @@
 
 class LifeBar : public TopLeftGameObject {
  public:
-  LifeBar(bn::fixed_point initialPosition, bn::sprite_item icon);
+  LifeBar(bn::fixed_point initialPosition,
+          bn::sprite_item _icon,
+          bn::sprite_item _fill);
 
   unsigned getLife() { return life; }
   void setLife(unsigned _life);

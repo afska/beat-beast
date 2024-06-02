@@ -16,10 +16,12 @@ const bn::fixed MARGIN_ITEMS = 4;
 const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
-LifeBar::LifeBar(bn::fixed_point initialPosition, bn::sprite_item _icon)
+LifeBar::LifeBar(bn::fixed_point initialPosition,
+                 bn::sprite_item _icon,
+                 bn::sprite_item _fill)
     : TopLeftGameObject(SpriteProvider::lifebar().create_sprite(0, 0)),
       icon(_icon.create_sprite(0, 0)),
-      fill(SpriteProvider::lifebarFill().create_sprite(0, 0)) {
+      fill(_fill.create_sprite(0, 0)) {
   icon.set_position(
       Math::toAbsTopLeft(initialPosition + MARGIN_BORDER, 16, 16));
 

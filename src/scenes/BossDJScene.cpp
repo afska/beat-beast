@@ -12,6 +12,7 @@
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
 #include "bn_sprite_items_dj_icon_octopus.h"
+#include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
@@ -25,8 +26,12 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
       horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
       octopus(new Octopus({40, -30})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      lifeBar(new LifeBar({0, 0}, SpriteProvider::iconHorse())),
-      enemyLifeBar(new LifeBar({184, 0}, bn::sprite_items::dj_icon_octopus)),
+      lifeBar(new LifeBar({0, 0},
+                          SpriteProvider::iconHorse(),
+                          SpriteProvider::lifebarFill())),
+      enemyLifeBar(new LifeBar({184, 0},
+                               bn::sprite_items::dj_icon_octopus,
+                               bn::sprite_items::dj_lifebar_octopus_fill)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {
