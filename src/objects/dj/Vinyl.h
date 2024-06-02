@@ -1,8 +1,8 @@
 #ifndef VINYL_H
 #define VINYL_H
 
-#include "../rhythm/models/Event.h"
-#include "GameObject.h"
+#include "../../rhythm/models/Event.h"
+#include "../GameObject.h"
 
 class Vinyl : public GameObject {
  public:

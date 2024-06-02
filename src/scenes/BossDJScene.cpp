@@ -23,6 +23,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::DJ, _fs),
       textGenerator(fixed_8x16_sprite_font),
       horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
+      octopus(new Octopus()),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       lifeBar(new LifeBar({0, 0})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
@@ -105,23 +106,15 @@ void BossDJScene::processChart() {
       switch (event->getType()) {
         case ATTACK_LEFT_VINYL: {
           if (!vinyls.full()) {
-            auto vinyl = bn::unique_ptr{
-                new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)};
-            vinyls.push_back(bn::move(vinyl));
-
-            int sound = random.get_int(1, 7);
-            player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+            throwVinyl(bn::unique_ptr{
+                new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
           }
           break;
         }
         case ATTACK_RIGHT_VINYL: {
           if (!vinyls.full()) {
-            auto vinyl = bn::unique_ptr{
-                new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)};
-            vinyls.push_back(bn::move(vinyl));
-
-            int sound = random.get_int(1, 7);
-            player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+            throwVinyl(bn::unique_ptr{
+                new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
           }
           break;
           default: {
@@ -203,4 +196,11 @@ void BossDJScene::updateSprites() {
 void BossDJScene::showCross() {
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
+}
+
+void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
+  vinyls.push_back(bn::move(vinyl));
+
+  int sound = random.get_int(1, 7);
+  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
 }

@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/Horse.h"
+#include "../objects/dj/Octopus.h"
 #include "../objects/dj/Vinyl.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
@@ -23,6 +24,7 @@ class BossDJScene : public Scene {
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<ChartReader> chartReader;
   bn::unique_ptr<Horse> horse;
+  bn::unique_ptr<Octopus> octopus;
   bn::regular_bg_ptr background;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
@@ -42,6 +44,7 @@ class BossDJScene : public Scene {
   void updateSprites();
 
   void showCross();
+  void throwVinyl(bn::unique_ptr<Vinyl> vinyl);
 };
 
 #endif  // BOSS_DJ_SCENE_H

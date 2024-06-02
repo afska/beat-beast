@@ -42,6 +42,7 @@ SOURCES     	:=  src \
 					src/scenes \
 					src/objects \
 					src/objects/ui \
+					src/objects/dj \
 					src/utils \
 					src/utils/gbfs \
 					src/phys \
