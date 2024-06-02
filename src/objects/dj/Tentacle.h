@@ -5,10 +5,10 @@
 
 class Tentacle : public GameObject {
  public:
-  Tentacle(bn::fixed_point position, bn::fixed angle);
+  Tentacle(bn::fixed_point position, bn::fixed angle, bool flipX);
   void update();
 
- private:
+  //  private: // TODO: ENABLE
   bn::sprite_ptr sprite;
   bn::optional<bn::sprite_animate_action<8>> idleAnimation;
 

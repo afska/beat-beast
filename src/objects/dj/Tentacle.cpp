@@ -2,12 +2,13 @@
 
 #include "bn_sprite_items_dj_tentacle.h"
 
-Tentacle::Tentacle(bn::fixed_point position, bn::fixed angle)
+Tentacle::Tentacle(bn::fixed_point position, bn::fixed angle, bool flipX)
     : sprite(bn::sprite_items::dj_tentacle.create_sprite(0, 0)) {
   setIdleState();
   sprite.set_position(position);
+  sprite.set_horizontal_flip(flipX);
   sprite.set_rotation_angle(angle);
-  sprite.set_z_order(1);
+  sprite.set_z_order(2);
 }
 
 void Tentacle::update() {

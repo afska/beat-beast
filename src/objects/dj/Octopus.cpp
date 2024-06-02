@@ -1,12 +1,25 @@
 #include "Octopus.h"
 
+#include "../../utils/Math.h"
 #include "bn_sprite_items_dj_octopus.h"
 
 Octopus::Octopus() : sprite(bn::sprite_items::dj_octopus.create_sprite(0, 0)) {
   setIdleState();
 
-  tentacles.push_back(bn::unique_ptr{new Tentacle({20, 35}, 320)});
-  turntables.push_back(bn::unique_ptr{new Turntable({-10, -10})});
+  sprite.set_z_order(1);
+
+  // upleft:
+  tentacles.push_back(bn::unique_ptr{new Tentacle({-45, 10}, 0, true)});
+  // downleft:
+  tentacles.push_back(bn::unique_ptr{new Tentacle({20, 38}, 270, false)});
+  // upright:
+  tentacles.push_back(bn::unique_ptr{new Tentacle({0, -45}, 90, false)});
+  // updown:
+  tentacles.push_back(bn::unique_ptr{new Tentacle({45, -10}, 0, false)});
+  // upleft:
+  turntables.push_back(bn::unique_ptr{new Turntable({-44, 17})});
+  // downleft:
+  turntables.push_back(bn::unique_ptr{new Turntable({20, 35})});
 }
 
 void Octopus::update() {
