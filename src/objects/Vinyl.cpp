@@ -4,6 +4,7 @@
 #include "bn_sprite_items_vinyl.h"
 
 #define SPEED 3
+#define NEGATIVE_TARGET_OFFSET 16
 
 Vinyl::Vinyl(bn::fixed_point initialPosition,
              bn::fixed_point normalizedDirection,
@@ -21,7 +22,9 @@ bool Vinyl::update(int msecs,
                    int horseX) {
   if (msecs < event->timestamp + (int)beatDurationMs) {
     int distance =
-        direction.x() >= 0 ? horseX : (int)Math::SCREEN_WIDTH - (horseX + 64);
+        direction.x() >= 0
+            ? horseX
+            : (int)Math::SCREEN_WIDTH - (horseX + 64 - NEGATIVE_TARGET_OFFSET);
 
     // beatDurationMs --------------- distance
     // (msecs - event->timestamp) --- ???
