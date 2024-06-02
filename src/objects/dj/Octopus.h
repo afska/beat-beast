@@ -9,6 +9,7 @@ class Octopus : public GameObject {
  public:
   Octopus();
   void update();
+  void bounce();
 
  private:
   bn::sprite_ptr sprite;

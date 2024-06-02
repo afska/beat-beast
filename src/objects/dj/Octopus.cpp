@@ -19,9 +19,16 @@ void Octopus::update() {
   }
 }
 
+void Octopus::bounce() {
+  setIdleState();
+}
+
 void Octopus::updateAnimations() {
-  if (idleAnimation.has_value())
+  if (idleAnimation.has_value()) {
     idleAnimation->update();
+    if (idleAnimation->done())
+      resetAnimations();
+  }
 }
 
 void Octopus::setIdleState() {
@@ -34,6 +41,6 @@ void Octopus::resetAnimations() {
 }
 
 bn::sprite_animate_action<5> Octopus::createIdleAnimation() {
-  return bn::create_sprite_animate_action_forever(
-      sprite, 5, bn::sprite_items::dj_octopus.tiles_item(), 0, 1, 2, 3, 4);
+  return bn::create_sprite_animate_action_once(
+      sprite, 3, bn::sprite_items::dj_octopus.tiles_item(), 0, 1, 2, 3, 4);
 }

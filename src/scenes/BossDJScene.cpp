@@ -151,6 +151,7 @@ void BossDJScene::updateSprites() {
   if (isNewBeat) {
     horse->bounce();
     lifeBar->bounce();
+    octopus->bounce();
   }
   horse->update();
 
