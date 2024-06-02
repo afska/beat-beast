@@ -54,7 +54,14 @@ void Octopus::setPosition(bn::fixed_point newPosition) {
 }
 
 void Octopus::bounce() {
+  if (isBusy())
+    return;
+
   setIdleState();
+}
+
+void Octopus::hurt() {
+  setHurtState();
 }
 
 void Octopus::updateAnimations() {
@@ -63,6 +70,12 @@ void Octopus::updateAnimations() {
     if (idleAnimation->done())
       resetAnimations();
   }
+
+  if (hurtAnimation.has_value()) {
+    hurtAnimation->update();
+    if (hurtAnimation->done())
+      setIdleState();
+  }
 }
 
 void Octopus::setIdleState() {
@@ -70,11 +83,23 @@ void Octopus::setIdleState() {
   idleAnimation = createIdleAnimation();
 }
 
+void Octopus::setHurtState() {
+  resetAnimations();
+  hurtAnimation = createHurtAnimation();
+}
+
 void Octopus::resetAnimations() {
   idleAnimation.reset();
+  hurtAnimation.reset();
 }
 
 bn::sprite_animate_action<5> Octopus::createIdleAnimation() {
   return bn::create_sprite_animate_action_once(
       sprite, 3, bn::sprite_items::dj_octopus.tiles_item(), 0, 1, 2, 3, 4);
+}
+
+bn::sprite_animate_action<8> Octopus::createHurtAnimation() {
+  return bn::create_sprite_animate_action_once(
+      sprite, 2, bn::sprite_items::dj_octopus.tiles_item(), 10, 0, 10, 0, 10, 0,
+      10, 0);
 }
