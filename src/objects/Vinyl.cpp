@@ -13,22 +13,26 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
       event(_event) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
-  if (normalizedDirection.x() < 0)
-    sprite.set_scale(2);  // TODO: REMOVE test code and support both directions
 }
 
 bool Vinyl::update(int msecs,
                    unsigned beatDurationMs,
                    unsigned oneDivBeatDurationMs,
                    int horseX) {
-  // TODO: SUPPORT BOTH DIRECTIONS
-
   if (msecs < event->timestamp + (int)beatDurationMs) {
-    // beatDurationMs --------------- horseX
+    int distance =
+        direction.x() >= 0 ? horseX : (int)Math::SCREEN_WIDTH - (horseX + 64);
+
+    // beatDurationMs --------------- distance
     // (msecs - event->timestamp) --- ???
-    int expectedX = Math::fastDiv((msecs - event->timestamp) * horseX,
+
+    int expectedX = Math::fastDiv((msecs - event->timestamp) * distance,
                                   oneDivBeatDurationMs);
-    sprite.set_x(Math::toAbsTopLeftX(expectedX, 16));
+    if (direction.x() < 0)
+      expectedX = Math::SCREEN_WIDTH - expectedX;
+
+    sprite.set_x(Math::toAbsTopLeftX(
+        Math::coerce(expectedX, -16, Math::SCREEN_WIDTH + 16), 16));
   } else {
     sprite.set_x(sprite.x() + direction.x() * SPEED);
   }
@@ -37,6 +41,6 @@ bool Vinyl::update(int msecs,
 
   boundingBox.set_position(sprite.position());
 
-  return sprite.position().y() < -80 || sprite.position().x() > 120 ||
-         sprite.position().y() > 80;
+  return sprite.position().x() < -Math::SCREEN_WIDTH / 2 - 16 * 2 ||
+         sprite.position().x() > Math::SCREEN_WIDTH / 2 + 16 * 2;
 }

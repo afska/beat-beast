@@ -68,6 +68,14 @@ inline bn::fixed normalizeAngle(bn::fixed angle) {
   return angle;
 }
 
+inline bn::fixed sgn(bn::fixed n) {
+  return n >= 0 ? 1 : -1;
+}
+
+inline bn::fixed coerce(bn::fixed n, bn::fixed min, bn::fixed max) {
+  return bn::min(bn::max(n, min), max);
+}
+
 inline bn::fixed_point rotate(bn::fixed_point point, bn::fixed angleDegrees) {
   // translation matrix (Y inverted)
   bn::fixed rotatedX = point.x() * bn::degrees_cos(angleDegrees) +
