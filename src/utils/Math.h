@@ -68,7 +68,7 @@ inline bn::fixed normalizeAngle(bn::fixed angle) {
   return angle;
 }
 
-inline bn::fixed sgn(bn::fixed n) {
+inline int sgn(bn::fixed n) {
   return n >= 0 ? 1 : -1;
 }
 

@@ -1,9 +1,9 @@
 #include "Tentacle.h"
 
-#include "bn_sprite_items_dj_tentacles.h"
+#include "bn_sprite_items_dj_tentacle.h"
 
 Tentacle::Tentacle(bn::fixed_point position, bn::fixed angle)
-    : sprite(bn::sprite_items::dj_tentacles.create_sprite(0, 0)) {
+    : sprite(bn::sprite_items::dj_tentacle.create_sprite(0, 0)) {
   setIdleState();
   sprite.set_position(position);
   sprite.set_rotation_angle(angle);
@@ -30,6 +30,6 @@ void Tentacle::resetAnimations() {
 
 bn::sprite_animate_action<8> Tentacle::createIdleAnimation() {
   return bn::create_sprite_animate_action_forever(
-      sprite, 5, bn::sprite_items::dj_tentacles.tiles_item(), 0, 1, 2, 3, 4, 5,
+      sprite, 5, bn::sprite_items::dj_tentacle.tiles_item(), 0, 1, 2, 3, 4, 5,
       6, 7);
 }

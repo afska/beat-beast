@@ -19,6 +19,11 @@ class Vinyl : public GameObject {
   bn::sprite_ptr sprite;
   bn::fixed_point direction;
   Event* event;
+  bn::fixed scale = 0.1;
+
+  bn::sprite_ptr tentacleSprite;
+  bn::fixed tentacleTargetX;
+  bn::sprite_animate_action<5> attackAnimation;
 };
 
 #endif  // VINYL_H
