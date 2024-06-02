@@ -154,6 +154,9 @@ void BossDJScene::updateSprites() {
   }
   horse->update();
 
+  // Octopus
+  octopus->update();
+
   // Attacks
   for (auto it = bullets.begin(); it != bullets.end();) {
     bool isOut = it->get()->update(chartReader->isInsideBeat());
