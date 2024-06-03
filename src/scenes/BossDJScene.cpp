@@ -29,9 +29,11 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
       octopus(new Octopus({40, -30})),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
       lifeBar(new LifeBar({0, 0},
+                          20,
                           SpriteProvider::iconHorse(),
                           SpriteProvider::lifebarFill())),
       enemyLifeBar(new LifeBar({184, 0},
+                               40,
                                bn::sprite_items::dj_icon_octopus,
                                bn::sprite_items::dj_lifebar_octopus_fill)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(

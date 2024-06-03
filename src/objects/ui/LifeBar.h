@@ -3,11 +3,10 @@
 
 #include "../TopLeftGameObject.h"
 
-#define MAX_LIFE 20
-
 class LifeBar : public TopLeftGameObject {
  public:
   LifeBar(bn::fixed_point initialPosition,
+          unsigned _maxLife,
           bn::sprite_item _icon,
           bn::sprite_item _fill);
 
@@ -18,9 +17,11 @@ class LifeBar : public TopLeftGameObject {
   void bounce();
 
  private:
+  unsigned maxLife;
   bn::sprite_ptr icon;
   bn::sprite_ptr fill;
-  unsigned life = MAX_LIFE;
+  unsigned life;        // [0, maxLife]
+  unsigned visualLife;  // [0, MAX_DIFFERENT_VALUES]
   int animationIndex = -1;
   int animationOffset = 0;
   unsigned animationWait = 0;

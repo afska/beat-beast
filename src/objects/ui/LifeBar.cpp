@@ -4,7 +4,8 @@
 
 #include "../../utils/Math.h"
 
-constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_LIFE][2] = {
+#define MAX_DIFFERENT_VALUES 20
+constexpr bn::fixed SCALE_TO_X_OFFSET[MAX_DIFFERENT_VALUES][2] = {
     {0.05, -14}, {0.1, -13},  {0.15, -12}, {0.2, -12}, {0.25, -11},
     {0.3, -10},  {0.35, -10}, {0.4, -9},   {0.45, -8}, {0.5, -7},
     {0.55, -7},  {0.6, -6},   {0.65, -5},  {0.7, -5},  {0.75, -4},
@@ -17,9 +18,11 @@ const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
 LifeBar::LifeBar(bn::fixed_point initialPosition,
+                 unsigned _maxLife,
                  bn::sprite_item _icon,
                  bn::sprite_item _fill)
     : TopLeftGameObject(SpriteProvider::lifebar().create_sprite(0, 0)),
+      maxLife(_maxLife),
       icon(_icon.create_sprite(0, 0)),
       fill(_fill.create_sprite(0, 0)) {
   icon.set_position(
@@ -29,15 +32,18 @@ LifeBar::LifeBar(bn::fixed_point initialPosition,
                      bn::fixed_point(16 + MARGIN_ITEMS, 0));
   defaultFillPosition = getCenteredPosition();
   fill.set_position(defaultFillPosition);
+  setLife(_maxLife);
 }
 
 bool LifeBar::setLife(unsigned _life) {
   if (_life <= 0)
     return true;
-  if (_life > MAX_LIFE)
+  if (_life > maxLife)
     return false;
 
   life = _life;
+  visualLife =
+      Math::lerp(_life, 0, maxLife, 0, MAX_DIFFERENT_VALUES).ceil_integer();
   animationIndex = Math::SCALE_STEPS.size() - 1;
   return false;
 }
@@ -56,10 +62,11 @@ void LifeBar::update() {
   } else if (animationWait > 0)
     animationWait--;
 
-  unsigned visualLife = life == MAX_LIFE
-                            ? MAX_LIFE
-                            : (unsigned)bn::max((int)life + animationOffset, 1);
-  updateFill(visualLife);
+  unsigned drawLife =
+      visualLife == MAX_DIFFERENT_VALUES
+          ? MAX_DIFFERENT_VALUES
+          : (unsigned)bn::max((int)visualLife + animationOffset, 1);
+  updateFill(drawLife);
 }
 
 void LifeBar::bounce() {
@@ -67,12 +74,12 @@ void LifeBar::bounce() {
   animationWait = ANIMATION_WAIT_TIME;
 }
 
-void LifeBar::updateFill(unsigned visualLife) {
-  if (visualLife == 0)
+void LifeBar::updateFill(unsigned drawLife) {
+  if (drawLife == 0)
     return;
 
-  bn::fixed scaleX = SCALE_TO_X_OFFSET[visualLife - 1][0];
-  bn::fixed offsetX = SCALE_TO_X_OFFSET[visualLife - 1][1];
+  bn::fixed scaleX = SCALE_TO_X_OFFSET[drawLife - 1][0];
+  bn::fixed offsetX = SCALE_TO_X_OFFSET[drawLife - 1][1];
   fill.set_horizontal_scale(scaleX);
   fill.set_x(defaultFillPosition.x() + offsetX);
 }

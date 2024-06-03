@@ -104,6 +104,15 @@ inline int fastDiv(int x, uint32_t fraction) {
                 : -fastDiv((uint32_t)(-x), fraction);
 }
 
+inline bn::fixed lerp(bn::fixed x,
+                      bn::fixed inputMin,
+                      bn::fixed inputMax,
+                      bn::fixed outputMin,
+                      bn::fixed outputMax) {
+  return ((x - inputMin) * (outputMax - outputMin)) / (inputMax - inputMin) +
+         outputMin;
+}
+
 inline void moveSpriteTowards(bn::sprite_ptr sprite,
                               bn::fixed_point targetPosition,
                               int speed) {
