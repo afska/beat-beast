@@ -38,7 +38,7 @@ class BossScene : public Scene {
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
     for (auto it = vector.begin(); it != vector.end();) {
-      bool erase = action(it);
+      bool erase = action(it->get());
 
       if (erase)
         it = vector.erase(it);

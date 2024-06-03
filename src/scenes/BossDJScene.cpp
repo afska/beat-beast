@@ -56,10 +56,9 @@ void BossDJScene::processInput() {
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (chartReader->isInsideTick()) {
       horse->shoot();
-      auto bullet = bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                              horse->getShootingDirection(),
-                                              SpriteProvider::bullet())};
-      bullets.push_back(bn::move(bullet));
+      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                                  horse->getShootingDirection(),
+                                                  SpriteProvider::bullet())});
     } else {
       horse->hurt();
       showCross();
@@ -77,11 +76,6 @@ void BossDJScene::processChart() {
       switch (event->getType()) {
         case ATTACK_LEFT_VINYL: {
           octopus->setTargetPosition({-50, -30});
-          // octopus->attack();  // TODO: TEST
-          // auto enemyBullet = bn::unique_ptr{
-          //     new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
-          //                bn::sprite_items::dj_bad_bullet)};
-          // enemyBullets.push_back(bn::move(enemyBullet));
 
           if (!vinyls.full()) {
             throwVinyl(bn::unique_ptr{
@@ -103,21 +97,33 @@ void BossDJScene::processChart() {
         case ATTACK_BULLET_1: {
           octopus->setTargetPosition({-52, -69});
           octopus->attack();
+          enemyBullets.push_back(bn::unique_ptr{
+              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
+                         bn::sprite_items::dj_bad_bullet)});
           break;
         }
         case ATTACK_BULLET_2: {
           octopus->setTargetPosition({-21, -70});
           octopus->attack();
+          enemyBullets.push_back(bn::unique_ptr{
+              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
+                         bn::sprite_items::dj_bad_bullet)});
           break;
         }
         case ATTACK_BULLET_3: {
           octopus->setTargetPosition({35, -70});
           octopus->attack();
+          enemyBullets.push_back(bn::unique_ptr{
+              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
+                         bn::sprite_items::dj_bad_bullet)});
           break;
         }
         case ATTACK_BULLET_4: {
           octopus->setTargetPosition({68, 70});
           octopus->attack();
+          enemyBullets.push_back(bn::unique_ptr{
+              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
+                         bn::sprite_items::dj_bad_bullet)});
           break;
         }
       }
@@ -149,71 +155,49 @@ void BossDJScene::updateBackground() {
 void BossDJScene::updateSprites() {
   updateCommonSprites();
 
+  // Octopus
   if (isNewBeat)
     octopus->bounce();
-
-  // Octopus
   octopus->update(chartReader->isInsideBeat());
 
   // Attacks
-  for (auto it = bullets.begin(); it != bullets.end();) {
-    bool isOut = it->get()->update(chartReader->isInsideBeat());
+  iterate(bullets, [this](Bullet* bullet) {
+    bool isOut = bullet->update(chartReader->isInsideBeat());
 
-    if (it->get()->getBoundingBox().intersects(octopus->getBoundingBox())) {
+    if (bullet->getBoundingBox().intersects(octopus->getBoundingBox())) {
       octopus->hurt();
       if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
         BN_ASSERT(false, "GANASTE!!!");
       }
 
-      isOut = true;
+      return true;
     }
 
-    if (isOut)
-      it = bullets.erase(it);
-    else
-      ++it;
-  }
+    return isOut;
+  });
 
-  for (auto it = enemyBullets.begin(); it != enemyBullets.end();) {
-    bool isOut = it->get()->update(chartReader->isInsideBeat());
+  iterate(enemyBullets, [this](Bullet* bullet) {
+    return bullet->update(chartReader->isInsideBeat());
+  });
 
-    // if (it->get()->getBoundingBox().intersects(octopus->getBoundingBox())) {
-    //   octopus->hurt();
-    //   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
-    //     BN_ASSERT(false, "GANASTE!!!");
-    //   }
+  iterate(vinyls, [this](Vinyl* vinyl) {
+    bool isOut =
+        vinyl->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
+                      chartReader->getSong()->oneDivBeatDurationMs,
+                      horse->getPosition().x().ceil_integer());
 
-    //   isOut = true;
-    // }
-
-    if (isOut)
-      it = enemyBullets.erase(it);
-    else
-      ++it;
-  }
-
-  for (auto it = vinyls.begin(); it != vinyls.end();) {
-    bool isOut = it->get()->update(chartReader->getMsecs(),
-                                   chartReader->getBeatDurationMs(),
-                                   chartReader->getSong()->oneDivBeatDurationMs,
-                                   horse->getPosition().x().ceil_integer());
-
-    if (it->get()->getBoundingBox().intersects(horse->getBoundingBox())) {
-      if (it->get()->getBoundingBox().x() < horse->getBoundingBox().x()) {
+    if (vinyl->getBoundingBox().intersects(horse->getBoundingBox())) {
+      if (vinyl->getBoundingBox().x() < horse->getBoundingBox().x()) {
         horse->hurt();
         if (lifeBar->setLife(lifeBar->getLife() - 1)) {
           BN_ASSERT(false, "SOS MALISIMO");
         }
-        isOut = true;
+        return true;
       }
     }
 
-    if (isOut)
-      it = vinyls.erase(it);
-    else {
-      ++it;
-    }
-  }
+    return isOut;
+  });
 }
 
 void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
