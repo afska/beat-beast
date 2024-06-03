@@ -190,6 +190,6 @@ void BossDJScene::updateSprites() {
 void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
   vinyls.push_back(bn::move(vinyl));
 
-  int sound = random.get_int(1, 7);
-  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+  // int sound = random.get_int(1, 7);
+  // player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
 }
