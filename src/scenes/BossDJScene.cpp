@@ -15,6 +15,7 @@
 #define IS_EVENT_LEFT_VINYL(TYPE) IS_EVENT(TYPE, 0, 1)
 #define IS_EVENT_RIGHT_VINYL(TYPE) IS_EVENT(TYPE, 0, 2)
 #define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 1, 2)
 #define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 2, 2)
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 2, 3)
@@ -93,6 +94,12 @@ void BossDJScene::processChart() {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1.5),
+                       bn::sprite_items::dj_bad_bullet)});
+      }
+      if (IS_EVENT_BULLET_SLOW(type)) {
+        octopus->attack();
+        enemyBullets.push_back(bn::unique_ptr{
+            new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
                        bn::sprite_items::dj_bad_bullet)});
       }
       if (IS_EVENT_MOVE_COL1(type))
