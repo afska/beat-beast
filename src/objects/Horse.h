@@ -39,20 +39,15 @@ class Horse : public TopLeftGameObject {
   int jumpFrame = 0;
   int hurtFrame = 0;
 
-  void updateAnimations();
   void updateAngle();
 
+  void updateAnimations();
   void setIdleOrRunningState();
   void setIdleState();
   void setRunningState();
   void setJumpingState();
   void setHurtState();
-
   void resetAnimations();
-  bn::sprite_animate_action<2> createIdleAnimation();
-  bn::sprite_animate_action<8> createRunningAnimation();
-  bn::sprite_animate_action<4> createJumpingAnimation();
-  bn::sprite_animate_action<8> createHurtAnimation();
 };
 
 #endif  // HORSE_H

@@ -5,7 +5,6 @@
 
 Octopus::Octopus(bn::fixed_point initialPosition)
     : sprite(bn::sprite_items::dj_octopus.create_sprite(initialPosition)) {
-  setIdleState();
   sprite.set_z_order(1);
 
   // upleft:
@@ -65,6 +64,10 @@ void Octopus::bounce() {
   setIdleState();
 }
 
+void Octopus::attack() {
+  setAttackState();
+}
+
 void Octopus::hurt() {
   setHurtState();
 }
@@ -79,32 +82,39 @@ void Octopus::updateAnimations() {
   if (hurtAnimation.has_value()) {
     hurtAnimation->update();
     if (hurtAnimation->done())
-      setIdleState();
+      resetAnimations();
+  }
+
+  if (attackAnimation.has_value()) {
+    attackAnimation->update();
+    if (attackAnimation->done())
+      resetAnimations();
   }
 }
 
 void Octopus::setIdleState() {
   resetAnimations();
-  idleAnimation = createIdleAnimation();
+  idleAnimation = bn::create_sprite_animate_action_once(
+      sprite, 3, bn::sprite_items::dj_octopus.tiles_item(), 0, 1, 2, 3, 0);
 }
 
 void Octopus::setHurtState() {
   resetAnimations();
-  hurtAnimation = createHurtAnimation();
+  hurtAnimation = bn::create_sprite_animate_action_once(
+      sprite, 2, bn::sprite_items::dj_octopus.tiles_item(), 10, 0, 10, 0, 10, 0,
+      10, 0);
+}
+
+void Octopus::setAttackState() {
+  resetAnimations();
+  attackAnimation = bn::create_sprite_animate_action_once(
+      sprite, 10, bn::sprite_items::dj_octopus.tiles_item(), 5, 6, 7, 8, 0);
 }
 
 void Octopus::resetAnimations() {
   idleAnimation.reset();
   hurtAnimation.reset();
+  attackAnimation.reset();
 }
 
-bn::sprite_animate_action<5> Octopus::createIdleAnimation() {
-  return bn::create_sprite_animate_action_once(
-      sprite, 3, bn::sprite_items::dj_octopus.tiles_item(), 0, 1, 2, 3, 4);
-}
-
-bn::sprite_animate_action<8> Octopus::createHurtAnimation() {
-  return bn::create_sprite_animate_action_once(
-      sprite, 2, bn::sprite_items::dj_octopus.tiles_item(), 10, 0, 10, 0, 10, 0,
-      10, 0);
-}
+// (tiles #9 and #4 are bad duplicates of #0)

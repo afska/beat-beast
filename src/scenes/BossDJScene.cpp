@@ -11,11 +11,13 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
+#include "bn_sprite_items_dj_bad_bullet.h"
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
+#define ATTACK_BULLET_1 16
 
 const bn::fixed HORSE_INITIAL_X = 20;
 const bn::fixed HORSE_Y = 90;
@@ -85,8 +87,9 @@ void BossDJScene::processInput() {
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (chartReader->isInsideTick()) {
       horse->shoot();
-      auto bullet = bn::unique_ptr{
-          new Bullet(horse->getShootingPoint(), horse->getShootingDirection())};
+      auto bullet = bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                              horse->getShootingDirection(),
+                                              SpriteProvider::bullet())};
       bullets.push_back(bn::move(bullet));
     } else {
       horse->hurt();
@@ -123,6 +126,7 @@ void BossDJScene::processChart() {
         }
         case ATTACK_RIGHT_VINYL: {
           octopus->setTargetPosition({50, -50});
+
           if (!vinyls.full()) {
             throwVinyl(bn::unique_ptr{
                 new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
@@ -130,6 +134,10 @@ void BossDJScene::processChart() {
           break;
           default: {
           }
+        }
+        case ATTACK_BULLET_1: {
+          // octopus->attack();
+          break;
         }
       }
     } else {

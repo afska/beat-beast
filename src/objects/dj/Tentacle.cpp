@@ -22,15 +22,11 @@ void Tentacle::updateAnimations() {
 
 void Tentacle::setIdleState() {
   resetAnimations();
-  idleAnimation = createIdleAnimation();
+  idleAnimation = bn::create_sprite_animate_action_forever(
+      sprite, 5, bn::sprite_items::dj_tentacle.tiles_item(), 0, 1, 2, 3, 4, 5,
+      6, 7);
 }
 
 void Tentacle::resetAnimations() {
   idleAnimation.reset();
-}
-
-bn::sprite_animate_action<8> Tentacle::createIdleAnimation() {
-  return bn::create_sprite_animate_action_forever(
-      sprite, 5, bn::sprite_items::dj_tentacle.tiles_item(), 0, 1, 2, 3, 4, 5,
-      6, 7);
 }

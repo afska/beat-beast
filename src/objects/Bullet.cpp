@@ -3,14 +3,14 @@
 #include "../assets/SpriteProvider.h"
 
 Bullet::Bullet(bn::fixed_point initialPosition,
-               bn::fixed_point normalizedDirection)
+               bn::fixed_point normalizedDirection,
+               bn::sprite_item _bullet)
     : sprite(SpriteProvider::bullet().create_sprite(initialPosition)),
-      animation(bn::create_sprite_animate_action_forever(
-          sprite,
-          5,
-          SpriteProvider::bullet().tiles_item(),
-          0,
-          1)),
+      animation(bn::create_sprite_animate_action_forever(sprite,
+                                                         5,
+                                                         _bullet.tiles_item(),
+                                                         0,
+                                                         1)),
       direction(normalizedDirection) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);

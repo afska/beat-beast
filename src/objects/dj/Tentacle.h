@@ -16,11 +16,8 @@ class Tentacle : public GameObject {
   bn::optional<bn::sprite_animate_action<8>> idleAnimation;
 
   void updateAnimations();
-
   void setIdleState();
-
   void resetAnimations();
-  bn::sprite_animate_action<8> createIdleAnimation();
 };
 
 #endif  // TENTACLE_H
