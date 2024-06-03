@@ -1,12 +1,8 @@
 #include "BossDJScene.h"
 
 #include "../assets/SpriteProvider.h"
-#include "../player/player.h"
 #include "../player/player_sfx.h"
-#include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
-
-#include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
@@ -26,35 +22,25 @@ const bn::fixed HORSE_INITIAL_X = 20;
 const bn::fixed HORSE_Y = 90;
 
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
-    : Scene(GameState::Screen::DJ, _fs),
-      textGenerator(fixed_8x16_sprite_font),
-      horse(new Horse({HORSE_INITIAL_X, HORSE_Y})),
-      octopus(new Octopus({40, -30})),
+    : BossScene(GameState::Screen::DJ,
+                "dj",
+                bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
+                bn::unique_ptr{
+                    new LifeBar({184, 0},
+                                40,
+                                bn::sprite_items::dj_icon_octopus,
+                                bn::sprite_items::dj_lifebar_octopus_fill)},
+                _fs),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      lifeBar(new LifeBar({0, 0},
-                          20,
-                          SpriteProvider::iconHorse(),
-                          SpriteProvider::lifebarFill())),
-      enemyLifeBar(new LifeBar({184, 0},
-                               40,
-                               bn::sprite_items::dj_icon_octopus,
-                               bn::sprite_items::dj_lifebar_octopus_fill)),
+      octopus(new Octopus({40, -30})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {
-  auto song = SONG_parse(_fs, "dj.boss");
-  auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
-  chartReader =
-      bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
   background.set_blending_enabled(true);
   bn::blending::set_fade_alpha(0.3);
 }
 
-void BossDJScene::init() {
-  player_play("dj.gsm");
-}
-
-void BossDJScene::update() {
+void BossDJScene::updateBossFight() {
   processInput();
   processChart();
   updateBackground();
@@ -62,31 +48,9 @@ void BossDJScene::update() {
 }
 
 void BossDJScene::processInput() {
-  // move horse (left/right)
-  bn::fixed speedX;
-  if (!bn::keypad::r_held()) {  // (R locks target)
-    if (bn::keypad::left_held()) {
-      speedX = -1;
-      horse->setFlipX(true);
-    } else if (bn::keypad::right_held()) {
-      speedX = 1;
-      horse->setFlipX(false);
-    }
-    if (speedX != 0 && chartReader->isInsideBeat())
-      speedX *= 2;  // rhythmic movement?
-    horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y},
-                       speedX != 0);
-  } else {
-    horse->setPosition({horse->getPosition().x(), HORSE_Y}, speedX != 0);
-  }
-
-  // move aim
-  if (bn::keypad::left_held())
-    horse->aim({-1, bn::keypad::up_held() ? -1 : 0});
-  else if (bn::keypad::right_held())
-    horse->aim({1, bn::keypad::up_held() ? -1 : 0});
-  else if (bn::keypad::up_held())
-    horse->aim({0, -1});
+  processMovementInput(HORSE_Y);
+  processAimInput();
+  processMenuInput();
 
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
@@ -105,18 +69,9 @@ void BossDJScene::processInput() {
   // jump
   if (bn::keypad::a_pressed())
     horse->jump();
-
-  // start = go to settings / CalibrationScene
-  if (bn::keypad::start_pressed())
-    setNextScreen(GameState::Screen::CALIBRATION);
 }
 
 void BossDJScene::processChart() {
-  int audioLag = SaveFile::data.audioLag;
-  bool wasInsideBeat = chartReader->isInsideBeat();
-  chartReader->update(PlaybackState.msecs - audioLag);
-  isNewBeat = !wasInsideBeat && chartReader->isInsideBeat();
-
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
       switch (event->getType()) {
@@ -192,14 +147,10 @@ void BossDJScene::updateBackground() {
 }
 
 void BossDJScene::updateSprites() {
-  // Horse
-  if (isNewBeat) {
-    horse->bounce();
-    lifeBar->bounce();
-    enemyLifeBar->bounce();
+  updateCommonSprites();
+
+  if (isNewBeat)
     octopus->bounce();
-  }
-  horse->update();
 
   // Octopus
   octopus->update(chartReader->isInsideBeat());
@@ -263,20 +214,6 @@ void BossDJScene::updateSprites() {
       ++it;
     }
   }
-
-  // UI
-  lifeBar->update();
-  enemyLifeBar->update();
-
-  if (cross.has_value()) {
-    if (cross->get()->update())
-      cross.reset();
-  }
-}
-
-void BossDJScene::showCross() {
-  cross.reset();
-  cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
 }
 
 void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {

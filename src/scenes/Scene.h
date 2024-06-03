@@ -17,20 +17,23 @@
 
 class Scene {
  public:
-  Scene(GameState::Screen screen, const GBFS_FILE* _fs) : fs(_fs) {
-    GameState::data.currentScreen = screen;
-  }
+  Scene(GameState::Screen _screen, const GBFS_FILE* _fs)
+      : screen(_screen), fs(_fs) {}
 
   virtual void init() = 0;
   virtual void update() = 0;
 
   virtual ~Scene() = default;
 
-  void setNextScreen(GameState::Screen screen) { nextScreen = screen; }
+  GameState::Screen getScreen() { return screen; }
+  void setNextScreen(GameState::Screen _nextScreen) {
+    nextScreen = _nextScreen;
+  }
   bool hasNextScreen() { return nextScreen != GameState::Screen::NO; }
   GameState::Screen getNextScreen() { return nextScreen; }
 
  protected:
+  GameState::Screen screen;
   GameState::Screen nextScreen;
   const GBFS_FILE* fs;
 };

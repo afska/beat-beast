@@ -17,7 +17,9 @@ static const GBFS_FILE* fs = find_first_gbfs_file(0);
 
 bn::optional<bn::unique_ptr<Scene>> scene;
 
-bn::unique_ptr<Scene> getNextScene(GameState::Screen nextScreen) {
+bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
+  GameState::data.currentScreen = nextScreen;
+
   switch (nextScreen) {
     case GameState::Screen::CALIBRATION:
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
@@ -46,8 +48,8 @@ int main() {
   player_init();
   player_sfx_init();
 
-  scene = isNewSave ? getNextScene(GameState::Screen::CALIBRATION)
-                    : getNextScene(GameState::Screen::DJ);
+  scene = isNewSave ? setNextScene(GameState::Screen::CALIBRATION)
+                    : setNextScene(GameState::Screen::DJ);
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->get()->init();
 
@@ -56,7 +58,7 @@ int main() {
     if (scene->get()->hasNextScreen()) {
       auto nextScreen = scene->get()->getNextScreen();
       scene.reset();
-      scene = getNextScene(nextScreen);
+      scene = setNextScene(nextScreen);
 
       player_stop();
       player_sfx_stop();
