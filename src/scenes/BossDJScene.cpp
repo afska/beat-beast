@@ -29,7 +29,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},
-                                40,
+                                100,
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
@@ -92,17 +92,21 @@ void BossDJScene::processChart() {
       if (IS_EVENT_BULLET(type)) {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
-            new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 2),
+            new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1.5),
                        bn::sprite_items::dj_bad_bullet)});
       }
       if (IS_EVENT_MOVE_COL1(type))
-        octopus->setTargetPosition({-52, -69});
+        octopus->setTargetPosition(
+            {-52, -40}, chartReader->getSong()->oneDivBeatDurationFrames);
       if (IS_EVENT_MOVE_COL2(type))
-        octopus->setTargetPosition({0, -60});
+        octopus->setTargetPosition(
+            {0, -60}, chartReader->getSong()->oneDivBeatDurationFrames);
       if (IS_EVENT_MOVE_COL3(type))
-        octopus->setTargetPosition({52, -70});
+        octopus->setTargetPosition(
+            {52, -40}, chartReader->getSong()->oneDivBeatDurationFrames);
       if (IS_EVENT_MOVE_OFFSCREEN(type))
-        octopus->setTargetPosition({200, -70});
+        octopus->setTargetPosition(
+            {200, -70}, chartReader->getSong()->oneDivBeatDurationFrames);
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");

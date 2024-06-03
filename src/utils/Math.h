@@ -115,24 +115,25 @@ inline bn::fixed lerp(bn::fixed x,
 
 inline void moveSpriteTowards(bn::sprite_ptr sprite,
                               bn::fixed_point targetPosition,
-                              int speed) {
+                              unsigned speedX,
+                              unsigned speedY) {
   if (sprite.position().x() < targetPosition.x()) {
-    sprite.set_x(sprite.position().x() + speed);
+    sprite.set_x(sprite.position().x() + speedX);
     if (sprite.position().x() > targetPosition.x())
       sprite.set_x(targetPosition.x());
   }
   if (sprite.position().x() > targetPosition.x()) {
-    sprite.set_x(sprite.position().x() - speed);
+    sprite.set_x(sprite.position().x() - speedX);
     if (sprite.position().x() < targetPosition.x())
       sprite.set_x(targetPosition.x());
   }
   if (sprite.position().y() < targetPosition.y()) {
-    sprite.set_y(sprite.position().y() + speed);
+    sprite.set_y(sprite.position().y() + speedY);
     if (sprite.position().y() > targetPosition.y())
       sprite.set_y(targetPosition.y());
   }
   if (sprite.position().y() > targetPosition.y()) {
-    sprite.set_y(sprite.position().y() - speed);
+    sprite.set_y(sprite.position().y() - speedY);
     if (sprite.position().y() < targetPosition.y())
       sprite.set_y(targetPosition.y());
   }

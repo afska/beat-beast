@@ -37,15 +37,22 @@ void Octopus::update(bool isInsideBeat) {
   for (auto& turntable : turntables)
     turntable->update();
 
-  int speed = isInsideBeat ? 4 : 2;
-  Math::moveSpriteTowards(sprite, targetPosition, speed);
+  Math::moveSpriteTowards(sprite, targetPosition, speedX, speedY);
   setPosition(sprite.position());
 
   boundingBox.set_position(sprite.position());
 }
 
-void Octopus::setTargetPosition(bn::fixed_point newTargetPosition) {
+void Octopus::setTargetPosition(bn::fixed_point newTargetPosition,
+                                unsigned oneDivBeatDurationFrames) {
   targetPosition = newTargetPosition;
+
+  speedX = Math::fastDiv(
+      bn::abs(newTargetPosition.x() - sprite.position().x()).ceil_integer(),
+      oneDivBeatDurationFrames);
+  speedY = Math::fastDiv(
+      bn::abs(newTargetPosition.y() - sprite.position().y()).ceil_integer(),
+      oneDivBeatDurationFrames);
 }
 
 void Octopus::setPosition(bn::fixed_point newPosition) {
