@@ -153,7 +153,18 @@ void BossDJScene::updateSprites() {
   });
 
   iterate(enemyBullets, [this](Bullet* bullet) {
-    return bullet->update(chartReader->isInsideBeat());
+    bool isOut = bullet->update(chartReader->isInsideBeat());
+
+    if (bullet->getBoundingBox().intersects(horse->getBoundingBox())) {
+      horse->hurt();
+      if (lifeBar->setLife(lifeBar->getLife() - 1)) {
+        BN_ASSERT(false, "SOS MALISIMO");
+      }
+
+      return true;
+    }
+
+    return isOut;
   });
 
   iterate(vinyls, [this](Vinyl* vinyl) {
