@@ -13,6 +13,9 @@ class Octopus : public GameObject {
   void hurt();
   void attack();
   void setTargetPosition(bn::fixed_point newTargetPosition);
+  bn::fixed_point getShootingPoint() {
+    return sprite.position() + bn::fixed_point(-18, 21);
+  }
   bool isBusy() { return isHurt() || isAttacking(); }
 
  private:

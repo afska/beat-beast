@@ -18,6 +18,9 @@
 #define ATTACK_LEFT_VINYL 1
 #define ATTACK_RIGHT_VINYL 2
 #define ATTACK_BULLET_1 16
+#define ATTACK_BULLET_2 17
+#define ATTACK_BULLET_3 18
+#define ATTACK_BULLET_4 19
 
 const bn::fixed HORSE_INITIAL_X = 20;
 const bn::fixed HORSE_Y = 90;
@@ -119,6 +122,11 @@ void BossDJScene::processChart() {
       switch (event->getType()) {
         case ATTACK_LEFT_VINYL: {
           octopus->setTargetPosition({-50, -30});
+          // octopus->attack();  // TODO: TEST
+          // auto enemyBullet = bn::unique_ptr{
+          //     new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
+          //                bn::sprite_items::dj_bad_bullet)};
+          // enemyBullets.push_back(bn::move(enemyBullet));
 
           if (!vinyls.full()) {
             throwVinyl(bn::unique_ptr{
@@ -138,7 +146,23 @@ void BossDJScene::processChart() {
           }
         }
         case ATTACK_BULLET_1: {
-          // octopus->attack();
+          octopus->setTargetPosition({-52, -69});
+          octopus->attack();
+          break;
+        }
+        case ATTACK_BULLET_2: {
+          octopus->setTargetPosition({-21, -70});
+          octopus->attack();
+          break;
+        }
+        case ATTACK_BULLET_3: {
+          octopus->setTargetPosition({35, -70});
+          octopus->attack();
+          break;
+        }
+        case ATTACK_BULLET_4: {
+          octopus->setTargetPosition({68, 70});
+          octopus->attack();
           break;
         }
       }
@@ -195,6 +219,24 @@ void BossDJScene::updateSprites() {
 
     if (isOut)
       it = bullets.erase(it);
+    else
+      ++it;
+  }
+
+  for (auto it = enemyBullets.begin(); it != enemyBullets.end();) {
+    bool isOut = it->get()->update(chartReader->isInsideBeat());
+
+    // if (it->get()->getBoundingBox().intersects(octopus->getBoundingBox())) {
+    //   octopus->hurt();
+    //   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
+    //     BN_ASSERT(false, "GANASTE!!!");
+    //   }
+
+    //   isOut = true;
+    // }
+
+    if (isOut)
+      it = enemyBullets.erase(it);
     else
       ++it;
   }

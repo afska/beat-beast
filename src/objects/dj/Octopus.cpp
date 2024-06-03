@@ -110,7 +110,7 @@ void Octopus::setHurtState() {
 void Octopus::setAttackState() {
   resetAnimations();
   attackAnimation = bn::create_sprite_animate_action_once(
-      sprite, 10, bn::sprite_items::dj_octopus.tiles_item(), 5, 6, 7, 8, 0);
+      sprite, 15, bn::sprite_items::dj_octopus.tiles_item(), 7, 8, 0);
 }
 
 void Octopus::resetAnimations() {
