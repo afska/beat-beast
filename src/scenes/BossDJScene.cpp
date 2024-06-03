@@ -11,14 +11,16 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
-#define ATTACK_LEFT_VINYL 1
-#define ATTACK_RIGHT_VINYL 2
-#define ATTACK_BULLET_1 16
-#define ATTACK_BULLET_2 17
-#define ATTACK_BULLET_3 18
-#define ATTACK_BULLET_4 19
+#define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
+#define IS_EVENT_LEFT_VINYL(TYPE) IS_EVENT(TYPE, 0, 1)
+#define IS_EVENT_RIGHT_VINYL(TYPE) IS_EVENT(TYPE, 0, 2)
+#define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 2, 3)
+#define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 2, 9)
 
-const bn::fixed HORSE_INITIAL_X = 20;
+const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
 
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
@@ -32,12 +34,13 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      octopus(new Octopus({40, -30})),
+      octopus(new Octopus({200, -70})),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {
   background.set_blending_enabled(true);
   bn::blending::set_fade_alpha(0.3);
+  chartReader->eventsThatNeedAudioLagPrediction.push_back(0xf /* 0b1111*/);
 }
 
 void BossDJScene::updateBossFight() {
@@ -73,60 +76,33 @@ void BossDJScene::processInput() {
 void BossDJScene::processChart() {
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
-      switch (event->getType()) {
-        case ATTACK_LEFT_VINYL: {
-          octopus->setTargetPosition({-50, -30});
-
-          if (!vinyls.full()) {
-            throwVinyl(bn::unique_ptr{
-                new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
-          }
-          break;
-        }
-        case ATTACK_RIGHT_VINYL: {
-          octopus->setTargetPosition({50, -50});
-
-          if (!vinyls.full()) {
-            throwVinyl(bn::unique_ptr{
-                new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
-          }
-          break;
-          default: {
-          }
-        }
-        case ATTACK_BULLET_1: {
-          octopus->setTargetPosition({-52, -69});
-          octopus->attack();
-          enemyBullets.push_back(bn::unique_ptr{
-              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
-                         bn::sprite_items::dj_bad_bullet)});
-          break;
-        }
-        case ATTACK_BULLET_2: {
-          octopus->setTargetPosition({-21, -70});
-          octopus->attack();
-          enemyBullets.push_back(bn::unique_ptr{
-              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
-                         bn::sprite_items::dj_bad_bullet)});
-          break;
-        }
-        case ATTACK_BULLET_3: {
-          octopus->setTargetPosition({35, -70});
-          octopus->attack();
-          enemyBullets.push_back(bn::unique_ptr{
-              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
-                         bn::sprite_items::dj_bad_bullet)});
-          break;
-        }
-        case ATTACK_BULLET_4: {
-          octopus->setTargetPosition({68, 70});
-          octopus->attack();
-          enemyBullets.push_back(bn::unique_ptr{
-              new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1),
-                         bn::sprite_items::dj_bad_bullet)});
-          break;
+      auto type = event->getType();
+      if (IS_EVENT_LEFT_VINYL(type)) {
+        if (!vinyls.full()) {
+          throwVinyl(bn::unique_ptr{
+              new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
         }
       }
+      if (IS_EVENT_RIGHT_VINYL(type)) {
+        if (!vinyls.full()) {
+          throwVinyl(bn::unique_ptr{
+              new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
+        }
+      }
+      if (IS_EVENT_BULLET(type)) {
+        octopus->attack();
+        enemyBullets.push_back(bn::unique_ptr{
+            new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 2),
+                       bn::sprite_items::dj_bad_bullet)});
+      }
+      if (IS_EVENT_MOVE_COL1(type))
+        octopus->setTargetPosition({-52, -69});
+      if (IS_EVENT_MOVE_COL2(type))
+        octopus->setTargetPosition({0, -60});
+      if (IS_EVENT_MOVE_COL3(type))
+        octopus->setTargetPosition({52, -70});
+      if (IS_EVENT_MOVE_OFFSCREEN(type))
+        octopus->setTargetPosition({200, -70});
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");

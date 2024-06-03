@@ -9,10 +9,10 @@
 #define TENTACLE_OFFSET 8
 
 Vinyl::Vinyl(bn::fixed_point initialPosition,
-             bn::fixed_point normalizedDirection,
+             bn::fixed_point _direction,
              Event* _event)
     : sprite(bn::sprite_items::dj_vinyl.create_sprite(initialPosition)),
-      direction(normalizedDirection),
+      direction(_direction),
       event(_event),
       tentacleSprite(
           bn::sprite_items::dj_tentacle.create_sprite(initialPosition)),
@@ -29,8 +29,8 @@ Vinyl::Vinyl(bn::fixed_point initialPosition,
   boundingBox.set_position(initialPosition);
 
   sprite.set_scale(scale);
-  tentacleTargetX = initialPosition.x() +
-                    TENTACLE_OFFSET * Math::sgn(normalizedDirection.x());
+  tentacleTargetX =
+      initialPosition.x() + TENTACLE_OFFSET * Math::sgn(_direction.x());
   if (direction.x() < 0)
     tentacleSprite.set_horizontal_flip(true);
 }

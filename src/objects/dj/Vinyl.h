@@ -7,7 +7,7 @@
 class Vinyl : public GameObject {
  public:
   Vinyl(bn::fixed_point initialPosition,
-        bn::fixed_point normalizedDirection,
+        bn::fixed_point _direction,
         Event* _event);
 
   bool update(int msecs,

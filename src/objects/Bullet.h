@@ -6,7 +6,7 @@
 class Bullet : public GameObject {
  public:
   Bullet(bn::fixed_point initialPosition,
-         bn::fixed_point normalizedDirection,
+         bn::fixed_point _direction,
          bn::sprite_item _bullet);
 
   bool update(bool isInsideBeat);

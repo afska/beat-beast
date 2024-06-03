@@ -17,7 +17,7 @@ typedef struct {
   bool isSpecial() { return !isRegular(); }
   bool isBeat() { return isSpecial() && getType() == 0; }
   bool isTick() { return isBeat() || (isSpecial() && getType() == 1); }
-  u8 getType() { return data & ~(1 << 31); }
+  u32 getType() { return data & ~(1 << 31); }
 } Event;
 
 #endif  // EVENT_H

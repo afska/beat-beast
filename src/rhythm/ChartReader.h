@@ -20,6 +20,7 @@ class ChartReader {
   void update(int msecs);
 
   bn::vector<Event*, MAX_PENDING_EVENTS> pendingEvents;
+  bn::vector<u32, 8> eventsThatNeedAudioLagPrediction;
 
  private:
   Song song;

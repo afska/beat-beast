@@ -37,7 +37,7 @@ void Octopus::update(bool isInsideBeat) {
   for (auto& turntable : turntables)
     turntable->update();
 
-  int speed = isInsideBeat ? 3 : 1;
+  int speed = isInsideBeat ? 4 : 2;
   Math::moveSpriteTowards(sprite, targetPosition, speed);
   setPosition(sprite.position());
 

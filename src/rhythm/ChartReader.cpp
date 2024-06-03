@@ -1,5 +1,7 @@
 #include "ChartReader.h"
 
+#include "bn_log.h"
+
 #define TIMING_WINDOW_MS 80
 #define MINUTE 60000
 
@@ -55,16 +57,26 @@ void ChartReader::processRhythmEvents() {
 void ChartReader::processNextEvents() {
   pendingEvents.clear();
 
-  // REGULAR events are processed ahead of time (`audioLag` ms before)
-  // SPECIAL events are processed at the right time
+  // Some REGULAR events are processed ahead of time to compensate audio lag.
+  // Bosses define which type of events receive this compensation,
+  // by setting their masks in `eventsThatNeedAudioLagPrediction`.
+  // SPECIAL events are always processed at the right time.
 
   processEvents(chart.events, chart.eventCount, eventIndex, msecs + audioLag,
                 [this](Event* event, bool* stop) {
-                  if (event->isRegular() || event->timestamp >= msecs) {
-                    pendingEvents.push_back(event);
-                    return true;
+                  if (event->isRegular()) {
+                    for (auto& it : eventsThatNeedAudioLagPrediction) {
+                      if ((event->getType() & it) != 0) {
+                        pendingEvents.push_back(event);
+                        return true;
+                      }
+                    }
                   }
 
-                  return false;
+                  if (msecs < event->timestamp)
+                    return false;
+
+                  pendingEvents.push_back(event);
+                  return true;
                 });
 }
