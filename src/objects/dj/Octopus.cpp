@@ -3,6 +3,8 @@
 #include "../../utils/Math.h"
 #include "bn_sprite_items_dj_octopus.h"
 
+#define HITBOX_SIZE 48
+
 Octopus::Octopus(bn::fixed_point initialPosition)
     : sprite(bn::sprite_items::dj_octopus.create_sprite(initialPosition)) {
   sprite.set_z_order(1);
@@ -23,7 +25,7 @@ Octopus::Octopus(bn::fixed_point initialPosition)
   setPosition(initialPosition);
   targetPosition = initialPosition;
 
-  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_dimensions(bn::fixed_size(HITBOX_SIZE, HITBOX_SIZE));
   boundingBox.set_position(initialPosition);
 }
 
