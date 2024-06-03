@@ -44,15 +44,14 @@ void Octopus::update(bool isInsideBeat) {
 }
 
 void Octopus::setTargetPosition(bn::fixed_point newTargetPosition,
-                                unsigned oneDivBeatDurationFrames) {
+                                unsigned beatDurationMs) {
   targetPosition = newTargetPosition;
 
-  speedX = Math::fastDiv(
-      bn::abs(newTargetPosition.x() - sprite.position().x()).ceil_integer(),
-      oneDivBeatDurationFrames);
-  speedY = Math::fastDiv(
-      bn::abs(newTargetPosition.y() - sprite.position().y()).ceil_integer(),
-      oneDivBeatDurationFrames);
+  bn::fixed beatDurationFrames = bn::fixed(beatDurationMs) / 16.67;
+  speedX = bn::abs(newTargetPosition.x() - sprite.position().x()) /
+           beatDurationFrames;
+  speedY = bn::abs(newTargetPosition.y() - sprite.position().y()) /
+           beatDurationFrames;
 }
 
 void Octopus::setPosition(bn::fixed_point newPosition) {

@@ -22,7 +22,6 @@ Song SONG_parse(const GBFS_FILE* fs, bn::string<32> filePath) {
   song.bpm = parse_u8(data, &cursor);
   song.tickcount = parse_u8(data, &cursor);
   song.oneDivBeatDurationMs = parse_u32le(data, &cursor);
-  song.oneDivBeatDurationFrames = parse_u32le(data, &cursor);
 
   song.chartCount = parse_u8(data, &cursor);
   for (u32 i = 0; i < song.chartCount; i++) {

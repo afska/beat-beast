@@ -13,7 +13,7 @@ class Octopus : public GameObject {
   void hurt();
   void attack();
   void setTargetPosition(bn::fixed_point newTargetPosition,
-                         unsigned oneDivBeatDurationFrames);
+                         unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
     return sprite.position() + bn::fixed_point(-18, 21);
   }
@@ -27,8 +27,8 @@ class Octopus : public GameObject {
   bn::vector<bn::unique_ptr<Tentacle>, 8> tentacles;
   bn::vector<bn::unique_ptr<Turntable>, 4> turntables;
   bn::fixed_point targetPosition;
-  unsigned speedX = 1;
-  unsigned speedY = 1;
+  bn::fixed speedX = 1;
+  bn::fixed speedY = 1;
 
   bool isHurt() { return hurtAnimation.has_value(); }
   bool isAttacking() { return attackAnimation.has_value(); }

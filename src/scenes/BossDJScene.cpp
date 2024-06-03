@@ -96,17 +96,15 @@ void BossDJScene::processChart() {
                        bn::sprite_items::dj_bad_bullet)});
       }
       if (IS_EVENT_MOVE_COL1(type))
-        octopus->setTargetPosition(
-            {-52, -40}, chartReader->getSong()->oneDivBeatDurationFrames);
+        octopus->setTargetPosition({-52, -40},
+                                   chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL2(type))
-        octopus->setTargetPosition(
-            {0, -60}, chartReader->getSong()->oneDivBeatDurationFrames);
+        octopus->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL3(type))
-        octopus->setTargetPosition(
-            {52, -40}, chartReader->getSong()->oneDivBeatDurationFrames);
+        octopus->setTargetPosition({52, -40}, chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_OFFSCREEN(type))
-        octopus->setTargetPosition(
-            {200, -70}, chartReader->getSong()->oneDivBeatDurationFrames);
+        octopus->setTargetPosition({200, -70},
+                                   chartReader->getBeatDurationMs());
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");

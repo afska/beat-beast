@@ -16,13 +16,11 @@ module.exports = class LevelSerializer {
 
     const beatDurationMs = MINUTE / metadata.bpm;
     const oneDivBeatDurationMs = INFINITY * (1 / beatDurationMs);
-    const oneDivBeatDurationFrames = INFINITY * (1 / (beatDurationMs / 16.74));
 
     return buffer
       .UInt8(metadata.bpm)
       .UInt8(metadata.tickcount)
       .UInt32LE(oneDivBeatDurationMs)
-      .UInt32LE(oneDivBeatDurationFrames)
       .ChartArray(charts).result;
   }
 
