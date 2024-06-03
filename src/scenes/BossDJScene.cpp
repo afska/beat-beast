@@ -103,12 +103,12 @@ void BossDJScene::processChart() {
                        bn::sprite_items::dj_bad_bullet)});
       }
       if (IS_EVENT_MOVE_COL1(type))
-        octopus->setTargetPosition({-52, -40},
+        octopus->setTargetPosition({-50, -40},
                                    chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL2(type))
         octopus->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL3(type))
-        octopus->setTargetPosition({52, -40}, chartReader->getBeatDurationMs());
+        octopus->setTargetPosition({80, -40}, chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_OFFSCREEN(type))
         octopus->setTargetPosition({200, -70},
                                    chartReader->getBeatDurationMs());
