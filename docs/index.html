@@ -10,6 +10,11 @@
         <title>synthbattle</title>
 
         <script>
+            // [!] customization
+            localStorage.VBABindings = JSON.stringify({"KEY_BUTTON_A":{"friendlyName":"A","codes":["Space"],"keyCodes":[32]},"KEY_BUTTON_B":{"friendlyName":"B","codes":["KeyD"],"keyCodes":[68]},"KEY_BUTTON_SELECT":{"friendlyName":"Select","codes":["Backspace"],"keyCodes":[8]},"KEY_BUTTON_START":{"friendlyName":"Start","codes":["Enter"],"keyCodes":[13]},"KEY_RIGHT":{"friendlyName":"Right","codes":["ArrowRight"],"keyCodes":[39]},"KEY_LEFT":{"friendlyName":"Left","codes":["ArrowLeft"],"keyCodes":[37]},"KEY_UP":{"friendlyName":"Up","codes":["ArrowUp"],"keyCodes":[38]},"KEY_DOWN":{"friendlyName":"Down","codes":["ArrowDown"],"keyCodes":[40]},"KEY_BUTTON_R":{"friendlyName":"R","codes":["KeyA"],"keyCodes":[65]},"KEY_BUTTON_L":{"friendlyName":"L","codes":["Shift"],"keyCodes":[16]},"PERF_STATS":{"friendlyName":"Performance Stats","codes":["Backquote"],"keyCodes":[192]},"PAUSE":{"friendlyName":"Pause","codes":["Escape"],"keyCodes":[27]}});
+        </script>
+		
+        <script>
             window.gtag = () => {};
             
             if (navigator.serviceWorker) {
@@ -939,7 +944,7 @@
                 PLAY
             </button>
 
-			<code>A=Z, B=X, START=ENTER, D-PAD=arrows</pre>
+			<code>spacebar=jump, B=shoot, A=lock_target, ENTER=calibrate, ARROWS=move/aim</pre>
         </div>
 
         <div class="pixels" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;"></div>
