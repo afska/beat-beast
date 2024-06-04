@@ -47,6 +47,7 @@ class BossScene : public Scene {
     }
   }
 
+  void sufferDamage(unsigned amount);
   void processMovementInput(bn::fixed horseY);
   void processAimInput();
   void processMenuInput();

@@ -40,6 +40,13 @@ void BossScene::update() {
   updateBossFight();
 }
 
+void BossScene::sufferDamage(unsigned amount) {
+  horse->hurt();
+  bool isDead = lifeBar->setLife(lifeBar->getLife() - amount);
+  if (isDead)
+    BN_ASSERT(false, "YOU LOSE");
+}
+
 void BossScene::processMovementInput(bn::fixed horseY) {
   // move horse (left/right)
   bn::fixed speedX;

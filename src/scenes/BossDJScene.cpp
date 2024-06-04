@@ -20,6 +20,7 @@
 #define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 2, 2)
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 2, 3)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 2, 9)
+// TODO: SORT EVENTS
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
@@ -114,9 +115,11 @@ void BossDJScene::processChart() {
                                    chartReader->getBeatDurationMs());
 
       // TODO:
-      //                                enemyBullets.push_back(bn::unique_ptr{new
-      //                                FloatingVinyl(
+
+      // enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
       // bn::fixed_point(120, -80), bn::fixed_point(-1, 1), event)});
+
+      // octopus->getUpperTurntable()->attack();
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");
@@ -148,14 +151,28 @@ void BossDJScene::updateSprites() {
   // Octopus
   if (isNewBeat)
     octopus->bounce();
-  octopus->update(chartReader->isInsideBeat());
+  octopus->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
+
+  if (octopus->getUpperTurntable()->collidesWith(horse.get())) {
+    sufferDamage(2);
+    octopus->getUpperTurntable()->stopAttack();
+  }
+  if (octopus->getLowerTurntable()->collidesWith(horse.get())) {
+    sufferDamage(2);
+    octopus->getLowerTurntable()->stopAttack();
+  }
 
   // Attacks
   iterate(bullets, [this](RhythmicBullet* bullet) {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
-    if (bullet->getBoundingBox().intersects(octopus->getBoundingBox())) {
+    if (bullet->collidesWith(octopus->getUpperTurntable()))
+      octopus->getUpperTurntable()->stopAttack();
+    if (bullet->collidesWith(octopus->getLowerTurntable()))
+      octopus->getLowerTurntable()->stopAttack();
+
+    if (bullet->collidesWith(octopus.get())) {
       octopus->hurt();
       if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
         BN_ASSERT(false, "GANASTE!!!");
@@ -165,15 +182,14 @@ void BossDJScene::updateSprites() {
     }
 
     bool colided = false;
-    iterate(enemyBullets, [&bullet, &colided,
-                           this](RhythmicBullet* enemyBullet) {
-      if (enemyBullet->isShootable &&
-          bullet->getBoundingBox().intersects(enemyBullet->getBoundingBox())) {
-        enemyBullet->explode();
-        colided = true;
-      }
-      return false;
-    });
+    iterate(
+        enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
+          if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+            enemyBullet->explode();
+            colided = true;
+          }
+          return false;
+        });
 
     return isOut || colided;
   });
@@ -182,11 +198,8 @@ void BossDJScene::updateSprites() {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
-    if (bullet->getBoundingBox().intersects(horse->getBoundingBox())) {
-      horse->hurt();
-      if (lifeBar->setLife(lifeBar->getLife() - 1)) {
-        BN_ASSERT(false, "SOS MALISIMO");
-      }
+    if (bullet->collidesWith(horse.get())) {
+      sufferDamage(1);
 
       return true;
     }
@@ -200,12 +213,10 @@ void BossDJScene::updateSprites() {
                       chartReader->getSong()->oneDivBeatDurationMs,
                       horse->getPosition().x().ceil_integer());
 
-    if (vinyl->getBoundingBox().intersects(horse->getBoundingBox())) {
+    if (vinyl->collidesWith(horse.get())) {
       if (vinyl->getBoundingBox().x() < horse->getBoundingBox().x()) {
-        horse->hurt();
-        if (lifeBar->setLife(lifeBar->getLife() - 1)) {
-          BN_ASSERT(false, "SOS MALISIMO");
-        }
+        sufferDamage(1);
+
         return true;
       }
     }
@@ -217,6 +228,6 @@ void BossDJScene::updateSprites() {
 void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
   vinyls.push_back(bn::move(vinyl));
 
-  // int sound = random.get_int(1, 7);
-  // player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+  int sound = random.get_int(1, 7);
+  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
 }

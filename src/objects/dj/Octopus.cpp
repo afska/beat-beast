@@ -29,13 +29,13 @@ Octopus::Octopus(bn::fixed_point initialPosition)
   boundingBox.set_position(initialPosition);
 }
 
-void Octopus::update(bool isInsideBeat) {
+void Octopus::update(bn::fixed_point playerPosition, bool isInsideBeat) {
   updateAnimations();
 
   for (auto& tentacle : tentacles)
     tentacle->update();
   for (auto& turntable : turntables)
-    turntable->update();
+    turntable->update(playerPosition);
 
   Math::moveSpriteTowards(sprite, targetPosition, speedX, speedY);
   setPosition(sprite.position());
@@ -61,8 +61,10 @@ void Octopus::setPosition(bn::fixed_point newPosition) {
   tentacles[1]->setPosition(newPosition + bn::fixed_point(20, 38));
   tentacles[2]->setPosition(newPosition + bn::fixed_point(0, -45));
   tentacles[3]->setPosition(newPosition + bn::fixed_point(45, -10));
-  turntables[0]->setPosition(newPosition + bn::fixed_point(-44, 17));
-  turntables[1]->setPosition(newPosition + bn::fixed_point(20, 35));
+  if (!turntables[0]->getIsAttacking())
+    turntables[0]->setPosition(newPosition + bn::fixed_point(-44, 17));
+  if (!turntables[1]->getIsAttacking())
+    turntables[1]->setPosition(newPosition + bn::fixed_point(20, 35));
 }
 
 void Octopus::bounce() {

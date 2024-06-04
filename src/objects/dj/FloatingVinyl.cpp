@@ -54,5 +54,5 @@ bool FloatingVinyl::update(int msecs, bool isInsideBeat) {
 
   boundingBox.set_position(sprite.position());
 
-  return false;
+  return false;  // TODO: REMOVE?
 }

@@ -1,5 +1,6 @@
 #include "Turntable.h"
 
+#include "../../utils/Math.h"
 #include "bn_sprite_items_dj_turntable.h"
 
 Turntable::Turntable(bn::fixed_point position)
@@ -12,8 +13,26 @@ Turntable::Turntable(bn::fixed_point position)
           1,
           2)) {
   sprite.set_z_order(3);
+
+  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_position(position);
 }
 
-void Turntable::update() {
+void Turntable::update(bn::fixed_point playerPosition) {
   animation.update();
+
+  if (isAttacking)
+    Math::moveSpriteTowards(sprite, playerPosition, 1, 1);
+
+  boundingBox.set_position(sprite.position());
+}
+
+void Turntable::attack() {
+  if (isAttacking)
+    return;
+  isAttacking = true;
+}
+
+void Turntable::stopAttack() {
+  isAttacking = false;
 }

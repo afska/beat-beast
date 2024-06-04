@@ -11,6 +11,10 @@
 
 class GameObject {
  public:
+  bool collidesWith(GameObject* other) {
+    return getBoundingBox().intersects(other->getBoundingBox());
+  }
+
   bn::fixed_rect getBoundingBox() {
     if (boundingBoxPreview.has_value())  // (for debug)
       boundingBoxPreview.get()->set_position(boundingBox.position());

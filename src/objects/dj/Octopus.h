@@ -8,7 +8,7 @@
 class Octopus : public GameObject {
  public:
   Octopus(bn::fixed_point initialPosition);
-  void update(bool isInsideBeat);
+  void update(bn::fixed_point playerPosition, bool isInsideBeat);
   void bounce();
   void hurt();
   void attack();
@@ -18,6 +18,8 @@ class Octopus : public GameObject {
     return sprite.position() + bn::fixed_point(-18, 21);
   }
   bool isBusy() { return isHurt() || isAttacking(); }
+  Turntable* getUpperTurntable() { return turntables[0].get(); }
+  Turntable* getLowerTurntable() { return turntables[1].get(); }
 
  private:
   bn::sprite_ptr sprite;
