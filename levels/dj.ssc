@@ -2,6 +2,13 @@
 #BPM:115;
 #TICKCOUNT:2;
 
+// 00000000
+//    ^^^^^ move octopus (1 = topleft | 2 = top | 3 = topright | 9 = offscreen)
+//    ||||- floor vinyls (1 = from left | 2 = from right)
+//    |||-- floating vinyls (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right)
+//    ||--- bullet (1 = normal | 2 = slow | 3 = MEGA)
+//    |---- throw turntable (1 = top | 2 = bottom)
+
 // Easy
 #NOTEDATA:;
 #DIFFICULTY:Easy;

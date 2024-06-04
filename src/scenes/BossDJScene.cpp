@@ -40,8 +40,8 @@
 #define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 3, 2)
 #define IS_EVENT_BULLET_MEGA(TYPE) IS_EVENT(TYPE, 3, 3)
 
-#define IS_EVENT_TURNTABLE_THROW_UP(TYPE) IS_EVENT(TYPE, 4, 1)
-#define IS_EVENT_TURNTABLE_THROW_DOWN(TYPE) IS_EVENT(TYPE, 4, 2)
+#define IS_EVENT_TURNTABLE_THROW_TOP(TYPE) IS_EVENT(TYPE, 4, 1)
+#define IS_EVENT_TURNTABLE_THROW_BOTTOM(TYPE) IS_EVENT(TYPE, 4, 2)
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
@@ -167,10 +167,10 @@ void BossDJScene::processChart() {
       }
 
       // Turntable throw
-      if (IS_EVENT_TURNTABLE_THROW_UP(type)) {
+      if (IS_EVENT_TURNTABLE_THROW_TOP(type)) {
         octopus->getUpperTurntable()->attack();
       }
-      if (IS_EVENT_TURNTABLE_THROW_DOWN(type)) {
+      if (IS_EVENT_TURNTABLE_THROW_BOTTOM(type)) {
         octopus->getLowerTurntable()->attack();
       }
     } else {
