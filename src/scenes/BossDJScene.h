@@ -27,6 +27,7 @@ class BossDJScene : public BossScene {
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::regular_bg_position_hbe_ptr horizontalHBE;
   bool didWin = false;
+  bool didShowMessage = false;
 
   void processInput();
   void processChart();

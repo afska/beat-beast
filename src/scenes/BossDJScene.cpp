@@ -1,6 +1,7 @@
 #include "BossDJScene.h"
 
 #include "../assets/SpriteProvider.h"
+#include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../utils/Math.h"
 
@@ -73,6 +74,16 @@ void BossDJScene::updateBossFight() {
   processChart();
   updateBackground();
   updateSprites();
+
+  if (PlaybackState.hasFinished && !didShowMessage) {
+    textGenerator.set_center_alignment();
+    if (didWin) {
+      textGenerator.generate(-30, -30, "Creo que ganaste", textSprites);
+    } else {
+      textGenerator.generate(-30, -30, "Creo que ganaperdiste", textSprites);
+    }
+    didShowMessage = true;
+  }
 }
 
 void BossDJScene::processInput() {
