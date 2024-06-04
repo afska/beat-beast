@@ -111,14 +111,14 @@ void Octopus::setIdleState() {
 void Octopus::setHurtState() {
   resetAnimations();
   hurtAnimation = bn::create_sprite_animate_action_once(
-      sprite, 2, bn::sprite_items::dj_octopus.tiles_item(), 10, 0, 10, 0, 10, 0,
-      10, 0);
+      sprite, 2, bn::sprite_items::dj_octopus.tiles_item(), 8, 0, 8, 0, 8, 0, 8,
+      0);
 }
 
 void Octopus::setAttackState() {
   resetAnimations();
   attackAnimation = bn::create_sprite_animate_action_once(
-      sprite, 15, bn::sprite_items::dj_octopus.tiles_item(), 7, 8, 0);
+      sprite, 15, bn::sprite_items::dj_octopus.tiles_item(), 6, 7, 0);
 }
 
 void Octopus::resetAnimations() {
@@ -126,5 +126,3 @@ void Octopus::resetAnimations() {
   hurtAnimation.reset();
   attackAnimation.reset();
 }
-
-// (tiles #9 and #4 are bad duplicates of #0)

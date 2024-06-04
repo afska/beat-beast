@@ -19,8 +19,8 @@ FloatingVinyl::FloatingVinyl(bn::fixed_point initialPosition,
           0,
           1,
           2,
-          3,
-          4)) {
+          1,
+          0)) {
   boundingBox.set_dimensions(sprite.dimensions() * 2);
   boundingBox.set_position(initialPosition);
 
@@ -55,4 +55,5 @@ bool FloatingVinyl::update(int msecs, bool isInsideBeat) {
   boundingBox.set_position(sprite.position());
 
   return false;  // TODO: REMOVE?
+  // TODO: HURT animation
 }
