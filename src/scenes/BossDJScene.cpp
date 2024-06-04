@@ -170,12 +170,12 @@ void BossDJScene::updateSprites() {
     if (octopus->getUpperTurntable()->getIsAttacking() &&
         bullet->collidesWith(octopus->getUpperTurntable())) {
       addExplosion(((Bullet*)bullet)->getPosition());
-      octopus->getUpperTurntable()->stopAttack();
+      octopus->getUpperTurntable()->addDamage();
     }
     if (octopus->getLowerTurntable()->getIsAttacking() &&
         bullet->collidesWith(octopus->getLowerTurntable())) {
       addExplosion(((Bullet*)bullet)->getPosition());
-      octopus->getLowerTurntable()->stopAttack();
+      octopus->getLowerTurntable()->addDamage();
     }
 
     if (bullet->collidesWith(octopus.get())) {

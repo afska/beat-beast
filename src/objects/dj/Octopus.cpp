@@ -18,9 +18,9 @@ Octopus::Octopus(bn::fixed_point initialPosition)
   // updown:
   tentacles.push_back(bn::unique_ptr{new Tentacle({0, 0}, 0, false)});
   // upleft:
-  turntables.push_back(bn::unique_ptr{new Turntable({0, 0})});
+  turntables.push_back(bn::unique_ptr{new Turntable(initialPosition)});
   // downleft:
-  turntables.push_back(bn::unique_ptr{new Turntable({0, 0})});
+  turntables.push_back(bn::unique_ptr{new Turntable(initialPosition)});
 
   setPosition(initialPosition);
   targetPosition = initialPosition;
@@ -62,9 +62,11 @@ void Octopus::setPosition(bn::fixed_point newPosition) {
   tentacles[2]->setPosition(newPosition + bn::fixed_point(0, -45));
   tentacles[3]->setPosition(newPosition + bn::fixed_point(45, -10));
   if (!turntables[0]->getIsAttacking())
-    turntables[0]->setPosition(newPosition + bn::fixed_point(-44, 17));
+    Math::moveSpriteTowards(turntables[0]->getSprite(),
+                            newPosition + bn::fixed_point(-44, 17), 10, 10);
   if (!turntables[1]->getIsAttacking())
-    turntables[1]->setPosition(newPosition + bn::fixed_point(20, 35));
+    Math::moveSpriteTowards(turntables[1]->getSprite(),
+                            newPosition + bn::fixed_point(20, 35), 10, 10);
 }
 
 void Octopus::bounce() {

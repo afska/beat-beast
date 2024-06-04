@@ -1,6 +1,7 @@
 #include "Turntable.h"
 
 #include "../../utils/Math.h"
+#include "bn_sprite_items_dj_spark.h"
 #include "bn_sprite_items_dj_turntable.h"
 
 Turntable::Turntable(bn::fixed_point position)
@@ -24,6 +25,12 @@ void Turntable::update(bn::fixed_point playerPosition) {
   if (isAttacking)
     Math::moveSpriteTowards(sprite, playerPosition, 1, 1);
 
+  for (auto& damageSprite : damageSprites)
+    damageSprite.set_position(sprite.position() + bn::fixed_point(0, -8));
+
+  for (auto& damageSpriteAnimation : damageSpriteAnimations)
+    damageSpriteAnimation.update();
+
   boundingBox.set_position(sprite.position());
 }
 
@@ -35,4 +42,17 @@ void Turntable::attack() {
 
 void Turntable::stopAttack() {
   isAttacking = false;
+}
+
+void Turntable::addDamage() {
+  stopAttack();
+
+  if (!damageSprites.full()) {
+    auto newSprite =
+        bn::sprite_items::dj_turntable.create_sprite(sprite.position());
+    damageSpriteAnimations.push_back(bn::create_sprite_animate_action_forever(
+        newSprite, 3, bn::sprite_items::dj_spark.tiles_item(), 0, 1, 2, 3, 4,
+        5));
+    damageSprites.push_back(bn::move(newSprite));
+  }
 }
