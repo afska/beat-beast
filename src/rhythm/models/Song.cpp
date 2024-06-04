@@ -62,5 +62,6 @@ void parseEvents(Event* events, u32 count, u8* data, u32* cursor) {
     event->timestamp = (int)parse_u32le(data, cursor);
     event->data = parse_u32le(data, cursor);
     event->handled = false;
+    event->index = j;
   }
 }

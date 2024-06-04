@@ -8,9 +8,10 @@ typedef struct {
   u32 data;
 
   bool handled;
+  u32 index;
 
   // REGULAR events: 31 types. Can be used simultaneosly.
-  // SPECIAL events: * types. One per beat.
+  // SPECIAL events: * types. One per event.
   // All events are user-defined (depend on the scene).
 
   bool isRegular() { return (data & (1 << 31)) == 0; }

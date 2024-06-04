@@ -3,11 +3,12 @@
 #TICKCOUNT:2;
 
 // 00000000
-//    ^^^^^ move octopus (1 = topleft | 2 = top | 3 = topright | 9 = offscreen)
-//    ||||- floor vinyls (1 = from left | 2 = from right)
-//    |||-- floating vinyls (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right | 6 = left from top | 7 = right from top)
-//    ||--- bullet (1 = normal | 2 = slow | 3 = MEGA)
-//    |---- throw turntable (1 = top | 2 = bottom)
+//  ^ ^^^^^ move octopus (1 = topleft | 2 = top | 3 = topright | 9 = offscreen)
+//  | ||||- floor vinyls (1 = from left | 2 = from right)
+//  | |||-- floating vinyls (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right | 6 = left from top | 7 = right from top)
+//  | ||--- bullet (1 = normal | 2 = slow | 3 = MEGA)
+//  | |---- throw turntable (1 = top | 2 = bottom)
+//  |------ set loop marker (1)
 // !50 = test special event
 
 // Easy
@@ -398,8 +399,8 @@
 00000000
 00000000
 ,
-// 01:40 (main++++ left)
-00000701
+// 01:40 (main++++ left) (LOOP START)
+01000701
 00000000
 00002002
 00002000

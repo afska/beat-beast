@@ -16,6 +16,18 @@ class ChartReader {
   unsigned getBeatDurationMs() { return beatDurationMs; }
   bool isInsideBeat() { return _isInsideBeat; }
   bool isInsideTick() { return _isInsideTick; }
+  void setLoopMarker(Event* event) {
+    loopEventIndex = (int)event->index;
+    loopBeatIndex = (int)beatIndex;
+    loopTickIndex = (int)tickIndex;
+  }
+  void restoreLoop() {
+    for (u32 i = loopEventIndex; i < chart.eventCount; i++)
+      chart.events[i].handled = false;
+    eventIndex = loopEventIndex;
+    beatIndex = loopBeatIndex;
+    tickIndex = loopTickIndex;
+  }
 
   void update(int msecs);
 
@@ -33,6 +45,9 @@ class ChartReader {
   unsigned eventIndex = 0;
   bool _isInsideBeat = false;
   bool _isInsideTick = false;
+  int loopEventIndex = -1;
+  int loopBeatIndex = -1;
+  int loopTickIndex = -1;
 
   void processRhythmEvents();
   void processNextEvents();
