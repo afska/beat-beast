@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 
+#include "../objects/Explosion.h"
 #include "../objects/Horse.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
@@ -31,6 +32,7 @@ class BossScene : public Scene {
   bn::unique_ptr<Horse> horse;
   bn::unique_ptr<LifeBar> lifeBar;
   bn::unique_ptr<LifeBar> enemyLifeBar;
+  bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::random random;
   bool isNewBeat = false;
@@ -47,6 +49,7 @@ class BossScene : public Scene {
     }
   }
 
+  void addExplosion(bn::fixed_point position);
   void sufferDamage(unsigned amount);
   void processMovementInput(bn::fixed horseY);
   void processAimInput();

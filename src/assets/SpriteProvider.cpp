@@ -4,6 +4,7 @@
 
 #include "bn_sprite_items_dj_bullet.h"
 #include "bn_sprite_items_dj_cross.h"
+#include "bn_sprite_items_dj_explosion.h"
 #include "bn_sprite_items_dj_gun.h"
 #include "bn_sprite_items_dj_hitbox.h"
 #include "bn_sprite_items_dj_horse.h"
@@ -75,6 +76,15 @@ bn::sprite_item SpriteProvider::lifebarFill() {
   switch (GameState::data.currentScreen) {
     case GameState::Screen::DJ:
       return bn::sprite_items::dj_lifebar_fill;
+    default:
+      return unknownScreen();
+  }
+}
+
+bn::sprite_item SpriteProvider::explosion() {
+  switch (GameState::data.currentScreen) {
+    case GameState::Screen::DJ:
+      return bn::sprite_items::dj_explosion;
     default:
       return unknownScreen();
   }

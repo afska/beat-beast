@@ -9,6 +9,7 @@ class Bullet : public RhythmicBullet {
          bn::fixed_point _direction,
          bn::sprite_item _bullet);
 
+  bn::fixed_point getPosition() { return sprite.position(); }
   bool update(int msecs, bool isInsideBeat) override;
 
  private:

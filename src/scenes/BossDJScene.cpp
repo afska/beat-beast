@@ -178,6 +178,7 @@ void BossDJScene::updateSprites() {
         BN_ASSERT(false, "GANASTE!!!");
       }
 
+      addExplosion(((Bullet*)bullet)->getPosition());
       return true;
     }
 

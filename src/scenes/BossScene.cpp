@@ -40,6 +40,10 @@ void BossScene::update() {
   updateBossFight();
 }
 
+void BossScene::addExplosion(bn::fixed_point position) {
+  explosions.push_back(bn::unique_ptr{new Explosion(position)});
+}
+
 void BossScene::sufferDamage(unsigned amount) {
   horse->hurt();
   bool isDead = lifeBar->setLife(lifeBar->getLife() - amount);
@@ -91,6 +95,9 @@ void BossScene::updateCommonSprites() {
     enemyLifeBar->bounce();
   }
   horse->update();
+
+  // Explosions
+  iterate(explosions, [](Explosion* explosion) { return explosion->update(); });
 
   // UI
   lifeBar->update();
