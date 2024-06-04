@@ -11,7 +11,7 @@ class FloatingVinyl : public RhythmicBullet {
                 Event* _event);
 
   bool update(int msecs, bool isInsideBeat) override;
-  void explode() override { isExploding = true; }
+  void explode() override;
 
  private:
   bn::sprite_ptr sprite;
@@ -20,6 +20,7 @@ class FloatingVinyl : public RhythmicBullet {
   bn::fixed scale = 0.1;
   bn::sprite_animate_action<5> animation;
   bool isExploding = false;
+  bn::optional<bn::sprite_animate_action<2>> explodingAnimation;
 };
 
 #endif  // FLOATING_VINYL_H

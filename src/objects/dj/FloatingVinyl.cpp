@@ -30,10 +30,11 @@ FloatingVinyl::FloatingVinyl(bn::fixed_point initialPosition,
 
 bool FloatingVinyl::update(int msecs, bool isInsideBeat) {
   if (isExploding) {
-    scale -= 0.25;
+    scale -= 0.15;
     if (scale <= 0)
       return true;
     sprite.set_scale(scale);
+    explodingAnimation->update();
     return false;
   }
 
@@ -54,6 +55,12 @@ bool FloatingVinyl::update(int msecs, bool isInsideBeat) {
 
   boundingBox.set_position(sprite.position());
 
-  return false;  // TODO: REMOVE?
-  // TODO: HURT animation
+  return sprite.position().x() < -180 || sprite.position().y() < -140 ||
+         sprite.position().x() > 180 || sprite.position().y() > 140;
+}
+
+void FloatingVinyl::explode() {
+  isExploding = true;
+  explodingAnimation = bn::create_sprite_animate_action_forever(
+      sprite, 2, bn::sprite_items::dj_alt_vinyl.tiles_item(), 3, 0);
 }

@@ -167,18 +167,24 @@ void BossDJScene::updateSprites() {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
-    if (bullet->collidesWith(octopus->getUpperTurntable()))
+    if (octopus->getUpperTurntable()->getIsAttacking() &&
+        bullet->collidesWith(octopus->getUpperTurntable())) {
+      addExplosion(((Bullet*)bullet)->getPosition());
       octopus->getUpperTurntable()->stopAttack();
-    if (bullet->collidesWith(octopus->getLowerTurntable()))
+    }
+    if (octopus->getLowerTurntable()->getIsAttacking() &&
+        bullet->collidesWith(octopus->getLowerTurntable())) {
+      addExplosion(((Bullet*)bullet)->getPosition());
       octopus->getLowerTurntable()->stopAttack();
+    }
 
     if (bullet->collidesWith(octopus.get())) {
+      addExplosion(((Bullet*)bullet)->getPosition());
       octopus->hurt();
       if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
         BN_ASSERT(false, "GANASTE!!!");
       }
 
-      addExplosion(((Bullet*)bullet)->getPosition());
       return true;
     }
 
@@ -186,6 +192,7 @@ void BossDJScene::updateSprites() {
     iterate(
         enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
           if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+            addExplosion(((Bullet*)bullet)->getPosition());
             enemyBullet->explode();
             colided = true;
           }
