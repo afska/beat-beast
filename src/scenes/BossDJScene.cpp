@@ -206,11 +206,13 @@ void BossDJScene::updateSprites() {
     octopus->bounce();
   octopus->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
-  if (octopus->getUpperTurntable()->collidesWith(horse.get())) {
+  if (octopus->getUpperTurntable()->getIsAttacking() &&
+      octopus->getUpperTurntable()->collidesWith(horse.get())) {
     sufferDamage(DMG_TURNTABLE_TO_PLAYER);
     octopus->getUpperTurntable()->stopAttack();
   }
-  if (octopus->getLowerTurntable()->collidesWith(horse.get())) {
+  if (octopus->getLowerTurntable()->getIsAttacking() &&
+      octopus->getLowerTurntable()->collidesWith(horse.get())) {
     sufferDamage(DMG_TURNTABLE_TO_PLAYER);
     octopus->getLowerTurntable()->stopAttack();
   }
