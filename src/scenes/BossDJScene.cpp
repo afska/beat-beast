@@ -35,6 +35,8 @@
 #define IS_EVENT_FLOATING_VINYL_TOPRIGHT(TYPE) IS_EVENT(TYPE, 2, 3)
 #define IS_EVENT_FLOATING_VINYL_LEFT(TYPE) IS_EVENT(TYPE, 2, 4)
 #define IS_EVENT_FLOATING_VINYL_RIGHT(TYPE) IS_EVENT(TYPE, 2, 5)
+#define IS_EVENT_FLOATING_VINYL_LEFT_FROM_TOP(TYPE) IS_EVENT(TYPE, 2, 6)
+#define IS_EVENT_FLOATING_VINYL_RIGHT_FROM_TOP(TYPE) IS_EVENT(TYPE, 2, 7)
 
 #define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 3, 1)
 #define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 3, 2)
@@ -140,11 +142,19 @@ void BossDJScene::processChart() {
       }
       if (IS_EVENT_FLOATING_VINYL_LEFT(type)) {
         enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
-            bn::fixed_point(-120, 0), bn::fixed_point(1, 0), event)});
+            bn::fixed_point(-120, 52), bn::fixed_point(1, 0), event)});
       }
       if (IS_EVENT_FLOATING_VINYL_RIGHT(type)) {
         enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
-            bn::fixed_point(120, 0), bn::fixed_point(-1, 0), event)});
+            bn::fixed_point(120, 52), bn::fixed_point(-1, 0), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_LEFT_FROM_TOP(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(-120, -80), bn::fixed_point(0, 1), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_RIGHT_FROM_TOP(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(120, -80), bn::fixed_point(0, 1), event)});
       }
 
       // Bullets
