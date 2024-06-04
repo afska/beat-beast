@@ -10,7 +10,9 @@ class FloatingVinyl : public RhythmicBullet {
                 bn::fixed_point _direction,
                 Event* _event);
 
-  bool update(int msecs, bool isInsideBeat) override;
+  bool update(int msecs,
+              bool isInsideBeat,
+              bn::fixed_point playerPosition) override;
   void explode(bn::fixed_point nextTarget) override;
 
  private:

@@ -10,7 +10,9 @@ class Bullet : public RhythmicBullet {
          bn::sprite_item _bullet);
 
   bn::fixed_point getPosition() { return sprite.position(); }
-  bool update(int msecs, bool isInsideBeat) override;
+  bool update(int msecs,
+              bool isInsideBeat,
+              bn::fixed_point playerPosition) override;
 
  private:
   bn::sprite_ptr sprite;

@@ -4,14 +4,13 @@
 
 #include "bn_sprite_items_dj_bad_big_bullet.h"
 
-#define ON_BEAT_SPEED 2
+#define ON_BEAT_SPEED 1
 #define OFF_BEAT_SPEED 0
 #define SCALE_IN_SPEED 0.05
 #define RETURN_SPEED 5
 
-MegaBall::MegaBall(bn::fixed_point _initialPosition, bn::fixed_point _direction)
-    : direction(_direction),
-      sprite1(
+MegaBall::MegaBall(bn::fixed_point _initialPosition)
+    : sprite1(
           bn::sprite_items::dj_bad_big_bullet.create_sprite(_initialPosition)),
       sprite2(SpriteProvider::explosion().create_sprite(_initialPosition)),
       animation1(bn::create_sprite_animate_action_forever(
@@ -40,7 +39,9 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition, bn::fixed_point _direction)
   hasDamageAfterExploding = true;
 }
 
-bool MegaBall::update(int msecs, bool isInsideBeat) {
+bool MegaBall::update(int msecs,
+                      bool isInsideBeat,
+                      bn::fixed_point playerPosition) {
   if (isExploding) {
     scale += 0.15;
     if (scale > 2.5)
@@ -70,9 +71,8 @@ bool MegaBall::update(int msecs, bool isInsideBeat) {
     return false;
   }
 
-  sprite1.set_position(sprite1.position() +
-                       direction *
-                           (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));
+  int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;
+  Math::moveSpriteTowards(sprite1, playerPosition, speed, speed);
   sprite2.set_position(sprite1.position());
 
   boundingBox.set_position(sprite1.position());

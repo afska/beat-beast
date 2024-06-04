@@ -31,7 +31,9 @@ FloatingVinyl::FloatingVinyl(bn::fixed_point initialPosition,
   isShootable = true;
 }
 
-bool FloatingVinyl::update(int msecs, bool isInsideBeat) {
+bool FloatingVinyl::update(int msecs,
+                           bool isInsideBeat,
+                           bn::fixed_point playerPosition) {
   if (isExploding) {
     scale -= SCALE_OUT_SPEED;
     if (scale <= 0)

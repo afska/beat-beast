@@ -19,7 +19,9 @@ Bullet::Bullet(bn::fixed_point initialPosition,
   boundingBox.set_position(initialPosition);
 }
 
-bool Bullet::update(int msecs, bool isInsideBeat) {
+bool Bullet::update(int msecs,
+                    bool isInsideBeat,
+                    bn::fixed_point playerPosition) {
   sprite.set_position(sprite.position() +
                       direction *
                           (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));

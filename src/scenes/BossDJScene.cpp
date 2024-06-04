@@ -150,11 +150,11 @@ void BossDJScene::processChart() {
       }
       if (IS_EVENT_FLOATING_VINYL_LEFT_FROM_TOP(type)) {
         enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
-            bn::fixed_point(-120, -80), bn::fixed_point(0, 1), event)});
+            bn::fixed_point(-80, -80), bn::fixed_point(0, 1), event)});
       }
       if (IS_EVENT_FLOATING_VINYL_RIGHT_FROM_TOP(type)) {
         enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
-            bn::fixed_point(120, -80), bn::fixed_point(0, 1), event)});
+            bn::fixed_point(80, -80), bn::fixed_point(0, 1), event)});
       }
 
       // Bullets
@@ -172,8 +172,8 @@ void BossDJScene::processChart() {
       }
       if (IS_EVENT_BULLET_MEGA(type)) {
         octopus->megaAttack();
-        enemyBullets.push_back(bn::unique_ptr{new MegaBall(
-            octopus->getShootingPoint(), bn::fixed_point(0, 1.5))});
+        enemyBullets.push_back(
+            bn::unique_ptr{new MegaBall(octopus->getShootingPoint())});
       }
 
       // Turntable throw
@@ -230,7 +230,8 @@ void BossDJScene::updateSprites() {
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
     bool isOut =
-        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
 
     if (octopus->getUpperTurntable()->getIsAttacking() &&
         bullet->collidesWith(octopus->getUpperTurntable())) {
@@ -268,7 +269,8 @@ void BossDJScene::updateSprites() {
 
   iterate(enemyBullets, [this](RhythmicBullet* bullet) {
     bool isOut =
-        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
 
     if (bullet->collidesWith(horse.get())) {
       sufferDamage(DMG_ENEMY_BULLET_TO_PLAYER);
