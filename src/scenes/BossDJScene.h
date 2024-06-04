@@ -33,8 +33,8 @@ class BossDJScene : public BossScene {
   void updateBackground();
   void updateSprites();
 
-  void throwVinyl(bn::unique_ptr<Vinyl> vinyl);
   void causeDamage(unsigned amount);
+  void playRandomSound();
 };
 
 #endif  // BOSS_DJ_SCENE_H

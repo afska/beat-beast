@@ -21,15 +21,27 @@
 #define DMG_MEGABALL_TO_ENEMY 10
 
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
-#define IS_EVENT_LEFT_VINYL(TYPE) IS_EVENT(TYPE, 0, 1)
-#define IS_EVENT_RIGHT_VINYL(TYPE) IS_EVENT(TYPE, 0, 2)
-#define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 1, 1)
-#define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 1, 2)
-#define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 2, 1)
-#define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 2, 2)
-#define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 2, 3)
-#define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 2, 9)
-// TODO: SORT EVENTS
+
+#define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 0, 1)
+#define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 0, 2)
+#define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
+#define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
+
+#define IS_EVENT_LEFT_VINYL(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_RIGHT_VINYL(TYPE) IS_EVENT(TYPE, 1, 2)
+
+#define IS_EVENT_FLOATING_VINYL_TOPLEFT(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_FLOATING_VINYL_TOP(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_FLOATING_VINYL_TOPRIGHT(TYPE) IS_EVENT(TYPE, 2, 3)
+#define IS_EVENT_FLOATING_VINYL_LEFT(TYPE) IS_EVENT(TYPE, 2, 4)
+#define IS_EVENT_FLOATING_VINYL_RIGHT(TYPE) IS_EVENT(TYPE, 2, 5)
+
+#define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 3, 1)
+#define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 3, 2)
+#define IS_EVENT_BULLET_MEGA(TYPE) IS_EVENT(TYPE, 3, 3)
+
+#define IS_EVENT_TURNTABLE_THROW_UP(TYPE) IS_EVENT(TYPE, 4, 1)
+#define IS_EVENT_TURNTABLE_THROW_DOWN(TYPE) IS_EVENT(TYPE, 4, 2)
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
@@ -51,7 +63,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
           horizontalDeltas)) {
   background.set_blending_enabled(true);
   bn::blending::set_fade_alpha(0.3);
-  chartReader->eventsThatNeedAudioLagPrediction.push_back(0xf /* 0b1111*/);
+  chartReader->eventsThatNeedAudioLagPrediction.push_back(240 /* 0b11110000*/);
 }
 
 void BossDJScene::updateBossFight() {
@@ -88,18 +100,54 @@ void BossDJScene::processChart() {
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
       auto type = event->getType();
+
+      // Movement
+      if (IS_EVENT_MOVE_COL1(type))
+        octopus->setTargetPosition({-50, -40},
+                                   chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL2(type))
+        octopus->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL3(type))
+        octopus->setTargetPosition({80, -40}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_OFFSCREEN(type))
+        octopus->setTargetPosition({200, -70},
+                                   chartReader->getBeatDurationMs());
+
+      // Vinyls (floor)
       if (IS_EVENT_LEFT_VINYL(type)) {
-        if (!vinyls.full()) {
-          throwVinyl(bn::unique_ptr{
-              new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
-        }
+        vinyls.push_back(bn::unique_ptr{
+            new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
+        playRandomSound();
       }
       if (IS_EVENT_RIGHT_VINYL(type)) {
-        if (!vinyls.full()) {
-          throwVinyl(bn::unique_ptr{
-              new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
-        }
+        vinyls.push_back(bn::unique_ptr{
+            new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
+        playRandomSound();
       }
+
+      // Vinyls (floating)
+      if (IS_EVENT_FLOATING_VINYL_TOPLEFT(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(-120, -80), bn::fixed_point(1, 1), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_TOP(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(0, -80), bn::fixed_point(0, 1), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_TOPRIGHT(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(120, -80), bn::fixed_point(-1, 1), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_LEFT(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(-120, 0), bn::fixed_point(1, 0), event)});
+      }
+      if (IS_EVENT_FLOATING_VINYL_RIGHT(type)) {
+        enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
+            bn::fixed_point(120, 0), bn::fixed_point(-1, 0), event)});
+      }
+
+      // Bullets
       if (IS_EVENT_BULLET(type)) {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
@@ -112,31 +160,22 @@ void BossDJScene::processChart() {
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
                        bn::sprite_items::dj_bad_bullet)});
       }
-      if (IS_EVENT_MOVE_COL1(type))
-        octopus->setTargetPosition({-50, -40},
-                                   chartReader->getBeatDurationMs());
-      if (IS_EVENT_MOVE_COL2(type))
-        octopus->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
-      if (IS_EVENT_MOVE_COL3(type))
-        octopus->setTargetPosition({80, -40}, chartReader->getBeatDurationMs());
-      if (IS_EVENT_MOVE_OFFSCREEN(type))
-        octopus->setTargetPosition({200, -70},
-                                   chartReader->getBeatDurationMs());
+      if (IS_EVENT_BULLET_MEGA(type)) {
+        octopus->megaAttack();
+        enemyBullets.push_back(bn::unique_ptr{new MegaBall(
+            octopus->getShootingPoint(), bn::fixed_point(0, 1.5))});
+      }
 
-      // TODO:
-
-      // enemyBullets.push_back(bn::unique_ptr{new FloatingVinyl(
-      // bn::fixed_point(120, -80), bn::fixed_point(-1, 1), event)});
-
-      // octopus->getUpperTurntable()->attack();
-
-      // octopus->megaAttack();
-      // enemyBullets.push_back(bn::unique_ptr{
-      //     new MegaBall(octopus->getShootingPoint(),
-      //     bn::fixed_point(0, 1.5))});
+      // Turntable throw
+      if (IS_EVENT_TURNTABLE_THROW_UP(type)) {
+        octopus->getUpperTurntable()->attack();
+      }
+      if (IS_EVENT_TURNTABLE_THROW_DOWN(type)) {
+        octopus->getLowerTurntable()->attack();
+      }
     } else {
       if (event->getType() == 50) {
-        // BN_ASSERT(false, "special event 50 detected :D");
+        // BN_ASSERT(false, "special event #50 detected :D");
       }
     }
   }
@@ -249,15 +288,13 @@ void BossDJScene::updateSprites() {
   });
 }
 
-void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
-  vinyls.push_back(bn::move(vinyl));
-
-  int sound = random.get_int(1, 7);
-  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
-}
-
 void BossDJScene::causeDamage(unsigned amount) {
   octopus->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
+}
+
+void BossDJScene::playRandomSound() {
+  int sound = random.get_int(1, 7);
+  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
 }
