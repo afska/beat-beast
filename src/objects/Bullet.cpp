@@ -16,7 +16,7 @@ Bullet::Bullet(bn::fixed_point initialPosition,
   boundingBox.set_position(initialPosition);
 }
 
-bool Bullet::update(bool isInsideBeat) {
+bool Bullet::update(int msecs, bool isInsideBeat) {
   sprite.set_position(sprite.position() + direction * (isInsideBeat ? 2 : 1));
 
   animation.update();

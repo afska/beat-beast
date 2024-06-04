@@ -4,6 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
+#include "../objects/dj/FloatingVinyl.h"
 #include "../objects/dj/Octopus.h"
 #include "../objects/dj/Vinyl.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
@@ -17,8 +18,8 @@ class BossDJScene : public BossScene {
  private:
   bn::regular_bg_ptr background;
   bn::unique_ptr<Octopus> octopus;
-  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
-  bn::vector<bn::unique_ptr<Bullet>, 32> enemyBullets;
+  bn::vector<bn::unique_ptr<RhythmicBullet>, 32> bullets;
+  bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   bn::fixed layer1 = 0;
   bn::fixed layer2 = 0;

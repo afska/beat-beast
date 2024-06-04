@@ -112,6 +112,11 @@ void BossDJScene::processChart() {
       if (IS_EVENT_MOVE_OFFSCREEN(type))
         octopus->setTargetPosition({200, -70},
                                    chartReader->getBeatDurationMs());
+
+      // TODO:
+      //                                enemyBullets.push_back(bn::unique_ptr{new
+      //                                FloatingVinyl(
+      // bn::fixed_point(120, -80), bn::fixed_point(-1, 1), event)});
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");
@@ -146,8 +151,9 @@ void BossDJScene::updateSprites() {
   octopus->update(chartReader->isInsideBeat());
 
   // Attacks
-  iterate(bullets, [this](Bullet* bullet) {
-    bool isOut = bullet->update(chartReader->isInsideBeat());
+  iterate(bullets, [this](RhythmicBullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
     if (bullet->getBoundingBox().intersects(octopus->getBoundingBox())) {
       octopus->hurt();
@@ -158,11 +164,23 @@ void BossDJScene::updateSprites() {
       return true;
     }
 
-    return isOut;
+    bool colided = false;
+    iterate(enemyBullets, [&bullet, &colided,
+                           this](RhythmicBullet* enemyBullet) {
+      if (enemyBullet->isShootable &&
+          bullet->getBoundingBox().intersects(enemyBullet->getBoundingBox())) {
+        enemyBullet->explode();
+        colided = true;
+      }
+      return false;
+    });
+
+    return isOut || colided;
   });
 
-  iterate(enemyBullets, [this](Bullet* bullet) {
-    bool isOut = bullet->update(chartReader->isInsideBeat());
+  iterate(enemyBullets, [this](RhythmicBullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
     if (bullet->getBoundingBox().intersects(horse->getBoundingBox())) {
       horse->hurt();

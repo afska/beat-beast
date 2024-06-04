@@ -1,15 +1,15 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "GameObject.h"
+#include "RhythmicBullet.h"
 
-class Bullet : public GameObject {
+class Bullet : public RhythmicBullet {
  public:
   Bullet(bn::fixed_point initialPosition,
          bn::fixed_point _direction,
          bn::sprite_item _bullet);
 
-  bool update(bool isInsideBeat);
+  bool update(int msecs, bool isInsideBeat) override;
 
  private:
   bn::sprite_ptr sprite;
