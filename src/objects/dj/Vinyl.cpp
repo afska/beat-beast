@@ -5,6 +5,8 @@
 #include "bn_sprite_items_dj_vinyl.h"
 
 #define SPEED 3
+#define SCALE_IN_SPEED 0.05
+#define ROTATION_SPEED 3
 #define NEGATIVE_TARGET_OFFSET 16
 #define TENTACLE_OFFSET 8
 
@@ -71,13 +73,14 @@ bool Vinyl::update(int msecs,
 
   if (sprite.x() > -Math::SCREEN_WIDTH / 2 &&
       sprite.x() < Math::SCREEN_WIDTH / 2 && scale <= 1) {
-    scale += 0.05;
+    scale += SCALE_IN_SPEED;
     if (scale > 1)
       scale = 1;
     sprite.set_scale(scale);
   }
 
-  sprite.set_rotation_angle(Math::normalizeAngle(sprite.rotation_angle() - 3));
+  sprite.set_rotation_angle(
+      Math::normalizeAngle(sprite.rotation_angle() - ROTATION_SPEED));
 
   boundingBox.set_position(sprite.position());
 

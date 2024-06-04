@@ -11,7 +11,7 @@ class FloatingVinyl : public RhythmicBullet {
                 Event* _event);
 
   bool update(int msecs, bool isInsideBeat) override;
-  void explode() override;
+  void explode(bn::fixed_point nextTarget) override;
 
  private:
   bn::sprite_ptr sprite;

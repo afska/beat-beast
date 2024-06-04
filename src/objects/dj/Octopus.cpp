@@ -3,6 +3,7 @@
 #include "../../utils/Math.h"
 #include "bn_sprite_items_dj_octopus.h"
 
+#define GBA_FRAME 16.67
 #define HITBOX_SIZE 48
 
 Octopus::Octopus(bn::fixed_point initialPosition)
@@ -47,7 +48,7 @@ void Octopus::setTargetPosition(bn::fixed_point newTargetPosition,
                                 unsigned beatDurationMs) {
   targetPosition = newTargetPosition;
 
-  bn::fixed beatDurationFrames = bn::fixed(beatDurationMs) / 16.67;
+  bn::fixed beatDurationFrames = bn::fixed(beatDurationMs) / GBA_FRAME;
   speedX = bn::abs(newTargetPosition.x() - sprite.position().x()) /
            beatDurationFrames;
   speedY = bn::abs(newTargetPosition.y() - sprite.position().y()) /
@@ -80,6 +81,10 @@ void Octopus::attack() {
   setAttackState();
 }
 
+void Octopus::megaAttack() {
+  setMegaAttackState();
+}
+
 void Octopus::hurt() {
   setHurtState();
 }
@@ -100,6 +105,12 @@ void Octopus::updateAnimations() {
   if (attackAnimation.has_value()) {
     attackAnimation->update();
     if (attackAnimation->done())
+      resetAnimations();
+  }
+
+  if (megaAttackAnimation.has_value()) {
+    megaAttackAnimation->update();
+    if (megaAttackAnimation->done())
       resetAnimations();
   }
 }
@@ -123,8 +134,16 @@ void Octopus::setAttackState() {
       sprite, 15, bn::sprite_items::dj_octopus.tiles_item(), 6, 7, 0);
 }
 
+void Octopus::setMegaAttackState() {
+  resetAnimations();
+  megaAttackAnimation = bn::create_sprite_animate_action_once(
+      sprite, 15, bn::sprite_items::dj_octopus.tiles_item(), 6, 6, 6, 6, 6, 6,
+      6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 0);
+}
+
 void Octopus::resetAnimations() {
   idleAnimation.reset();
   hurtAnimation.reset();
   attackAnimation.reset();
+  megaAttackAnimation.reset();
 }

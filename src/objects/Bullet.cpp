@@ -2,6 +2,9 @@
 
 #include "../assets/SpriteProvider.h"
 
+#define ON_BEAT_SPEED 2
+#define OFF_BEAT_SPEED 1
+
 Bullet::Bullet(bn::fixed_point initialPosition,
                bn::fixed_point _direction,
                bn::sprite_item _bullet)
@@ -17,7 +20,9 @@ Bullet::Bullet(bn::fixed_point initialPosition,
 }
 
 bool Bullet::update(int msecs, bool isInsideBeat) {
-  sprite.set_position(sprite.position() + direction * (isInsideBeat ? 2 : 1));
+  sprite.set_position(sprite.position() +
+                      direction *
+                          (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));
 
   animation.update();
 

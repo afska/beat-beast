@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/dj/FloatingVinyl.h"
+#include "../objects/dj/MegaBall.h"
 #include "../objects/dj/Octopus.h"
 #include "../objects/dj/Vinyl.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
@@ -18,13 +19,14 @@ class BossDJScene : public BossScene {
  private:
   bn::regular_bg_ptr background;
   bn::unique_ptr<Octopus> octopus;
-  bn::vector<bn::unique_ptr<RhythmicBullet>, 32> bullets;
+  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   bn::fixed layer1 = 0;
   bn::fixed layer2 = 0;
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::regular_bg_position_hbe_ptr horizontalHBE;
+  bool didWin = false;
 
   void processInput();
   void processChart();
@@ -32,6 +34,7 @@ class BossDJScene : public BossScene {
   void updateSprites();
 
   void throwVinyl(bn::unique_ptr<Vinyl> vinyl);
+  void causeDamage(unsigned amount);
 };
 
 #endif  // BOSS_DJ_SCENE_H

@@ -4,6 +4,8 @@
 #include "bn_sprite_items_dj_spark.h"
 #include "bn_sprite_items_dj_turntable.h"
 
+#define ATTACK_SPEED 1
+
 Turntable::Turntable(bn::fixed_point position)
     : sprite(bn::sprite_items::dj_turntable.create_sprite(position)),
       animation(bn::create_sprite_animate_action_forever(
@@ -23,7 +25,7 @@ void Turntable::update(bn::fixed_point playerPosition) {
   animation.update();
 
   if (isAttacking)
-    Math::moveSpriteTowards(sprite, playerPosition, 1, 1);
+    Math::moveSpriteTowards(sprite, playerPosition, ATTACK_SPEED, ATTACK_SPEED);
 
   for (auto& damageSprite : damageSprites)
     damageSprite.set_position(sprite.position() + bn::fixed_point(0, -8));

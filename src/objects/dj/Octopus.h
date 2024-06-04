@@ -12,6 +12,7 @@ class Octopus : public GameObject {
   void bounce();
   void hurt();
   void attack();
+  void megaAttack();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
@@ -25,7 +26,8 @@ class Octopus : public GameObject {
   bn::sprite_ptr sprite;
   bn::optional<bn::sprite_animate_action<5>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
-  bn::optional<bn::sprite_animate_action<5>> attackAnimation;
+  bn::optional<bn::sprite_animate_action<3>> attackAnimation;
+  bn::optional<bn::sprite_animate_action<20>> megaAttackAnimation;
   bn::vector<bn::unique_ptr<Tentacle>, 8> tentacles;
   bn::vector<bn::unique_ptr<Turntable>, 4> turntables;
   bn::fixed_point targetPosition;
@@ -41,6 +43,7 @@ class Octopus : public GameObject {
   void setIdleState();
   void setHurtState();
   void setAttackState();
+  void setMegaAttackState();
   void resetAnimations();
 };
 

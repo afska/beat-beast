@@ -11,6 +11,15 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
+// Damage to player
+#define DMG_VINYL_TO_PLAYER 1
+#define DMG_TURNTABLE_TO_PLAYER 2
+#define DMG_ENEMY_BULLET_TO_PLAYER 1
+
+// Damage to enemy
+#define DMG_BULLET_TO_ENEMY 1
+#define DMG_MEGABALL_TO_ENEMY 10
+
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 #define IS_EVENT_LEFT_VINYL(TYPE) IS_EVENT(TYPE, 0, 1)
 #define IS_EVENT_RIGHT_VINYL(TYPE) IS_EVENT(TYPE, 0, 2)
@@ -120,6 +129,11 @@ void BossDJScene::processChart() {
       // bn::fixed_point(120, -80), bn::fixed_point(-1, 1), event)});
 
       // octopus->getUpperTurntable()->attack();
+
+      // octopus->megaAttack();
+      // enemyBullets.push_back(bn::unique_ptr{
+      //     new MegaBall(octopus->getShootingPoint(),
+      //     bn::fixed_point(0, 1.5))});
     } else {
       if (event->getType() == 50) {
         // BN_ASSERT(false, "special event 50 detected :D");
@@ -154,38 +168,35 @@ void BossDJScene::updateSprites() {
   octopus->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
   if (octopus->getUpperTurntable()->collidesWith(horse.get())) {
-    sufferDamage(2);
+    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
     octopus->getUpperTurntable()->stopAttack();
   }
   if (octopus->getLowerTurntable()->collidesWith(horse.get())) {
-    sufferDamage(2);
+    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
     octopus->getLowerTurntable()->stopAttack();
   }
 
   // Attacks
-  iterate(bullets, [this](RhythmicBullet* bullet) {
+  iterate(bullets, [this](Bullet* bullet) {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
     if (octopus->getUpperTurntable()->getIsAttacking() &&
         bullet->collidesWith(octopus->getUpperTurntable())) {
-      addExplosion(((Bullet*)bullet)->getPosition());
+      addExplosion(bullet->getPosition());
       octopus->getUpperTurntable()->addDamage();
       return true;
     }
     if (octopus->getLowerTurntable()->getIsAttacking() &&
         bullet->collidesWith(octopus->getLowerTurntable())) {
-      addExplosion(((Bullet*)bullet)->getPosition());
+      addExplosion(bullet->getPosition());
       octopus->getLowerTurntable()->addDamage();
       return true;
     }
 
     if (bullet->collidesWith(octopus.get())) {
-      addExplosion(((Bullet*)bullet)->getPosition());
-      octopus->hurt();
-      if (enemyLifeBar->setLife(enemyLifeBar->getLife() - 1)) {
-        BN_ASSERT(false, "GANASTE!!!");
-      }
+      addExplosion(bullet->getPosition());
+      causeDamage(DMG_BULLET_TO_ENEMY);
 
       return true;
     }
@@ -195,7 +206,7 @@ void BossDJScene::updateSprites() {
         enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
           if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
             addExplosion(((Bullet*)bullet)->getPosition());
-            enemyBullet->explode();
+            enemyBullet->explode(octopus->getShootingPoint());
             colided = true;
           }
           return false;
@@ -209,10 +220,13 @@ void BossDJScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat());
 
     if (bullet->collidesWith(horse.get())) {
-      sufferDamage(1);
+      sufferDamage(DMG_ENEMY_BULLET_TO_PLAYER);
 
       return true;
     }
+
+    if (isOut && bullet->didExplode() && bullet->hasDamageAfterExploding)
+      causeDamage(DMG_MEGABALL_TO_ENEMY);
 
     return isOut;
   });
@@ -225,7 +239,7 @@ void BossDJScene::updateSprites() {
 
     if (vinyl->collidesWith(horse.get())) {
       if (vinyl->getBoundingBox().x() < horse->getBoundingBox().x()) {
-        sufferDamage(1);
+        sufferDamage(DMG_VINYL_TO_PLAYER);
 
         return true;
       }
@@ -240,4 +254,10 @@ void BossDJScene::throwVinyl(bn::unique_ptr<Vinyl> vinyl) {
 
   int sound = random.get_int(1, 7);
   player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
+}
+
+void BossDJScene::causeDamage(unsigned amount) {
+  octopus->hurt();
+  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
+    didWin = true;
 }
