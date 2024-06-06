@@ -71,6 +71,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
           background,
           horizontalDeltas)) {
   background.set_blending_enabled(true);
+  background.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction.push_back(240 /* 0b11110000*/);
 }
@@ -84,6 +85,10 @@ void BossDJScene::updateBossFight() {
   if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
     player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
     chartReader->restoreLoop();
+    bullets.clear();
+    enemyBullets.clear();
+    vinyls.clear();
+    pixelBlink->blink();
   }
 }
 
