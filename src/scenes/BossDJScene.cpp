@@ -12,6 +12,10 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
+// Loop
+#define LOOP_END_MS 158580
+#define LOOP_OFFSET_CURSOR -218856
+
 // Damage to player
 #define DMG_VINYL_TO_PLAYER 1
 #define DMG_TURNTABLE_TO_PLAYER 2
@@ -46,6 +50,8 @@
 #define IS_EVENT_TURNTABLE_THROW_TOP(TYPE) IS_EVENT(TYPE, 4, 1)
 #define IS_EVENT_TURNTABLE_THROW_BOTTOM(TYPE) IS_EVENT(TYPE, 4, 2)
 
+#define IS_EVENT_SET_LOOP_MARKER(TYPE) IS_EVENT(TYPE, 6, 1)
+
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
 
@@ -65,6 +71,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
           background,
           horizontalDeltas)) {
   background.set_blending_enabled(true);
+  background.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction.push_back(240 /* 0b11110000*/);
 }
@@ -74,6 +81,15 @@ void BossDJScene::updateBossFight() {
   processChart();
   updateBackground();
   updateSprites();
+
+  if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
+    player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
+    chartReader->restoreLoop();
+    bullets.clear();
+    enemyBullets.clear();
+    vinyls.clear();
+    pixelBlink->blink();
+  }
 
   if (PlaybackState.hasFinished && !didShowMessage) {
     textGenerator.set_center_alignment();
@@ -193,6 +209,11 @@ void BossDJScene::processChart() {
       }
       if (IS_EVENT_TURNTABLE_THROW_BOTTOM(type)) {
         octopus->getLowerTurntable()->attack();
+      }
+
+      // Set loop marker
+      if (IS_EVENT_SET_LOOP_MARKER(type)) {
+        chartReader->setLoopMarker(event);
       }
     } else {
       if (event->getType() == 50) {

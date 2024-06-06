@@ -24,6 +24,9 @@ void player_onVBlank();
 void player_update(int expectedAudioChunk,
                    void (*onAudioChunks)(unsigned int current));
 
+unsigned int player_getCursor();
+void player_setCursor(unsigned int cursor);
+
 #ifdef __cplusplus
 }
 #endif

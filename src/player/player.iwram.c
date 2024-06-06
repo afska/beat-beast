@@ -253,6 +253,14 @@ CODE_ROM void player_seek(unsigned int msecs) {
   current_audio_chunk = 0;
 }
 
+CODE_ROM unsigned int player_getCursor() {
+  return src_pos;
+}
+
+CODE_ROM void player_setCursor(unsigned int cursor) {
+  src_pos = cursor;
+}
+
 CODE_ROM void player_setRate(int newRate) {
   rate = newRate;
   rate_counter = 0;

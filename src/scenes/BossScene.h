@@ -8,6 +8,7 @@
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
 #include "../rhythm/ChartReader.h"
+#include "../utils/PixelBlink.h"
 
 class BossScene : public Scene {
  public:
@@ -34,6 +35,7 @@ class BossScene : public Scene {
   bn::unique_ptr<LifeBar> enemyLifeBar;
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
+  bn::unique_ptr<PixelBlink> pixelBlink;
   bn::random random;
   bool isNewBeat = false;
 

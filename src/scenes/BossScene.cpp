@@ -24,7 +24,8 @@ BossScene::BossScene(GameState::Screen _screen,
                           20,
                           SpriteProvider::iconHorse(),
                           SpriteProvider::lifebarFill())),
-      enemyLifeBar(bn::move(_enemyLifeBar)) {
+      enemyLifeBar(bn::move(_enemyLifeBar)),
+      pixelBlink(new PixelBlink(0.3)) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =
@@ -38,6 +39,7 @@ void BossScene::init() {
 void BossScene::update() {
   updateChartReader();
   updateBossFight();
+  pixelBlink->update();
 }
 
 void BossScene::addExplosion(bn::fixed_point position) {
