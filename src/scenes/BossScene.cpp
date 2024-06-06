@@ -46,14 +46,19 @@ void BossScene::addExplosion(bn::fixed_point position) {
   explosions.push_back(bn::unique_ptr{new Explosion(position)});
 }
 
+bool dead = false;  // TODO: REMOVE AND MAKE PROPER DEATH SCENE
+
 void BossScene::sufferDamage(unsigned amount) {
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
 
   horse->hurt();
   bool isDead = lifeBar->setLife(lifeBar->getLife() - amount);
-  if (isDead)
-    BN_ASSERT(false, "YOU LOSE");
+  if (isDead && !dead) {
+    dead = true;
+    textGenerator.set_center_alignment();
+    textGenerator.generate(-30, -30, "YOU LOSE!", textSprites);
+  }
 }
 
 void BossScene::processMovementInput(bn::fixed horseY) {

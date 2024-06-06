@@ -4,6 +4,7 @@
 
 #include "bn_sprite_items_dj_bad_big_bullet.h"
 
+#define SCALE 2
 #define ON_BEAT_SPEED 1
 #define OFF_BEAT_SPEED 0
 #define SCALE_IN_SPEED 0.05
@@ -30,7 +31,7 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition)
           2,
           1,
           0)) {
-  boundingBox.set_dimensions(sprite1.dimensions());
+  boundingBox.set_dimensions(sprite1.dimensions() * SCALE);
   boundingBox.set_position(_initialPosition);
 
   sprite1.set_scale(scale);
@@ -43,9 +44,9 @@ bool MegaBall::update(int msecs,
                       bool isInsideBeat,
                       bn::fixed_point playerPosition) {
   if (isExploding) {
-    scale += 0.15;
-    if (scale > 2.5)
-      scale = 2.5;
+    scale -= 0.15;
+    if (scale <= 0)
+      scale = 0.1;
     sprite1.set_scale(scale);
     sprite2.set_scale(scale);
     Math::moveSpriteTowards(sprite1, returnPoint, RETURN_SPEED, RETURN_SPEED);
@@ -58,10 +59,10 @@ bool MegaBall::update(int msecs,
   animation1.update();
   animation2.update();
 
-  if (scale <= 1) {
+  if (scale <= SCALE) {
     scale += SCALE_IN_SPEED;
-    if (scale > 1)
-      scale = 1;
+    if (scale > SCALE)
+      scale = SCALE;
     sprite1.set_scale(scale);
     sprite2.set_scale(scale);
   }

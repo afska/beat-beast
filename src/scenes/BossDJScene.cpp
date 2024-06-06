@@ -25,6 +25,7 @@
 #define DMG_BULLET_TO_ENEMY 1
 #define DMG_MEGABALL_TO_ENEMY 10
 
+// Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
 #define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 0, 1)
@@ -52,6 +53,8 @@
 
 #define IS_EVENT_SET_LOOP_MARKER(TYPE) IS_EVENT(TYPE, 6, 1)
 
+#define EVENT_SONG_END 2
+
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
 
@@ -61,7 +64,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},
-                                100,
+                                150,
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
@@ -89,16 +92,6 @@ void BossDJScene::updateBossFight() {
     enemyBullets.clear();
     vinyls.clear();
     pixelBlink->blink();
-  }
-
-  if (PlaybackState.hasFinished && !didShowMessage) {
-    textGenerator.set_center_alignment();
-    if (didWin) {
-      textGenerator.generate(-30, -30, "Creo que ganaste", textSprites);
-    } else {
-      textGenerator.generate(-30, -30, "Creo que ganaperdiste", textSprites);
-    }
-    didShowMessage = true;
   }
 }
 
@@ -215,8 +208,12 @@ void BossDJScene::processChart() {
         chartReader->setLoopMarker(event);
       }
     } else {
-      if (event->getType() == 50) {
-        // BN_ASSERT(false, "special event #50 detected :D");
+      if (event->getType() == EVENT_SONG_END) {
+        if (!didShowMessage) {
+          textGenerator.set_center_alignment();
+          textGenerator.generate(-30, -30, "YOU WIN!", textSprites);
+          didShowMessage = true;
+        }
       }
     }
   }
