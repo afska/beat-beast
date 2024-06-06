@@ -12,8 +12,6 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
-// TODO: OPTIONAL TOGGLE LOCK?
-
 #define LIFE_BOSS 150
 
 // Loop
@@ -250,13 +248,21 @@ void BossDJScene::updateSprites() {
 
   if (octopus->getUpperTurntable()->getIsAttacking() &&
       octopus->getUpperTurntable()->collidesWith(horse.get())) {
-    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
-    octopus->getUpperTurntable()->stopAttack();
+    if (horse->isJumping())
+      octopus->getUpperTurntable()->addDamage();
+    else {
+      sufferDamage(DMG_TURNTABLE_TO_PLAYER);
+      octopus->getUpperTurntable()->stopAttack();
+    }
   }
   if (octopus->getLowerTurntable()->getIsAttacking() &&
       octopus->getLowerTurntable()->collidesWith(horse.get())) {
-    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
-    octopus->getLowerTurntable()->stopAttack();
+    if (horse->isJumping())
+      octopus->getLowerTurntable()->addDamage();
+    else {
+      sufferDamage(DMG_TURNTABLE_TO_PLAYER);
+      octopus->getLowerTurntable()->stopAttack();
+    }
   }
 
   // Attacks
@@ -305,6 +311,11 @@ void BossDJScene::updateSprites() {
                        horse->getCenteredPosition());
 
     if (bullet->collidesWith(horse.get())) {
+      if (horse->isJumping() && bullet->isHeadDeflectable) {
+        bullet->explode({});
+        return false;
+      }
+
       sufferDamage(DMG_ENEMY_BULLET_TO_PLAYER);
 
       return true;

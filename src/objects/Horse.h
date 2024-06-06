@@ -19,6 +19,7 @@ class Horse : public TopLeftGameObject {
   bn::fixed_point getPosition() { return topLeftPosition; }
   void setFlipX(bool flipX);
   bool isBusy() { return isJumping() || isHurt(); }
+  bool isJumping() { return jumpingAnimation.has_value(); }
   bool isHurt() { return hurtAnimation.has_value(); }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
@@ -29,7 +30,6 @@ class Horse : public TopLeftGameObject {
   bn::fixed targetAngle = 0;
   bool isMoving = false;
 
-  bool isJumping() { return jumpingAnimation.has_value(); }
   void setIsMoving(bool isNowMoving);
 
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;

@@ -6,6 +6,7 @@
 class RhythmicBullet : public GameObject {
  public:
   bool isShootable = false;
+  bool isHeadDeflectable = false;
   bool hasDamageAfterExploding = false;
 
   virtual bool update(int msecs,
