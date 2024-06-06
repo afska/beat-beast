@@ -2,6 +2,7 @@
 #define LIFE_BAR_H
 
 #include "../TopLeftGameObject.h"
+#include "LoopingCross.h"
 
 class LifeBar : public TopLeftGameObject {
  public:
@@ -27,6 +28,7 @@ class LifeBar : public TopLeftGameObject {
   unsigned animationWait = 0;
   bool animationFlag = false;
   bn::fixed_point defaultFillPosition;
+  bn::optional<bn::unique_ptr<LoopingCross>> loopingCross;
 
   void updateFill(unsigned visualLife);
 };

@@ -12,6 +12,8 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
+// TODO: OPTIONAL TOGGLE LOCK?
+
 #define LIFE_BOSS 150
 
 // Loop

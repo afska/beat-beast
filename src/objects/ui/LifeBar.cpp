@@ -36,6 +36,10 @@ LifeBar::LifeBar(bn::fixed_point initialPosition,
 }
 
 bool LifeBar::setLife(unsigned _life) {
+  if (_life == 0)
+    if (!loopingCross.has_value())
+      loopingCross = bn::unique_ptr{new LoopingCross(mainSprite.position())};
+
   if (_life <= 0)
     return true;
   if (_life > maxLife)
@@ -67,6 +71,9 @@ void LifeBar::update() {
           ? MAX_DIFFERENT_VALUES
           : (unsigned)bn::max((int)visualLife + animationOffset, 1);
   updateFill(drawLife);
+
+  if (loopingCross.has_value())
+    loopingCross->get()->update();
 }
 
 void LifeBar::bounce() {
