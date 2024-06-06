@@ -19,12 +19,10 @@
 #define LOOP_OFFSET_CURSOR -218856
 
 // Damage to player
-#define DMG_VINYL_TO_PLAYER 1
-#define DMG_TURNTABLE_TO_PLAYER 2
-#define DMG_ENEMY_BULLET_TO_PLAYER 1
+#define DMG_VINYL_TO_PLAYER 2
+#define DMG_TURNTABLE_TO_PLAYER 3
 
 // Damage to enemy
-#define DMG_BULLET_TO_ENEMY 1
 #define DMG_MEGABALL_TO_ENEMY 10
 
 // Events
@@ -286,7 +284,7 @@ void BossDJScene::updateSprites() {
 
     if (bullet->collidesWith(octopus.get())) {
       addExplosion(bullet->getPosition());
-      causeDamage(DMG_BULLET_TO_ENEMY);
+      causeDamage(bullet->damage);
 
       return true;
     }
@@ -316,7 +314,7 @@ void BossDJScene::updateSprites() {
         return false;
       }
 
-      sufferDamage(DMG_ENEMY_BULLET_TO_PLAYER);
+      sufferDamage(bullet->damage);
 
       return true;
     }

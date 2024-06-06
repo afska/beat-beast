@@ -10,6 +10,7 @@
 //  | |---- throw turntable (1 = top | 2 = bottom)
 //  |------ set loop marker (1)
 // !50 = test special event
+// !2  = end
 
 // Easy
 #NOTEDATA:;

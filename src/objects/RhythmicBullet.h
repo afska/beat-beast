@@ -5,6 +5,7 @@
 
 class RhythmicBullet : public GameObject {
  public:
+  unsigned damage = 1;
   bool isShootable = false;
   bool isHeadDeflectable = false;
   bool hasDamageAfterExploding = false;

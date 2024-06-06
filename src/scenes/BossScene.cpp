@@ -8,7 +8,7 @@
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 #include "bn_keypad.h"
 
-#define LIFE_PLAYER 20
+#define LIFE_PLAYER 30
 
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".gsm";
