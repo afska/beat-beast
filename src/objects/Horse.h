@@ -5,6 +5,8 @@
 
 class Horse : public TopLeftGameObject {
  public:
+  bool canShoot = false;
+
   Horse(bn::fixed_point initialPosition);
 
   void update();

@@ -115,7 +115,6 @@ void BossDJScene::processInput() {
                                                   horse->getShootingDirection(),
                                                   SpriteProvider::bullet())});
     } else {
-      horse->hurt();
       showCross();
     }
   }

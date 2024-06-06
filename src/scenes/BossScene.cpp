@@ -109,12 +109,16 @@ void BossScene::updateCommonSprites() {
   enemyLifeBar->update();
 
   if (cross.has_value()) {
-    if (cross->get()->update())
+    if (cross->get()->update()) {
+      horse->canShoot = true;
       cross.reset();
+    }
   }
 }
 
 void BossScene::showCross() {
+  horse->canShoot = false;
+
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
 }

@@ -3,7 +3,7 @@
 
 #include "bn_sprite_items_dj_alt_vinyl.h"
 
-#define ON_BEAT_SPEED 1
+#define ON_BEAT_SPEED 2
 #define OFF_BEAT_SPEED 0
 #define SCALE 2
 #define SCALE_IN_SPEED 0.05
