@@ -13,8 +13,8 @@
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
 // Loop
-#define LOOP_START 100174
-#define LOOP_END 158616
+#define LOOP_END_MS 158580
+#define LOOP_OFFSET_CURSOR -218856
 
 // Damage to player
 #define DMG_VINYL_TO_PLAYER 1
@@ -81,8 +81,8 @@ void BossDJScene::updateBossFight() {
   updateBackground();
   updateSprites();
 
-  if (chartReader->getMsecs() >= LOOP_END && !didWin) {
-    player_seek(LOOP_START);
+  if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
+    player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
     chartReader->restoreLoop();
   }
 }

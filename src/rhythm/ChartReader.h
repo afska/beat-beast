@@ -22,7 +22,7 @@ class ChartReader {
     loopTickIndex = (int)tickIndex;
   }
   void restoreLoop() {
-    for (u32 i = loopEventIndex; i < chart.eventCount; i++)
+    for (u32 i = loopEventIndex + 1; i < chart.eventCount; i++)
       chart.events[i].handled = false;
     eventIndex = loopEventIndex;
     beatIndex = loopBeatIndex;
