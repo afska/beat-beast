@@ -62,21 +62,20 @@ void ChartReader::processNextEvents() {
   // by setting their masks in `eventsThatNeedAudioLagPrediction`.
   // SPECIAL events are always processed at the right time.
 
-  processEvents(chart.events, chart.eventCount, eventIndex, msecs + audioLag,
-                [this](Event* event, bool* stop) {
-                  if (event->isRegular()) {
-                    for (auto& it : eventsThatNeedAudioLagPrediction) {
-                      if ((event->getType() & it) != 0) {
-                        pendingEvents.push_back(event);
-                        return true;
-                      }
-                    }
-                  }
+  processEvents(
+      chart.events, chart.eventCount, eventIndex, msecs + audioLag,
+      [this](Event* event, bool* stop) {
+        if (event->isRegular()) {
+          if ((event->getType() & eventsThatNeedAudioLagPrediction) != 0) {
+            pendingEvents.push_back(event);
+            return true;
+          }
+        }
 
-                  if (msecs < event->timestamp)
-                    return false;
+        if (msecs < event->timestamp)
+          return false;
 
-                  pendingEvents.push_back(event);
-                  return true;
-                });
+        pendingEvents.push_back(event);
+        return true;
+      });
 }

@@ -78,7 +78,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
   background.set_blending_enabled(true);
   background.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
-  chartReader->eventsThatNeedAudioLagPrediction.push_back(240 /* 0b11110000*/);
+  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
 }
 
 void BossDJScene::updateBossFight() {
