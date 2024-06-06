@@ -12,6 +12,8 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
+#define LIFE_BOSS 150
+
 // Loop
 #define LOOP_END_MS 158580
 #define LOOP_OFFSET_CURSOR -218856
@@ -64,7 +66,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},
-                                150,
+                                LIFE_BOSS,
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),

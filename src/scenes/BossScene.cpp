@@ -8,6 +8,8 @@
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
 #include "bn_keypad.h"
 
+#define LIFE_PLAYER 20
+
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".gsm";
 
@@ -21,7 +23,7 @@ BossScene::BossScene(GameState::Screen _screen,
       textGenerator(fixed_8x16_sprite_font),
       horse(bn::move(_horse)),
       lifeBar(new LifeBar({0, 0},
-                          20,
+                          LIFE_PLAYER,
                           SpriteProvider::iconHorse(),
                           SpriteProvider::lifebarFill())),
       enemyLifeBar(bn::move(_enemyLifeBar)),
