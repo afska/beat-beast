@@ -1,6 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "bn_camera_ptr.h"
 #include "bn_display.h"
 #include "bn_random.h"
 #include "bn_regular_bg_ptr.h"

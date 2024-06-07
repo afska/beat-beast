@@ -21,6 +21,7 @@ class Horse : public TopLeftGameObject {
   bool isBusy() { return isJumping() || isHurt(); }
   bool isJumping() { return jumpingAnimation.has_value(); }
   bool isHurt() { return hurtAnimation.has_value(); }
+  bool getIsMoving() { return isMoving; }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
   int getBounceFrame() { return bounceFrame; }

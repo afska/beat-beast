@@ -12,7 +12,10 @@ class BossWizardScene : public BossScene {
   void updateBossFight() override;
 
  private:
-  bn::regular_bg_ptr background;
+  bn::regular_bg_ptr background3;
+  bn::regular_bg_ptr background2;
+  bn::regular_bg_ptr background1;
+  bn::regular_bg_ptr background0;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
 

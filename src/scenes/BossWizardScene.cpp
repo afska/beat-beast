@@ -8,6 +8,10 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj.h"
+#include "bn_regular_bg_items_back_wizard_mountain_bg0.h"
+#include "bn_regular_bg_items_back_wizard_mountain_bg1.h"
+#include "bn_regular_bg_items_back_wizard_mountain_bg2.h"
+#include "bn_regular_bg_items_back_wizard_mountain_bg3.h"
 #include "bn_sprite_items_dj_bad_bullet.h"
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
@@ -29,7 +33,7 @@
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
 const bn::fixed HORSE_INITIAL_X = 80;
-const bn::fixed HORSE_Y = 90;
+const bn::fixed HORSE_Y = 95;
 
 BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::WIZARD,
@@ -41,9 +45,26 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
-      background(bn::regular_bg_items::back_dj.create_bg(0, 0)) {
-  background.set_blending_enabled(true);
-  background.set_mosaic_enabled(true);
+      background3(bn::regular_bg_items::back_wizard_mountain_bg3.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      background2(bn::regular_bg_items::back_wizard_mountain_bg2.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      background1(bn::regular_bg_items::back_wizard_mountain_bg1.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      background0(bn::regular_bg_items::back_wizard_mountain_bg0.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)) {
+  background0.set_blending_enabled(true);
+  background0.set_mosaic_enabled(true);
+  background1.set_blending_enabled(true);
+  background1.set_mosaic_enabled(true);
+  background2.set_blending_enabled(true);
+  background2.set_mosaic_enabled(true);
+  background3.set_blending_enabled(true);
+  background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   // chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
 }
@@ -64,7 +85,21 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
-  processMovementInput(HORSE_Y);
+  // move horse (left/right)
+  bn::fixed speedX;
+  if (!bn::keypad::r_held()) {  // (R locks target)
+    if (bn::keypad::left_held()) {
+      speedX = -1;
+    } else if (bn::keypad::right_held()) {
+      speedX = 1;
+    }
+    if (speedX != 0 && chartReader->isInsideBeat())
+      speedX *= 2;  // rhythmic movement?
+    horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y}, true);
+  } else {
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+  }
+
   processAimInput();
   processMenuInput();
 
@@ -97,6 +132,13 @@ void BossWizardScene::processChart() {
 void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+
+  background0.set_position(background0.position().x() - 1,
+                           background0.position().y());
+  background1.set_position(background1.position().x() - 0.5,
+                           background1.position().y());
+  background2.set_position(background2.position().x() - 0.25,
+                           background2.position().y());
 }
 
 void BossWizardScene::updateSprites() {
