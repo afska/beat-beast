@@ -52,8 +52,8 @@ int main() {
   player_sfx_init();
 
   scene = isNewSave ? setNextScene(GameState::Screen::CALIBRATION)
-                    : setNextScene(GameState::Screen::DJ);
-  // : setNextScene(GameState::Screen::WIZARD);
+                    // : setNextScene(GameState::Screen::DJ);
+                    : setNextScene(GameState::Screen::WIZARD);
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->get()->init();
 

@@ -1,5 +1,6 @@
 #include "DevPlaygroundScene.h"
 
+#include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../scenes/CalibrationScene.h"
@@ -9,8 +10,6 @@
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_synth.h"
-#include "bn_sprite_items_dj_gun.h"
-#include "bn_sprite_items_dj_horse.h"
 
 DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::DJ, _fs),
@@ -18,8 +17,8 @@ DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
       physWorld(new PhysWorld),
       horse(new Horse({20, 90})),
       background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
-      gun(bn::sprite_items::dj_gun.create_sprite(20, 20)),
-      otherGun(bn::sprite_items::dj_gun.create_sprite(40, 40)),
+      gun(SpriteProvider::gun().create_sprite(20, 20)),
+      otherGun(SpriteProvider::gun().create_sprite(40, 40)),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {}

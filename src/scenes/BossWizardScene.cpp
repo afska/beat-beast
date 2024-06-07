@@ -32,8 +32,8 @@ const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
 
 BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
-    : BossScene(GameState::Screen::DJ,
-                "dj",
+    : BossScene(GameState::Screen::WIZARD,
+                "wizard",
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},

@@ -246,21 +246,13 @@ void BossDJScene::updateSprites() {
 
   if (octopus->getUpperTurntable()->getIsAttacking() &&
       octopus->getUpperTurntable()->collidesWith(horse.get())) {
-    if (horse->isJumping())
-      octopus->getUpperTurntable()->addDamage();
-    else {
-      sufferDamage(DMG_TURNTABLE_TO_PLAYER);
-      octopus->getUpperTurntable()->stopAttack();
-    }
+    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
+    octopus->getUpperTurntable()->stopAttack();
   }
   if (octopus->getLowerTurntable()->getIsAttacking() &&
       octopus->getLowerTurntable()->collidesWith(horse.get())) {
-    if (horse->isJumping())
-      octopus->getLowerTurntable()->addDamage();
-    else {
-      sufferDamage(DMG_TURNTABLE_TO_PLAYER);
-      octopus->getLowerTurntable()->stopAttack();
-    }
+    sufferDamage(DMG_TURNTABLE_TO_PLAYER);
+    octopus->getLowerTurntable()->stopAttack();
   }
 
   // Attacks
