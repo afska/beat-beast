@@ -13,7 +13,7 @@
 #include "bn_sprite_items_dj_lifebar_fill.h"
 
 bn::sprite_item unknownScreen() {
-  BN_ASSERT(false, "Unknown screen: " +
+  BN_ASSERT(false, "Sprites not found for screen: " +
                        bn::to_string<32>(GameState::data.currentScreen));
   return bn::sprite_items::dj_horse;
 }

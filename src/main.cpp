@@ -2,6 +2,7 @@
 #include "player/player_sfx.h"
 #include "savefile/SaveFile.h"
 #include "scenes/BossDJScene.h"
+#include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
 #include "scenes/DevPlaygroundScene.h"
 #include "utils/gbfs/gbfs.h"
@@ -25,6 +26,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
     case GameState::Screen::DJ:
       return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
+    case GameState::Screen::WIZARD:
+      return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
     default: {
       BN_ASSERT(false, "Next screen not found?");
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
@@ -50,6 +53,7 @@ int main() {
 
   scene = isNewSave ? setNextScene(GameState::Screen::CALIBRATION)
                     : setNextScene(GameState::Screen::DJ);
+  // : setNextScene(GameState::Screen::WIZARD);
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->get()->init();
 
