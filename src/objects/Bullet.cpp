@@ -8,7 +8,7 @@
 Bullet::Bullet(bn::fixed_point initialPosition,
                bn::fixed_point _direction,
                bn::sprite_item _bullet)
-    : sprite(SpriteProvider::bullet().create_sprite(initialPosition)),
+    : sprite(_bullet.create_sprite(initialPosition)),
       animation(bn::create_sprite_animate_action_forever(sprite,
                                                          5,
                                                          _bullet.tiles_item(),

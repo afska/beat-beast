@@ -2,6 +2,6 @@
     "type": "sprite",
     "width": 32,
     "height": 32,
-    "bpp_mode": "bpp_8",
-    "colors_count": 240
+    "bpp_mode": "bpp_4",
+    "colors_count": 16
 }

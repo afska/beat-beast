@@ -5,15 +5,18 @@
 
 namespace SpriteProvider {
 
-bn::sprite_item horse();
 bn::sprite_item gun();
 bn::sprite_item bullet();
 bn::sprite_item cross();
+bn::sprite_item explosion();
+bn::sprite_item hitbox();
+
+// ---
+
+bn::sprite_item horse();
 bn::sprite_item iconHorse();
 bn::sprite_item lifebar();
 bn::sprite_item lifebarFill();
-bn::sprite_item explosion();
-bn::sprite_item hitbox();
 
 }  // namespace SpriteProvider
 
