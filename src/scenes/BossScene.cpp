@@ -116,14 +116,17 @@ void BossScene::updateCommonSprites() {
   enemyLifeBar->update();
 
   if (cross.has_value()) {
-    if (cross->get()->update()) {
-      horse->canShoot = true;
+    if (cross->get()->update())
       cross.reset();
-    }
   }
 }
 
-void BossScene::showCross() {
+void BossScene::shoot() {
+  horse->shoot();
+  horse->canShoot = false;
+}
+
+void BossScene::reportFailedShot() {
   horse->canShoot = false;
 
   cross.reset();
@@ -133,6 +136,11 @@ void BossScene::showCross() {
 void BossScene::updateChartReader() {
   int audioLag = SaveFile::data.audioLag;
   bool wasInsideBeat = chartReader->isInsideBeat();
+  bool wasInsideTick = chartReader->isInsideTick();
   chartReader->update(PlaybackState.msecs - audioLag);
   isNewBeat = !wasInsideBeat && chartReader->isInsideBeat();
+  isNewTick = !wasInsideTick && chartReader->isInsideTick();
+
+  if (isNewTick)
+    horse->canShoot = true;
 }

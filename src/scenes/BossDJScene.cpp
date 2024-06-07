@@ -102,13 +102,13 @@ void BossDJScene::processInput() {
 
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
-    if (chartReader->isInsideTick()) {
+    if (chartReader->isInsideTick() && horse->canShoot) {
       horse->shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),
                                                   SpriteProvider::bullet())});
     } else {
-      showCross();
+      reportFailedShot();
     }
   }
 

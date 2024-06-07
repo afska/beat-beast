@@ -38,6 +38,7 @@ class BossScene : public Scene {
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::random random;
   bool isNewBeat = false;
+  bool isNewTick = false;
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
@@ -57,7 +58,8 @@ class BossScene : public Scene {
   void processAimInput();
   void processMenuInput();
   void updateCommonSprites();
-  void showCross();
+  void shoot();
+  void reportFailedShot();
 
  private:
   void updateChartReader();
