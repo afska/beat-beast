@@ -36,9 +36,10 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition)
 
   sprite1.set_scale(scale);
   sprite2.set_scale(scale);
+  damage = 5;
   isShootable = true;
   hasDamageAfterExploding = true;
-  damage = 5;
+  hasLoopSound = true;
 }
 
 bool MegaBall::update(int msecs,

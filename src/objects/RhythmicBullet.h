@@ -9,6 +9,7 @@ class RhythmicBullet : public GameObject {
   bool isShootable = false;
   bool isHeadDeflectable = false;
   bool hasDamageAfterExploding = false;
+  bool hasLoopSound = false;
 
   virtual bool update(int msecs,
                       bool isInsideBeat,

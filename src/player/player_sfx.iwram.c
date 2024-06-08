@@ -38,6 +38,7 @@
 // Playback rate can be either 1 or 1.11.
 
 static bool did_run = false;
+static bool is_looping = false;
 
 #define AS_MSECS AS_MSECS_PCM
 
@@ -147,6 +148,7 @@ INLINE void dsound_start_audio_copy(const void* source) {
 
 INLINE void loadFile(const char* name) {
   play(name);
+  is_looping = false;
 }
 
 CODE_ROM void player_sfx_init() {
@@ -163,8 +165,13 @@ CODE_ROM void player_sfx_play(const char* name) {
   loadFile(name);
 }
 
+CODE_ROM void player_sfx_setLoop(bool enable) {
+  is_looping = enable;
+}
+
 CODE_ROM void player_sfx_stop() {
   stop();
+  is_looping = false;
 }
 
 CODE_ROM bool player_sfx_isPlaying() {
@@ -186,5 +193,10 @@ void player_sfx_onVBlank() {
 
 void player_sfx_update() {
   // > audio processing (back buffer)
-  AUDIO_PROCESS({ player_sfx_stop(); });
+  AUDIO_PROCESS({
+    if (is_looping)
+      src_pos = 0;
+    else
+      player_sfx_stop();
+  });
 }

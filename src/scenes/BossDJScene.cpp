@@ -56,6 +56,7 @@
 #define EVENT_SONG_END 2
 
 #define SFX_VINYL "vinyl.pcm"
+#define SFX_MEGABALL "megaball.pcm"
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
@@ -195,6 +196,8 @@ void BossDJScene::processChart() {
         octopus->megaAttack();
         enemyBullets.push_back(
             bn::unique_ptr{new MegaBall(octopus->getShootingPoint())});
+        player_sfx_play(SFX_MEGABALL);
+        player_sfx_setLoop(true);
       }
 
       // Turntable throw
@@ -310,8 +313,14 @@ void BossDJScene::updateSprites() {
 
       sufferDamage(bullet->damage);
 
+      if (bullet->hasLoopSound)
+        player_sfx_stop();
+
       return true;
     }
+
+    if (isOut && bullet->hasLoopSound)
+      player_sfx_stop();
 
     if (isOut && bullet->didExplode() && bullet->hasDamageAfterExploding)
       causeDamage(DMG_MEGABALL_TO_ENEMY);
