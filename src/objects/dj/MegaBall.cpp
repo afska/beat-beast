@@ -10,8 +10,9 @@
 #define SCALE_IN_SPEED 0.05
 #define RETURN_SPEED 5
 
-MegaBall::MegaBall(bn::fixed_point _initialPosition)
-    : sprite1(
+MegaBall::MegaBall(bn::fixed_point _initialPosition, Event* _event)
+    : event(_event),
+      sprite1(
           bn::sprite_items::dj_bad_big_bullet.create_sprite(_initialPosition)),
       sprite2(SpriteProvider::explosion().create_sprite(_initialPosition)),
       animation1(bn::create_sprite_animate_action_forever(
@@ -45,6 +46,15 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition)
 bool MegaBall::update(int msecs,
                       bool isInsideBeat,
                       bn::fixed_point playerPosition) {
+  if (msecs < event->timestamp) {
+    sprite1.set_visible(false);
+    sprite2.set_visible(false);
+    return false;
+  } else {
+    sprite1.set_visible(true);
+    sprite2.set_visible(true);
+  }
+
   if (isExploding) {
     scale -= 0.15;
     if (scale <= 0)

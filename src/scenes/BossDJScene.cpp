@@ -46,10 +46,11 @@
 
 #define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 3, 1)
 #define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 3, 2)
-#define IS_EVENT_BULLET_MEGA(TYPE) IS_EVENT(TYPE, 3, 3)
 
 #define IS_EVENT_TURNTABLE_THROW_TOP(TYPE) IS_EVENT(TYPE, 4, 1)
 #define IS_EVENT_TURNTABLE_THROW_BOTTOM(TYPE) IS_EVENT(TYPE, 4, 2)
+
+#define IS_EVENT_BULLET_MEGA(TYPE) IS_EVENT(TYPE, 5, 1)
 
 #define IS_EVENT_SET_LOOP_MARKER(TYPE) IS_EVENT(TYPE, 6, 1)
 
@@ -79,7 +80,8 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
   background.set_blending_enabled(true);
   background.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
-  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction =
+      15728880 /* 0b111100000000000011110000*/;
 }
 
 void BossDJScene::updateBossFight() {
@@ -95,6 +97,7 @@ void BossDJScene::updateBossFight() {
     enemyBullets.clear();
     vinyls.clear();
     pixelBlink->blink();
+    player_sfx_stop();
   }
 }
 
@@ -192,13 +195,6 @@ void BossDJScene::processChart() {
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
                        bn::sprite_items::dj_bad_bullet)});
       }
-      if (IS_EVENT_BULLET_MEGA(type)) {
-        octopus->megaAttack();
-        enemyBullets.push_back(
-            bn::unique_ptr{new MegaBall(octopus->getShootingPoint())});
-        player_sfx_play(SFX_MEGABALL);
-        player_sfx_setLoop(true);
-      }
 
       // Turntable throw
       if (IS_EVENT_TURNTABLE_THROW_TOP(type)) {
@@ -206,6 +202,14 @@ void BossDJScene::processChart() {
       }
       if (IS_EVENT_TURNTABLE_THROW_BOTTOM(type)) {
         octopus->getLowerTurntable()->attack();
+      }
+
+      if (IS_EVENT_BULLET_MEGA(type)) {
+        octopus->megaAttack();
+        enemyBullets.push_back(
+            bn::unique_ptr{new MegaBall(octopus->getShootingPoint(), event)});
+        player_sfx_play(SFX_MEGABALL);
+        player_sfx_setLoop(true);
       }
 
       // Set loop marker

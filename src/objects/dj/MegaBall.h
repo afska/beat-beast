@@ -6,7 +6,7 @@
 
 class MegaBall : public RhythmicBullet {
  public:
-  MegaBall(bn::fixed_point _initialPosition);
+  MegaBall(bn::fixed_point _initialPosition, Event* _event);
 
   bool update(int msecs,
               bool isInsideBeat,
@@ -14,6 +14,7 @@ class MegaBall : public RhythmicBullet {
   void explode(bn::fixed_point nextTarget) override;
 
  private:
+  Event* event;
   bn::fixed_point direction;
   bn::fixed scale = 0.1;
   bn::sprite_ptr sprite1;
