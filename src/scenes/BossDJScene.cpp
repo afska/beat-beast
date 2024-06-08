@@ -208,8 +208,7 @@ void BossDJScene::processChart() {
         octopus->megaAttack();
         enemyBullets.push_back(
             bn::unique_ptr{new MegaBall(octopus->getShootingPoint(), event)});
-        player_sfx_play(SFX_MEGABALL);
-        player_sfx_setLoop(true);
+        addMegaBallSfx();
       }
 
       // Set loop marker
@@ -318,13 +317,13 @@ void BossDJScene::updateSprites() {
       sufferDamage(bullet->damage);
 
       if (bullet->hasLoopSound)
-        player_sfx_stop();
+        removeMegaBallSfx();
 
       return true;
     }
 
     if (isOut && bullet->hasLoopSound)
-      player_sfx_stop();
+      removeMegaBallSfx();
 
     if (isOut && bullet->didExplode() && bullet->hasDamageAfterExploding)
       causeDamage(DMG_MEGABALL_TO_ENEMY);
@@ -354,4 +353,16 @@ void BossDJScene::causeDamage(unsigned amount) {
   octopus->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
+}
+
+void BossDJScene::addMegaBallSfx() {
+  player_sfx_play(SFX_MEGABALL);
+  player_sfx_setLoop(true);
+  megaBallSfxCount++;
+}
+
+void BossDJScene::removeMegaBallSfx() {
+  megaBallSfxCount--;
+  if (megaBallSfxCount <= 0)
+    player_sfx_stop();
 }

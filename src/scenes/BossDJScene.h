@@ -28,6 +28,7 @@ class BossDJScene : public BossScene {
   bn::regular_bg_position_hbe_ptr horizontalHBE;
   bool didWin = false;
   bool didShowMessage = false;
+  int megaBallSfxCount = 0;
 
   void processInput();
   void processChart();
@@ -35,6 +36,8 @@ class BossDJScene : public BossScene {
   void updateSprites();
 
   void causeDamage(unsigned amount);
+  void addMegaBallSfx();
+  void removeMegaBallSfx();
 };
 
 #endif  // BOSS_DJ_SCENE_H
