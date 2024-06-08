@@ -50,6 +50,9 @@ static bool did_run = false;
       for (u32 i = 0; i < 608 / 4; i++)                 \
         ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i]; \
       src_pos += 608;                                   \
+      if (src_pos > src_len) {                          \
+        ON_STOP;                                        \
+      }                                                 \
     } else {                                            \
       ON_STOP;                                          \
     }                                                   \
