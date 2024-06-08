@@ -194,9 +194,10 @@ void player_sfx_onVBlank() {
 void player_sfx_update() {
   // > audio processing (back buffer)
   AUDIO_PROCESS({
-    if (is_looping)
+    if (is_looping) {
       src_pos = 0;
-    else
+      did_run = false;
+    } else
       player_sfx_stop();
   });
 }
