@@ -55,6 +55,8 @@
 
 #define EVENT_SONG_END 2
 
+#define SFX_VINYL "vinyl.pcm"
+
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 90;
 
@@ -138,12 +140,12 @@ void BossDJScene::processChart() {
       if (IS_EVENT_LEFT_VINYL(type)) {
         vinyls.push_back(bn::unique_ptr{
             new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
-        playRandomSound();
+        player_sfx_play(SFX_VINYL);
       }
       if (IS_EVENT_RIGHT_VINYL(type)) {
         vinyls.push_back(bn::unique_ptr{
             new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
-        playRandomSound();
+        player_sfx_play(SFX_VINYL);
       }
 
       // Vinyls (floating)
@@ -339,9 +341,4 @@ void BossDJScene::causeDamage(unsigned amount) {
   octopus->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
-}
-
-void BossDJScene::playRandomSound() {
-  int sound = random.get_int(1, 7);
-  player_sfx_play(("ta" + bn::to_string<32>(sound) + ".pcm").c_str());
 }

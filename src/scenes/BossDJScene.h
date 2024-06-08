@@ -35,7 +35,6 @@ class BossDJScene : public BossScene {
   void updateSprites();
 
   void causeDamage(unsigned amount);
-  void playRandomSound();
 };
 
 #endif  // BOSS_DJ_SCENE_H
