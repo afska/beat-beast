@@ -104,7 +104,6 @@ void BossDJScene::updateBossFight() {
 void BossDJScene::processInput() {
   processMovementInput(HORSE_Y);
   processAimInput();
-  processMenuInput();
 
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {

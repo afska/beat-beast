@@ -101,7 +101,6 @@ void BossWizardScene::processInput() {
   }
 
   processAimInput();
-  processMenuInput();
 
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {

@@ -4,13 +4,16 @@
 
 #include "bn_sprite_items_bullet.h"
 #include "bn_sprite_items_cross.h"
+#include "bn_sprite_items_explosion.h"
+#include "bn_sprite_items_gun.h"
+#include "bn_sprite_items_hitbox.h"
+#include "bn_sprite_items_menu.h"
+
 #include "bn_sprite_items_dj_horse.h"
 #include "bn_sprite_items_dj_icon_horse.h"
 #include "bn_sprite_items_dj_lifebar.h"
 #include "bn_sprite_items_dj_lifebar_fill.h"
-#include "bn_sprite_items_explosion.h"
-#include "bn_sprite_items_gun.h"
-#include "bn_sprite_items_hitbox.h"
+
 #include "bn_sprite_items_wizard_horse.h"
 #include "bn_sprite_items_wizard_icon_horse.h"
 #include "bn_sprite_items_wizard_lifebar.h"
@@ -36,6 +39,10 @@ bn::sprite_item SpriteProvider::cross() {
 
 bn::sprite_item SpriteProvider::explosion() {
   return bn::sprite_items::explosion;
+}
+
+bn::sprite_item SpriteProvider::menu() {
+  return bn::sprite_items::menu;
 }
 
 bn::sprite_item SpriteProvider::hitbox() {

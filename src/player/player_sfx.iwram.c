@@ -39,6 +39,7 @@
 
 static bool did_run = false;
 static bool is_looping = false;
+static bool is_paused = false;
 
 #define AS_MSECS AS_MSECS_PCM
 
@@ -149,6 +150,7 @@ INLINE void dsound_start_audio_copy(const void* source) {
 INLINE void loadFile(const char* name) {
   play(name);
   is_looping = false;
+  is_paused = false;
 }
 
 CODE_ROM void player_sfx_init() {
@@ -169,9 +171,14 @@ CODE_ROM void player_sfx_setLoop(bool enable) {
   is_looping = enable;
 }
 
+CODE_ROM void player_sfx_setPause(bool enable) {
+  is_paused = enable;
+}
+
 CODE_ROM void player_sfx_stop() {
   stop();
   is_looping = false;
+  is_paused = false;
 }
 
 CODE_ROM bool player_sfx_isPlaying() {
@@ -192,6 +199,11 @@ void player_sfx_onVBlank() {
 }
 
 void player_sfx_update() {
+  if (is_paused) {
+    mute();
+    return;
+  }
+
   // > audio processing (back buffer)
   AUDIO_PROCESS({
     if (is_looping) {

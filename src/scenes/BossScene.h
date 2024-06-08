@@ -29,6 +29,7 @@ class BossScene : public Scene {
   bn::string<32> fileName;
   bn::vector<bn::sprite_ptr, 32> textSprites;
   bn::sprite_text_generator textGenerator;
+  bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<ChartReader> chartReader;
   bn::unique_ptr<Horse> horse;
   bn::unique_ptr<LifeBar> lifeBar;
@@ -36,9 +37,11 @@ class BossScene : public Scene {
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<PixelBlink> pixelBlink;
+  bn::sprite_ptr menu;
   bn::random random;
   bool isNewBeat = false;
   bool isNewTick = false;
+  bool isPaused = false;
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
@@ -56,13 +59,13 @@ class BossScene : public Scene {
   void sufferDamage(unsigned amount);
   void processMovementInput(bn::fixed horseY);
   void processAimInput();
-  void processMenuInput();
   void updateCommonSprites();
   void shoot();
   void reportFailedShot();
 
  private:
   void updateChartReader();
+  void pause();
 };
 
 #endif  // BOSS_SCENE_H

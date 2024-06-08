@@ -16,6 +16,7 @@ void player_init();
 void player_unload();
 void player_play(const char* name);
 void player_setLoop(bool enable);
+void player_setPause(bool enable);
 void player_seek(unsigned int msecs);
 void player_setRate(int rate);
 void player_stop();

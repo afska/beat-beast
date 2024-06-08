@@ -59,6 +59,7 @@ static int rate = 0;
 static u32 rate_counter = 0;
 static u32 current_audio_chunk = 0;
 static bool did_run = false;
+static bool is_paused = false;
 
 #define AS_MSECS AS_MSECS_GSM
 
@@ -207,6 +208,7 @@ INLINE void loadFile(const char* name) {
   PlaybackState.msecs = 0;
   PlaybackState.hasFinished = false;
   PlaybackState.isLooping = false;
+  is_paused = false;
   rate = 0;
   rate_counter = 0;
   current_audio_chunk = 0;
@@ -234,6 +236,10 @@ CODE_ROM void player_play(const char* name) {
 
 CODE_ROM void player_setLoop(bool enable) {
   PlaybackState.isLooping = enable;
+}
+
+CODE_ROM void player_setPause(bool enable) {
+  is_paused = enable;
 }
 
 CODE_ROM void player_seek(unsigned int msecs) {
@@ -272,6 +278,7 @@ CODE_ROM void player_stop() {
   PlaybackState.msecs = 0;
   PlaybackState.hasFinished = false;
   PlaybackState.isLooping = false;
+  is_paused = false;
   rate = 0;
   rate_counter = 0;
   current_audio_chunk = 0;
@@ -306,6 +313,11 @@ CODE_ROM void update_rate() {
 
 void player_update(int expectedAudioChunk,
                    void (*onAudioChunks)(unsigned int current)) {
+  if (is_paused) {
+    mute();
+    return;
+  }
+
   // > multiplayer audio sync
   bool isSynchronized = expectedAudioChunk > 0;
   int availableAudioChunks = expectedAudioChunk - current_audio_chunk;
