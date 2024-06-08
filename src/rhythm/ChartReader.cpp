@@ -2,7 +2,8 @@
 
 #include "bn_log.h"
 
-#define TIMING_WINDOW_MS 80
+#define BEAT_TIMING_WINDOW_MS 80
+#define TICK_TIMING_WINDOW_MS 66
 #define MINUTE 60000
 
 ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
@@ -26,9 +27,9 @@ void ChartReader::processRhythmEvents() {
 
     int nextBeatMs = nextBeatEvent.timestamp;
 
-    if (msecs >= nextBeatMs - TIMING_WINDOW_MS)
+    if (msecs >= nextBeatMs - BEAT_TIMING_WINDOW_MS)
       _isInsideBeat = true;
-    if (msecs >= nextBeatMs + TIMING_WINDOW_MS) {
+    if (msecs >= nextBeatMs + BEAT_TIMING_WINDOW_MS) {
       _isInsideBeat = false;
       do {
         nextBeatEvent = chart.rhythmEvents[beatIndex];
@@ -43,9 +44,9 @@ void ChartReader::processRhythmEvents() {
     Event nextTickEvent = chart.rhythmEvents[tickIndex];
     int nextTickMs = nextTickEvent.timestamp;
 
-    if (msecs >= nextTickMs - TIMING_WINDOW_MS)
+    if (msecs >= nextTickMs - TICK_TIMING_WINDOW_MS)
       _isInsideTick = true;
-    if (msecs >= nextTickMs + TIMING_WINDOW_MS) {
+    if (msecs >= nextTickMs + TICK_TIMING_WINDOW_MS) {
       _isInsideTick = false;
       tickIndex++;
     }
