@@ -175,6 +175,20 @@ CODE_ROM void player_sfx_setPause(bool enable) {
   is_paused = enable;
 }
 
+CODE_ROM PlayerSFXState player_sfx_getState() {
+  PlayerSFXState state;
+  state.pos = src_pos;
+  state.isPlaying = src != NULL;
+  state.isLooping = is_looping;
+  return state;
+}
+
+CODE_ROM void player_sfx_setState(PlayerSFXState state) {
+  src_pos = state.pos;
+  is_looping = is_looping;
+  did_run = false;
+}
+
 CODE_ROM void player_sfx_stop() {
   stop();
   is_looping = false;

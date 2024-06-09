@@ -143,12 +143,12 @@ void BossDJScene::processChart() {
       if (IS_EVENT_LEFT_VINYL(type)) {
         vinyls.push_back(bn::unique_ptr{
             new Vinyl(Math::toAbsTopLeft({0, 150}), {1, 0}, event)});
-        player_sfx_play(SFX_VINYL);
+        playSfx(SFX_VINYL);
       }
       if (IS_EVENT_RIGHT_VINYL(type)) {
         vinyls.push_back(bn::unique_ptr{
             new Vinyl(Math::toAbsTopLeft({240, 150}), {-1, 0}, event)});
-        player_sfx_play(SFX_VINYL);
+        playSfx(SFX_VINYL);
       }
 
       // Vinyls (floating)
@@ -355,8 +355,7 @@ void BossDJScene::causeDamage(unsigned amount) {
 }
 
 void BossDJScene::addMegaBallSfx() {
-  player_sfx_play(SFX_MEGABALL);
-  player_sfx_setLoop(true);
+  playSfx(SFX_MEGABALL, true);
   megaBallSfxCount++;
 }
 

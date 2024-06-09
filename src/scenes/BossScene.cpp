@@ -2,7 +2,6 @@
 
 #include "../assets/SpriteProvider.h"
 #include "../player/player.h"
-#include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 
 #include "../assets/fonts/fixed_8x16_sprite_font.h"
@@ -67,6 +66,12 @@ void BossScene::update() {
 
   if (bn::keypad::start_pressed() && !isPaused)
     pause();
+}
+
+void BossScene::playSfx(bn::string<32> sfxFileName, bool loop) {
+  lastSfxFileName = sfxFileName;
+  player_sfx_play(sfxFileName.c_str());
+  player_sfx_setLoop(loop);
 }
 
 void BossScene::addExplosion(bn::fixed_point position) {
@@ -167,6 +172,7 @@ void BossScene::updateChartReader() {
 void BossScene::pause() {
   isPaused = true;
 
+  playerSfxState = player_sfx_getState();
   player_setPause(true);
   player_sfx_play(SFX_PAUSE);
 
@@ -183,6 +189,10 @@ void BossScene::unpause() {
   isPaused = false;
 
   player_setPause(false);
+  if (playerSfxState.isPlaying) {
+    player_sfx_play(lastSfxFileName.c_str());
+    player_sfx_setState(playerSfxState);
+  }
   menu->stop();
 }
 

@@ -8,6 +8,7 @@
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Menu.h"
+#include "../player/player_sfx.h"
 #include "../rhythm/ChartReader.h"
 #include "../utils/PixelBlink.h"
 
@@ -39,6 +40,8 @@ class BossScene : public Scene {
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::unique_ptr<Menu> menu;
+  bn::string<32> lastSfxFileName = "";
+  PlayerSFXState playerSfxState;
   bn::random random;
   bool isNewBeat = false;
   bool isNewTick = false;
@@ -56,6 +59,7 @@ class BossScene : public Scene {
     }
   }
 
+  void playSfx(bn::string<32> sfxFileName, bool loop = false);
   void addExplosion(bn::fixed_point position);
   void sufferDamage(unsigned amount);
   void processMovementInput(bn::fixed horseY);
@@ -66,9 +70,9 @@ class BossScene : public Scene {
 
  private:
   void updateChartReader();
+  void processMenuOption(int option);
   void pause();
   void unpause();
-  void processMenuOption(int option);
 };
 
 #endif  // BOSS_SCENE_H
