@@ -179,7 +179,7 @@ void BossScene::pause() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Continue"});
   options.push_back(Menu::Option{.text = "Calibrate"});
-  options.push_back(Menu::Option{.text = "Settings"});
+  options.push_back(Menu::Option{.text = "WIZARD!"});
   options.push_back(Menu::Option{.text = "Quit"});
 
   menu->start(options);
@@ -207,7 +207,8 @@ void BossScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Settings
-      // ???
+               // ???
+      setNextScreen(GameState::Screen::WIZARD);
       break;
     }
     case 3: {  // Quit
