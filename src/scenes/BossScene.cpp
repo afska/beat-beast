@@ -11,6 +11,7 @@
 #include "bn_keypad.h"
 
 #define LIFE_PLAYER 30
+#define SFX_PAUSE "menu_pause.pcm"
 
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".gsm";
@@ -31,14 +32,12 @@ BossScene::BossScene(GameState::Screen _screen,
                           SpriteProvider::lifebarFill())),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       pixelBlink(new PixelBlink(0.3)),
-      menu(SpriteProvider::menu().create_sprite(0, 0)) {
+      menu(bn::unique_ptr{
+          new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =
       bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
-  menu.set_visible(false);
-  menu.set_scale(1.5);
-  menu.set_z_order(-1);
 }
 
 void BossScene::init() {
@@ -49,6 +48,16 @@ void BossScene::update() {
   if (isPaused) {
     if (bn::blending::fade_alpha() < 0.7)
       bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
+    menu->update();
+    if (bn::keypad::start_pressed()) {
+      unpause();
+      return;
+    }
+    if (menu->hasConfirmedOption()) {
+      auto confirmedOption = menu->receiveConfirmedOption();
+      processMenuOption(confirmedOption);
+    }
+
     return;
   }
 
@@ -156,19 +165,46 @@ void BossScene::updateChartReader() {
 }
 
 void BossScene::pause() {
-  setNextScreen(GameState::Screen::CALIBRATION);
-  // isPaused = true;
-  // menu.set_visible(true);
-  // player_setPause(true);
-  // player_sfx_setPause(true);
-  // textSprites.clear();
-  // textGenerator.set_z_order(-2);
-  // textGeneratorAccent.set_z_order(-2);
-  // textGenerator.set_center_alignment();
-  // textGeneratorAccent.set_center_alignment();
+  isPaused = true;
 
-  // textGeneratorAccent.generate(0, -32, "Continue", textSprites);
-  // textGenerator.generate(0, -32 + 16, "Calibrate", textSprites);
-  // textGenerator.generate(0, -32 + 16 + 16, "Settings", textSprites);
-  // textGenerator.generate(0, -32 + 16 + 16 + 16, "Quit", textSprites);
+  player_setPause(true);
+  player_sfx_play(SFX_PAUSE);
+
+  bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Continue"});
+  options.push_back(Menu::Option{.text = "Calibrate"});
+  options.push_back(Menu::Option{.text = "Settings"});
+  options.push_back(Menu::Option{.text = "Quit"});
+
+  menu->start(options);
+}
+
+void BossScene::unpause() {
+  isPaused = false;
+
+  player_setPause(false);
+  menu->stop();
+}
+
+void BossScene::processMenuOption(int option) {
+  switch (option) {
+    case 0: {  // Continue
+      unpause();
+      break;
+    }
+    case 1: {  // Calibrate
+      setNextScreen(GameState::Screen::CALIBRATION);
+      break;
+    }
+    case 2: {  // Settings
+      // ???
+      break;
+    }
+    case 3: {  // Quit
+      // ???
+      break;
+    }
+    default: {
+    }
+  }
 }

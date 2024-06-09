@@ -7,6 +7,7 @@
 #include "../objects/Horse.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
+#include "../objects/ui/Menu.h"
 #include "../rhythm/ChartReader.h"
 #include "../utils/PixelBlink.h"
 
@@ -37,7 +38,7 @@ class BossScene : public Scene {
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<PixelBlink> pixelBlink;
-  bn::sprite_ptr menu;
+  bn::unique_ptr<Menu> menu;
   bn::random random;
   bool isNewBeat = false;
   bool isNewTick = false;
@@ -66,6 +67,8 @@ class BossScene : public Scene {
  private:
   void updateChartReader();
   void pause();
+  void unpause();
+  void processMenuOption(int option);
 };
 
 #endif  // BOSS_SCENE_H
