@@ -17,7 +17,7 @@ class Menu {
        bn::sprite_text_generator _accentTextGenerator,
        bn::vector<bn::sprite_ptr, 32> _textSprites);
 
-  void start(bn::vector<Option, 10> _options);
+  void start(bn::vector<Option, 10> _options, bool withSquare = true);
   void update();
   void stop();
 

@@ -20,12 +20,12 @@ Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
   square.set_z_order(-1);
 }
 
-void Menu::start(bn::vector<Option, 10> _options) {
+void Menu::start(bn::vector<Option, 10> _options, bool withSquare) {
   options = _options;
   selectedOption = 0;
   confirmedOption = -1;
 
-  square.set_visible(true);
+  square.set_visible(withSquare);
 
   textSprites.clear();
   normalTextGenerator.set_z_order(-2);
