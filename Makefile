@@ -79,6 +79,8 @@ include $(LIBBUTANOABS)/butano.mak
 
 .PHONY: rebuild
 
-rebuild: clean
+import:
 	node importer/src/importer.js
+
+rebuild: import
 	make -j12
