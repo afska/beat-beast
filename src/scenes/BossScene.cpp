@@ -189,9 +189,10 @@ void BossScene::unpause() {
   isPaused = false;
 
   player_setPause(false);
-  if (playerSfxState.isPlaying) {
+  if (playerSfxState.isPlaying && lastSfxFileName.empty()) {
     player_sfx_play(lastSfxFileName.c_str());
     player_sfx_setState(playerSfxState);
+    lastSfxFileName = "";
   }
   menu->stop();
 }
