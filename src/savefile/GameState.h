@@ -5,7 +5,7 @@
 
 namespace GameState {
 
-enum Screen { NO, CALIBRATION, DJ, WIZARD };
+enum Screen { NO, START, CALIBRATION, DJ, WIZARD };
 
 struct GameStateData {
   Screen currentScreen = Screen::NO;
