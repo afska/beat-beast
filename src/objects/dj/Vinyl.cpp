@@ -4,7 +4,7 @@
 #include "bn_sprite_items_dj_tentacle.h"
 #include "bn_sprite_items_dj_vinyl.h"
 
-#define SPEED 3
+#define SPEED 5
 #define SCALE_IN_SPEED 0.05
 #define ROTATION_SPEED 3
 #define NEGATIVE_TARGET_OFFSET 16

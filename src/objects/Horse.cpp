@@ -21,7 +21,7 @@ const bn::fixed GUN_ROTATION_SPEED = 10;
 Horse::Horse(bn::fixed_point _topLeftPosition)
     : TopLeftGameObject(SpriteProvider::horse().create_sprite(0, 0)),
       gunSprite(SpriteProvider::gun().create_sprite(0, 0)) {
-  boundingBox.set_dimensions(bn::fixed_size(32, 32));
+  boundingBox.set_dimensions(bn::fixed_size(24, 32));
   // boundingBoxPreview = SpriteProvider::hitbox().create_sprite(0, HITBOX_Y);
   // DEBUG (uncomment this to see the bounding box ^^^^^)
 

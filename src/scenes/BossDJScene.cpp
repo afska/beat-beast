@@ -336,12 +336,9 @@ void BossDJScene::updateSprites() {
                       chartReader->getSong()->oneDivBeatDurationMs,
                       horse->getPosition().x().ceil_integer());
 
-    if (vinyl->collidesWith(horse.get())) {
-      if (vinyl->getBoundingBox().x() < horse->getBoundingBox().x()) {
-        sufferDamage(DMG_VINYL_TO_PLAYER);
-
-        return true;
-      }
+    if (vinyl->collidesWith(horse.get()) && !horse->isJumping()) {
+      sufferDamage(DMG_VINYL_TO_PLAYER);
+      return true;
     }
 
     return isOut;

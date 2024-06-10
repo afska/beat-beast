@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/wizard/Lightning.h"
+#include "../objects/wizard/MiniRock.h"
 
 class BossWizardScene : public BossScene {
  public:
@@ -17,6 +18,7 @@ class BossWizardScene : public BossScene {
   bn::regular_bg_ptr background2;
   bn::regular_bg_ptr background1;
   bn::regular_bg_ptr background0;
+  bn::vector<bn::unique_ptr<MiniRock>, 32> miniRocks;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;

@@ -23,8 +23,7 @@
 // #define LOOP_OFFSET_CURSOR -218856
 
 // Damage to player
-#define DMG_VINYL_TO_PLAYER 2
-#define DMG_TURNTABLE_TO_PLAYER 3
+#define DMG_MINI_ROCK_TO_PLAYER 2
 
 // Damage to enemy
 // #define DMG_MEGABALL_TO_ENEMY 10
@@ -32,8 +31,13 @@
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
+#define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
+
+#define IS_EVENT_LIGHTNING_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 2, 2)
+
 const bn::fixed HORSE_INITIAL_X = 80;
-const bn::fixed HORSE_Y = 95;
+const bn::fixed HORSE_Y = 97;
 
 BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::WIZARD,
@@ -70,21 +74,10 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
 }
 
 void BossWizardScene::updateBossFight() {
-  if (bn::keypad::a_pressed()) {
-    lightnings.push_back(bn::unique_ptr{new Lightning({30, 0})});
-  }
-  if (bn::keypad::b_pressed())
-    lightnings[lightnings.size() - 1]->start();
-
   processInput();
   processChart();
   updateBackground();
   updateSprites();
-
-  iterate(lightnings, [](Lightning* lightning) {
-    bool isOut = lightning->update();
-    return isOut;
-  });
 
   // if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
   //   player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
@@ -133,8 +126,21 @@ void BossWizardScene::processInput() {
 void BossWizardScene::processChart() {
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
-      // auto type = event->getType();
-      // TODO: IMPLEMENT
+      auto type = event->getType();
+
+      if (IS_EVENT_MINI_ROCK(type)) {
+        miniRocks.push_back(bn::unique_ptr{
+            new MiniRock(Math::toAbsTopLeft({240, 152}), event)});
+        // playSfx(SFX_MINI_ROCK);
+      }
+
+      if (IS_EVENT_LIGHTNING_PREPARE(type)) {
+        lightnings.push_back(
+            bn::unique_ptr{new Lightning({random.get_int(20, 180), 0})});
+      }
+      if (IS_EVENT_LIGHTNING_START(type)) {
+        lightnings[lightnings.size() - 1]->start();
+      }
     }
   }
 }
@@ -143,8 +149,9 @@ void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  background0.set_position(background0.position().x() - 1,
-                           background0.position().y());
+  background0.set_position(
+      background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
+      background0.position().y());
   background1.set_position(background1.position().x() - 0.5,
                            background1.position().y());
   background2.set_position(background2.position().x() - 0.25,
@@ -188,6 +195,26 @@ void BossWizardScene::updateSprites() {
       }
 
       sufferDamage(bullet->damage);
+
+      return true;
+    }
+
+    return isOut;
+  });
+
+  iterate(lightnings, [](Lightning* lightning) {
+    bool isOut = lightning->update();
+    return isOut;
+  });
+
+  iterate(miniRocks, [this](MiniRock* miniRock) {
+    bool isOut = miniRock->update(chartReader->getMsecs(),
+                                  chartReader->getBeatDurationMs(),
+                                  chartReader->getSong()->oneDivBeatDurationMs,
+                                  horse->getPosition().x().ceil_integer());
+
+    if (miniRock->collidesWith(horse.get()) && !horse->isJumping()) {
+      sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
 
       return true;
     }
