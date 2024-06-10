@@ -78,10 +78,18 @@ endif
 #---------------------------------------------------------------------------------------------------------------------
 include $(LIBBUTANOABS)/butano.mak
 
-.PHONY: rebuild
+XCF ?= XCF_FILE_NEEDED
+
+.PHONY: rebuild sprites
 
 import:
 	node importer/src/importer.js
+
+sprites:
+	rm -rf graphics/sprites/output graphics/sprites/export_layers.scm
+	cd graphics/sprites && node export.js $(XCF).xcf
+	cp -rf graphics/sprites/output/* graphics
+	rm -rf graphics/sprites/output graphics/sprites/export_layers.scm
 
 rebuild: import
 	make -j12

@@ -22,14 +22,31 @@ make rebuild # the `rebuild` target builds the levels && the code
 # (this will generate a synthbattle.out.gba ROM file)
 ```
 
-## Import levels
+### Development scripts
+
+### Install required tools
+
+```bash
+# -> install nvm / node 18
+sudo apt install gimp -y
+sudo apt install -y imagemagick-6.q16
+```
+
+### Import levels
 
 ```bash
 # cd importer && npm install && cd ..
 cd importer && node src/importer.js && cd ..
 ```
 
-## Build music
+### Export sprites
+
+```bash
+make sprites XCF=dj
+# (exports individual sprites to `graphics/` from `graphics/sprites/dj.xcf`)
+```
+
+### Build music
 
 ```bash
 # GSM (music)
