@@ -13,10 +13,23 @@ Rock::Rock(bn::fixed_point initialPosition, Event* _event)
   boundingBox.set_position(initialPosition);
 }
 
+void Rock::smash() {
+  isSmashing = true;
+}
+
 bool Rock::update(int msecs,
                   unsigned beatDurationMs,
                   unsigned oneDivBeatDurationMs,
                   int horseX) {
+  if (isSmashing) {
+    bn::fixed newScale = sprite.horizontal_scale() - 0.1;
+    if (newScale <= 0)
+      return true;
+    sprite.set_scale(newScale);
+    sprite.set_y(sprite.y() + 2);
+    return false;
+  }
+
   if (msecs < event->timestamp + (int)beatDurationMs * BEATS)
     sprite.set_x(Math::getBeatBasedXPositionForObject(
         horseX, 64, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,

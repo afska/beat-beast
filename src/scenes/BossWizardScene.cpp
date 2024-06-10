@@ -239,10 +239,11 @@ void BossWizardScene::updateSprites() {
                      chartReader->getSong()->oneDivBeatDurationMs,
                      horse->getPosition().x().ceil_integer());
 
-    if (rock->collidesWith(horse.get())) {
+    if (rock->collidesWith(horse.get()) && !rock->isBreaking()) {
+      rock->smash();
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
 
-      return true;
+      return false;
     }
 
     return isOut;
