@@ -5,48 +5,62 @@
 #include "bn_sprite_items_wizard_lightning2.h"
 #include "bn_sprite_items_wizard_lightning3.h"
 
+#define HINT_OFFSET 4
+
 Lightning::Lightning(bn::fixed_point _topLeftPosition)
     : TopLeftGameObject(
           bn::sprite_items::wizard_lightning1.create_sprite(0, 0)),
       sprite2(bn::sprite_items::wizard_lightning2.create_sprite(0, 0)),
       sprite3(bn::sprite_items::wizard_lightning3.create_sprite(0, 0)),
-      animation1(bn::create_sprite_animate_action_once(
+      animation1(bn::create_sprite_animate_action_forever(
           mainSprite,
           2,
           bn::sprite_items::wizard_lightning1.tiles_item(),
-          0,
-          1,
-          2,
-          1,
-          3,
-          1,
-          3,
-          1)),
-      animation2(bn::create_sprite_animate_action_once(
+          HINT_OFFSET + 0,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 2,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1)),
+      animation2(bn::create_sprite_animate_action_forever(
           sprite2,
           2,
           bn::sprite_items::wizard_lightning2.tiles_item(),
-          0,
-          1,
-          2,
-          1,
-          3,
-          1,
-          3,
-          1)),
-      animation3(bn::create_sprite_animate_action_once(
+          HINT_OFFSET + 0,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 2,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1)),
+      animation3(bn::create_sprite_animate_action_forever(
           sprite3,
           2,
           bn::sprite_items::wizard_lightning3.tiles_item(),
-          0,
-          1,
-          2,
-          1,
-          3,
-          1,
-          3,
-          1)) {
+          HINT_OFFSET + 0,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 2,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1,
+          HINT_OFFSET + 3,
+          HINT_OFFSET + 1)) {
   setPosition(_topLeftPosition);
+}
+
+void Lightning::start() {
+  animation1 = bn::create_sprite_animate_action_once(
+      mainSprite, 2, bn::sprite_items::wizard_lightning1.tiles_item(), 0, 1, 2,
+      1, 3, 1, 3, 1);
+  animation2 = bn::create_sprite_animate_action_once(
+      sprite2, 2, bn::sprite_items::wizard_lightning2.tiles_item(), 0, 1, 2, 1,
+      3, 1, 3, 1);
+  animation3 = bn::create_sprite_animate_action_once(
+      sprite3, 2, bn::sprite_items::wizard_lightning3.tiles_item(), 0, 1, 2, 1,
+      3, 1, 3, 1);
 }
 
 bool Lightning::update() {

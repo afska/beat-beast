@@ -73,9 +73,9 @@ void BossWizardScene::updateBossFight() {
   if (bn::keypad::a_pressed()) {
     lightnings.push_back(bn::unique_ptr{new Lightning({30, 0})});
   }
-  if (bn::keypad::b_pressed()) {
-    lightningHints.push_back(bn::unique_ptr{new LightningHint({30, 0})});
-  }
+  if (bn::keypad::b_pressed())
+    lightnings[lightnings.size() - 1]->start();
+
   processInput();
   processChart();
   updateBackground();
@@ -83,11 +83,6 @@ void BossWizardScene::updateBossFight() {
 
   iterate(lightnings, [](Lightning* lightning) {
     bool isOut = lightning->update();
-    return isOut;
-  });
-
-  iterate(lightningHints, [](LightningHint* lightningHint) {
-    bool isOut = lightningHint->update();
     return isOut;
   });
 

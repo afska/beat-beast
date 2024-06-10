@@ -7,6 +7,7 @@ class Lightning : public TopLeftGameObject {
  public:
   Lightning(bn::fixed_point _topLeftPosition);
 
+  void start();
   bool update();
 
  private:
