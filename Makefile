@@ -88,6 +88,7 @@ import:
 sprites:
 	rm -rf graphics/sprites/output graphics/sprites/export_layers.scm
 	cd graphics/sprites && node export.js $(XCF).xcf
+	rm -rf graphics/sprites/output/_*
 	cp -rf graphics/sprites/output/* graphics
 	rm -rf graphics/sprites/output graphics/sprites/export_layers.scm
 
