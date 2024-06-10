@@ -179,17 +179,14 @@ void BossWizardScene::updateSprites() {
                        horse->getCenteredPosition());
 
     bool colided = false;
-    // iterate(
-    //     enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet)
-    //     {
-    //       if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet))
-    //       {
-    //         addExplosion(((Bullet*)bullet)->getPosition());
-    //         enemyBullet->explode(octopus->getShootingPoint());
-    //         colided = true;
-    //       }
-    //       return false;
-    //     });
+    iterate(rocks, [&bullet, &colided, this](Rock* rock) {
+      if (bullet->collidesWith(rock)) {
+        addExplosion(((Bullet*)bullet)->getPosition());
+        rock->smash();
+        colided = true;
+      }
+      return false;
+    });
 
     return isOut || colided;
   });
