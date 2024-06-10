@@ -70,10 +70,18 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
 }
 
 void BossWizardScene::updateBossFight() {
+  if (bn::keypad::a_pressed()) {
+    lightnings.push_back(bn::unique_ptr{new Lightning({30, 0})});
+  }
   processInput();
   processChart();
   updateBackground();
   updateSprites();
+
+  iterate(lightnings, [](Lightning* lightning) {
+    bool isOut = lightning->update();
+    return isOut;
+  });
 
   // if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
   //   player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);

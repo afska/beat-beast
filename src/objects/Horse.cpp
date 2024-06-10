@@ -18,14 +18,14 @@ const int GUN_FLIPPED_OFFSET_X = -14;
 const unsigned GUN_ANIMATION_WAIT = 0;
 const bn::fixed GUN_ROTATION_SPEED = 10;
 
-Horse::Horse(bn::fixed_point initialPosition)
+Horse::Horse(bn::fixed_point _topLeftPosition)
     : TopLeftGameObject(SpriteProvider::horse().create_sprite(0, 0)),
       gunSprite(SpriteProvider::gun().create_sprite(0, 0)) {
   boundingBox.set_dimensions(bn::fixed_size(32, 32));
   // boundingBoxPreview = SpriteProvider::hitbox().create_sprite(0, HITBOX_Y);
   // DEBUG (uncomment this to see the bounding box ^^^^^)
 
-  setPosition(initialPosition, false);
+  setPosition(_topLeftPosition, false);
   setIdleState();
 }
 

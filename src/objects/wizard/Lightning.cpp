@@ -1,0 +1,69 @@
+#include "Lightning.h"
+
+#include "../../utils/Math.h"
+#include "bn_sprite_items_wizard_lightning1.h"
+#include "bn_sprite_items_wizard_lightning2.h"
+#include "bn_sprite_items_wizard_lightning3.h"
+
+Lightning::Lightning(bn::fixed_point _topLeftPosition)
+    : TopLeftGameObject(
+          bn::sprite_items::wizard_lightning1.create_sprite(0, 0)),
+      sprite2(bn::sprite_items::wizard_lightning2.create_sprite(0, 0)),
+      sprite3(bn::sprite_items::wizard_lightning3.create_sprite(0, 0)),
+      animation1(bn::create_sprite_animate_action_once(
+          mainSprite,
+          2,
+          bn::sprite_items::wizard_lightning1.tiles_item(),
+          0,
+          1,
+          2,
+          1,
+          3,
+          1,
+          3,
+          1)),
+      animation2(bn::create_sprite_animate_action_once(
+          sprite2,
+          2,
+          bn::sprite_items::wizard_lightning2.tiles_item(),
+          0,
+          1,
+          2,
+          1,
+          3,
+          1,
+          3,
+          1)),
+      animation3(bn::create_sprite_animate_action_once(
+          sprite3,
+          2,
+          bn::sprite_items::wizard_lightning3.tiles_item(),
+          0,
+          1,
+          2,
+          1,
+          3,
+          1,
+          3,
+          1)) {
+  setPosition(_topLeftPosition);
+}
+
+bool Lightning::update() {
+  if (animation1.done())
+    return true;
+  else {
+    animation1.update();
+    animation2.update();
+    animation3.update();
+    return false;
+  }
+}
+
+void Lightning::setPosition(bn::fixed_point newPosition) {
+  setTopLeftPosition(newPosition);
+  sprite2.set_position(
+      Math::toAbsTopLeft(newPosition + bn::fixed_point(0, 64), 32, 64));
+  sprite3.set_position(
+      Math::toAbsTopLeft(newPosition + bn::fixed_point(0, 64 + 64), 32, 64));
+}

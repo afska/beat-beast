@@ -7,7 +7,7 @@ class Horse : public TopLeftGameObject {
  public:
   bool canShoot = false;
 
-  Horse(bn::fixed_point initialPosition);
+  Horse(bn::fixed_point _topLeftPosition);
 
   void update();
   void bounce();

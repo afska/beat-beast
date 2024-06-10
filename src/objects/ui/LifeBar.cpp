@@ -17,7 +17,7 @@ const bn::fixed MARGIN_ITEMS = 4;
 const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
-LifeBar::LifeBar(bn::fixed_point initialPosition,
+LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
                  unsigned _maxLife,
                  bn::sprite_item _icon,
                  bn::sprite_item _fill)
@@ -26,9 +26,9 @@ LifeBar::LifeBar(bn::fixed_point initialPosition,
       icon(_icon.create_sprite(0, 0)),
       fill(_fill.create_sprite(0, 0)) {
   icon.set_position(
-      Math::toAbsTopLeft(initialPosition + MARGIN_BORDER, 16, 16));
+      Math::toAbsTopLeft(_topLeftPosition + MARGIN_BORDER, 16, 16));
 
-  setTopLeftPosition(initialPosition + MARGIN_BORDER +
+  setTopLeftPosition(_topLeftPosition + MARGIN_BORDER +
                      bn::fixed_point(16 + MARGIN_ITEMS, 0));
   defaultFillPosition = getCenteredPosition();
   fill.set_position(defaultFillPosition);

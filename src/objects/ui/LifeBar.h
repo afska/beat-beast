@@ -6,7 +6,7 @@
 
 class LifeBar : public TopLeftGameObject {
  public:
-  LifeBar(bn::fixed_point initialPosition,
+  LifeBar(bn::fixed_point _topLeftPosition,
           unsigned _maxLife,
           bn::sprite_item _icon,
           bn::sprite_item _fill);
