@@ -24,6 +24,7 @@
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 2
+#define DMG_ROCK_TO_PLAYER 6
 
 // Damage to enemy
 // #define DMG_MEGABALL_TO_ENEMY 10
@@ -32,9 +33,13 @@
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_ROCK(TYPE) IS_EVENT(TYPE, 1, 2)
 
 #define IS_EVENT_LIGHTNING_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 2, 2)
+
+#define SFX_MINI_ROCK "minirock.pcm"
+#define SFX_ROCK "rock.pcm"
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 97;
@@ -70,7 +75,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background3.set_blending_enabled(true);
   background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
-  // chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
 }
 
 void BossWizardScene::updateBossFight() {
@@ -131,7 +136,13 @@ void BossWizardScene::processChart() {
       if (IS_EVENT_MINI_ROCK(type)) {
         miniRocks.push_back(bn::unique_ptr{
             new MiniRock(Math::toAbsTopLeft({240, 152}), event)});
-        // playSfx(SFX_MINI_ROCK);
+        playSfx(SFX_MINI_ROCK);
+      }
+
+      if (IS_EVENT_ROCK(type)) {
+        rocks.push_back(
+            bn::unique_ptr{new Rock(Math::toAbsTopLeft({240, 139}), event)});
+        playSfx(SFX_ROCK);
       }
 
       if (IS_EVENT_LIGHTNING_PREPARE(type)) {
@@ -214,6 +225,21 @@ void BossWizardScene::updateSprites() {
                                   horse->getPosition().x().ceil_integer());
 
     if (miniRock->collidesWith(horse.get()) && !horse->isJumping()) {
+      sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
+
+      return true;
+    }
+
+    return isOut;
+  });
+
+  iterate(rocks, [this](Rock* rock) {
+    bool isOut =
+        rock->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
+                     chartReader->getSong()->oneDivBeatDurationMs,
+                     horse->getPosition().x().ceil_integer());
+
+    if (rock->collidesWith(horse.get())) {
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
 
       return true;

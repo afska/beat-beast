@@ -7,7 +7,6 @@
 #define SPEED 5
 #define SCALE_IN_SPEED 0.05
 #define ROTATION_SPEED 3
-#define NEGATIVE_TARGET_OFFSET 16
 #define TENTACLE_OFFSET 8
 
 Vinyl::Vinyl(bn::fixed_point initialPosition,
@@ -51,25 +50,12 @@ bool Vinyl::update(int msecs,
       tentacleSprite.set_visible(false);
   }
 
-  if (msecs < event->timestamp + (int)beatDurationMs) {
-    int distance =
-        direction.x() >= 0
-            ? horseX
-            : (int)Math::SCREEN_WIDTH - (horseX + 64 - NEGATIVE_TARGET_OFFSET);
-
-    // beatDurationMs --------------- distance
-    // (msecs - event->timestamp) --- ???
-
-    int expectedX = Math::fastDiv((msecs - event->timestamp) * distance,
-                                  oneDivBeatDurationMs);
-    if (direction.x() < 0)
-      expectedX = Math::SCREEN_WIDTH - expectedX;
-
-    sprite.set_x(Math::toAbsTopLeftX(
-        Math::coerce(expectedX, -16, Math::SCREEN_WIDTH + 16), 16));
-  } else {
+  if (msecs < event->timestamp + (int)beatDurationMs)
+    sprite.set_x(Math::getBeatBasedXPositionForObject(
+        horseX, 64, direction.x(), beatDurationMs, oneDivBeatDurationMs, msecs,
+        event->timestamp, 16));
+  else
     sprite.set_x(sprite.x() + direction.x() * SPEED);
-  }
 
   if (sprite.x() > -Math::SCREEN_WIDTH / 2 &&
       sprite.x() < Math::SCREEN_WIDTH / 2 && scale <= 1) {

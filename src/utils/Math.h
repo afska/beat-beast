@@ -4,7 +4,9 @@
 #include <stdint.h>
 #include "bn_array.h"
 #include "bn_fixed.h"
+#include "bn_fixed_point.h"
 #include "bn_math.h"
+#include "bn_sprite_ptr.h"
 
 extern "C" {
 // Multiply by a 0.32 fractional number between 0 and 1.
@@ -137,6 +139,32 @@ inline void moveSpriteTowards(bn::sprite_ptr sprite,
     if (sprite.position().y() < targetPosition.y())
       sprite.set_y(targetPosition.y());
   }
+}
+
+inline bn::fixed getBeatBasedXPositionForObject(int targetX,
+                                                int targetWidth,
+                                                bn::fixed directionX,
+                                                unsigned beatDurationMs,
+                                                unsigned oneDivBeatDurationMs,
+                                                int msecs,
+                                                int targetMsecs,
+                                                int objectWidth) {
+  int negativeTargetOffset = 16;
+  int distance =
+      directionX >= 0
+          ? targetX
+          : (int)SCREEN_WIDTH - (targetX + targetWidth - negativeTargetOffset);
+
+  // beatDurationMs --------------- distance
+  // (msecs - event->timestamp) --- ???
+
+  int expectedX =
+      fastDiv((msecs - targetMsecs) * distance, oneDivBeatDurationMs);
+  if (directionX < 0)
+    expectedX = Math::SCREEN_WIDTH - expectedX;
+
+  return toAbsTopLeftX(
+      coerce(expectedX, -objectWidth, SCREEN_WIDTH + objectWidth), objectWidth);
 }
 
 }  // namespace Math
