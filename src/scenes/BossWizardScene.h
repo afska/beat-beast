@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/wizard/Lightning.h"
+#include "../objects/wizard/LightningHint.h"
 
 class BossWizardScene : public BossScene {
  public:
@@ -20,6 +21,7 @@ class BossWizardScene : public BossScene {
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;
+  bn::vector<bn::unique_ptr<LightningHint>, 32> lightningHints;
 
   void processInput();
   void processChart();
