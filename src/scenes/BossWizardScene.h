@@ -4,6 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
+#include "../objects/wizard/FlyingDragon.h"
 #include "../objects/wizard/Lightning.h"
 #include "../objects/wizard/MiniRock.h"
 #include "../objects/wizard/Rock.h"
@@ -24,6 +25,7 @@ class BossWizardScene : public BossScene {
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;
+  bn::vector<bn::unique_ptr<FlyingDragon>, 32> flyingDragons;
 
   void processInput();
   void processChart();

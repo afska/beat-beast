@@ -38,6 +38,8 @@
 #define IS_EVENT_LIGHTNING_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 2, 2)
 
+#define IS_EVENT_FLYING_DRAGON(TYPE) IS_EVENT(TYPE, 3, 1)
+
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
 
@@ -152,6 +154,11 @@ void BossWizardScene::processChart() {
       if (IS_EVENT_LIGHTNING_START(type)) {
         lightnings[lightnings.size() - 1]->start();
       }
+
+      if (IS_EVENT_FLYING_DRAGON(type)) {
+        flyingDragons.push_back(bn::unique_ptr{
+            new FlyingDragon(Math::toAbsTopLeft({240, 30}), event)});
+      }
     }
   }
 }
@@ -187,6 +194,16 @@ void BossWizardScene::updateSprites() {
       }
       return false;
     });
+
+    iterate(flyingDragons,
+            [&bullet, &colided, this](FlyingDragon* flyingDragon) {
+              if (bullet->collidesWith(flyingDragon)) {
+                addExplosion(((Bullet*)bullet)->getPosition());
+                flyingDragon->explode();
+                colided = true;
+              }
+              return false;
+            });
 
     return isOut || colided;
   });
@@ -241,6 +258,18 @@ void BossWizardScene::updateSprites() {
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
 
       return false;
+    }
+
+    return isOut;
+  });
+
+  iterate(flyingDragons, [this](FlyingDragon* flyingDragon) {
+    bool isOut = flyingDragon->update(chartReader->getMsecs(),
+                                      chartReader->isInsideBeat());
+
+    if (flyingDragon->collidesWith(horse.get())) {
+      sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
+      return true;
     }
 
     return isOut;
