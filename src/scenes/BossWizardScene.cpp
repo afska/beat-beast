@@ -35,10 +35,17 @@
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_ROCK(TYPE) IS_EVENT(TYPE, 1, 2)
 
-#define IS_EVENT_LIGHTNING_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
-#define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_LIGHTNING_PREPARE_1(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_LIGHTNING_PREPARE_2(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_LIGHTNING_PREPARE_3(TYPE) IS_EVENT(TYPE, 2, 3)
+#define IS_EVENT_LIGHTNING_PREPARE_4(TYPE) IS_EVENT(TYPE, 2, 4)
+#define IS_EVENT_LIGHTNING_PREPARE_5(TYPE) IS_EVENT(TYPE, 2, 5)
+#define IS_EVENT_LIGHTNING_PREPARE_6(TYPE) IS_EVENT(TYPE, 2, 6)
+#define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 2, 9)
 
-#define IS_EVENT_FLYING_DRAGON(TYPE) IS_EVENT(TYPE, 3, 1)
+#define IS_EVENT_FLYING_DRAGON_A(TYPE) IS_EVENT(TYPE, 3, 1)
+#define IS_EVENT_FLYING_DRAGON_B(TYPE) IS_EVENT(TYPE, 3, 2)
+#define IS_EVENT_FLYING_DRAGON_C(TYPE) IS_EVENT(TYPE, 3, 3)
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -147,17 +154,39 @@ void BossWizardScene::processChart() {
         playSfx(SFX_ROCK);
       }
 
-      if (IS_EVENT_LIGHTNING_PREPARE(type)) {
-        lightnings.push_back(
-            bn::unique_ptr{new Lightning({random.get_int(20, 180), 0})});
+      if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({30, 0})});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({56, 0})});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({82, 0})});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({108, 0})});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_5(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({134, 0})});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_6(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning({160, 0})});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
         lightnings[lightnings.size() - 1]->start();
       }
 
-      if (IS_EVENT_FLYING_DRAGON(type)) {
-        flyingDragons.push_back(bn::unique_ptr{
-            new FlyingDragon(Math::toAbsTopLeft({240, 30}), event)});
+      if (IS_EVENT_FLYING_DRAGON_A(type)) {
+        flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
+            Math::toAbsTopLeft({240, 30}), event, 1.5, 0.175, 2.5)});
+      }
+      if (IS_EVENT_FLYING_DRAGON_B(type)) {
+        flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
+            Math::toAbsTopLeft({240, 50}), event, 3, 0.195, 3)});
+      }
+      if (IS_EVENT_FLYING_DRAGON_C(type)) {
+        flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
+            Math::toAbsTopLeft({260, 0}), event, 1.5, 0.2, 2.75)});
       }
     }
   }

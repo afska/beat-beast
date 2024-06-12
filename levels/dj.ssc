@@ -4,8 +4,8 @@
 
 // 00000000
 //  ^^^^^^^ move octopus (1 = topleft | 2 = top | 3 = topright | 9 = offscreen)
-//  ||||||- floor vinyls (1 = from left | 2 = from right)
-//  |||||-- floating vinyls (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right | 6 = left from top | 7 = right from top)
+//  ||||||- floor vinyl (1 = from left | 2 = from right)
+//  |||||-- floating vinyl (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right | 6 = left from top | 7 = right from top)
 //  ||||--- bullet (1 = normal | 2 = slow)
 //  |||---- throw turntable (1 = top | 2 = bottom)
 //  ||----- megaball
