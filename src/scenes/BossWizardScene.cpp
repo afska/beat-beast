@@ -85,6 +85,8 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+
+  portals.push_back(bn::unique_ptr{new Portal({0, 0}, NULL)});
 }
 
 void BossWizardScene::updateBossFight() {
@@ -302,6 +304,13 @@ void BossWizardScene::updateSprites() {
     }
 
     return isOut;
+  });
+
+  iterate(portals, [this](Portal* portal) {
+    portal->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
+                   chartReader->getSong()->oneDivBeatDurationMs,
+                   horse->getPosition().x().ceil_integer());
+    return false;
   });
 }
 
