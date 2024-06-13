@@ -3,7 +3,7 @@
 
 #include "bn_sprite_items_wizard_portal.h"
 
-#define BEATS 3
+#define BEATS 4
 #define SPEED 5
 
 Portal::Portal(bn::fixed_point initialPosition, Event* _event)
@@ -31,6 +31,13 @@ bool Portal::update(int msecs,
                     unsigned beatDurationMs,
                     unsigned oneDivBeatDurationMs,
                     int horseX) {
+  if (msecs < event->timestamp + (int)beatDurationMs * BEATS)
+    sprite.set_x(Math::getBeatBasedXPositionForObject(
+        horseX, 64, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,
+        msecs, event->timestamp, 64));
+  else
+    sprite.set_x(sprite.x() - SPEED);
+
   animation.update();
 
   boundingBox.set_position(sprite.position());

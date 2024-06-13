@@ -34,6 +34,7 @@
 
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_ROCK(TYPE) IS_EVENT(TYPE, 1, 2)
+#define IS_EVENT_PORTAL(TYPE) IS_EVENT(TYPE, 1, 3)
 
 #define IS_EVENT_LIGHTNING_PREPARE_1(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_LIGHTNING_PREPARE_2(TYPE) IS_EVENT(TYPE, 2, 2)
@@ -85,8 +86,6 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
-
-  // portals.push_back(bn::unique_ptr{new Portal({0, 0}, NULL)});
 }
 
 void BossWizardScene::updateBossFight() {
@@ -149,11 +148,14 @@ void BossWizardScene::processChart() {
             new MiniRock(Math::toAbsTopLeft({240, 152}), event)});
         playSfx(SFX_MINI_ROCK);
       }
-
       if (IS_EVENT_ROCK(type)) {
         rocks.push_back(
             bn::unique_ptr{new Rock(Math::toAbsTopLeft({240, 139}), event)});
         playSfx(SFX_ROCK);
+      }
+      if (IS_EVENT_PORTAL(type)) {
+        portals.push_back(
+            bn::unique_ptr{new Portal(Math::toAbsTopLeft({240, 139}), event)});
       }
 
       if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
@@ -313,6 +315,11 @@ void BossWizardScene::updateSprites() {
     portal->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
                    chartReader->getSong()->oneDivBeatDurationMs,
                    horse->getPosition().x().ceil_integer());
+    if (portal->collidesWith(horse.get())) {
+      pixelBlink->blink();
+      return true;
+    }
+
     return false;
   });
 }

@@ -3,7 +3,7 @@
 
 #include "bn_sprite_items_wizard_rock.h"
 
-#define BEATS 3
+#define BEATS 5
 #define SPEED 5
 
 Rock::Rock(bn::fixed_point initialPosition, Event* _event)
