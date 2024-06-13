@@ -52,6 +52,9 @@ Lightning::Lightning(bn::fixed_point _topLeftPosition)
 }
 
 void Lightning::start() {
+  if (_hasStarted)
+    return;
+
   animation1 = bn::create_sprite_animate_action_once(
       mainSprite, 2, bn::sprite_items::wizard_lightning1.tiles_item(), 0, 1, 2,
       1, 3, 1, 3, 1);
@@ -61,6 +64,7 @@ void Lightning::start() {
   animation3 = bn::create_sprite_animate_action_once(
       sprite3, 2, bn::sprite_items::wizard_lightning3.tiles_item(), 0, 1, 2, 1,
       3, 1, 3, 1);
+  _hasStarted = true;
 }
 
 bool Lightning::update() {

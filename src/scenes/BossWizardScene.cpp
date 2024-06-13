@@ -86,7 +86,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
 
-  portals.push_back(bn::unique_ptr{new Portal({0, 0}, NULL)});
+  // portals.push_back(bn::unique_ptr{new Portal({0, 0}, NULL)});
 }
 
 void BossWizardScene::updateBossFight() {
@@ -175,7 +175,10 @@ void BossWizardScene::processChart() {
         lightnings.push_back(bn::unique_ptr{new Lightning({160, 0})});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
-        lightnings[lightnings.size() - 1]->start();
+        iterate(lightnings, [](Lightning* lightning) {
+          lightning->start();
+          return false;
+        });
       }
 
       if (IS_EVENT_FLYING_DRAGON_A(type)) {

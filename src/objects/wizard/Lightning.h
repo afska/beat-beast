@@ -8,6 +8,7 @@ class Lightning : public TopLeftGameObject {
   Lightning(bn::fixed_point _topLeftPosition);
 
   void start();
+  bool hasStarted() { return _hasStarted; }
   bool update();
 
  private:
@@ -16,6 +17,7 @@ class Lightning : public TopLeftGameObject {
   bn::sprite_animate_action<8> animation1;
   bn::sprite_animate_action<8> animation2;
   bn::sprite_animate_action<8> animation3;
+  bool _hasStarted = false;
 
   void setPosition(bn::fixed_point newPosition);
 };
