@@ -108,9 +108,9 @@ void BossWizardScene::processInput() {
   bn::fixed speedX;
   if (!bn::keypad::r_held()) {  // (R locks target)
     if (bn::keypad::left_held()) {
-      speedX = -1;
+      speedX = -HORSE_SPEED;
     } else if (bn::keypad::right_held()) {
-      speedX = 1;
+      speedX = HORSE_SPEED;
     }
     if (speedX != 0 && chartReader->isInsideBeat())
       speedX *= 2;  // rhythmic movement?

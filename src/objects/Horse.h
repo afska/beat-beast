@@ -3,6 +3,8 @@
 
 #include "TopLeftGameObject.h"
 
+#define HORSE_SPEED 1.5
+
 class Horse : public TopLeftGameObject {
  public:
   bool canShoot = false;
