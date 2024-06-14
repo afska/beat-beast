@@ -8,6 +8,8 @@
 #include "bn_math.h"
 #include "bn_sprite_ptr.h"
 
+#define GBA_FRAME 16.67
+
 extern "C" {
 // Multiply by a 0.32 fractional number between 0 and 1.
 // Used for fast division by a constant.

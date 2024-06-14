@@ -3,7 +3,6 @@
 #include "../../utils/Math.h"
 #include "bn_sprite_items_dj_octopus.h"
 
-#define GBA_FRAME 16.67
 #define HITBOX_SIZE 48
 
 Octopus::Octopus(bn::fixed_point initialPosition)

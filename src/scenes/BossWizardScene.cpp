@@ -32,6 +32,11 @@
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
+#define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 0, 1)
+#define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 0, 2)
+#define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
+#define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
+
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_ROCK(TYPE) IS_EVENT(TYPE, 1, 2)
 #define IS_EVENT_PORTAL(TYPE) IS_EVENT(TYPE, 1, 3)
@@ -76,7 +81,8 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
           (256 - Math::SCREEN_HEIGHT) / 2)),
       background0(bn::regular_bg_items::back_wizard_mountain_bg0.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
-          (256 - Math::SCREEN_HEIGHT) / 2)) {
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      wizard(bn::unique_ptr{new Wizard({200, -70})}) {
   background0.set_blending_enabled(true);
   background0.set_mosaic_enabled(true);
   background1.set_blending_enabled(true);
@@ -148,6 +154,17 @@ void BossWizardScene::processChart() {
     if (event->isRegular()) {
       auto type = event->getType();
 
+      // Movement
+      if (IS_EVENT_MOVE_COL1(type))
+        wizard->setTargetPosition({-50, -40}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL2(type))
+        wizard->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL3(type))
+        wizard->setTargetPosition({80, -40}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_OFFSCREEN(type))
+        wizard->setTargetPosition({200, -70}, chartReader->getBeatDurationMs());
+
+      // Rocks & Portals
       if (IS_EVENT_MINI_ROCK(type)) {
         miniRocks.push_back(bn::unique_ptr{
             new MiniRock(Math::toAbsTopLeft({240, 152}), event)});
@@ -163,6 +180,7 @@ void BossWizardScene::processChart() {
             bn::unique_ptr{new Portal(Math::toAbsTopLeft({240, 139}), event)});
       }
 
+      // Lightnings
       if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
         lightnings.push_back(bn::unique_ptr{new Lightning({30, 0}, event)});
       }
@@ -189,6 +207,7 @@ void BossWizardScene::processChart() {
         });
       }
 
+      // Flying dragons
       if (IS_EVENT_FLYING_DRAGON_A(type)) {
         flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
             Math::toAbsTopLeft({240, 30}), event, 1.5, 0.175, 2.5)});
@@ -222,6 +241,9 @@ void BossWizardScene::updateBackground() {
 
 void BossWizardScene::updateSprites() {
   updateCommonSprites();
+
+  // Wizard
+  wizard->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
@@ -324,13 +346,18 @@ void BossWizardScene::updateSprites() {
                    chartReader->getSong()->oneDivBeatDurationMs,
                    horse->getPosition().x().ceil_integer());
     if (portal->collidesWith(horse.get())) {
-      pixelBlink->blink();
-      phase++;
+      goToPhase2();
       return true;
     }
 
     return false;
   });
+}
+
+void BossWizardScene::goToPhase2() {
+  pixelBlink->blink();
+  wizard->setTargetPosition({0, -40}, 0);
+  phase++;
 }
 
 void BossWizardScene::causeDamage(unsigned amount) {

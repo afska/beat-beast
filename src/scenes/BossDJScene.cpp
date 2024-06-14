@@ -73,7 +73,7 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
       background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
-      octopus(new Octopus({200, -70})),
+      octopus(bn::unique_ptr{new Octopus({200, -70})}),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
           horizontalDeltas)) {

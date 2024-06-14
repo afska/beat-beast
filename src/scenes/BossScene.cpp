@@ -25,12 +25,12 @@ BossScene::BossScene(GameState::Screen _screen,
       textGenerator(fixed_8x16_sprite_font),
       textGeneratorAccent(fixed_8x16_sprite_font_accent),
       horse(bn::move(_horse)),
-      lifeBar(new LifeBar({0, 0},
-                          LIFE_PLAYER,
-                          SpriteProvider::iconHorse(),
-                          SpriteProvider::lifebarFill())),
+      lifeBar(bn::unique_ptr{new LifeBar({0, 0},
+                                         LIFE_PLAYER,
+                                         SpriteProvider::iconHorse(),
+                                         SpriteProvider::lifebarFill())}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
-      pixelBlink(new PixelBlink(0.3)),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
       menu(bn::unique_ptr{
           new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
