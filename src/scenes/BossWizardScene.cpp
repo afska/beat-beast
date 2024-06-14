@@ -106,18 +106,22 @@ void BossWizardScene::updateBossFight() {
 
 void BossWizardScene::processInput() {
   // move horse (left/right)
-  bn::fixed speedX;
-  if (!bn::keypad::r_held()) {  // (R locks target)
-    if (bn::keypad::left_held()) {
-      speedX = -HORSE_SPEED;
-    } else if (bn::keypad::right_held()) {
-      speedX = HORSE_SPEED;
+  if (phase == 1) {
+    bn::fixed speedX;
+    if (!bn::keypad::r_held()) {  // (R locks target)
+      if (bn::keypad::left_held()) {
+        speedX = -HORSE_SPEED;
+      } else if (bn::keypad::right_held()) {
+        speedX = HORSE_SPEED;
+      }
+      if (speedX != 0 && chartReader->isInsideBeat())
+        speedX *= 2;  // rhythmic movement?
+      horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y}, true);
+    } else {
+      horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
     }
-    if (speedX != 0 && chartReader->isInsideBeat())
-      speedX *= 2;  // rhythmic movement?
-    horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y}, true);
   } else {
-    horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+    processMovementInput(HORSE_Y);
   }
 
   processAimInput();
@@ -205,13 +209,15 @@ void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  background0.set_position(
-      background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
-      background0.position().y());
-  background1.set_position(background1.position().x() - 0.5,
-                           background1.position().y());
-  background2.set_position(background2.position().x() - 0.25,
-                           background2.position().y());
+  if (phase == 1) {
+    background0.set_position(
+        background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
+        background0.position().y());
+    background1.set_position(background1.position().x() - 0.5,
+                             background1.position().y());
+    background2.set_position(background2.position().x() - 0.25,
+                             background2.position().y());
+  }
 }
 
 void BossWizardScene::updateSprites() {
@@ -319,6 +325,7 @@ void BossWizardScene::updateSprites() {
                    horse->getPosition().x().ceil_integer());
     if (portal->collidesWith(horse.get())) {
       pixelBlink->blink();
+      phase++;
       return true;
     }
 
