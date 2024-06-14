@@ -33,7 +33,7 @@ bool Portal::update(int msecs,
                     int horseX) {
   if (msecs < event->timestamp + (int)beatDurationMs * BEATS)
     sprite.set_x(Math::getBeatBasedXPositionForObject(
-        horseX, 64, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,
+        horseX, 48, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,
         msecs, event->timestamp, 64));
   else
     sprite.set_x(sprite.x() - SPEED);

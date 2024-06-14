@@ -50,6 +50,7 @@
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
+#define SFX_LIGHTNING "lightning.pcm"
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 97;
@@ -85,7 +86,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background3.set_blending_enabled(true);
   background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
-  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
 
 void BossWizardScene::updateBossFight() {
@@ -159,26 +160,27 @@ void BossWizardScene::processChart() {
       }
 
       if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({30, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({30, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({56, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({56, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({82, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({82, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({108, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({108, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_5(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({134, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({134, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_6(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({160, 0})});
+        lightnings.push_back(bn::unique_ptr{new Lightning({160, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
-        iterate(lightnings, [](Lightning* lightning) {
-          lightning->start();
+        iterate(lightnings, [&event](Lightning* lightning) {
+          lightning->start(event);
+          player_sfx_play(SFX_LIGHTNING);
           return false;
         });
       }
@@ -263,8 +265,8 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
-  iterate(lightnings, [](Lightning* lightning) {
-    bool isOut = lightning->update();
+  iterate(lightnings, [this](Lightning* lightning) {
+    bool isOut = lightning->update(chartReader->getMsecs());
     return isOut;
   });
 
