@@ -99,5 +99,5 @@ void Lightning::setPosition(bn::fixed_point newPosition) {
   sprite2.set_position(
       Math::toAbsTopLeft(newPosition + bn::fixed_point(0, 64), 32, 64));
   sprite3.set_position(
-      Math::toAbsTopLeft(newPosition + bn::fixed_point(0, 64 + 64), 32, 64));
+      Math::toAbsTopLeft(newPosition + bn::fixed_point(0, 64 + 64), 32, 32));
 }
