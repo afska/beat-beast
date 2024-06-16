@@ -25,6 +25,7 @@
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 2
 #define DMG_ROCK_TO_PLAYER 6
+#define DMG_LIGHTNING_TO_PLAYER 5
 
 // Damage to enemy
 // #define DMG_MEGABALL_TO_ENEMY 10
@@ -312,6 +313,14 @@ void BossWizardScene::updateSprites() {
 
   iterate(lightnings, [this](Lightning* lightning) {
     bool isOut = lightning->update(chartReader->getMsecs());
+
+    if (lightning->hasReallyStarted(chartReader->getMsecs()) &&
+        !lightning->causedDamage && lightning->collidesWith(horse.get())) {
+      sufferDamage(DMG_LIGHTNING_TO_PLAYER);
+      lightning->causedDamage = true;
+      return false;
+    }
+
     return isOut;
   });
 

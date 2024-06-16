@@ -50,6 +50,8 @@ Lightning::Lightning(bn::fixed_point _topLeftPosition, Event* _event)
           HINT_OFFSET + 1)),
       event(_event) {
   setPosition(_topLeftPosition);
+  boundingBox.set_dimensions(bn::fixed_size(16, 160));
+  boundingBox.set_position(bn::fixed_point(mainSprite.position().x(), 80));
 }
 
 void Lightning::start(Event* _startEvent) {
@@ -71,7 +73,7 @@ bool Lightning::update(int msecs) {
     sprite3.set_visible(true);
   }
 
-  if (!hasStartedAnimation && hasStarted() && msecs >= startEvent->timestamp) {
+  if (!hasStartedAnimation && hasReallyStarted(msecs)) {
     animation1 = bn::create_sprite_animate_action_once(
         mainSprite, 2, bn::sprite_items::wizard_lightning1.tiles_item(), 0, 1,
         0, 1, 3, 1, 3, 1);

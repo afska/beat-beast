@@ -7,10 +7,13 @@
 
 class Lightning : public TopLeftGameObject {
  public:
+  bool causedDamage = false;
   Lightning(bn::fixed_point _topLeftPosition, Event* _event);
 
   void start(Event* event);
-  bool hasStarted() { return startEvent != NULL; }
+  bool hasReallyStarted(int msecs) {
+    return startEvent != NULL && msecs >= startEvent->timestamp;
+  }
   bool update(int msecs);
 
  private:
@@ -23,6 +26,7 @@ class Lightning : public TopLeftGameObject {
   Event* startEvent = NULL;
   bool hasStartedAnimation = false;
 
+  bool hasStarted() { return startEvent != NULL; }
   void setPosition(bn::fixed_point newPosition);
 };
 #endif  // LIGHTNING_H
