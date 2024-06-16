@@ -24,7 +24,7 @@ void StartScene::init() {
 
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Start"});
-  options.push_back(Menu::Option{.text = "Mini game"});
+  options.push_back(Menu::Option{.text = "Wizard"});  // TODO: Mini game?
   options.push_back(Menu::Option{.text = "Settings"});
   options.push_back(Menu::Option{.text = "Quit"});
 

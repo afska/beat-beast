@@ -19,7 +19,7 @@ FireBall::FireBall(bn::fixed_point _initialPosition, Event* _event)
           1,
           2,
           3)) {
-  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_dimensions(sprite.dimensions());  // TODO: ADJUST HITBOX
   boundingBox.set_position(_initialPosition);
 
   sprite.set_scale(scale);
