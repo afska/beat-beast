@@ -243,6 +243,8 @@ void BossWizardScene::updateSprites() {
   updateCommonSprites();
 
   // Wizard
+  if (isNewBeat)
+    wizard->bounce();
   wizard->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
   // Attacks
@@ -270,6 +272,13 @@ void BossWizardScene::updateSprites() {
               }
               return false;
             });
+
+    if (bullet->collidesWith(wizard.get())) {
+      addExplosion(bullet->getPosition());
+      causeDamage(bullet->damage);
+
+      return true;
+    }
 
     return isOut || colided;
   });
@@ -361,7 +370,7 @@ void BossWizardScene::goToPhase2() {
 }
 
 void BossWizardScene::causeDamage(unsigned amount) {
-  // octopus->hurt();
+  // wizard->hurt(); // TODO: IMPLEMENT
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount)) {
   }
   // didWin = true;

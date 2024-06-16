@@ -13,7 +13,17 @@ Wizard::Wizard(bn::fixed_point initialPosition)
   boundingBox.set_position(initialPosition);
 }
 
+void Wizard::bounce() {
+  animationIndex = Math::SCALE_STEPS.size() - 1;
+}
+
 bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
+  if (animationIndex > -1) {
+    auto scale = Math::SCALE_STEPS[animationIndex];
+    sprite.set_scale(scale);
+    animationIndex--;
+  }
+
   Math::moveSpriteTowards(sprite, targetPosition, speedX, speedY);
 
   boundingBox.set_position(sprite.position());
