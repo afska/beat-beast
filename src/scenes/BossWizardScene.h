@@ -4,6 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
+#include "../objects/wizard/FireBall.h"
 #include "../objects/wizard/FlyingDragon.h"
 #include "../objects/wizard/Lightning.h"
 #include "../objects/wizard/MiniRock.h"

@@ -53,6 +53,8 @@
 #define IS_EVENT_FLYING_DRAGON_B(TYPE) IS_EVENT(TYPE, 3, 2)
 #define IS_EVENT_FLYING_DRAGON_C(TYPE) IS_EVENT(TYPE, 3, 3)
 
+#define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
+
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
@@ -219,6 +221,12 @@ void BossWizardScene::processChart() {
       if (IS_EVENT_FLYING_DRAGON_C(type)) {
         flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
             Math::toAbsTopLeft({260, 0}), event, 1.5, 0.2, 2.75)});
+      }
+
+      // Fireballs
+      if (IS_EVENT_FIREBALL(type)) {
+        enemyBullets.push_back(
+            bn::unique_ptr{new FireBall(wizard->getShootingPoint(), event)});
       }
     }
   }

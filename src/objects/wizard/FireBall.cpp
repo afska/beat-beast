@@ -1,0 +1,75 @@
+#include "FireBall.h"
+#include "../../assets/SpriteProvider.h"
+#include "../../utils/Math.h"
+
+#include "bn_sprite_items_wizard_fireball.h"
+
+#define ON_BEAT_SPEED 3
+#define OFF_BEAT_SPEED 1
+#define SCALE_IN_SPEED 0.05
+
+FireBall::FireBall(bn::fixed_point _initialPosition, Event* _event)
+    : event(_event),
+      sprite(bn::sprite_items::wizard_fireball.create_sprite(_initialPosition)),
+      animation(bn::create_sprite_animate_action_forever(
+          sprite,
+          3,
+          bn::sprite_items::wizard_fireball.tiles_item(),
+          0,
+          1,
+          2,
+          3)) {
+  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_position(_initialPosition);
+
+  sprite.set_scale(scale);
+  damage = 5;
+  isShootable = true;
+}
+
+bool FireBall::update(int msecs,
+                      bool isInsideBeat,
+                      bn::fixed_point playerPosition) {
+  if (msecs < event->timestamp) {
+    sprite.set_visible(false);
+    return false;
+  } else {
+    sprite.set_visible(true);
+  }
+
+  if (isExploding) {
+    scale -= 0.15;
+    if (scale <= 0)
+      scale = 0.1;
+    sprite.set_scale(scale);
+    return scale == 0.1;
+  }
+
+  animation.update();
+
+  if (scale <= 1) {
+    scale += SCALE_IN_SPEED;
+    if (scale > 1)
+      scale = 1;
+    sprite.set_scale(scale);
+  }
+
+  int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;
+  Math::moveSpriteTowards(sprite, playerPosition, speed, speed);
+
+  int deltaY =
+      bn::abs(playerPosition.y() - sprite.position().y()).ceil_integer();
+  int deltaX =
+      bn::abs(playerPosition.x() - sprite.position().x()).ceil_integer();
+  bn::fixed angle = Math::normalizeAngle(bn::degrees_atan2(deltaY, deltaX));
+  sprite.set_rotation_angle(angle);
+
+  boundingBox.set_position(sprite.position());
+
+  return sprite.position().x() < -180 || sprite.position().y() < -140 ||
+         sprite.position().x() > 180 || sprite.position().y() > 140;
+}
+
+void FireBall::explode(bn::fixed_point nextTarget) {
+  isExploding = true;
+}

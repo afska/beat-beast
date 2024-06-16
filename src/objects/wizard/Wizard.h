@@ -11,6 +11,9 @@ class Wizard : public GameObject {
   bool update(bn::fixed_point playerPosition, bool isInsideBeat);
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
+  bn::fixed_point getShootingPoint() {
+    return sprite.position() + bn::fixed_point(0, 0);
+  }
 
  private:
   bn::sprite_ptr sprite;
