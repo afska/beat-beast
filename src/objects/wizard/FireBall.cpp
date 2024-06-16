@@ -4,7 +4,7 @@
 
 #include "bn_sprite_items_wizard_fireball.h"
 
-#define ON_BEAT_SPEED 3
+#define ON_BEAT_SPEED 2
 #define OFF_BEAT_SPEED 1
 #define SCALE_IN_SPEED 0.05
 

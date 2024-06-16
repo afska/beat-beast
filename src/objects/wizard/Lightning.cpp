@@ -74,12 +74,12 @@ bool Lightning::update(int msecs) {
   if (!hasStartedAnimation && hasStarted() && msecs >= startEvent->timestamp) {
     animation1 = bn::create_sprite_animate_action_once(
         mainSprite, 2, bn::sprite_items::wizard_lightning1.tiles_item(), 0, 1,
-        2, 1, 3, 1, 3, 1);
+        0, 1, 3, 1, 3, 1);
     animation2 = bn::create_sprite_animate_action_once(
-        sprite2, 2, bn::sprite_items::wizard_lightning2.tiles_item(), 0, 1, 2,
+        sprite2, 2, bn::sprite_items::wizard_lightning2.tiles_item(), 0, 1, 0,
         1, 3, 1, 3, 1);
     animation3 = bn::create_sprite_animate_action_once(
-        sprite3, 2, bn::sprite_items::wizard_lightning3.tiles_item(), 0, 1, 2,
+        sprite3, 2, bn::sprite_items::wizard_lightning3.tiles_item(), 0, 1, 0,
         1, 3, 1, 3, 1);
     hasStartedAnimation = true;
   }
