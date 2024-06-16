@@ -54,14 +54,24 @@ bool FireBall::update(int msecs,
     sprite.set_scale(scale);
   }
 
-  int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;
-  Math::moveSpriteTowards(sprite, playerPosition, speed, speed);
+  bn::fixed_point target = playerPosition + bn::fixed_point(0, 64);
+  if (waitFramesUntilTargetFixed > 0) {
+    waitFramesUntilTargetFixed--;
+    if (waitFramesUntilTargetFixed == 0)
+      fixedTarget = playerPosition + bn::fixed_point(0, 64);
+  } else {
+    target = fixedTarget;
+  }
 
-  int deltaY =
-      bn::abs(playerPosition.y() - sprite.position().y()).ceil_integer();
-  int deltaX =
-      bn::abs(playerPosition.x() - sprite.position().x()).ceil_integer();
-  bn::fixed angle = Math::normalizeAngle(bn::degrees_atan2(deltaY, deltaX));
+  int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;
+  Math::moveSpriteTowards(sprite, target, speed, speed);
+
+  bn::fixed deltaY =
+      sprite.position().y() - target.y();  // (inverted for Y-down)
+  bn::fixed deltaX = target.x() - sprite.position().x();
+  bn::fixed angle = Math::normalizeAngle(
+      bn::degrees_atan2((deltaY).ceil_integer(), (deltaX).ceil_integer()) +
+      128 + 45);
   sprite.set_rotation_angle(angle);
 
   boundingBox.set_position(sprite.position());

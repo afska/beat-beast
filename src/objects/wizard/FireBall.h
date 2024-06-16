@@ -19,6 +19,8 @@ class FireBall : public RhythmicBullet {
   bn::fixed scale = 0.1;
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<4> animation;
+  int waitFramesUntilTargetFixed = 15;
+  bn::fixed_point fixedTarget;
 };
 
 #endif  // FIRE_BALL_H
