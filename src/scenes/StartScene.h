@@ -1,6 +1,7 @@
 #ifndef START_SCENE_H
 #define START_SCENE_H
 
+#include "../objects/Horse.h"
 #include "../objects/ui/Menu.h"
 #include "Scene.h"
 
@@ -12,6 +13,7 @@ class StartScene : public Scene {
 
  private:
   bn::optional<bn::regular_bg_ptr> background;
+  bn::unique_ptr<Horse> horse;
   bn::vector<bn::sprite_ptr, 32> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;

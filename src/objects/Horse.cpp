@@ -141,7 +141,7 @@ void Horse::updateAngle() {
 }
 
 void Horse::updateAnimations() {
-  gunSprite.set_visible(!isBusy());
+  gunSprite.set_visible(!isBusy() && showGun);
 
   if (idleAnimation.has_value())
     idleAnimation->update();

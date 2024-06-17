@@ -8,15 +8,20 @@
 #include "../utils/Math.h"
 #include "bn_blending.h"
 
+#define HORSE_X 40
+#define HORSE_Y 90
 #define BPM 85
 #define BEAT_PREDICTION_WINDOW 100
 
 StartScene::StartScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::START, _fs),
+      horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(fixed_8x16_sprite_font),
       textGeneratorAccent(fixed_8x16_sprite_font_accent),
       menu(bn::unique_ptr{
-          new Menu(textGenerator, textGeneratorAccent, textSprites)}) {}
+          new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
+  horse->showGun = false;
+}
 
 void StartScene::init() {
   player_play("lazer.gsm");
@@ -32,6 +37,9 @@ void StartScene::init() {
 }
 
 void StartScene::update() {
+  horse->setPosition({HORSE_X, HORSE_Y}, true);
+  horse->update();
+
   menu->update();
   if (menu->hasConfirmedOption()) {
     auto confirmedOption = menu->receiveConfirmedOption();
@@ -47,6 +55,8 @@ void StartScene::update() {
   if (isNewBeat)
     extraSpeed = 10;
 
+  if (isNewBeat)
+    horse->jump();
   background.reset();
   background = StartVideo::getFrame(videoFrame)
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,

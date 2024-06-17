@@ -9,6 +9,8 @@
 #include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_menu.h"
 
+#include "bn_sprite_items_start_3dhorse.h"
+
 #include "bn_sprite_items_dj_horse.h"
 #include "bn_sprite_items_dj_icon_horse.h"
 #include "bn_sprite_items_dj_lifebar.h"
@@ -57,6 +59,8 @@ bn::sprite_item SpriteProvider::horse() {
       return bn::sprite_items::dj_horse;
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_horse;
+    case GameState::Screen::START:
+      return bn::sprite_items::start_3dhorse;
     default:
       return unknownScreen();
   }
