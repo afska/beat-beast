@@ -56,7 +56,7 @@
 
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
 
-#define EVENT_RUN 1
+#define EVENT_NEXT_PHASE 1
 #define EVENT_SONG_END 2
 
 #define SFX_MINI_ROCK "minirock.pcm"
@@ -233,8 +233,8 @@ void BossWizardScene::processChart() {
             bn::unique_ptr{new FireBall(wizard->getShootingPoint(), event)});
       }
     } else {
-      if (event->getType() == EVENT_RUN) {
-        goToPhase3();
+      if (event->getType() == EVENT_NEXT_PHASE) {
+        goToNextPhase();
       }
     }
   }
@@ -252,7 +252,7 @@ void BossWizardScene::updateBackground() {
                              background1.position().y());
     background2.set_position(background2.position().x() - 0.25,
                              background2.position().y());
-  } else if (phase == 4) {
+  } else if (phase == 5) {
     background0.set_position(
         background0.position().x() - 2 - (chartReader->isInsideBeat() ? 2 : 0),
         background0.position().y());
@@ -387,7 +387,7 @@ void BossWizardScene::updateSprites() {
                    chartReader->getSong()->oneDivBeatDurationMs,
                    horse->getPosition().x().ceil_integer());
     if (portal->collidesWith(horse.get())) {
-      goToPhase2();
+      goToNextPhase();
       return true;
     }
 
@@ -395,14 +395,17 @@ void BossWizardScene::updateSprites() {
   });
 }
 
-void BossWizardScene::goToPhase2() {
-  pixelBlink->blink();
-  wizard->setTargetPosition({0, -40}, 0);
-  phase++;
-}
-
-void BossWizardScene::goToPhase3() {
-  phase++;
+void BossWizardScene::goToNextPhase() {
+  if (phase == 1) {
+    pixelBlink->blink();
+    wizard->setTargetPosition({0, -40}, 0);
+    phase++;
+  } else if (phase == 2) {
+    phase++;
+  } else if (phase == 3) {
+    phase++;
+    // TODO: INVERT GRAVITY
+  }
 }
 
 void BossWizardScene::causeDamage(unsigned amount) {

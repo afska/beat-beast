@@ -38,8 +38,7 @@ class BossWizardScene : public BossScene {
   void updateBackground();
   void updateSprites();
 
-  void goToPhase2();
-  void goToPhase3();
+  void goToNextPhase();
   void causeDamage(unsigned amount);
 };
 
