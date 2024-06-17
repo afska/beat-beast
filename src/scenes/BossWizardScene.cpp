@@ -56,6 +56,9 @@
 
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
 
+#define EVENT_RUN 1
+#define EVENT_SONG_END 2
+
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
@@ -115,7 +118,7 @@ void BossWizardScene::updateBossFight() {
 
 void BossWizardScene::processInput() {
   // move horse (left/right)
-  if (phase == 1) {
+  if (phase == 1 || phase == 3) {
     bn::fixed speedX;
     if (!bn::keypad::r_held()) {  // (R locks target)
       if (bn::keypad::left_held()) {
@@ -229,6 +232,10 @@ void BossWizardScene::processChart() {
         enemyBullets.push_back(
             bn::unique_ptr{new FireBall(wizard->getShootingPoint(), event)});
       }
+    } else {
+      if (event->getType() == EVENT_RUN) {
+        goToPhase3();
+      }
     }
   }
 }
@@ -237,13 +244,21 @@ void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  if (phase == 1) {
+  if (phase == 1 || phase == 3) {
     background0.set_position(
         background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
         background0.position().y());
     background1.set_position(background1.position().x() - 0.5,
                              background1.position().y());
     background2.set_position(background2.position().x() - 0.25,
+                             background2.position().y());
+  } else if (phase == 4) {
+    background0.set_position(
+        background0.position().x() - 2 - (chartReader->isInsideBeat() ? 2 : 0),
+        background0.position().y());
+    background1.set_position(background1.position().x() - 1.5,
+                             background1.position().y());
+    background2.set_position(background2.position().x() - 1.25,
                              background2.position().y());
   }
 }
@@ -383,6 +398,10 @@ void BossWizardScene::updateSprites() {
 void BossWizardScene::goToPhase2() {
   pixelBlink->blink();
   wizard->setTargetPosition({0, -40}, 0);
+  phase++;
+}
+
+void BossWizardScene::goToPhase3() {
   phase++;
 }
 
