@@ -11,13 +11,12 @@ Wizard::Wizard(bn::fixed_point initialPosition)
 
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
-}
-
-void Wizard::bounce() {
-  animationIndex = Math::SCALE_STEPS.size() - 1;
+  setIdleState();
 }
 
 bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
+  updateAnimations();
+
   if (animationIndex > -1) {
     auto scale = Math::SCALE_STEPS[animationIndex];
     sprite.set_scale(scale);
@@ -30,6 +29,21 @@ bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 
   return sprite.position().x() < -Math::SCREEN_WIDTH / 2 - 16 * 2 ||
          sprite.position().x() > Math::SCREEN_WIDTH / 2 + 16 * 2;
+}
+
+void Wizard::bounce() {
+  if (isBusy())
+    return;
+
+  animationIndex = Math::SCALE_STEPS.size() - 1;
+}
+
+void Wizard::attack() {
+  setAttackState();
+}
+
+void Wizard::hurt() {
+  setHurtState();
 }
 
 void Wizard::setTargetPosition(bn::fixed_point newTargetPosition,
@@ -47,4 +61,51 @@ void Wizard::setTargetPosition(bn::fixed_point newTargetPosition,
            beatDurationFrames;
   speedY = bn::abs(newTargetPosition.y() - sprite.position().y()) /
            beatDurationFrames;
+}
+
+void Wizard::updateAnimations() {
+  if (idleAnimation.has_value()) {
+    idleAnimation->update();
+  }
+
+  if (hurtAnimation.has_value()) {
+    hurtAnimation->update();
+    if (hurtAnimation->done()) {
+      resetAnimations();
+      setIdleState();
+    }
+  }
+
+  if (attackAnimation.has_value()) {
+    attackAnimation->update();
+    if (attackAnimation->done()) {
+      resetAnimations();
+      setIdleState();
+    }
+  }
+}
+
+void Wizard::setIdleState() {
+  resetAnimations();
+  idleAnimation = bn::create_sprite_animate_action_forever(
+      sprite, 10, bn::sprite_items::wizard_wizard.tiles_item(), 0, 1);
+}
+
+void Wizard::setHurtState() {
+  resetAnimations();
+  hurtAnimation = bn::create_sprite_animate_action_once(
+      sprite, 2, bn::sprite_items::wizard_wizard.tiles_item(), 3, 0, 3, 0, 3, 0,
+      3, 0);
+}
+
+void Wizard::setAttackState() {
+  resetAnimations();
+  attackAnimation = bn::create_sprite_animate_action_once(
+      sprite, 15, bn::sprite_items::wizard_wizard.tiles_item(), 2, 2);
+}
+
+void Wizard::resetAnimations() {
+  idleAnimation.reset();
+  hurtAnimation.reset();
+  attackAnimation.reset();
 }

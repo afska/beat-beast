@@ -230,6 +230,7 @@ void BossWizardScene::processChart() {
 
       // Fireballs
       if (IS_EVENT_FIREBALL(type)) {
+        wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall(wizard->get()->getShootingPoint(), event)});
       }
@@ -419,7 +420,7 @@ void BossWizardScene::goToNextPhase() {
 }
 
 void BossWizardScene::causeDamage(unsigned amount) {
-  // wizard->hurt(); // TODO: IMPLEMENT
+  wizard->get()->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount)) {
   }
   // didWin = true;
