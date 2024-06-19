@@ -214,15 +214,15 @@ void BossWizardScene::processChart() {
       // Flying dragons
       if (IS_EVENT_FLYING_DRAGON_A(type)) {
         flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
-            Math::toAbsTopLeft({240, 30}), event, 1.5, 0.175, 2.5)});
+            Math::toAbsTopLeft({240, 30}), event, 1.5, 0.219, 2.4)});
       }
       if (IS_EVENT_FLYING_DRAGON_B(type)) {
         flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
-            Math::toAbsTopLeft({240, 50}), event, 3, 0.195, 3)});
+            Math::toAbsTopLeft({260, 0}), event, 2, 0.25, 2.15)});
       }
       if (IS_EVENT_FLYING_DRAGON_C(type)) {
         flyingDragons.push_back(bn::unique_ptr{new FlyingDragon(
-            Math::toAbsTopLeft({260, 0}), event, 1.5, 0.2, 2.75)});
+            Math::toAbsTopLeft({240, 50}), event, 1.5, 0.25, 2.15)});
       }
 
       // Fireballs
@@ -370,7 +370,7 @@ void BossWizardScene::updateSprites() {
 
   iterate(flyingDragons, [this](FlyingDragon* flyingDragon) {
     bool isOut = flyingDragon->update(chartReader->getMsecs(),
-                                      chartReader->isInsideBeat());
+                                      chartReader->isInsideTick());
 
     if (flyingDragon->collidesWith(horse.get())) {
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);

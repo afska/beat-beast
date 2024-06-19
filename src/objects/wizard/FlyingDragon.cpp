@@ -10,6 +10,15 @@ FlyingDragon::FlyingDragon(bn::fixed_point initialPosition,
                            bn::fixed _gravity,
                            bn::fixed _flapForce)
     : sprite(bn::sprite_items::wizard_dragon.create_sprite(initialPosition)),
+      animation(bn::create_sprite_animate_action_forever(
+          sprite,
+          2,
+          bn::sprite_items::wizard_dragon.tiles_item(),
+          0,
+          2,
+          4,
+          6,
+          7)),
       event(_event),
       xSpeed(_xSpeed),
       gravity(_gravity),
@@ -35,6 +44,8 @@ bool FlyingDragon::update(int msecs, bool isInsideBeat) {
   } else if (isFlapping && !isInsideBeat) {
     isFlapping = false;
   }
+
+  animation.update();
 
   sprite.set_x(sprite.position().x() - xSpeed);
   velocityY += gravity;
