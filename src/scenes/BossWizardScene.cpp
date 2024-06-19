@@ -7,14 +7,12 @@
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
-#include "bn_regular_bg_items_back_dj.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg0.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg1.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg2.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg3.h"
-#include "bn_sprite_items_dj_bad_bullet.h"
-#include "bn_sprite_items_dj_icon_octopus.h"
-#include "bn_sprite_items_dj_lifebar_octopus_fill.h"
+#include "bn_sprite_items_wizard_icon_wizard.h"
+#include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
 #define LIFE_BOSS 150
 
@@ -73,8 +71,8 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
                 bn::unique_ptr{
                     new LifeBar({184, 0},
                                 LIFE_BOSS,
-                                bn::sprite_items::dj_icon_octopus,
-                                bn::sprite_items::dj_lifebar_octopus_fill)},
+                                bn::sprite_items::wizard_icon_wizard,
+                                bn::sprite_items::wizard_lifebar_wizard_fill)},
                 _fs),
       background3(bn::regular_bg_items::back_wizard_mountain_bg3.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
