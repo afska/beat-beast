@@ -30,7 +30,7 @@ class BossWizardScene : public BossScene {
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;
   bn::vector<bn::unique_ptr<FlyingDragon>, 32> flyingDragons;
   bn::vector<bn::unique_ptr<Portal>, 32> portals;
-  bn::unique_ptr<Wizard> wizard;
+  bn::optional<bn::unique_ptr<Wizard>> wizard;
   int phase = 1;
 
   void processInput();

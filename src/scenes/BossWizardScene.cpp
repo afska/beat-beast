@@ -85,8 +85,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
           (256 - Math::SCREEN_HEIGHT) / 2)),
       background0(bn::regular_bg_items::back_wizard_mountain_bg0.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
-          (256 - Math::SCREEN_HEIGHT) / 2)),
-      wizard(bn::unique_ptr{new Wizard({200, -70})}) {
+          (256 - Math::SCREEN_HEIGHT) / 2)) {
   background0.set_blending_enabled(true);
   background0.set_mosaic_enabled(true);
   background1.set_blending_enabled(true);
@@ -160,13 +159,17 @@ void BossWizardScene::processChart() {
 
       // Movement
       if (IS_EVENT_MOVE_COL1(type))
-        wizard->setTargetPosition({-50, -40}, chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({-50, -40},
+                                         chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL2(type))
-        wizard->setTargetPosition({0, -60}, chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({0, -50},
+                                         chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_COL3(type))
-        wizard->setTargetPosition({80, -40}, chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({80, -40},
+                                         chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_OFFSCREEN(type))
-        wizard->setTargetPosition({200, -70}, chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({200, -70},
+                                         chartReader->getBeatDurationMs());
 
       // Rocks & Portals
       if (IS_EVENT_MINI_ROCK(type)) {
@@ -227,8 +230,8 @@ void BossWizardScene::processChart() {
 
       // Fireballs
       if (IS_EVENT_FIREBALL(type)) {
-        enemyBullets.push_back(
-            bn::unique_ptr{new FireBall(wizard->getShootingPoint(), event)});
+        enemyBullets.push_back(bn::unique_ptr{
+            new FireBall(wizard->get()->getShootingPoint(), event)});
       }
     } else {
       if (event->getType() == EVENT_NEXT_PHASE) {
@@ -265,9 +268,12 @@ void BossWizardScene::updateSprites() {
   updateCommonSprites();
 
   // Wizard
-  if (isNewBeat)
-    wizard->bounce();
-  wizard->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
+  if (wizard.has_value()) {
+    if (isNewBeat)
+      wizard->get()->bounce();
+    wizard->get()->update(horse->getCenteredPosition(),
+                          chartReader->isInsideBeat());
+  }
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
@@ -295,11 +301,13 @@ void BossWizardScene::updateSprites() {
               return false;
             });
 
-    if (bullet->collidesWith(wizard.get())) {
-      addExplosion(bullet->getPosition());
-      causeDamage(bullet->damage);
+    if (wizard.has_value()) {
+      if (bullet->collidesWith(wizard->get())) {
+        addExplosion(bullet->getPosition());
+        causeDamage(bullet->damage);
 
-      return true;
+        return true;
+      }
     }
 
     return isOut || colided;
@@ -381,23 +389,26 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
-  iterate(portals, [this](Portal* portal) {
+  bool nextPhase = false;
+  iterate(portals, [this, &nextPhase](Portal* portal) {
     portal->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
                    chartReader->getSong()->oneDivBeatDurationMs,
                    horse->getPosition().x().ceil_integer());
     if (portal->collidesWith(horse.get())) {
-      goToNextPhase();
+      nextPhase = true;
       return true;
     }
 
     return false;
   });
+  if (nextPhase)
+    goToNextPhase();
 }
 
 void BossWizardScene::goToNextPhase() {
   if (phase == 1) {
     pixelBlink->blink();
-    wizard->setTargetPosition({0, -40}, 0);
+    wizard = bn::unique_ptr{new Wizard({0, -40})};
     phase++;
   } else if (phase == 2) {
     phase++;
