@@ -28,8 +28,13 @@ FlyingDragon::FlyingDragon(bn::fixed_point initialPosition,
 }
 
 bool FlyingDragon::update(int msecs, bool isInsideBeat) {
-  if (isExploding)
-    return true;
+  if (isExploding()) {
+    scale -= 0.075;
+    if (scale <= 0)
+      return true;
+    sprite.set_scale(scale);
+    hurtAnimation->update();
+  }
 
   if (msecs < event->timestamp) {
     sprite.set_visible(false);
@@ -45,7 +50,8 @@ bool FlyingDragon::update(int msecs, bool isInsideBeat) {
     isFlapping = false;
   }
 
-  animation.update();
+  if (!isExploding())
+    animation.update();
 
   sprite.set_x(sprite.position().x() - xSpeed);
   velocityY += gravity;
@@ -58,5 +64,6 @@ bool FlyingDragon::update(int msecs, bool isInsideBeat) {
 }
 
 void FlyingDragon::explode() {
-  isExploding = true;
+  hurtAnimation = bn::create_sprite_animate_action_forever(
+      sprite, 2, bn::sprite_items::wizard_dragon.tiles_item(), 8, 0);
 }

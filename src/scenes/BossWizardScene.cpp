@@ -372,7 +372,8 @@ void BossWizardScene::updateSprites() {
     bool isOut = flyingDragon->update(chartReader->getMsecs(),
                                       chartReader->isInsideTick());
 
-    if (flyingDragon->collidesWith(horse.get())) {
+    if (!flyingDragon->isExploding() &&
+        flyingDragon->collidesWith(horse.get())) {
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
       return true;
     }
