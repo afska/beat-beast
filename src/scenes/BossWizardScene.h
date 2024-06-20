@@ -22,7 +22,7 @@ class BossWizardScene : public BossScene {
   bn::regular_bg_ptr background3;
   bn::regular_bg_ptr background2;
   bn::regular_bg_ptr background1;
-  bn::regular_bg_ptr background0;
+  bn::optional<bn::regular_bg_ptr> background0;
   bn::vector<bn::unique_ptr<MiniRock>, 32> miniRocks;
   bn::vector<bn::unique_ptr<Rock>, 32> rocks;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;

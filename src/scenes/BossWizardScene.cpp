@@ -11,6 +11,9 @@
 #include "bn_regular_bg_items_back_wizard_mountain_bg1.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg2.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg3.h"
+#include "bn_regular_bg_items_back_wizard_mountainlava1_bg0.h"
+#include "bn_regular_bg_items_back_wizard_mountainlava2_bg0.h"
+#include "bn_regular_bg_items_back_wizard_mountainlava3_bg0.h"
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
@@ -86,8 +89,8 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
       background0(bn::regular_bg_items::back_wizard_mountain_bg0.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
           (256 - Math::SCREEN_HEIGHT) / 2)) {
-  background0.set_blending_enabled(true);
-  background0.set_mosaic_enabled(true);
+  background0.get()->set_blending_enabled(true);
+  background0.get()->set_mosaic_enabled(true);
   background1.set_blending_enabled(true);
   background1.set_mosaic_enabled(true);
   background2.set_blending_enabled(true);
@@ -243,22 +246,27 @@ void BossWizardScene::processChart() {
 }
 
 void BossWizardScene::updateBackground() {
+  if (phase == 3 && background0.get()->position().x().ceil_integer() == -3600) {
+    background0.reset();
+    background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
+        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+  }
+
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  if (phase == 1 || phase == 3) {
-    BN_LOG(background1.position().x());
-    background0.set_position(
-        background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
-        background0.position().y());
+  if (phase == 1 || phase == 3 || phase == 4) {
+    background0.get()->set_position(background0.get()->position().x() - 1 -
+                                        (chartReader->isInsideBeat() ? 1 : 0),
+                                    background0.get()->position().y());
     background1.set_position(background1.position().x() - 0.5,
                              background1.position().y());
     background2.set_position(background2.position().x() - 0.25,
                              background2.position().y());
   } else if (phase == 5) {
-    background0.set_position(
-        background0.position().x() - 2 - (chartReader->isInsideBeat() ? 2 : 0),
-        background0.position().y());
+    background0.get()->set_position(background0.get()->position().x() - 2 -
+                                        (chartReader->isInsideBeat() ? 2 : 0),
+                                    background0.get()->position().y());
     background1.set_position(background1.position().x() - 1.5,
                              background1.position().y());
     background2.set_position(background2.position().x() - 1.25,
@@ -416,7 +424,6 @@ void BossWizardScene::goToNextPhase() {
     phase++;
   } else if (phase == 3) {
     phase++;
-    // TODO: INVERT GRAVITY
   }
 }
 
