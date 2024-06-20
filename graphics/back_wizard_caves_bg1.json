@@ -1,5 +1,3 @@
 {
-    "type": "regular_bg",
-    "bpp_mode": "bpp_8",
-    "colors_count": 8
+    "type": "regular_bg"
 }
