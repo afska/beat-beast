@@ -247,6 +247,7 @@ void BossWizardScene::updateBackground() {
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
   if (phase == 1 || phase == 3) {
+    BN_LOG(background1.position().x());
     background0.set_position(
         background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
         background0.position().y());
