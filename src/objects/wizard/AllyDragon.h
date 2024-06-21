@@ -7,8 +7,8 @@ class AllyDragon : public GameObject {
  public:
   AllyDragon(bn::fixed_point initialPosition);
 
-  bool update();
-  void flap();
+  bool update(bn::fixed_point playerPosition);
+  bool isReady() { return _isReady; }
 
  private:
   bn::sprite_ptr sprite;
@@ -19,6 +19,7 @@ class AllyDragon : public GameObject {
   bn::fixed velocityY = 0;
   bn::fixed scale = 1;
   bool isFlapping = false;
+  bool _isReady = false;
 };
 
 #endif  // ALLY_DRAGON_H

@@ -453,7 +453,8 @@ void BossWizardScene::updateSprites() {
     }
   }
   if (allyDragon.has_value()) {
-    if (allyDragon->get()->update()) {
+    if (allyDragon->get()->update(horse->getCenteredPosition() -
+                                  bn::fixed_point(0, 7))) {
       allyDragon.reset();
     }
   }
@@ -480,3 +481,5 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
+// TODO: BUG - WHEN PLAYER IS ALL THE WAY TO THE LEFT, THE LAVA EVENT DOESN'T
+// OCCUR

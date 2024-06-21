@@ -23,7 +23,7 @@ AllyDragon::AllyDragon(bn::fixed_point initialPosition)
   sprite.set_scale(0.1);
 }
 
-bool AllyDragon::update() {
+bool AllyDragon::update(bn::fixed_point playerPosition) {
   if (sprite.horizontal_scale() < 1) {
     sprite.set_scale(sprite.horizontal_scale() + 0.05);
     if (sprite.horizontal_scale() > 1)
@@ -32,11 +32,12 @@ bool AllyDragon::update() {
   animation.update();
 
   velocityY += gravity;
-  // sprite.set_y(sprite.position().y() + velocityY);
+
+  Math::moveSpriteTowards(sprite, playerPosition, 2, 2);
+  if (sprite.position() == playerPosition) {
+    sprite.set_horizontal_flip(true);
+    _isReady = true;
+  }
 
   return false;
-}
-
-void AllyDragon::flap() {
-  velocityY -= flapForce;
 }
