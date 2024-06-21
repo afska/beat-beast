@@ -246,10 +246,15 @@ void BossWizardScene::processChart() {
 }
 
 void BossWizardScene::updateBackground() {
-  if (phase == 3 && background0.get()->position().x().ceil_integer() == -3600) {
+  if (phase == 3 && background0.get()->position().x().ceil_integer() == -3577) {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
-        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+        (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    goToNextPhase();
+  }
+
+  if (phase == 4 && background0.get()->position().x().ceil_integer() == -136) {
+    goToNextPhase();
   }
 
   bn::blending::set_fade_alpha(
@@ -263,7 +268,7 @@ void BossWizardScene::updateBackground() {
                              background1.position().y());
     background2.set_position(background2.position().x() - 0.25,
                              background2.position().y());
-  } else if (phase == 5) {
+  } /*else if (phase == 5) {
     background0.get()->set_position(background0.get()->position().x() - 2 -
                                         (chartReader->isInsideBeat() ? 2 : 0),
                                     background0.get()->position().y());
@@ -271,7 +276,7 @@ void BossWizardScene::updateBackground() {
                              background1.position().y());
     background2.set_position(background2.position().x() - 1.25,
                              background2.position().y());
-  }
+  }*/
 }
 
 void BossWizardScene::updateSprites() {
@@ -419,12 +424,11 @@ void BossWizardScene::goToNextPhase() {
   if (phase == 1) {
     pixelBlink->blink();
     wizard = bn::unique_ptr{new Wizard({0, -40})};
-    phase++;
-  } else if (phase == 2) {
-    phase++;
-  } else if (phase == 3) {
-    phase++;
   }
+
+  phase++;
+  BN_LOG("PHASE");
+  BN_LOG(phase);
 }
 
 void BossWizardScene::causeDamage(unsigned amount) {
