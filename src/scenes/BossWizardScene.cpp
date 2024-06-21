@@ -253,6 +253,7 @@ void BossWizardScene::updateBackground() {
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
     bg0ScrollX = background0.get()->position().x().ceil_integer();
+    dragonEgg = bn::unique_ptr{new DragonEgg({260, 59})};
     goToNextPhase();
   }
 
@@ -264,6 +265,8 @@ void BossWizardScene::updateBackground() {
     if (bg0ScrollX <= lavaStart) {
       int limitOffset = bg0ScrollX - lavaStart;
       bn::fixed limit = Math::SCREEN_WIDTH + limitOffset - horseWidth;
+      dragonEgg->get()->setPosition(
+          bn::fixed_point(limit - 27, dragonEgg->get()->getPosition().y()));
       horse->setTopLeftPosition(
           {bn::min(horse->getTopLeftPosition().x(), limit),
            horse->getTopLeftPosition().y()});
@@ -434,6 +437,9 @@ void BossWizardScene::updateSprites() {
   });
   if (nextPhase)
     goToNextPhase();
+
+  if (dragonEgg.has_value())
+    dragonEgg->get()->update();
 }
 
 void BossWizardScene::goToNextPhase() {
