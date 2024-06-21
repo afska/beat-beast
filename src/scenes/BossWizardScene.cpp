@@ -58,8 +58,7 @@
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
 
 #define EVENT_NEXT_PHASE 1
-#define EVENT_HATCH 2
-#define EVENT_SONG_END 3
+#define EVENT_SONG_END 2
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -243,9 +242,6 @@ void BossWizardScene::processChart() {
       if (event->getType() == EVENT_NEXT_PHASE) {
         goToNextPhase();
       }
-      if (event->getType() == EVENT_HATCH) {
-        dragonEgg->get()->explode();
-      }
     }
   }
 }
@@ -281,8 +277,10 @@ void BossWizardScene::updateBackground() {
            horse->getTopLeftPosition().y()});
     }
 
-    if (phase == 4 && bg0ScrollX <= lavaStart - lavaSize)
+    if (phase == 4 && bg0ScrollX <= lavaStart - lavaSize) {
+      dragonEgg->get()->explode();
       goToNextPhase();
+    }
   }
 
   bn::blending::set_fade_alpha(
@@ -450,7 +448,7 @@ void BossWizardScene::updateSprites() {
   if (dragonEgg.has_value()) {
     if (dragonEgg->get()->update()) {
       allyDragon = bn::unique_ptr{new AllyDragon(
-          dragonEgg->get()->getPosition() + bn::fixed_point(-9, -3))};
+          dragonEgg->get()->getPosition() + bn::fixed_point(0, -3))};
       dragonEgg.reset();
     }
   }
@@ -480,5 +478,5 @@ void BossWizardScene::causeDamage(unsigned amount) {
 }
 
 // TODO: REMOVE ALL BN_LOGS
-// TODO: ENSURE THE LEVEL WORKS WELL WITH INPUT LAG; IN updateBackground() THERE
+// TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT

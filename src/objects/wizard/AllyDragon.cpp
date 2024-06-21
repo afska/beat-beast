@@ -9,16 +9,17 @@ AllyDragon::AllyDragon(bn::fixed_point initialPosition)
           bn::sprite_items::wizard_dragon_alt.create_sprite(initialPosition)),
       animation(bn::create_sprite_animate_action_forever(
           sprite,
-          2,
-          bn::sprite_items::wizard_dragon_alt.tiles_item(),
-          0,
           1,
+          bn::sprite_items::wizard_dragon_alt.tiles_item(),
+          6,
+          5,
+          4,
+          3,
           2,
           3,
           4,
           5,
-          6,
-          7)) {
+          6)) {
   sprite.set_scale(0.1);
 }
 
