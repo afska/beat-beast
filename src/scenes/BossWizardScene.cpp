@@ -118,7 +118,7 @@ void BossWizardScene::updateBossFight() {
 
 void BossWizardScene::processInput() {
   bool isRunning = phase == 1 || phase == 3;
-  bool isFlying = phase == 6;
+  bool isFlying = phase == 6 || phase == 7;
 
   // move horse (left/right)
   if (isRunning) {
@@ -277,7 +277,7 @@ void BossWizardScene::processChart() {
 void BossWizardScene::updateBackground() {
   // transition to lava stop
   int bg0ScrollX = background0.get()->position().x().ceil_integer();
-  if (phase == 3 && bg0ScrollX == -3577) {
+  if (phase == 3 && bg0ScrollX <= -3577) {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
@@ -307,14 +307,32 @@ void BossWizardScene::updateBackground() {
 
     if (phase == 4 && bg0ScrollX <= lavaStart - lavaSize) {
       dragonEgg->get()->explode();
+      background0.reset();
+      background0 =
+          bn::regular_bg_items::back_wizard_mountainlava2_bg0.create_bg(
+              (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+      background0.get()->set_blending_enabled(true);
+      background0.get()->set_mosaic_enabled(true);
+      bg0ScrollX = background0.get()->position().x().ceil_integer();
       goToNextPhase();
     }
+  }
+
+  // transition to lava
+  if (phase == 6 && bg0ScrollX <= -122) {
+    background0.reset();
+    background0 = bn::regular_bg_items::back_wizard_mountainlava2_bg0.create_bg(
+        (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background0.get()->set_blending_enabled(true);
+    background0.get()->set_mosaic_enabled(true);
+    bg0ScrollX = background0.get()->position().x().ceil_integer();
+    goToNextPhase();
   }
 
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  if (phase == 1 || phase == 3 || phase == 4 || phase == 6) {
+  if (phase == 1 || phase == 3 || phase == 4 || phase == 6 || phase == 7) {
     background0.get()->set_position(background0.get()->position().x() - 1 -
                                         (chartReader->isInsideBeat() ? 1 : 0),
                                     background0.get()->position().y());
@@ -514,5 +532,3 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
-// TODO: BUG - WHEN PLAYER IS ALL THE WAY TO THE LEFT, THE LAVA EVENT DOESN'T
-// OCCUR
