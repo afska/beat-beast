@@ -117,8 +117,11 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
+  bool isRunning = phase == 1 || phase == 3;
+  bool isFlying = phase == 6;
+
   // move horse (left/right)
-  if (phase == 1 || phase == 3) {
+  if (isRunning) {
     bn::fixed speedX;
     horse->setFlipX(false);
     if (!bn::keypad::r_held()) {  // (R locks target)
@@ -132,6 +135,29 @@ void BossWizardScene::processInput() {
       horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y}, true);
     } else {
       horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+    }
+  } else if (isFlying) {
+    bn::fixed speedX, speedY;
+    horse->setFlipX(false);
+    if (!bn::keypad::r_held()) {  // (R locks target)
+      if (bn::keypad::left_held()) {
+        speedX = -HORSE_SPEED;
+      } else if (bn::keypad::right_held()) {
+        speedX = HORSE_SPEED;
+      }
+      if (bn::keypad::up_held()) {
+        speedY = -HORSE_SPEED;
+      } else if (bn::keypad::down_held()) {
+        speedY = HORSE_SPEED;
+      }
+      if (speedX != 0 && chartReader->isInsideBeat())
+        speedX *= 2;  // rhythmic movement?
+      horse->setPosition({horse->getPosition().x() + speedX,
+                          horse->getPosition().y() + speedY},
+                         false);
+    } else {
+      horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
+                         false);
     }
   } else {
     processMovementInput(HORSE_Y);
@@ -151,9 +177,11 @@ void BossWizardScene::processInput() {
     }
   }
 
-  // jump
-  if (bn::keypad::a_pressed())
-    horse->jump();
+  if (!isFlying) {
+    // jump
+    if (bn::keypad::a_pressed())
+      horse->jump();
+  }
 }
 
 void BossWizardScene::processChart() {
@@ -286,7 +314,7 @@ void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  if (phase == 1 || phase == 3 || phase == 4) {
+  if (phase == 1 || phase == 3 || phase == 4 || phase == 6) {
     background0.get()->set_position(background0.get()->position().x() - 1 -
                                         (chartReader->isInsideBeat() ? 1 : 0),
                                     background0.get()->position().y());
@@ -453,9 +481,14 @@ void BossWizardScene::updateSprites() {
     }
   }
   if (allyDragon.has_value()) {
+    bool wasReady = allyDragon->get()->isReady();
     if (allyDragon->get()->update(horse->getCenteredPosition() -
-                                  bn::fixed_point(0, 7))) {
+                                  bn::fixed_point(0, 9))) {
       allyDragon.reset();
+    } else {
+      bool isReady = allyDragon->get()->isReady();
+      if (!wasReady && isReady)
+        goToNextPhase();
     }
   }
 }
