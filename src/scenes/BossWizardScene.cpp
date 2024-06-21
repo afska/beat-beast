@@ -121,6 +121,7 @@ void BossWizardScene::processInput() {
   // move horse (left/right)
   if (phase == 1 || phase == 3) {
     bn::fixed speedX;
+    horse->setFlipX(false);
     if (!bn::keypad::r_held()) {  // (R locks target)
       if (bn::keypad::left_held()) {
         speedX = -HORSE_SPEED;
@@ -481,4 +482,3 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH INPUT LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
-// TODO: BUG - IT'S POSSIBLE TO LOCK LEFT MOVEMENT SOMEHOW
