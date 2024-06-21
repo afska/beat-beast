@@ -246,15 +246,31 @@ void BossWizardScene::processChart() {
 }
 
 void BossWizardScene::updateBackground() {
-  if (phase == 3 && background0.get()->position().x().ceil_integer() == -3577) {
+  // transition to lava stop
+  int bg0ScrollX = background0.get()->position().x().ceil_integer();
+  if (phase == 3 && bg0ScrollX == -3577) {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    bg0ScrollX = background0.get()->position().x().ceil_integer();
     goToNextPhase();
   }
 
-  if (phase == 4 && background0.get()->position().x().ceil_integer() == -136) {
-    goToNextPhase();
+  // lava stop
+  int lavaStart = -8;
+  int lavaSize = 128;
+  int horseWidth = 64;
+  if ((phase == 4 || phase == 5) && bg0ScrollX <= 0) {
+    if (bg0ScrollX <= lavaStart) {
+      int limitOffset = bg0ScrollX - lavaStart;
+      bn::fixed limit = Math::SCREEN_WIDTH + limitOffset - horseWidth;
+      horse->setTopLeftPosition(
+          {bn::min(horse->getTopLeftPosition().x(), limit),
+           horse->getTopLeftPosition().y()});
+    }
+
+    if (phase == 4 && bg0ScrollX <= lavaStart - lavaSize)
+      goToNextPhase();
   }
 
   bn::blending::set_fade_alpha(
