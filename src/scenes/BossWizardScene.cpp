@@ -58,7 +58,8 @@
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
 
 #define EVENT_NEXT_PHASE 1
-#define EVENT_SONG_END 2
+#define EVENT_HATCH 2
+#define EVENT_SONG_END 3
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -241,6 +242,9 @@ void BossWizardScene::processChart() {
       if (event->getType() == EVENT_NEXT_PHASE) {
         goToNextPhase();
       }
+      if (event->getType() == EVENT_HATCH) {
+        dragonEgg->get()->explode();
+      }
     }
   }
 }
@@ -252,6 +256,8 @@ void BossWizardScene::updateBackground() {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background0.get()->set_blending_enabled(true);
+    background0.get()->set_mosaic_enabled(true);
     bg0ScrollX = background0.get()->position().x().ceil_integer();
     dragonEgg = bn::unique_ptr{new DragonEgg({260, 59})};
     goToNextPhase();
@@ -265,8 +271,10 @@ void BossWizardScene::updateBackground() {
     if (bg0ScrollX <= lavaStart) {
       int limitOffset = bg0ScrollX - lavaStart;
       bn::fixed limit = Math::SCREEN_WIDTH + limitOffset - horseWidth;
-      dragonEgg->get()->setPosition(
-          bn::fixed_point(limit - 27, dragonEgg->get()->getPosition().y()));
+      if (dragonEgg.has_value()) {
+        dragonEgg->get()->setPosition(
+            bn::fixed_point(limit - 27, dragonEgg->get()->getPosition().y()));
+      }
       horse->setTopLeftPosition(
           {bn::min(horse->getTopLeftPosition().x(), limit),
            horse->getTopLeftPosition().y()});
@@ -438,8 +446,18 @@ void BossWizardScene::updateSprites() {
   if (nextPhase)
     goToNextPhase();
 
-  if (dragonEgg.has_value())
-    dragonEgg->get()->update();
+  if (dragonEgg.has_value()) {
+    if (dragonEgg->get()->update()) {
+      allyDragon = bn::unique_ptr{new AllyDragon(
+          dragonEgg->get()->getPosition() + bn::fixed_point(-9, -3))};
+      dragonEgg.reset();
+    }
+  }
+  if (allyDragon.has_value()) {
+    if (allyDragon->get()->update()) {
+      allyDragon.reset();
+    }
+  }
 }
 
 void BossWizardScene::goToNextPhase() {
@@ -459,3 +477,8 @@ void BossWizardScene::causeDamage(unsigned amount) {
   }
   // didWin = true;
 }
+
+// TODO: REMOVE ALL BN_LOGS
+// TODO: ENSURE THE LEVEL WORKS WELL WITH INPUT LAG; IN updateBackground() THERE
+// ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
+// TODO: BUG - IT'S POSSIBLE TO LOCK LEFT MOVEMENT SOMEHOW

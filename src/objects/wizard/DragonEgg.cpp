@@ -14,6 +14,13 @@ DragonEgg::DragonEgg(bn::fixed_point initialPosition)
           1)) {}
 
 bool DragonEgg::update() {
+  animation.update();
+
+  if (isExploding) {
+    sprite.set_scale(sprite.horizontal_scale() + 0.025);
+    return sprite.horizontal_scale() >= 1.9;
+  }
+
   if (animationIndex > -1) {
     auto scale = Math::SCALE_STEPS[animationIndex];
     sprite.set_scale(scale);
@@ -21,11 +28,9 @@ bool DragonEgg::update() {
   } else
     animationIndex = Math::SCALE_STEPS.size() - 1;
 
-  animation.update();
-
-  return didExplode;
+  return false;
 }
 
 void DragonEgg::explode() {
-  didExplode = true;
+  isExploding = true;
 }

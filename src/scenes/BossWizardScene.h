@@ -4,6 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
+#include "../objects/wizard/AllyDragon.h"
 #include "../objects/wizard/DragonEgg.h"
 #include "../objects/wizard/FireBall.h"
 #include "../objects/wizard/FlyingDragon.h"
@@ -33,6 +34,7 @@ class BossWizardScene : public BossScene {
   bn::vector<bn::unique_ptr<Portal>, 32> portals;
   bn::optional<bn::unique_ptr<Wizard>> wizard;
   bn::optional<bn::unique_ptr<DragonEgg>> dragonEgg;
+  bn::optional<bn::unique_ptr<AllyDragon>> allyDragon;
   int phase = 1;
 
   void processInput();
