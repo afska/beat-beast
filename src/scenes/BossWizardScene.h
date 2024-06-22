@@ -35,6 +35,7 @@ class BossWizardScene : public BossScene {
   bn::optional<bn::unique_ptr<Wizard>> wizard;
   bn::optional<bn::unique_ptr<DragonEgg>> dragonEgg;
   bn::optional<bn::unique_ptr<AllyDragon>> allyDragon;
+  bn::fixed flySpeedX = 0, flySpeedY = 0;
   int phase = 1;
 
   void processInput();

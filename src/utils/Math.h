@@ -143,6 +143,21 @@ inline void moveSpriteTowards(bn::sprite_ptr sprite,
   }
 }
 
+inline void moveNumberTowards(bn::fixed& current,
+                              bn::fixed absTarget,
+                              bn::fixed absStep) {
+  if (current < -absTarget) {
+    current += absStep;
+    if (current > -absTarget)
+      current = -absTarget;
+  }
+  if (current > absTarget) {
+    current -= absStep;
+    if (current < absTarget)
+      current = absTarget;
+  }
+}
+
 inline bn::fixed getBeatBasedXPositionForObject(int targetX,
                                                 int targetWidth,
                                                 bn::fixed directionX,

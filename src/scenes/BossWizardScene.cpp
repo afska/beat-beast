@@ -117,8 +117,8 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
-  bool isRunning = phase == 1 || phase == 3;
-  bool isFlying = phase == 6 || phase == 7;
+  const bool isRunning = phase == 1 || phase == 3;
+  const bool isFlying = phase == 6 || phase == 7;
 
   // move horse (left/right)
   if (isRunning) {
@@ -137,23 +137,25 @@ void BossWizardScene::processInput() {
       horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
     }
   } else if (isFlying) {
-    bn::fixed speedX, speedY;
+    const bn::fixed friction = 0.15;
+    const int targetSpeed = 3;
+    Math::moveNumberTowards(flySpeedX, 0, friction);
+    Math::moveNumberTowards(flySpeedY, 0, friction);
+
     horse->setFlipX(false);
     if (!bn::keypad::r_held()) {  // (R locks target)
       if (bn::keypad::left_held()) {
-        speedX = -HORSE_SPEED;
+        flySpeedX = bn::max(flySpeedX - 1, bn::fixed(-targetSpeed));
       } else if (bn::keypad::right_held()) {
-        speedX = HORSE_SPEED;
+        flySpeedX = bn::min(flySpeedX + 1, bn::fixed(targetSpeed));
       }
       if (bn::keypad::up_held()) {
-        speedY = -HORSE_SPEED;
+        flySpeedY = bn::max(flySpeedY - 1, bn::fixed(-targetSpeed));
       } else if (bn::keypad::down_held()) {
-        speedY = HORSE_SPEED;
+        flySpeedY = bn::min(flySpeedY + 1, bn::fixed(targetSpeed));
       }
-      if (speedX != 0 && chartReader->isInsideBeat())
-        speedX *= 2;  // rhythmic movement?
-      horse->setPosition({horse->getPosition().x() + speedX,
-                          horse->getPosition().y() + speedY},
+      horse->setPosition({horse->getPosition().x() + flySpeedX,
+                          horse->getPosition().y() + flySpeedY},
                          false);
     } else {
       horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
@@ -289,9 +291,9 @@ void BossWizardScene::updateBackground() {
   }
 
   // lava stop
-  int lavaStart = -8;
-  int lavaSize = 128;
-  int horseWidth = 64;
+  const int lavaStart = -8;
+  const int lavaSize = 128;
+  const int horseWidth = 64;
   if ((phase == 4 || phase == 5) && bg0ScrollX <= 0) {
     if (bg0ScrollX <= lavaStart) {
       int limitOffset = bg0ScrollX - lavaStart;
@@ -310,7 +312,8 @@ void BossWizardScene::updateBackground() {
       background0.reset();
       background0 =
           bn::regular_bg_items::back_wizard_mountainlava2_bg0.create_bg(
-              (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+              (512 - Math::SCREEN_WIDTH) / 2 - 16,
+              (256 - Math::SCREEN_HEIGHT) / 2);
       background0.get()->set_blending_enabled(true);
       background0.get()->set_mosaic_enabled(true);
       bg0ScrollX = background0.get()->position().x().ceil_integer();
@@ -321,7 +324,7 @@ void BossWizardScene::updateBackground() {
   // transition to lava
   if (phase == 6 && bg0ScrollX <= -122) {
     background0.reset();
-    background0 = bn::regular_bg_items::back_wizard_mountainlava2_bg0.create_bg(
+    background0 = bn::regular_bg_items::back_wizard_mountainlava3_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
     background0.get()->set_blending_enabled(true);
     background0.get()->set_mosaic_enabled(true);
