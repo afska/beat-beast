@@ -22,6 +22,8 @@ FireBall::FireBall(bn::fixed_point _initialPosition, Event* _event)
   boundingBox.set_dimensions(bn::fixed_size(13, 13));
   boundingBox.set_position(_initialPosition);
 
+  sprite.set_z_order(-1);
+
   sprite.set_scale(scale);
   damage = 5;
   isShootable = true;
