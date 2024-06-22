@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/wizard/AllyDragon.h"
+#include "../objects/wizard/BlackHole.h"
 #include "../objects/wizard/DragonEgg.h"
 #include "../objects/wizard/FireBall.h"
 #include "../objects/wizard/FlyingDragon.h"
@@ -36,6 +37,7 @@ class BossWizardScene : public BossScene {
   bn::optional<bn::unique_ptr<Wizard>> wizard;
   bn::optional<bn::unique_ptr<DragonEgg>> dragonEgg;
   bn::optional<bn::unique_ptr<AllyDragon>> allyDragon;
+  bn::optional<bn::unique_ptr<BlackHole>> blackHole;
   bn::fixed flySpeedX = 0;
   int phase = 1;
 

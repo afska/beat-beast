@@ -302,6 +302,7 @@ void BossDJScene::updateSprites() {
     return isOut || colided;
   });
 
+  // Enemy bullets
   iterate(enemyBullets, [this](RhythmicBullet* bullet) {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
@@ -330,6 +331,7 @@ void BossDJScene::updateSprites() {
     return isOut;
   });
 
+  // Vinyls
   iterate(vinyls, [this](Vinyl* vinyl) {
     bool isOut =
         vinyl->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),

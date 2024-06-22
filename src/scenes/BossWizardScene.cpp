@@ -74,8 +74,9 @@
 #define IS_EVENT_METEORITE_5(TYPE) IS_EVENT(TYPE, 5, 5)
 #define IS_EVENT_METEORITE_6(TYPE) IS_EVENT(TYPE, 5, 6)
 
-#define EVENT_NEXT_PHASE 1
+#define EVENT_RUN 1
 #define EVENT_SONG_END 2
+#define EVENT_BLACK_HOLE 3
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -341,8 +342,11 @@ void BossWizardScene::processChart() {
             {0, 1}, event)});
       }
     } else {
-      if (event->getType() == EVENT_NEXT_PHASE) {
+      if (event->getType() == EVENT_RUN) {
         goToNextPhase();
+      }
+      if (event->getType() == EVENT_BLACK_HOLE) {
+        blackHole = bn::unique_ptr{new BlackHole({120, 0})};
       }
     }
   }
@@ -496,6 +500,7 @@ void BossWizardScene::updateSprites() {
     return isOut || colided;
   });
 
+  // Enemy bullets
   iterate(enemyBullets, [this](RhythmicBullet* bullet) {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
@@ -515,6 +520,7 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
+  // Lightnings
   iterate(lightnings, [this](Lightning* lightning) {
     bool isOut = lightning->update(chartReader->getMsecs());
 
@@ -528,6 +534,7 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
+  // Minirocks
   iterate(miniRocks, [this](MiniRock* miniRock) {
     bool isOut = miniRock->update(chartReader->getMsecs(),
                                   chartReader->getBeatDurationMs(),
@@ -543,6 +550,7 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
+  // Rocks
   iterate(rocks, [this](Rock* rock) {
     bool isOut =
         rock->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
@@ -559,6 +567,7 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
+  // Flying dragons
   iterate(flyingDragons, [this](FlyingDragon* flyingDragon) {
     bool isOut = flyingDragon->update(chartReader->getMsecs(),
                                       chartReader->isInsideTick());
@@ -572,6 +581,7 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
+  // Portals
   iterate(portals, [this, &nextPhase](Portal* portal) {
     portal->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
                    chartReader->getSong()->oneDivBeatDurationMs, horse.get());
@@ -585,6 +595,7 @@ void BossWizardScene::updateSprites() {
   if (nextPhase)
     goToNextPhase();
 
+  // Dragon egg
   if (dragonEgg.has_value()) {
     if (dragonEgg->get()->update()) {
       allyDragon = bn::unique_ptr{new AllyDragon(
@@ -592,6 +603,8 @@ void BossWizardScene::updateSprites() {
       dragonEgg.reset();
     }
   }
+
+  // Ally dragon
   if (allyDragon.has_value()) {
     bool wasReady = allyDragon->get()->isReady();
 
@@ -604,6 +617,12 @@ void BossWizardScene::updateSprites() {
       horse->enableAlternativeRunAnimation();
       goToNextPhase();
     }
+  }
+
+  // Black hole
+  if (blackHole.has_value()) {
+    if (blackHole->get()->update())
+      blackHole.reset();
   }
 }
 
