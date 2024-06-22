@@ -64,6 +64,21 @@ inline bn::fixed_point toAbsTopLeft(bn::fixed_point position,
           toAbsTopLeftY(position.y(), height)};
 }
 
+inline bn::fixed toAbsCenteredX(bn::fixed x, bn::fixed width = 0) {
+  return SCREEN_WIDTH / 2 + x - width / 2;
+}
+
+inline bn::fixed toAbsCenteredY(bn::fixed y, bn::fixed height = 0) {
+  return SCREEN_HEIGHT / 2 + y - height / 2;
+}
+
+inline bn::fixed_point toAbsCentered(bn::fixed_point position,
+                                     bn::fixed width = 0,
+                                     bn::fixed height = 0) {
+  return {toAbsCenteredX(position.x(), width),
+          toAbsCenteredY(position.y(), height)};
+}
+
 inline bn::fixed normalizeAngle(bn::fixed angle) {
   if (angle < 0)
     angle += 360;

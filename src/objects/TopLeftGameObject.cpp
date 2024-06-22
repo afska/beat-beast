@@ -8,3 +8,9 @@ void TopLeftGameObject::setTopLeftPosition(bn::fixed_point newPosition) {
                                              mainSpriteDimensions.width(),
                                              mainSpriteDimensions.height()));
 }
+
+void TopLeftGameObject::setCenteredPosition(bn::fixed_point newPosition) {
+  setTopLeftPosition(Math::toAbsCentered(newPosition,
+                                         mainSpriteDimensions.width(),
+                                         mainSpriteDimensions.height()));
+}

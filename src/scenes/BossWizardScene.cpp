@@ -140,7 +140,6 @@ void BossWizardScene::processInput() {
     const bn::fixed friction = 0.15;
     const int targetSpeed = 3;
     Math::moveNumberTowards(flySpeedX, 0, friction);
-    Math::moveNumberTowards(flySpeedY, 0, friction);
 
     horse->setFlipX(false);
     if (!bn::keypad::r_held()) {  // (R locks target)
@@ -149,14 +148,9 @@ void BossWizardScene::processInput() {
       } else if (bn::keypad::right_held()) {
         flySpeedX = bn::min(flySpeedX + 1, bn::fixed(targetSpeed));
       }
-      if (bn::keypad::up_held()) {
-        flySpeedY = bn::max(flySpeedY - 1, bn::fixed(-targetSpeed));
-      } else if (bn::keypad::down_held()) {
-        flySpeedY = bn::min(flySpeedY + 1, bn::fixed(targetSpeed));
-      }
-      horse->setPosition({horse->getPosition().x() + flySpeedX,
-                          horse->getPosition().y() + flySpeedY},
-                         false);
+      allyDragon->get()->setPosition(
+          {allyDragon->get()->getPosition().x() + flySpeedX,
+           allyDragon->get()->getPosition().y()});
     } else {
       horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
                          false);
@@ -183,6 +177,10 @@ void BossWizardScene::processInput() {
     // jump
     if (bn::keypad::a_pressed())
       horse->jump();
+  } else {
+    // flap
+    if (bn::keypad::a_pressed())
+      allyDragon->get()->flap();
   }
 }
 
@@ -503,14 +501,14 @@ void BossWizardScene::updateSprites() {
   }
   if (allyDragon.has_value()) {
     bool wasReady = allyDragon->get()->isReady();
-    if (allyDragon->get()->update(horse->getCenteredPosition() -
-                                  bn::fixed_point(0, 9))) {
+
+    if (allyDragon->get()->update(horse.get())) {
       allyDragon.reset();
-    } else {
-      bool isReady = allyDragon->get()->isReady();
-      if (!wasReady && isReady)
-        goToNextPhase();
     }
+
+    bool isReady = allyDragon->get()->isReady();
+    if (!wasReady && isReady)
+      goToNextPhase();
   }
 }
 

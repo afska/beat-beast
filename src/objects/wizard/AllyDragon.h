@@ -2,20 +2,26 @@
 #define ALLY_DRAGON_H
 
 #include "../GameObject.h"
+#include "../Horse.h"
 
 class AllyDragon : public GameObject {
  public:
   AllyDragon(bn::fixed_point initialPosition);
 
-  bool update(bn::fixed_point playerPosition);
+  bool update(Horse* horse);
+  void flap();
   bool isReady() { return _isReady; }
+  void setPosition(bn::fixed_point newPosition) {
+    sprite.set_position(newPosition);
+  }
+  bn::fixed_point getPosition() { return sprite.position(); }
 
  private:
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<9> animation;
   bn::fixed xSpeed = 1.5;
   bn::fixed gravity = 0.2;
-  bn::fixed flapForce = 2.5;
+  bn::fixed flapForce = 5;
   bn::fixed velocityY = 0;
   bn::fixed scale = 1;
   bool isFlapping = false;

@@ -4,6 +4,8 @@
 
 #include "bn_sprite_items_wizard_dragon_alt.h"
 
+#define MARGIN_Y 9
+
 AllyDragon::AllyDragon(bn::fixed_point initialPosition)
     : sprite(
           bn::sprite_items::wizard_dragon_alt.create_sprite(initialPosition)),
@@ -23,7 +25,7 @@ AllyDragon::AllyDragon(bn::fixed_point initialPosition)
   sprite.set_scale(0.1);
 }
 
-bool AllyDragon::update(bn::fixed_point playerPosition) {
+bool AllyDragon::update(Horse* horse) {
   if (sprite.horizontal_scale() < 1) {
     sprite.set_scale(sprite.horizontal_scale() + 0.05);
     if (sprite.horizontal_scale() > 1)
@@ -31,13 +33,27 @@ bool AllyDragon::update(bn::fixed_point playerPosition) {
   }
   animation.update();
 
-  velocityY += gravity;
-
-  Math::moveSpriteTowards(sprite, playerPosition, 2, 2);
-  if (sprite.position() == playerPosition) {
-    sprite.set_horizontal_flip(true);
-    _isReady = true;
+  if (_isReady) {
+    velocityY += gravity;
+    sprite.set_y(sprite.position().y() + velocityY);
+    if (sprite.position().y() >= 60) {
+      velocityY = 0;
+      sprite.set_y(60);
+    }
+    horse->setCenteredPosition({sprite.x(), sprite.y() + MARGIN_Y});
+  } else {
+    auto targetPosition =
+        horse->getCenteredPosition() + bn::fixed_point(0, -MARGIN_Y);
+    Math::moveSpriteTowards(sprite, targetPosition, 2, 2);
+    if (sprite.position() == targetPosition) {
+      sprite.set_horizontal_flip(true);
+      _isReady = true;
+    }
   }
 
   return false;
+}
+
+void AllyDragon::flap() {
+  velocityY = -flapForce;
 }
