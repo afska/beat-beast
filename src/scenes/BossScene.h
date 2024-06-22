@@ -45,6 +45,8 @@ class BossScene : public Scene {
   bn::random random;
   bool isNewBeat = false;
   bool isNewTick = false;
+  bool isNewBeatNow = false;
+  bool isNewTickNow = false;
   bool isPaused = false;
 
   template <typename F, typename Type, int MaxSize>

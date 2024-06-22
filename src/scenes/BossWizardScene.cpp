@@ -182,7 +182,7 @@ void BossWizardScene::processInput() {
 
   // shoot
   if (isFlying) {
-    if (isNewTick) {
+    if (isNewTickNow) {
       horse->shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),

@@ -27,10 +27,14 @@ void ChartReader::processRhythmEvents() {
 
     int nextBeatMs = nextBeatEvent.timestamp;
 
-    if (msecs >= nextBeatMs - BEAT_TIMING_WINDOW_MS)
+    if (msecs >= nextBeatMs - BEAT_TIMING_WINDOW_MS) {
       _isInsideBeat = true;
+      if (msecs >= nextBeatMs)
+        _isPreciselyInsideBeat = true;
+    }
     if (msecs >= nextBeatMs + BEAT_TIMING_WINDOW_MS) {
       _isInsideBeat = false;
+      _isPreciselyInsideBeat = false;
       do {
         nextBeatEvent = chart.rhythmEvents[beatIndex];
       } while (++beatIndex < (int)chart.rhythmEventCount &&
@@ -44,10 +48,14 @@ void ChartReader::processRhythmEvents() {
     Event nextTickEvent = chart.rhythmEvents[tickIndex];
     int nextTickMs = nextTickEvent.timestamp;
 
-    if (msecs >= nextTickMs - TICK_TIMING_WINDOW_MS)
+    if (msecs >= nextTickMs - TICK_TIMING_WINDOW_MS) {
       _isInsideTick = true;
+      if (msecs >= nextTickMs)
+        _isPreciselyInsideTick = true;
+    }
     if (msecs >= nextTickMs + TICK_TIMING_WINDOW_MS) {
       _isInsideTick = false;
+      _isPreciselyInsideTick = false;
       tickIndex++;
     }
   } else {

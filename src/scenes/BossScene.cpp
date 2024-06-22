@@ -167,9 +167,15 @@ void BossScene::updateChartReader() {
   int audioLag = SaveFile::data.audioLag;
   bool wasInsideBeat = chartReader->isInsideBeat();
   bool wasInsideTick = chartReader->isInsideTick();
+  bool wasPreciselyInsideBeat = chartReader->isPreciselyInsideBeat();
+  bool wasPreciselyInsideTick = chartReader->isPreciselyInsideTick();
   chartReader->update(PlaybackState.msecs - audioLag);
   isNewBeat = !wasInsideBeat && chartReader->isInsideBeat();
   isNewTick = !wasInsideTick && chartReader->isInsideTick();
+  isNewBeatNow =
+      !wasPreciselyInsideBeat && chartReader->isPreciselyInsideBeat();
+  isNewTickNow =
+      !wasPreciselyInsideTick && chartReader->isPreciselyInsideTick();
 
   if (isNewTick)
     horse->canShoot = true;
