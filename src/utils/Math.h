@@ -135,26 +135,55 @@ inline bn::fixed lerp(bn::fixed x,
 inline void moveSpriteTowards(bn::sprite_ptr sprite,
                               bn::fixed_point targetPosition,
                               bn::fixed speedX,
-                              bn::fixed speedY) {
-  if (sprite.position().x() < targetPosition.x()) {
-    sprite.set_x(sprite.position().x() + speedX);
-    if (sprite.position().x() > targetPosition.x())
+                              bn::fixed speedY,
+                              bool smooth = true) {
+  if (smooth) {
+    auto currentPosition = sprite.position();
+
+    bn::fixed dx = targetPosition.x() - currentPosition.x();
+    bn::fixed dy = targetPosition.y() - currentPosition.y();
+
+    const bn::fixed easingFactor = 0.1;
+    bn::fixed moveX = dx * easingFactor;
+    bn::fixed moveY = dy * easingFactor;
+
+    if (moveX > speedX)
+      moveX = speedX;
+    else if (moveX < -speedX)
+      moveX = -speedX;
+    if (moveY > speedY)
+      moveY = speedY;
+    else if (moveY < -speedY)
+      moveY = -speedY;
+
+    sprite.set_position(currentPosition.x() + moveX,
+                        currentPosition.y() + moveY);
+
+    if (bn::abs(dx) < speedX)
       sprite.set_x(targetPosition.x());
-  }
-  if (sprite.position().x() > targetPosition.x()) {
-    sprite.set_x(sprite.position().x() - speedX);
-    if (sprite.position().x() < targetPosition.x())
-      sprite.set_x(targetPosition.x());
-  }
-  if (sprite.position().y() < targetPosition.y()) {
-    sprite.set_y(sprite.position().y() + speedY);
-    if (sprite.position().y() > targetPosition.y())
+    if (bn::abs(dy) < speedY)
       sprite.set_y(targetPosition.y());
-  }
-  if (sprite.position().y() > targetPosition.y()) {
-    sprite.set_y(sprite.position().y() - speedY);
-    if (sprite.position().y() < targetPosition.y())
-      sprite.set_y(targetPosition.y());
+  } else {
+    if (sprite.position().x() < targetPosition.x()) {
+      sprite.set_x(sprite.position().x() + speedX);
+      if (sprite.position().x() > targetPosition.x())
+        sprite.set_x(targetPosition.x());
+    }
+    if (sprite.position().x() > targetPosition.x()) {
+      sprite.set_x(sprite.position().x() - speedX);
+      if (sprite.position().x() < targetPosition.x())
+        sprite.set_x(targetPosition.x());
+    }
+    if (sprite.position().y() < targetPosition.y()) {
+      sprite.set_y(sprite.position().y() + speedY);
+      if (sprite.position().y() > targetPosition.y())
+        sprite.set_y(targetPosition.y());
+    }
+    if (sprite.position().y() > targetPosition.y()) {
+      sprite.set_y(sprite.position().y() - speedY);
+      if (sprite.position().y() < targetPosition.y())
+        sprite.set_y(targetPosition.y());
+    }
   }
 }
 
