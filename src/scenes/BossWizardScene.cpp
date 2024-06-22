@@ -18,6 +18,7 @@
 #include "bn_regular_bg_items_back_wizard_mountainlava1_bg0.h"
 #include "bn_regular_bg_items_back_wizard_mountainlava2_bg0.h"
 #include "bn_regular_bg_items_back_wizard_mountainlava3_bg0.h"
+#include "bn_sprite_items_wizard_horse_run_noshadow.h"
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
@@ -166,10 +167,10 @@ void BossWizardScene::processInput() {
       }
       horse->setPosition({horse->getTopLeftPosition().x() + flySpeedX,
                           horse->getTopLeftPosition().y()},
-                         false);
+                         true);
     } else {
       horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
-                         false);
+                         true);
     }
   } else {
     processMovementInput(HORSE_Y);
@@ -599,8 +600,10 @@ void BossWizardScene::updateSprites() {
     }
 
     bool isReady = allyDragon->get()->isReady();
-    if (!wasReady && isReady)
+    if (!wasReady && isReady) {
+      horse->enableAlternativeRunAnimation();
       goToNextPhase();
+    }
   }
 }
 

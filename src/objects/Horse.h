@@ -28,6 +28,14 @@ class Horse : public TopLeftGameObject {
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
   int getBounceFrame() { return bounceFrame; }
+  void enableAlternativeRunAnimation() {
+    useAlternativeRunAnimation = true;
+    if (isMoving) {
+      setIsMoving(false);
+      setIsMoving(true);
+    }
+  }
+  void clearCustomRunTiles() { useAlternativeRunAnimation = false; }
 
  private:
   bn::sprite_ptr gunSprite;
@@ -41,6 +49,7 @@ class Horse : public TopLeftGameObject {
   bn::optional<bn::sprite_animate_action<4>> jumpingAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<8>> gunAnimation;
+  bool useAlternativeRunAnimation = false;
   int bounceFrame = 0;
   int jumpFrame = 0;
   int hurtFrame = 0;

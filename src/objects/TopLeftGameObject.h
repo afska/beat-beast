@@ -11,6 +11,7 @@ class TopLeftGameObject : public GameObject {
 
   void setTopLeftPosition(bn::fixed_point newPosition);
   void setCenteredPosition(bn::fixed_point newPosition);
+  bn::sprite_ptr getMainSprite() { return mainSprite; }
 
   bn::fixed_point getTopLeftPosition() { return topLeftPosition; }
   bn::fixed_point getCenteredPosition() { return mainSprite.position(); }
