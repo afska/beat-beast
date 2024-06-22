@@ -24,7 +24,11 @@ bool BlackHole::update() {
 
   scale += 0.00225;
 
-  sprite.set_x(sprite.position().x() - 0.1);
+  if (!isGoingAway) {
+    sprite.set_x(sprite.position().x() - 0.075);
+  } else {
+    Math::moveSpriteTowards(sprite, {160, -160}, 30, 30, true);
+  }
 
   if (animationIndex > -1) {
     auto animatedScale = Math::SCALE_STEPS[animationIndex] * scale;
@@ -36,4 +40,8 @@ bool BlackHole::update() {
     animationIndex = Math::SCALE_STEPS.size() - 1;
 
   return false;
+}
+
+void BlackHole::goAway() {
+  isGoingAway = true;
 }

@@ -10,12 +10,14 @@ class BlackHole : public GameObject {
   bool update();
   bn::fixed_point getPosition() { return sprite.position(); }
   void setPosition(bn::fixed_point position) { sprite.set_position(position); }
+  void goAway();
 
  private:
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<6> animation;
   bn::fixed scale = 0.05;
   int animationIndex = -1;
+  bool isGoingAway = false;
 };
 
 #endif  // BLACK_HOLE_H

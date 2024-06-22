@@ -78,10 +78,14 @@
 #define EVENT_SONG_END 2
 #define EVENT_BLACK_HOLE 3
 #define EVENT_FADE_TO_WHITE 4
+#define EVENT_END_FADE 5
+#define EVENT_FINAL 6
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
+
+#define INITIAL_FADE_ALPHA 0.3
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 97;
@@ -116,7 +120,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background2.get()->set_mosaic_enabled(true);
   background3.get()->set_blending_enabled(true);
   background3.get()->set_mosaic_enabled(true);
-  bn::blending::set_fade_alpha(0.3);
+  bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
   chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
 
@@ -137,7 +141,7 @@ void BossWizardScene::updateBossFight() {
 
 void BossWizardScene::processInput() {
   const bool isRunning = phase == 1 || phase == 3;
-  const bool isFlying = phase == 6 || phase == 7 || phase == 8;
+  const bool isFlying = phase == 6 || phase == 7 || phase == 8 || phase == 9;
 
   // move horse (left/right)
   if (isRunning) {
@@ -354,6 +358,44 @@ void BossWizardScene::processChart() {
         bn::blending::set_fade_alpha(0);
         fadingToWhite = true;
       }
+
+      if (event->getType() == EVENT_END_FADE) {
+        blackHole->get()->goAway();
+      }
+      if (event->getType() == EVENT_FINAL) {
+        bn::blending::set_black_fade_color();
+        bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
+        fadingToWhite = false;
+        pixelBlink->blink();
+
+        background3.reset();
+        background2.reset();
+        background1.reset();
+        background0.reset();
+
+        background3 = bn::regular_bg_items::back_wizard_mountain_bg3.create_bg(
+            (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+        background3.get()->set_blending_enabled(true);
+        background3.get()->set_mosaic_enabled(true);
+
+        background2 = bn::regular_bg_items::back_wizard_mountain_bg2.create_bg(
+            (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+        background2.get()->set_blending_enabled(true);
+        background2.get()->set_mosaic_enabled(true);
+
+        background1 = bn::regular_bg_items::back_wizard_mountain_bg1.create_bg(
+            (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+        background1.get()->set_blending_enabled(true);
+        background1.get()->set_mosaic_enabled(true);
+
+        background0 =
+            bn::regular_bg_items::back_wizard_mountainlava3_bg0.create_bg(
+                (512 - Math::SCREEN_WIDTH) / 2,
+                (256 - Math::SCREEN_HEIGHT) / 2);
+        background0.get()->set_blending_enabled(true);
+        background0.get()->set_mosaic_enabled(true);
+        goToNextPhase();
+      }
     }
   }
 }
@@ -433,15 +475,15 @@ void BossWizardScene::updateBackground() {
                                     background1.get()->position().y());
     background2.get()->set_position(background2.get()->position().x() - 0.25,
                                     background2.get()->position().y());
-  } /*else if (phase == 5) {
+  } else if (phase == 9) {
     background0.get()->set_position(background0.get()->position().x() - 2 -
                                         (chartReader->isInsideBeat() ? 2 : 0),
                                     background0.get()->position().y());
     background1.get()->set_position(background1.get()->position().x() - 1.5,
-                             background1.get()->position().y());
+                                    background1.get()->position().y());
     background2.get()->set_position(background2.get()->position().x() - 1.25,
-                             background2.get()->position().y());
-  }*/
+                                    background2.get()->position().y());
+  }
 }
 
 void BossWizardScene::updateSprites() {
@@ -459,7 +501,7 @@ void BossWizardScene::updateSprites() {
       sufferDamage(DMG_WIZARD_TO_PLAYER);
   }
 
-  if (phase == 7 && !horse->isHurt() &&
+  if ((phase == 7 || phase == 9) && !horse->isHurt() &&
       allyDragon->get()->getPosition().y() >= 50) {
     sufferDamage(DMG_LAVA_TO_PLAYER);
   }

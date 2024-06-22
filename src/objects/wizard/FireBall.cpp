@@ -64,7 +64,7 @@ bool FireBall::update(int msecs,
   }
 
   int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;
-  Math::moveSpriteTowards(sprite, target, speed, speed);
+  Math::moveSpriteTowards(sprite, target, speed, speed, false);
 
   bn::fixed deltaY =
       sprite.position().y() - target.y();  // (inverted for Y-down)
