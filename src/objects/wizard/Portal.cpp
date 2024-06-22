@@ -6,7 +6,7 @@
 #define BEATS 4
 #define SPEED 5
 
-Portal::Portal(bn::fixed_point initialPosition, Event* _event)
+Portal::Portal(bn::fixed_point initialPosition, Event* _event, bool _followY)
     : sprite(bn::sprite_items::wizard_portal.create_sprite(initialPosition)),
       event(_event),
       animation(bn::create_sprite_animate_action_forever(
@@ -22,7 +22,8 @@ Portal::Portal(bn::fixed_point initialPosition, Event* _event)
           4,
           3,
           2,
-          1)) {
+          1)),
+      followY(_followY) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
 }
@@ -30,13 +31,18 @@ Portal::Portal(bn::fixed_point initialPosition, Event* _event)
 bool Portal::update(int msecs,
                     unsigned beatDurationMs,
                     unsigned oneDivBeatDurationMs,
-                    int horseX) {
+                    Horse* horse) {
+  int horseX = horse->getPosition().x().ceil_integer();
+
   if (msecs < event->timestamp + (int)beatDurationMs * BEATS)
     sprite.set_x(Math::getBeatBasedXPositionForObject(
         horseX, 48, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,
         msecs, event->timestamp, 64));
   else
     sprite.set_x(sprite.x() - SPEED);
+
+  if (followY)
+    sprite.set_y(horse->getCenteredPosition().y());
 
   animation.update();
 

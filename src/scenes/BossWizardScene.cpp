@@ -7,6 +7,10 @@
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
+#include "bn_regular_bg_items_back_wizard_caves_bg0.h"
+#include "bn_regular_bg_items_back_wizard_caves_bg1.h"
+#include "bn_regular_bg_items_back_wizard_caves_bg2.h"
+#include "bn_regular_bg_items_back_wizard_caves_bg3.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg0.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg1.h"
 #include "bn_regular_bg_items_back_wizard_mountain_bg2.h"
@@ -27,6 +31,8 @@
 #define DMG_MINI_ROCK_TO_PLAYER 2
 #define DMG_ROCK_TO_PLAYER 6
 #define DMG_LIGHTNING_TO_PLAYER 5
+#define DMG_WIZARD_TO_PLAYER 1
+#define DMG_LAVA_TO_PLAYER 2
 
 // Damage to enemy
 // #define DMG_MEGABALL_TO_ENEMY 10
@@ -37,11 +43,14 @@
 #define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 0, 1)
 #define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 0, 2)
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
+#define IS_EVENT_MOVE_BOTTOMRIGHT(TYPE) IS_EVENT(TYPE, 0, 4)
+#define IS_EVENT_MOVE_BOTTOMLEFT(TYPE) IS_EVENT(TYPE, 0, 5)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_ROCK(TYPE) IS_EVENT(TYPE, 1, 2)
 #define IS_EVENT_PORTAL(TYPE) IS_EVENT(TYPE, 1, 3)
+#define IS_EVENT_PORTAL_Y_FOLLOW(TYPE) IS_EVENT(TYPE, 1, 4)
 
 #define IS_EVENT_LIGHTNING_PREPARE_1(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_LIGHTNING_PREPARE_2(TYPE) IS_EVENT(TYPE, 2, 2)
@@ -56,6 +65,13 @@
 #define IS_EVENT_FLYING_DRAGON_C(TYPE) IS_EVENT(TYPE, 3, 3)
 
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
+
+#define IS_EVENT_METEORITE_1(TYPE) IS_EVENT(TYPE, 5, 1)
+#define IS_EVENT_METEORITE_2(TYPE) IS_EVENT(TYPE, 5, 2)
+#define IS_EVENT_METEORITE_3(TYPE) IS_EVENT(TYPE, 5, 3)
+#define IS_EVENT_METEORITE_4(TYPE) IS_EVENT(TYPE, 5, 4)
+#define IS_EVENT_METEORITE_5(TYPE) IS_EVENT(TYPE, 5, 5)
+#define IS_EVENT_METEORITE_6(TYPE) IS_EVENT(TYPE, 5, 6)
 
 #define EVENT_NEXT_PHASE 1
 #define EVENT_SONG_END 2
@@ -91,12 +107,12 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
           (256 - Math::SCREEN_HEIGHT) / 2)) {
   background0.get()->set_blending_enabled(true);
   background0.get()->set_mosaic_enabled(true);
-  background1.set_blending_enabled(true);
-  background1.set_mosaic_enabled(true);
-  background2.set_blending_enabled(true);
-  background2.set_mosaic_enabled(true);
-  background3.set_blending_enabled(true);
-  background3.set_mosaic_enabled(true);
+  background1.get()->set_blending_enabled(true);
+  background1.get()->set_mosaic_enabled(true);
+  background2.get()->set_blending_enabled(true);
+  background2.get()->set_mosaic_enabled(true);
+  background3.get()->set_blending_enabled(true);
+  background3.get()->set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
@@ -118,7 +134,7 @@ void BossWizardScene::updateBossFight() {
 
 void BossWizardScene::processInput() {
   const bool isRunning = phase == 1 || phase == 3;
-  const bool isFlying = phase == 6 || phase == 7;
+  const bool isFlying = phase == 6 || phase == 7 || phase == 8;
 
   // move horse (left/right)
   if (isRunning) {
@@ -159,17 +175,26 @@ void BossWizardScene::processInput() {
     processMovementInput(HORSE_Y);
   }
 
-  processAimInput();
+  processAimInput(phase == 7);
 
   // shoot
-  if (bn::keypad::b_pressed() && !horse->isBusy()) {
-    if (chartReader->isInsideTick() && horse->canShoot) {
+  if (isFlying) {
+    if (isNewTick) {
       horse->shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),
                                                   SpriteProvider::bullet())});
-    } else {
-      reportFailedShot();
+    }
+  } else {
+    if (bn::keypad::b_pressed() && !horse->isBusy()) {
+      if (chartReader->isInsideTick() && horse->canShoot) {
+        horse->shoot();
+        bullets.push_back(bn::unique_ptr{
+            new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                       SpriteProvider::bullet())});
+      } else {
+        reportFailedShot();
+      }
     }
   }
 
@@ -199,6 +224,12 @@ void BossWizardScene::processChart() {
       if (IS_EVENT_MOVE_COL3(type))
         wizard->get()->setTargetPosition({80, -40},
                                          chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
+        wizard->get()->setTargetPosition({80, 60},
+                                         chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_BOTTOMLEFT(type))
+        wizard->get()->setTargetPosition({-50, 60},
+                                         chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_OFFSCREEN(type))
         wizard->get()->setTargetPosition({200, -70},
                                          chartReader->getBeatDurationMs());
@@ -217,6 +248,10 @@ void BossWizardScene::processChart() {
       if (IS_EVENT_PORTAL(type)) {
         portals.push_back(
             bn::unique_ptr{new Portal(Math::toAbsTopLeft({240, 139}), event)});
+      }
+      if (IS_EVENT_PORTAL_Y_FOLLOW(type)) {
+        portals.push_back(bn::unique_ptr{
+            new Portal(Math::toAbsTopLeft({240, 139}), event, true)});
       }
 
       // Lightnings
@@ -265,6 +300,44 @@ void BossWizardScene::processChart() {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall(wizard->get()->getShootingPoint(), event)});
+      }
+
+      // Meteorites
+      if (IS_EVENT_METEORITE_1(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 30, -Math::SCREEN_HEIGHT / 2 - 32},
+            {-1, 1}, event)});
+      }
+      if (IS_EVENT_METEORITE_2(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 56, -Math::SCREEN_HEIGHT / 2 - 32},
+            {0, 1}, event)});
+      }
+      if (IS_EVENT_METEORITE_3(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 82, -Math::SCREEN_HEIGHT / 2 - 32},
+            {0, 1}, event)});
+      }
+      if (IS_EVENT_METEORITE_4(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 108, -Math::SCREEN_HEIGHT / 2 - 32},
+            {0, 1}, event)});
+      }
+      if (IS_EVENT_METEORITE_5(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 134, -Math::SCREEN_HEIGHT / 2 - 32},
+            {0, 1}, event)});
+      }
+      if (IS_EVENT_METEORITE_6(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{new Meteorite(
+            {-Math::SCREEN_WIDTH / 2 + 160, -Math::SCREEN_HEIGHT / 2 - 32},
+            {0, 1}, event)});
       }
     } else {
       if (event->getType() == EVENT_NEXT_PHASE) {
@@ -333,26 +406,28 @@ void BossWizardScene::updateBackground() {
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
 
-  if (phase == 1 || phase == 3 || phase == 4 || phase == 6 || phase == 7) {
+  if (phase == 1 || phase == 3 || phase == 4 || phase == 6 || phase == 7 ||
+      phase == 8) {
     background0.get()->set_position(background0.get()->position().x() - 1 -
                                         (chartReader->isInsideBeat() ? 1 : 0),
                                     background0.get()->position().y());
-    background1.set_position(background1.position().x() - 0.5,
-                             background1.position().y());
-    background2.set_position(background2.position().x() - 0.25,
-                             background2.position().y());
+    background1.get()->set_position(background1.get()->position().x() - 0.5,
+                                    background1.get()->position().y());
+    background2.get()->set_position(background2.get()->position().x() - 0.25,
+                                    background2.get()->position().y());
   } /*else if (phase == 5) {
     background0.get()->set_position(background0.get()->position().x() - 2 -
                                         (chartReader->isInsideBeat() ? 2 : 0),
                                     background0.get()->position().y());
-    background1.set_position(background1.position().x() - 1.5,
-                             background1.position().y());
-    background2.set_position(background2.position().x() - 1.25,
-                             background2.position().y());
+    background1.get()->set_position(background1.get()->position().x() - 1.5,
+                             background1.get()->position().y());
+    background2.get()->set_position(background2.get()->position().x() - 1.25,
+                             background2.get()->position().y());
   }*/
 }
 
 void BossWizardScene::updateSprites() {
+  bool nextPhase = false;
   updateCommonSprites();
 
   // Wizard
@@ -361,6 +436,14 @@ void BossWizardScene::updateSprites() {
       wizard->get()->bounce();
     wizard->get()->update(horse->getCenteredPosition(),
                           chartReader->isInsideBeat());
+
+    if (horse->collidesWith(wizard->get()))
+      sufferDamage(DMG_WIZARD_TO_PLAYER);
+  }
+
+  if (phase == 7 && !horse->isHurt() &&
+      allyDragon->get()->getPosition().y() >= 50) {
+    sufferDamage(DMG_LAVA_TO_PLAYER);
   }
 
   // Attacks
@@ -376,6 +459,7 @@ void BossWizardScene::updateSprites() {
         rock->smash();
         colided = true;
       }
+
       return false;
     });
 
@@ -396,6 +480,16 @@ void BossWizardScene::updateSprites() {
 
         return true;
       }
+
+      iterate(
+          enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
+            if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+              addExplosion(((Bullet*)bullet)->getPosition());
+              enemyBullet->explode({0, 0});
+              colided = true;
+            }
+            return false;
+          });
     }
 
     return isOut || colided;
@@ -477,11 +571,9 @@ void BossWizardScene::updateSprites() {
     return isOut;
   });
 
-  bool nextPhase = false;
   iterate(portals, [this, &nextPhase](Portal* portal) {
     portal->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
-                   chartReader->getSong()->oneDivBeatDurationMs,
-                   horse->getPosition().x().ceil_integer());
+                   chartReader->getSong()->oneDivBeatDurationMs, horse.get());
     if (portal->collidesWith(horse.get())) {
       nextPhase = true;
       return true;
@@ -516,6 +608,33 @@ void BossWizardScene::goToNextPhase() {
   if (phase == 1) {
     pixelBlink->blink();
     wizard = bn::unique_ptr{new Wizard({0, -40})};
+  } else if (phase == 7) {
+    pixelBlink->blink();
+
+    background3.reset();
+    background2.reset();
+    background1.reset();
+    background0.reset();
+
+    background3 = bn::regular_bg_items::back_wizard_caves_bg3.create_bg(
+        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background3.get()->set_blending_enabled(true);
+    background3.get()->set_mosaic_enabled(true);
+
+    background2 = bn::regular_bg_items::back_wizard_caves_bg2.create_bg(
+        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background2.get()->set_blending_enabled(true);
+    background2.get()->set_mosaic_enabled(true);
+
+    background1 = bn::regular_bg_items::back_wizard_caves_bg1.create_bg(
+        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background1.get()->set_blending_enabled(true);
+    background1.get()->set_mosaic_enabled(true);
+
+    background0 = bn::regular_bg_items::back_wizard_caves_bg0.create_bg(
+        (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+    background0.get()->set_blending_enabled(true);
+    background0.get()->set_mosaic_enabled(true);
   }
 
   phase++;

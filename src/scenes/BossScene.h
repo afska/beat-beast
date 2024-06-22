@@ -63,7 +63,7 @@ class BossScene : public Scene {
   void addExplosion(bn::fixed_point position);
   void sufferDamage(unsigned amount);
   void processMovementInput(bn::fixed horseY);
-  void processAimInput();
+  void processAimInput(bool aim360 = false);
   void updateCommonSprites();
   void shoot();
   void reportFailedShot();

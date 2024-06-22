@@ -113,14 +113,20 @@ void BossScene::processMovementInput(bn::fixed horseY) {
   }
 }
 
-void BossScene::processAimInput() {
+void BossScene::processAimInput(bool aim360) {
   // move aim
   if (bn::keypad::left_held())
-    horse->aim({-1, bn::keypad::up_held() ? -1 : 0});
+    horse->aim({-1, bn::keypad::up_held()               ? -1
+                    : bn::keypad::down_held() && aim360 ? 1
+                                                        : 0});
   else if (bn::keypad::right_held())
-    horse->aim({1, bn::keypad::up_held() ? -1 : 0});
+    horse->aim({1, bn::keypad::up_held()               ? -1
+                   : bn::keypad::down_held() && aim360 ? 1
+                                                       : 0});
   else if (bn::keypad::up_held())
     horse->aim({0, -1});
+  else if (bn::keypad::down_held() && aim360)
+    horse->aim({0, 1});
 }
 
 void BossScene::updateCommonSprites() {

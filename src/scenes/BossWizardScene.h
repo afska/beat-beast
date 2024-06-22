@@ -9,6 +9,7 @@
 #include "../objects/wizard/FireBall.h"
 #include "../objects/wizard/FlyingDragon.h"
 #include "../objects/wizard/Lightning.h"
+#include "../objects/wizard/Meteorite.h"
 #include "../objects/wizard/MiniRock.h"
 #include "../objects/wizard/Portal.h"
 #include "../objects/wizard/Rock.h"
@@ -21,9 +22,9 @@ class BossWizardScene : public BossScene {
   void updateBossFight() override;
 
  private:
-  bn::regular_bg_ptr background3;
-  bn::regular_bg_ptr background2;
-  bn::regular_bg_ptr background1;
+  bn::optional<bn::regular_bg_ptr> background3;
+  bn::optional<bn::regular_bg_ptr> background2;
+  bn::optional<bn::regular_bg_ptr> background1;
   bn::optional<bn::regular_bg_ptr> background0;
   bn::vector<bn::unique_ptr<MiniRock>, 32> miniRocks;
   bn::vector<bn::unique_ptr<Rock>, 32> rocks;
