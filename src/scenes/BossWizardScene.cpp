@@ -175,7 +175,7 @@ void BossWizardScene::processInput() {
     processMovementInput(HORSE_Y);
   }
 
-  processAimInput(phase == 7);
+  processAimInput(isFlying);
 
   // shoot
   if (isFlying) {
@@ -635,6 +635,7 @@ void BossWizardScene::goToNextPhase() {
         (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
     background0.get()->set_blending_enabled(true);
     background0.get()->set_mosaic_enabled(true);
+    background0.get()->set_priority(0);
   }
 
   phase++;

@@ -33,6 +33,13 @@ LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
   defaultFillPosition = getCenteredPosition();
   fill.set_position(defaultFillPosition);
   setLife(_maxLife);
+
+  icon.set_z_order(-1);
+  mainSprite.set_z_order(-1);
+  fill.set_z_order(-1);
+  icon.set_bg_priority(0);
+  mainSprite.set_bg_priority(0);
+  fill.set_bg_priority(0);
 }
 
 bool LifeBar::setLife(unsigned _life) {

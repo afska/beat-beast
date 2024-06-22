@@ -18,6 +18,7 @@ Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
   square.set_visible(false);
   square.set_scale(1.5);
   square.set_z_order(-1);
+  square.set_bg_priority(0);
 }
 
 void Menu::start(bn::vector<Option, 10> _options, bool withSquare) {
@@ -30,6 +31,8 @@ void Menu::start(bn::vector<Option, 10> _options, bool withSquare) {
   textSprites.clear();
   normalTextGenerator.set_z_order(-2);
   accentTextGenerator.set_z_order(-2);
+  normalTextGenerator.set_bg_priority(0);
+  accentTextGenerator.set_bg_priority(0);
   normalTextGenerator.set_center_alignment();
   accentTextGenerator.set_center_alignment();
 

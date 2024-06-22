@@ -27,6 +27,8 @@ Horse::Horse(bn::fixed_point _topLeftPosition)
 
   setPosition(_topLeftPosition, false);
   setIdleState();
+  mainSprite.set_bg_priority(1);
+  gunSprite.set_bg_priority(1);
 }
 
 void Horse::update() {
