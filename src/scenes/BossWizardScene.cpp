@@ -148,9 +148,9 @@ void BossWizardScene::processInput() {
       } else if (bn::keypad::right_held()) {
         flySpeedX = bn::min(flySpeedX + 1, bn::fixed(targetSpeed));
       }
-      allyDragon->get()->setPosition(
-          {allyDragon->get()->getPosition().x() + flySpeedX,
-           allyDragon->get()->getPosition().y()});
+      horse->setPosition({horse->getTopLeftPosition().x() + flySpeedX,
+                          horse->getTopLeftPosition().y()},
+                         false);
     } else {
       horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
                          false);

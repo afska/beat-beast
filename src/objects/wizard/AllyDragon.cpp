@@ -4,6 +4,7 @@
 
 #include "bn_sprite_items_wizard_dragon_alt.h"
 
+#define SCREEN_LIMIT 60
 #define MARGIN_Y 9
 
 AllyDragon::AllyDragon(bn::fixed_point initialPosition)
@@ -36,11 +37,16 @@ bool AllyDragon::update(Horse* horse) {
   if (_isReady) {
     velocityY += gravity;
     sprite.set_y(sprite.position().y() + velocityY);
-    if (sprite.position().y() >= 60) {
+    if (sprite.position().y() >= SCREEN_LIMIT) {
       velocityY = 0;
-      sprite.set_y(60);
+      sprite.set_y(SCREEN_LIMIT);
     }
-    horse->setCenteredPosition({sprite.x(), sprite.y() + MARGIN_Y});
+    if (sprite.position().y() <= -SCREEN_LIMIT)
+      sprite.set_y(-SCREEN_LIMIT);
+
+    horse->setCenteredPosition(
+        {horse->getCenteredPosition().x(), sprite.y() + MARGIN_Y});
+    sprite.set_x(horse->getCenteredPosition().x());
   } else {
     auto targetPosition =
         horse->getCenteredPosition() + bn::fixed_point(0, -MARGIN_Y);
@@ -48,6 +54,7 @@ bool AllyDragon::update(Horse* horse) {
     if (sprite.position() == targetPosition) {
       sprite.set_horizontal_flip(true);
       _isReady = true;
+      megaflap();
     }
   }
 
@@ -56,4 +63,8 @@ bool AllyDragon::update(Horse* horse) {
 
 void AllyDragon::flap() {
   velocityY = -flapForce;
+}
+
+void AllyDragon::megaflap() {
+  velocityY = -7;
 }

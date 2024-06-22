@@ -8,6 +8,7 @@ Wizard::Wizard(bn::fixed_point initialPosition)
     : sprite(bn::sprite_items::wizard_wizard.create_sprite(initialPosition)) {
   targetPosition = initialPosition;
   sprite.set_mosaic_enabled(true);
+  sprite.set_z_order(-1);
 
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);

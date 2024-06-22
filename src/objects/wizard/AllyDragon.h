@@ -10,6 +10,7 @@ class AllyDragon : public GameObject {
 
   bool update(Horse* horse);
   void flap();
+  void megaflap();
   bool isReady() { return _isReady; }
   void setPosition(bn::fixed_point newPosition) {
     sprite.set_position(newPosition);
@@ -21,7 +22,7 @@ class AllyDragon : public GameObject {
   bn::sprite_animate_action<9> animation;
   bn::fixed xSpeed = 1.5;
   bn::fixed gravity = 0.2;
-  bn::fixed flapForce = 5;
+  bn::fixed flapForce = 4;
   bn::fixed velocityY = 0;
   bn::fixed scale = 1;
   bool isFlapping = false;
