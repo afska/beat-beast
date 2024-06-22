@@ -40,6 +40,7 @@ class BossWizardScene : public BossScene {
   bn::optional<bn::unique_ptr<BlackHole>> blackHole;
   bn::fixed flySpeedX = 0;
   int phase = 1;
+  bool fadingToWhite = false;
 
   void processInput();
   void processChart();

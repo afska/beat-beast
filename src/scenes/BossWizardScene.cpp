@@ -77,6 +77,7 @@
 #define EVENT_RUN 1
 #define EVENT_SONG_END 2
 #define EVENT_BLACK_HOLE 3
+#define EVENT_FADE_TO_WHITE 4
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -348,6 +349,11 @@ void BossWizardScene::processChart() {
       if (event->getType() == EVENT_BLACK_HOLE) {
         blackHole = bn::unique_ptr{new BlackHole({120, 0})};
       }
+      if (event->getType() == EVENT_FADE_TO_WHITE) {
+        bn::blending::set_white_fade_color();
+        bn::blending::set_fade_alpha(0);
+        fadingToWhite = true;
+      }
     }
   }
 }
@@ -408,8 +414,15 @@ void BossWizardScene::updateBackground() {
     goToNextPhase();
   }
 
-  bn::blending::set_fade_alpha(
-      Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+  if (!fadingToWhite) {
+    bn::blending::set_fade_alpha(
+        Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+  } else {
+    bn::fixed newAlpha = bn::blending::fade_alpha() + 0.01;
+    if (newAlpha > 1)
+      newAlpha = 1;
+    bn::blending::set_fade_alpha(newAlpha);
+  }
 
   if (phase == 1 || phase == 3 || phase == 4 || phase == 6 || phase == 7 ||
       phase == 8) {
