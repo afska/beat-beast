@@ -66,6 +66,7 @@
 #define IS_EVENT_FLYING_DRAGON_C(TYPE) IS_EVENT(TYPE, 3, 3)
 
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
+#define IS_EVENT_CIRCULAR_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 2)
 
 #define IS_EVENT_METEORITE_1(TYPE) IS_EVENT(TYPE, 5, 1)
 #define IS_EVENT_METEORITE_2(TYPE) IS_EVENT(TYPE, 5, 2)
@@ -308,6 +309,11 @@ void BossWizardScene::processChart() {
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall(wizard->get()->getShootingPoint(), event)});
       }
+      if (IS_EVENT_CIRCULAR_FIREBALL(type)) {
+        wizard->get()->attack();
+        enemyBullets.push_back(bn::unique_ptr{
+            new CircularFireBall(wizard->get()->getShootingPoint(), event)});
+      }
 
       // Meteorites
       if (IS_EVENT_METEORITE_1(type)) {
@@ -361,12 +367,6 @@ void BossWizardScene::processChart() {
 
       if (event->getType() == EVENT_END_FADE) {
         blackHole->get()->goAway();
-      }
-      if (event->getType() == EVENT_FINAL) {
-        bn::blending::set_black_fade_color();
-        bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
-        fadingToWhite = false;
-        pixelBlink->blink();
 
         background3.reset();
         background2.reset();
@@ -382,6 +382,14 @@ void BossWizardScene::processChart() {
             (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
         background2.get()->set_blending_enabled(true);
         background2.get()->set_mosaic_enabled(true);
+      }
+      if (event->getType() == EVENT_FINAL) {
+        blackHole.reset();
+
+        bn::blending::set_black_fade_color();
+        bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
+        fadingToWhite = false;
+        pixelBlink->blink();
 
         background1 = bn::regular_bg_items::back_wizard_mountain_bg1.create_bg(
             (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
@@ -730,3 +738,8 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
+
+// TODO: METEORITE: ANY DIRECTION
+// TODO: USE BLACK HOLE
+// TODO: BUG - IN LAVA TRANSITION, IT SHOULD KEEP IN RUN MODE
+// TODO: METEORITES - LEFT TO RIGHT

@@ -6,6 +6,7 @@
 #include "../objects/Bullet.h"
 #include "../objects/wizard/AllyDragon.h"
 #include "../objects/wizard/BlackHole.h"
+#include "../objects/wizard/CircularFireBall.h"
 #include "../objects/wizard/DragonEgg.h"
 #include "../objects/wizard/FireBall.h"
 #include "../objects/wizard/FlyingDragon.h"
