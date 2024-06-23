@@ -141,7 +141,7 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
-  const bool isRunning = phase == 1 || phase == 3;
+  const bool isRunning = phase == 1 || phase == 3 || phase == 4;
   const bool isFlying = phase == 6 || phase == 7 || phase == 8 || phase == 9;
 
   // move horse (left/right)
@@ -741,5 +741,4 @@ void BossWizardScene::causeDamage(unsigned amount) {
 
 // TODO: METEORITE: ANY DIRECTION
 // TODO: USE BLACK HOLE
-// TODO: BUG - IN LAVA TRANSITION, IT SHOULD KEEP IN RUN MODE
 // TODO: METEORITES - LEFT TO RIGHT
