@@ -5,6 +5,7 @@
 
 #include "../objects/Explosion.h"
 #include "../objects/Horse.h"
+#include "../objects/ui/AutoFire.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Menu.h"
@@ -38,6 +39,7 @@ class BossScene : public Scene {
   bn::unique_ptr<LifeBar> enemyLifeBar;
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
+  bn::optional<bn::unique_ptr<AutoFire>> autoFire;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::unique_ptr<Menu> menu;
   bn::string<32> lastSfxFileName = "";
@@ -48,6 +50,11 @@ class BossScene : public Scene {
   bool isNewBeatNow = false;
   bool isNewTickNow = false;
   bool isPaused = false;
+
+  //   v- BEAT_TIMING_WINDOW
+  // --(---------x---------)--
+  //   ^         ^ isNewBeatNow
+  //   ^- isNewBeat
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
@@ -69,6 +76,8 @@ class BossScene : public Scene {
   void updateCommonSprites();
   void shoot();
   void reportFailedShot();
+  void enableAutoFire();
+  void disableAutoFire();
 
  private:
   void updateChartReader();

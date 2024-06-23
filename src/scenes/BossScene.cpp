@@ -149,6 +149,8 @@ void BossScene::updateCommonSprites() {
     if (cross->get()->update())
       cross.reset();
   }
+  if (autoFire.has_value())
+    autoFire->get()->update();
 }
 
 void BossScene::shoot() {
@@ -161,6 +163,16 @@ void BossScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
+}
+
+void BossScene::enableAutoFire() {
+  if (autoFire.has_value())
+    return;
+  autoFire = bn::unique_ptr{new AutoFire({22, 12})};
+}
+
+void BossScene::disableAutoFire() {
+  autoFire.reset();
 }
 
 void BossScene::updateChartReader() {

@@ -188,7 +188,7 @@ void BossWizardScene::processInput() {
   processAimInput(isFlying);
 
   // shoot
-  if (isFlying) {
+  if (autoFire.has_value()) {
     if (isNewTickNow) {
       horse->shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
@@ -400,6 +400,7 @@ void BossWizardScene::processChart() {
         bn::blending::set_black_fade_color();
         bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
         fadingToWhite = false;
+        enableAutoFire();
         pixelBlink->blink();
 
         background1 = bn::regular_bg_items::back_wizard_mountain_bg1.create_bg(
@@ -724,7 +725,10 @@ void BossWizardScene::goToNextPhase() {
   if (phase == 1) {
     pixelBlink->blink();
     wizard = bn::unique_ptr{new Wizard({0, -40})};
+  } else if (phase == 5) {
+    enableAutoFire();
   } else if (phase == 7) {
+    disableAutoFire();
     pixelBlink->blink();
 
     background3.reset();

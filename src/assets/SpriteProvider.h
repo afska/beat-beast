@@ -10,6 +10,7 @@ bn::sprite_item bullet();
 bn::sprite_item cross();
 bn::sprite_item explosion();
 bn::sprite_item menu();
+bn::sprite_item autofire();
 bn::sprite_item hitbox();
 
 // ---

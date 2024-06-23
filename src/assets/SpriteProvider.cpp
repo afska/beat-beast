@@ -2,6 +2,7 @@
 #include "../savefile/GameState.h"
 #include "bn_string.h"
 
+#include "bn_sprite_items_autofire.h"
 #include "bn_sprite_items_bullet.h"
 #include "bn_sprite_items_cross.h"
 #include "bn_sprite_items_explosion.h"
@@ -45,6 +46,10 @@ bn::sprite_item SpriteProvider::explosion() {
 
 bn::sprite_item SpriteProvider::menu() {
   return bn::sprite_items::menu;
+}
+
+bn::sprite_item SpriteProvider::autofire() {
+  return bn::sprite_items::autofire;
 }
 
 bn::sprite_item SpriteProvider::hitbox() {
