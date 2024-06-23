@@ -571,6 +571,16 @@ void BossWizardScene::updateSprites() {
           });
     }
 
+    if (blackHole.has_value()) {
+      // black hole ->
+      auto targetPosition = blackHole->get()->getTargetPosition();
+      if (targetPosition.has_value() &&
+          bullet->collidesWith(blackHole->get())) {
+        blackHole->get()->setTargetPosition(targetPosition.value() +
+                                            bn::fixed_point(5, 0));
+      }
+    }
+
     return isOut || colided;
   });
 
@@ -587,6 +597,16 @@ void BossWizardScene::updateSprites() {
       }
 
       sufferDamage(bullet->damage);
+
+      if (blackHole.has_value()) {
+        // black hole <-
+        auto targetPosition = blackHole->get()->getTargetPosition();
+        if (targetPosition.has_value() &&
+            bullet->collidesWith(blackHole->get())) {
+          blackHole->get()->setTargetPosition(targetPosition.value() +
+                                              bn::fixed_point(-5, 0));
+        }
+      }
 
       return true;
     }
@@ -749,7 +769,5 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
-
-// TODO: METEORITE: ANY DIRECTION
-// TODO: USE BLACK HOLE
-// TODO: METEORITES - LEFT TO RIGHT
+// TODO: DISABLE AUTOFIRE IN CAVES AND LAST PART
+// TODO: FIX setTargetPosition in BlackHole

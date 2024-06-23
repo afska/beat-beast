@@ -17,6 +17,9 @@ BlackHole::BlackHole(bn::fixed_point initialPosition, bn::fixed _scaleInSpeed)
           4,
           5)),
       scaleInSpeed(_scaleInSpeed) {
+  boundingBox.set_dimensions({32, 32});
+  boundingBox.set_position(initialPosition);
+
   sprite.set_scale(scale);
 }
 
@@ -43,6 +46,8 @@ bool BlackHole::update() {
     animationIndex--;
   } else
     animationIndex = Math::SCALE_STEPS.size() - 1;
+
+  boundingBox.set_position(sprite.position());
 
   return false;
 }

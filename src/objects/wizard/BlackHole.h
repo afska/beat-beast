@@ -11,6 +11,7 @@ class BlackHole : public GameObject {
   bn::fixed_point getPosition() { return sprite.position(); }
   void setPosition(bn::fixed_point position) { sprite.set_position(position); }
   void goAway();
+  bn::optional<bn::fixed_point> getTargetPosition() { return targetPosition; }
   void setTargetPosition(bn::fixed_point _targetPosition);
 
  private:
