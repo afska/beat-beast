@@ -17,6 +17,7 @@ class DragonEgg : public GameObject {
   bn::sprite_animate_action<2> animation;
   int animationIndex = -1;
   bool isExploding = false;
+  bool isDestroying = false;
 };
 
 #endif  // DRAGON_EGG_H

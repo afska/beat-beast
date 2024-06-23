@@ -24,6 +24,7 @@ AllyDragon::AllyDragon(bn::fixed_point initialPosition)
           5,
           6)) {
   sprite.set_scale(0.1);
+  sprite.set_bg_priority(1);
 }
 
 bool AllyDragon::update(Horse* horse) {

@@ -68,6 +68,7 @@
 
 #define IS_EVENT_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 1)
 #define IS_EVENT_CIRCULAR_FIREBALL(TYPE) IS_EVENT(TYPE, 4, 2)
+#define IS_EVENT_THROW_BLACKHOLE(TYPE) IS_EVENT(TYPE, 4, 3)
 
 #define IS_EVENT_METEORITE_1(TYPE) IS_EVENT(TYPE, 5, 1)
 #define IS_EVENT_METEORITE_2(TYPE) IS_EVENT(TYPE, 5, 2)
@@ -317,6 +318,12 @@ void BossWizardScene::processChart() {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new CircularFireBall(wizard->get()->getShootingPoint(), event)});
+      }
+      if (IS_EVENT_THROW_BLACKHOLE(type)) {
+        wizard->get()->attack();
+        blackHole =
+            bn::unique_ptr{new BlackHole(wizard->get()->getShootingPoint())};
+        blackHole->get()->setTargetPosition({0, 0});
       }
 
       // Meteorites

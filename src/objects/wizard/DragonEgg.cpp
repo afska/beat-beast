@@ -16,9 +16,15 @@ DragonEgg::DragonEgg(bn::fixed_point initialPosition)
 bool DragonEgg::update() {
   animation.update();
 
+  if (isDestroying) {
+    sprite.set_scale(sprite.horizontal_scale() - 0.1);
+    return sprite.horizontal_scale() <= 0.25;
+  }
   if (isExploding) {
     sprite.set_scale(sprite.horizontal_scale() + 0.025);
-    return sprite.horizontal_scale() >= 1.9;
+    if (sprite.horizontal_scale() >= 1.9)
+      isDestroying = true;
+    return false;
   }
 
   if (animationIndex > -1) {
