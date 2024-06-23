@@ -46,6 +46,7 @@
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
 #define IS_EVENT_MOVE_BOTTOMRIGHT(TYPE) IS_EVENT(TYPE, 0, 4)
 #define IS_EVENT_MOVE_BOTTOMLEFT(TYPE) IS_EVENT(TYPE, 0, 5)
+#define IS_EVENT_MOVE_RIGHT(TYPE) IS_EVENT(TYPE, 0, 6)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
 #define IS_EVENT_MINI_ROCK(TYPE) IS_EVENT(TYPE, 1, 1)
@@ -237,6 +238,9 @@ void BossWizardScene::processChart() {
                                          chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_BOTTOMLEFT(type))
         wizard->get()->setTargetPosition({-50, 60},
+                                         chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_RIGHT(type))
+        wizard->get()->setTargetPosition({80, 0},
                                          chartReader->getBeatDurationMs());
       if (IS_EVENT_MOVE_OFFSCREEN(type))
         wizard->get()->setTargetPosition({200, -70},
