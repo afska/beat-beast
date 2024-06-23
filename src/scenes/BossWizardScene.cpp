@@ -320,37 +320,37 @@ void BossWizardScene::processChart() {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 30, -Math::SCREEN_HEIGHT / 2 - 32},
-            {-1, 1}, event)});
+            {0.25, 1}, event)});
       }
       if (IS_EVENT_METEORITE_2(type)) {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 56, -Math::SCREEN_HEIGHT / 2 - 32},
-            {0, 1}, event)});
+            {0.25, 1}, event)});
       }
       if (IS_EVENT_METEORITE_3(type)) {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 82, -Math::SCREEN_HEIGHT / 2 - 32},
-            {0, 1}, event)});
+            {0.25, 1}, event)});
       }
       if (IS_EVENT_METEORITE_4(type)) {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 108, -Math::SCREEN_HEIGHT / 2 - 32},
-            {0, 1}, event)});
+            {0.25, 1}, event)});
       }
       if (IS_EVENT_METEORITE_5(type)) {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 134, -Math::SCREEN_HEIGHT / 2 - 32},
-            {0, 1}, event)});
+            {0.25, 1}, event)});
       }
       if (IS_EVENT_METEORITE_6(type)) {
         wizard->get()->attack();
         enemyBullets.push_back(bn::unique_ptr{new Meteorite(
             {-Math::SCREEN_WIDTH / 2 + 160, -Math::SCREEN_HEIGHT / 2 - 32},
-            {0, 1}, event)});
+            {0.25, 1}, event)});
       }
     } else {
       if (event->getType() == EVENT_RUN) {
