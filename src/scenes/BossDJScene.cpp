@@ -288,18 +288,18 @@ void BossDJScene::updateSprites() {
       return true;
     }
 
-    bool colided = false;
+    bool collided = false;
     iterate(
-        enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
+        enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet) {
           if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
             addExplosion(((Bullet*)bullet)->getPosition());
             enemyBullet->explode(octopus->getShootingPoint());
-            colided = true;
+            collided = true;
           }
           return false;
         });
 
-    return isOut || colided;
+    return isOut || collided;
   });
 
   // Enemy bullets

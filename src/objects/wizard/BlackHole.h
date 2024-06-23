@@ -5,7 +5,9 @@
 
 class BlackHole : public GameObject {
  public:
-  BlackHole(bn::fixed_point initialPosition, bn::fixed _scaleInSpeed = 0.00225);
+  BlackHole(bn::fixed_point initialPosition,
+            bn::fixed _initialScale = 0.25,
+            bn::fixed _scaleInSpeed = 0.00225);
 
   bool update();
   bn::fixed_point getPosition() { return sprite.position(); }
@@ -19,10 +21,11 @@ class BlackHole : public GameObject {
   bn::sprite_animate_action<6> animation;
   bn::fixed scaleInSpeed;
   bn::optional<bn::fixed_point> targetPosition;
-  bn::fixed scale = 0.05;
+  bn::fixed scale;
   bn::fixed targetScale = 1.9;
   int animationIndex = -1;
   bool isGoingAway = false;
+  bool isMoving = false;
 };
 
 #endif  // BLACK_HOLE_H

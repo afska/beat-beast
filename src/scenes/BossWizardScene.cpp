@@ -22,7 +22,7 @@
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
-#define LIFE_BOSS 150
+#define LIFE_BOSS 75
 
 // Loop
 // #define LOOP_END_MS 158580
@@ -33,6 +33,8 @@
 #define DMG_ROCK_TO_PLAYER 6
 #define DMG_LIGHTNING_TO_PLAYER 5
 #define DMG_WIZARD_TO_PLAYER 1
+#define DMG_BLACKHOLE_TO_PLAYER 1
+#define DMG_BLACKHOLE_TO_WIZARD 1
 #define DMG_LAVA_TO_PLAYER 2
 
 // Damage to enemy
@@ -78,11 +80,11 @@
 #define IS_EVENT_METEORITE_6(TYPE) IS_EVENT(TYPE, 5, 6)
 
 #define EVENT_RUN 1
-#define EVENT_SONG_END 2
 #define EVENT_BLACK_HOLE 3
 #define EVENT_FADE_TO_WHITE 4
 #define EVENT_END_FADE 5
 #define EVENT_FINAL 6
+#define EVENT_SONG_END 7
 
 #define SFX_MINI_ROCK "minirock.pcm"
 #define SFX_ROCK "rock.pcm"
@@ -143,6 +145,9 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
+  if (end)
+    return;
+
   const bool isRunning = phase == 1 || phase == 3 || phase == 4;
   const bool isFlying = phase == 6 || phase == 7 || phase == 8 || phase == 9;
 
@@ -375,7 +380,6 @@ void BossWizardScene::processChart() {
         bn::blending::set_fade_alpha(0);
         fadingToWhite = true;
       }
-
       if (event->getType() == EVENT_END_FADE) {
         blackHole->get()->goAway();
 
@@ -415,6 +419,17 @@ void BossWizardScene::processChart() {
         background0.get()->set_blending_enabled(true);
         background0.get()->set_mosaic_enabled(true);
         goToNextPhase();
+      }
+      if (event->getType() == EVENT_SONG_END) {
+        end = true;
+        disableAutoFire();
+        if (didWin) {
+          wizard->get()->disappearInto(blackHole->get()->getPosition());
+          allyDragon->get()->stopFalling();
+        } else {
+          horse->disappearInto(blackHole->get()->getPosition());
+          allyDragon->get()->disappearInto(blackHole->get()->getPosition());
+        }
       }
     }
   }
@@ -521,6 +536,15 @@ void BossWizardScene::updateSprites() {
       sufferDamage(DMG_WIZARD_TO_PLAYER);
   }
 
+  // Black hole
+  if (blackHole.has_value()) {
+    if (horse->collidesWith(blackHole->get()) && !horse->isHurt())
+      sufferDamage(DMG_BLACKHOLE_TO_PLAYER);
+    if (wizard->get()->collidesWith(blackHole->get()) &&
+        !wizard->get()->isHurt())
+      causeDamage(DMG_BLACKHOLE_TO_WIZARD);
+  }
+
   if ((phase == 7 || phase == 9) && !horse->isHurt() &&
       allyDragon->get()->getPosition().y() >= 50) {
     sufferDamage(DMG_LAVA_TO_PLAYER);
@@ -532,23 +556,23 @@ void BossWizardScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
 
-    bool colided = false;
-    iterate(rocks, [&bullet, &colided, this](Rock* rock) {
+    bool collided = false;
+    iterate(rocks, [&bullet, &collided, this](Rock* rock) {
       if (bullet->collidesWith(rock)) {
         addExplosion(((Bullet*)bullet)->getPosition());
         rock->smash();
-        colided = true;
+        collided = true;
       }
 
       return false;
     });
 
     iterate(flyingDragons,
-            [&bullet, &colided, this](FlyingDragon* flyingDragon) {
+            [&bullet, &collided, this](FlyingDragon* flyingDragon) {
               if (bullet->collidesWith(flyingDragon)) {
                 addExplosion(((Bullet*)bullet)->getPosition());
                 flyingDragon->explode();
-                colided = true;
+                collided = true;
               }
               return false;
             });
@@ -561,15 +585,15 @@ void BossWizardScene::updateSprites() {
         return true;
       }
 
-      iterate(
-          enemyBullets, [&bullet, &colided, this](RhythmicBullet* enemyBullet) {
-            if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
-              addExplosion(((Bullet*)bullet)->getPosition());
-              enemyBullet->explode({0, 0});
-              colided = true;
-            }
-            return false;
-          });
+      iterate(enemyBullets, [&bullet, &collided,
+                             this](RhythmicBullet* enemyBullet) {
+        if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+          addExplosion(((Bullet*)bullet)->getPosition());
+          enemyBullet->explode({0, 0});
+          collided = true;
+        }
+        return false;
+      });
     }
 
     if (blackHole.has_value()) {
@@ -579,17 +603,20 @@ void BossWizardScene::updateSprites() {
           bullet->collidesWith(blackHole->get())) {
         blackHole->get()->setTargetPosition(targetPosition.value() +
                                             bn::fixed_point(5, 0));
+        collided = true;
       }
     }
 
-    return isOut || colided;
+    return isOut || collided;
   });
 
+  auto target = blackHole.has_value() ? blackHole->get()->getPosition()
+                                      : horse->getCenteredPosition();
+
   // Enemy bullets
-  iterate(enemyBullets, [this](RhythmicBullet* bullet) {
-    bool isOut =
-        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
-                       horse->getCenteredPosition());
+  iterate(enemyBullets, [&target, this](RhythmicBullet* bullet) {
+    bool isOut = bullet->update(chartReader->getMsecs(),
+                                chartReader->isInsideBeat(), target);
 
     if (bullet->collidesWith(horse.get())) {
       if (horse->isJumping() && bullet->isHeadDeflectable) {
@@ -599,17 +626,18 @@ void BossWizardScene::updateSprites() {
 
       sufferDamage(bullet->damage);
 
-      if (blackHole.has_value()) {
-        // black hole <-
-        auto targetPosition = blackHole->get()->getTargetPosition();
-        if (targetPosition.has_value() &&
-            bullet->collidesWith(blackHole->get())) {
-          blackHole->get()->setTargetPosition(targetPosition.value() +
-                                              bn::fixed_point(-5, 0));
-        }
-      }
-
       return true;
+    }
+
+    if (blackHole.has_value()) {
+      // black hole <-
+      auto targetPosition = blackHole->get()->getTargetPosition();
+      if (targetPosition.has_value() &&
+          bullet->collidesWith(blackHole->get())) {
+        blackHole->get()->setTargetPosition(targetPosition.value() +
+                                            bn::fixed_point(-5, 0));
+        return true;
+      }
     }
 
     return isOut;
@@ -765,13 +793,11 @@ void BossWizardScene::goToNextPhase() {
 
 void BossWizardScene::causeDamage(unsigned amount) {
   wizard->get()->hurt();
-  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount)) {
-  }
-  // didWin = true;
+  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
+    didWin = true;
 }
 
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
-// TODO: DISABLE AUTOFIRE IN CAVES AND LAST PART
-// TODO: FIX setTargetPosition in BlackHole
+// TODO: WALK OVER LAVA BUG

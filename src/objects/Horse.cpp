@@ -36,10 +36,26 @@ void Horse::update() {
   updateAnimations();
 
   bounceFrame = bn::max(bounceFrame - 1, 0);
+
+  if (disappearPosition.has_value()) {
+    auto newScale = mainSprite.horizontal_scale() - 0.005;
+    if (newScale <= 0)
+      newScale = 0.005;
+    mainSprite.set_scale(newScale);
+    gunSprite.set_scale(newScale);
+    mainSprite.set_rotation_angle(
+        Math::normalizeAngle(mainSprite.rotation_angle() + 5));
+    Math::moveSpriteTowards(mainSprite, disappearPosition.value(), 1, 1, false);
+    setCenteredPosition(mainSprite.position());
+  }
+
   setPosition(topLeftPosition, isMoving);
 }
 
 void Horse::bounce() {
+  if (disappearPosition.has_value())
+    return;
+
   bounceFrame = Math::BOUNCE_STEPS.size() - 1;
 }
 
@@ -219,6 +235,9 @@ void Horse::setJumpingState() {
 }
 
 void Horse::setHurtState() {
+  if (disappearPosition.has_value())
+    return;
+
   resetAnimations();
   hurtAnimation = bn::create_sprite_animate_action_once(
       mainSprite, 2, SpriteProvider::horse().tiles_item(), 13, 10, 13, 10, 13,

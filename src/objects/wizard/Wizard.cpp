@@ -18,6 +18,17 @@ Wizard::Wizard(bn::fixed_point initialPosition)
 bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
   updateAnimations();
 
+  if (disappearPosition.has_value()) {
+    auto newScale = sprite.horizontal_scale() - 0.005;
+    if (newScale <= 0)
+      newScale = 0.005;
+    sprite.set_rotation_angle(
+        Math::normalizeAngle(sprite.rotation_angle() + 5));
+    sprite.set_scale(newScale);
+    Math::moveSpriteTowards(sprite, disappearPosition.value(), 1, 1, false);
+    return false;
+  }
+
   if (animationIndex > -1) {
     auto scale = Math::SCALE_STEPS[animationIndex];
     sprite.set_scale(scale);
@@ -93,6 +104,9 @@ void Wizard::setIdleState() {
 }
 
 void Wizard::setHurtState() {
+  if (disappearPosition.has_value())
+    return;
+
   resetAnimations();
   hurtAnimation = bn::create_sprite_animate_action_once(
       sprite, 2, bn::sprite_items::wizard_wizard.tiles_item(), 3, 0, 3, 0, 3, 0,

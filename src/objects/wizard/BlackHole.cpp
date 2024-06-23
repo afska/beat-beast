@@ -4,7 +4,9 @@
 
 #include "bn_sprite_items_wizard_blackhole.h"
 
-BlackHole::BlackHole(bn::fixed_point initialPosition, bn::fixed _scaleInSpeed)
+BlackHole::BlackHole(bn::fixed_point initialPosition,
+                     bn::fixed _initialScale,
+                     bn::fixed _scaleInSpeed)
     : sprite(bn::sprite_items::wizard_blackhole.create_sprite(initialPosition)),
       animation(bn::create_sprite_animate_action_forever(
           sprite,
@@ -20,6 +22,7 @@ BlackHole::BlackHole(bn::fixed_point initialPosition, bn::fixed _scaleInSpeed)
   boundingBox.set_dimensions({32, 32});
   boundingBox.set_position(initialPosition);
 
+  scale = _initialScale;
   sprite.set_scale(scale);
 }
 
@@ -29,7 +32,14 @@ bool BlackHole::update() {
   scale += scaleInSpeed;
 
   if (targetPosition.has_value()) {
-    Math::moveSpriteTowards(sprite, targetPosition.value(), 30, 30);
+    Math::moveSpriteTowards(sprite, targetPosition.value(), 1, 1, false);
+    if (sprite.position() == targetPosition.value())
+      isMoving = false;
+
+    if (sprite.x() < -Math::SCREEN_WIDTH / 2 + 64)
+      sprite.set_x(-Math::SCREEN_WIDTH / 2 + 64);
+    if (sprite.x() > Math::SCREEN_WIDTH / 2 - 64)
+      sprite.set_x(Math::SCREEN_WIDTH / 2 - 64);
   } else {
     if (!isGoingAway) {
       sprite.set_x(sprite.position().x() - 0.075);
@@ -53,8 +63,11 @@ bool BlackHole::update() {
 }
 
 void BlackHole::setTargetPosition(bn::fixed_point _targetPosition) {
+  if (isMoving)
+    return;
   targetPosition = _targetPosition;
   targetScale = 2;
+  isMoving = true;
 }
 
 void BlackHole::goAway() {

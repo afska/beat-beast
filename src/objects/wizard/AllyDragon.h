@@ -16,6 +16,10 @@ class AllyDragon : public GameObject {
     sprite.set_position(newPosition);
   }
   bn::fixed_point getPosition() { return sprite.position(); }
+  void disappearInto(bn::fixed_point _disappearPosition) {
+    disappearPosition = _disappearPosition;
+  }
+  void stopFalling() { _stopFalling = true; }
 
  private:
   bn::sprite_ptr sprite;
@@ -27,6 +31,8 @@ class AllyDragon : public GameObject {
   bn::fixed scale = 1;
   bool isFlapping = false;
   bool _isReady = false;
+  bool _stopFalling = false;
+  bn::optional<bn::fixed_point> disappearPosition;
 };
 
 #endif  // ALLY_DRAGON_H

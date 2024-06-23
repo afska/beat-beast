@@ -17,6 +17,10 @@ class Wizard : public GameObject {
     return sprite.position() + bn::fixed_point(0, 0);
   }
   bool isBusy() { return isHurt() || isAttacking(); }
+  bool isHurt() { return hurtAnimation.has_value(); }
+  void disappearInto(bn::fixed_point _disappearPosition) {
+    disappearPosition = _disappearPosition;
+  }
 
  private:
   bn::sprite_ptr sprite;
@@ -24,11 +28,11 @@ class Wizard : public GameObject {
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<2>> attackAnimation;
   bn::fixed_point targetPosition;
+  bn::optional<bn::fixed_point> disappearPosition;
   bn::fixed speedX = 1;
   bn::fixed speedY = 1;
   int animationIndex = -1;
 
-  bool isHurt() { return hurtAnimation.has_value(); }
   bool isAttacking() { return attackAnimation.has_value(); }
 
   void updateAnimations();

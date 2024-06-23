@@ -36,13 +36,15 @@ class Horse : public TopLeftGameObject {
     }
   }
   void clearCustomRunTiles() { useAlternativeRunAnimation = false; }
+  void disappearInto(bn::fixed_point _disappearPosition) {
+    disappearPosition = _disappearPosition;
+  }
 
  private:
   bn::sprite_ptr gunSprite;
   bn::fixed targetAngle = 0;
   bool isMoving = false;
-
-  void setIsMoving(bool isNowMoving);
+  bn::optional<bn::fixed_point> disappearPosition;
 
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> runningAnimation;
@@ -53,6 +55,8 @@ class Horse : public TopLeftGameObject {
   int bounceFrame = 0;
   int jumpFrame = 0;
   int hurtFrame = 0;
+
+  void setIsMoving(bool isNowMoving);
 
   void updateAngle();
 

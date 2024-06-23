@@ -28,22 +28,36 @@ AllyDragon::AllyDragon(bn::fixed_point initialPosition)
 }
 
 bool AllyDragon::update(Horse* horse) {
+  animation.update();
+
+  if (disappearPosition.has_value()) {
+    auto newScale = sprite.horizontal_scale() - 0.005;
+    if (newScale <= 0)
+      newScale = 0.005;
+    sprite.set_scale(newScale);
+    sprite.set_rotation_angle(
+        Math::normalizeAngle(sprite.rotation_angle() + 5));
+    Math::moveSpriteTowards(sprite, disappearPosition.value(), 1, 1, false);
+    return false;
+  }
+
   if (sprite.horizontal_scale() < 1) {
     sprite.set_scale(sprite.horizontal_scale() + 0.05);
     if (sprite.horizontal_scale() > 1)
       sprite.set_scale(1);
   }
-  animation.update();
 
   if (_isReady) {
-    velocityY += gravity;
-    sprite.set_y(sprite.position().y() + velocityY);
-    if (sprite.position().y() >= SCREEN_LIMIT) {
-      velocityY = 0;
-      sprite.set_y(SCREEN_LIMIT);
+    if (!_stopFalling) {
+      velocityY += gravity;
+      sprite.set_y(sprite.position().y() + velocityY);
+      if (sprite.position().y() >= SCREEN_LIMIT) {
+        velocityY = 0;
+        sprite.set_y(SCREEN_LIMIT);
+      }
+      if (sprite.position().y() <= -SCREEN_LIMIT)
+        sprite.set_y(-SCREEN_LIMIT);
     }
-    if (sprite.position().y() <= -SCREEN_LIMIT)
-      sprite.set_y(-SCREEN_LIMIT);
 
     horse->setCenteredPosition(
         {horse->getCenteredPosition().x(), sprite.y() + MARGIN_Y});

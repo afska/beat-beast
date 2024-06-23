@@ -42,6 +42,8 @@ class BossWizardScene : public BossScene {
   bn::fixed flySpeedX = 0;
   int phase = 1;
   bool fadingToWhite = false;
+  bool didWin = false;
+  bool end = false;
 
   void processInput();
   void processChart();
