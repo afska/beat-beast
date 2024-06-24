@@ -453,13 +453,16 @@ void BossWizardScene::updateBackground() {
   const int lavaStart = -8;
   const int lavaSize = 128;
   const int horseWidth = 64;
-  if ((phase == 4 || phase == 5) && bg0ScrollX <= 0) {
-    if (bg0ScrollX <= lavaStart) {
-      int limitOffset = bg0ScrollX - lavaStart;
-      bn::fixed limit = Math::SCREEN_WIDTH + limitOffset - horseWidth;
-      if (dragonEgg.has_value()) {
-        dragonEgg->get()->setPosition(
-            bn::fixed_point(limit - 27, dragonEgg->get()->getPosition().y()));
+  if ((phase == 4 && bg0ScrollX <= 0) || phase == 5) {
+    if (bg0ScrollX <= lavaStart || phase == 5) {
+      bn::fixed limit = 48;
+      if (phase == 4) {
+        int limitOffset = bg0ScrollX - lavaStart;
+        limit = Math::SCREEN_WIDTH + limitOffset - horseWidth;
+        if (dragonEgg.has_value()) {
+          dragonEgg->get()->setPosition(
+              bn::fixed_point(limit - 27, dragonEgg->get()->getPosition().y()));
+        }
       }
       horse->setTopLeftPosition(
           {bn::min(horse->getTopLeftPosition().x(), limit),
@@ -800,4 +803,3 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // TODO: REMOVE ALL BN_LOGS
 // TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
 // ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
-// TODO: WALK OVER LAVA BUG

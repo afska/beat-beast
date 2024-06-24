@@ -32,8 +32,10 @@ bool AllyDragon::update(Horse* horse) {
 
   if (disappearPosition.has_value()) {
     auto newScale = sprite.horizontal_scale() - 0.005;
-    if (newScale <= 0)
+    if (newScale <= 0) {
+      sprite.set_visible(false);
       newScale = 0.005;
+    }
     sprite.set_scale(newScale);
     sprite.set_rotation_angle(
         Math::normalizeAngle(sprite.rotation_angle() + 5));

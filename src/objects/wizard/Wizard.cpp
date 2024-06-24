@@ -20,8 +20,10 @@ bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 
   if (disappearPosition.has_value()) {
     auto newScale = sprite.horizontal_scale() - 0.005;
-    if (newScale <= 0)
+    if (newScale <= 0) {
       newScale = 0.005;
+      sprite.set_visible(false);
+    }
     sprite.set_rotation_angle(
         Math::normalizeAngle(sprite.rotation_angle() + 5));
     sprite.set_scale(newScale);

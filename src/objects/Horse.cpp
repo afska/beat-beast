@@ -39,8 +39,11 @@ void Horse::update() {
 
   if (disappearPosition.has_value()) {
     auto newScale = mainSprite.horizontal_scale() - 0.005;
-    if (newScale <= 0)
+    if (newScale <= 0) {
       newScale = 0.005;
+      mainSprite.set_visible(false);
+      gunSprite.set_visible(false);
+    }
     mainSprite.set_scale(newScale);
     gunSprite.set_scale(newScale);
     mainSprite.set_rotation_angle(
