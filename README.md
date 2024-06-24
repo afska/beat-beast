@@ -18,8 +18,12 @@ sudo dkp-pacman -S gba-dev
 git clone https://github.com/Hazematman/butano
 git clone https://github.com/afska/synthbattle
 cd synthbattle/
-make rebuild # the `rebuild` target builds the levels && the code
+make -j12 # 12 = number of cores
 # (this will generate a synthbattle.out.gba ROM file)
+
+# to update boss scripts:
+make rebuild # the `rebuild` target builds the levels && the code
+# (requires extra development tools, like node)
 ```
 
 ### Development scripts
@@ -58,6 +62,19 @@ ffmpeg -y -i file.wav -ac 1 -ar 36314 -f s8 file.pcm
 for file in *.wav; do
   output="${file%.wav}.pcm"
   ffmpeg -y -i "$file" -ac 1 -ar 36314 -f s8 "$output"
+done
+```
+
+### Build videos
+
+```bash
+ffmpeg -y -i "input.mp4" -r 30 "output_%05d.png"
+for file in *.png; do
+  magick $file -resize 240x160! -colors 253 -unique-colors tmpPalette.bmp && magick importer/black.bmp tmpPalette.bmp +append tmpPalette.bmp && magick $file -resize 240x160! -background black -gravity northwest -extent 256x256 -colors 253 -remap tmpPalette.bmp "$file" && rm tmpPalette.bmp
+done
+for file in *.png; do
+  output="${file%.png}.bmp"
+  magick "$file" -define bmp:format=bmp3 -compress None -type Palette "$output"
 done
 ```
 
