@@ -430,6 +430,7 @@ void BossWizardScene::processChart() {
           horse->disappearInto(blackHole->get()->getPosition());
           allyDragon->get()->disappearInto(blackHole->get()->getPosition());
         }
+        blackHole->get()->disappear();
       }
     }
   }

@@ -15,6 +15,7 @@ class BlackHole : public GameObject {
   void goAway();
   bn::optional<bn::fixed_point> getTargetPosition() { return targetPosition; }
   void setTargetPosition(bn::fixed_point _targetPosition);
+  void disappear() { isDisappearing = true; }
 
  private:
   bn::sprite_ptr sprite;
@@ -26,6 +27,7 @@ class BlackHole : public GameObject {
   int animationIndex = -1;
   bool isGoingAway = false;
   bool isMoving = false;
+  bool isDisappearing = false;
 };
 
 #endif  // BLACK_HOLE_H

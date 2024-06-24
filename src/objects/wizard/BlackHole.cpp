@@ -29,6 +29,16 @@ BlackHole::BlackHole(bn::fixed_point initialPosition,
 bool BlackHole::update() {
   animation.update();
 
+  if (isDisappearing) {
+    auto newScale = sprite.horizontal_scale() - 0.005;
+    if (newScale <= 0) {
+      newScale = 0.005;
+      sprite.set_visible(false);
+    }
+    sprite.set_scale(newScale);
+    return false;
+  }
+
   scale += scaleInSpeed;
 
   if (targetPosition.has_value()) {
