@@ -7,7 +7,10 @@
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
-#include "bn_regular_bg_items_back_dj.h"
+#include "bn_regular_bg_items_back_dj_disco_bg0.h"
+#include "bn_regular_bg_items_back_dj_disco_bg1.h"
+#include "bn_regular_bg_items_back_dj_disco_bg2.h"
+#include "bn_regular_bg_items_back_dj_disco_bg3.h"
 #include "bn_sprite_items_dj_bad_bullet.h"
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
@@ -72,15 +75,27 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
-      background(bn::regular_bg_items::back_dj.create_bg(
+      background3(bn::regular_bg_items::back_dj_disco_bg3.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
           (256 - Math::SCREEN_HEIGHT) / 2)),
-      octopus(bn::unique_ptr{new Octopus({200, -70})}),
-      horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
-          background,
-          horizontalDeltas)) {
-  background.set_blending_enabled(true);
-  background.set_mosaic_enabled(true);
+      // background2(bn::regular_bg_items::back_dj_disco_bg2.create_bg(
+      //     (256 - Math::SCREEN_WIDTH) / 2,
+      //     (256 - Math::SCREEN_HEIGHT) / 2)),
+      background1(bn::regular_bg_items::back_dj_disco_bg1.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      background0(bn::regular_bg_items::back_dj_disco_bg0.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      octopus(bn::unique_ptr{new Octopus({200, -70})}) {
+  background0.set_blending_enabled(true);
+  background0.set_mosaic_enabled(true);
+  background1.set_blending_enabled(true);
+  background1.set_mosaic_enabled(true);
+  // background2.set_blending_enabled(true);
+  // background2.set_mosaic_enabled(true);
+  background3.set_blending_enabled(true);
+  background3.set_mosaic_enabled(true);
   bn::blending::set_fade_alpha(0.3);
   chartReader->eventsThatNeedAudioLagPrediction =
       15728880 /* 0b111100000000000011110000*/;
@@ -229,18 +244,15 @@ void BossDJScene::processChart() {
 }
 
 void BossDJScene::updateBackground() {
-  // layer1 += 0.3 + (chartReader->isInsideBeat() ? 3 : 0);
-  // layer2 += 0;
-
-  // for (int index = 0, limit = bn::display::height(); index < limit; ++index)
-  // {
-  //   if (index <= 129)
-  //     horizontalDeltas[index] = layer1;
-  //   else
-  //     horizontalDeltas[index] = layer2;
-  // }
-
-  // // horizontalHBE.reload_deltas_ref();
+  background0.set_position(
+      background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
+      background0.position().y());
+  background1.set_position(
+      background1.position().x() - (chartReader->isInsideBeat() ? 0.75 : 0.5),
+      background1.position().y());
+  // background2.set_position(
+  //     background2.position().x() - (chartReader->isInsideBeat() ? 0.5 :
+  //     0.25), background2.position().y());
 
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
