@@ -72,7 +72,9 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
-      background(bn::regular_bg_items::back_dj.create_bg(0, 0)),
+      background(bn::regular_bg_items::back_dj.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
       octopus(bn::unique_ptr{new Octopus({200, -70})}),
       horizontalHBE(bn::regular_bg_position_hbe_ptr::create_horizontal(
           background,
@@ -227,17 +229,18 @@ void BossDJScene::processChart() {
 }
 
 void BossDJScene::updateBackground() {
-  layer1 += 0.3 + (chartReader->isInsideBeat() ? 3 : 0);
-  layer2 += 0;
+  // layer1 += 0.3 + (chartReader->isInsideBeat() ? 3 : 0);
+  // layer2 += 0;
 
-  for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
-    if (index <= 81)
-      horizontalDeltas[index] = layer1;
-    else
-      horizontalDeltas[index] = layer2;
-  }
+  // for (int index = 0, limit = bn::display::height(); index < limit; ++index)
+  // {
+  //   if (index <= 129)
+  //     horizontalDeltas[index] = layer1;
+  //   else
+  //     horizontalDeltas[index] = layer2;
+  // }
 
-  horizontalHBE.reload_deltas_ref();
+  // // horizontalHBE.reload_deltas_ref();
 
   bn::blending::set_fade_alpha(
       Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
