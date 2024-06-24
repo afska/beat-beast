@@ -24,7 +24,7 @@ const unsigned SCREEN_HEIGHT = 160;
 constexpr const bn::array<unsigned, 10> BOUNCE_STEPS = {0, 1, 2, 4, 5,
                                                         8, 7, 5, 3, 0};
 constexpr const bn::array<bn::fixed, 10> BOUNCE_BLENDING_STEPS = {
-    0.3, 0.25, 0.2, 0.15, 0.1, 0.05, 0, 0.1, 0.2, 0.25};
+    0.2, 0.15, 0.1, 0.075, 0.05, 0.025, 0, 0.05, 0.1, 0.15};
 constexpr const bn::array<bn::fixed, 16> SCALE_STEPS = {
     1.0,   1.05, 1.1,   1.15, 1.2,   1.25, 1.225, 1.2,
     1.175, 1.15, 1.125, 1.1,  1.075, 1.05, 1.15,  1.025};

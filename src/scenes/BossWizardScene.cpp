@@ -90,7 +90,7 @@
 #define SFX_ROCK "rock.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
 
-#define INITIAL_FADE_ALPHA 0.3
+#define INITIAL_FADE_ALPHA 0.2
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 97;
