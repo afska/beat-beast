@@ -3,6 +3,8 @@
 
 #include "UIScene.h"
 
+#include "../objects/Horse.h"
+
 class CalibrationScene : public UIScene {
  public:
   CalibrationScene(const GBFS_FILE* _fs);
@@ -13,10 +15,10 @@ class CalibrationScene : public UIScene {
  private:
   enum CalibrationState { INTRO, MEASURING, REVIEWING };
 
-  bn::vector<bn::sprite_ptr, 32> textSprites;
-  bn::sprite_text_generator textGenerator;
-  CalibrationState state = INTRO;
+  bn::unique_ptr<Horse> horse;
+  int lastBeat = 0;
   int measuredLag = 0;
+  CalibrationState state = INTRO;
 
   void showInstructions();
   void start();

@@ -57,12 +57,14 @@ void StartScene::update() {
 
   if (isNewBeat)
     horse->jump();
+
   background.reset();
   background = StartVideo::getFrame(videoFrame)
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
+  background.get()->set_mosaic_enabled(true);
+  background.get()->set_blending_enabled(true);
   extraSpeed = bn::max(extraSpeed - 1, 0);
-
   videoFrame += 1 + extraSpeed / 2;
   if (videoFrame >= 600)
     videoFrame = 0;

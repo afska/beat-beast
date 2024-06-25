@@ -2,9 +2,6 @@
 
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
-#include "bn_bg_palettes.h"
-
-#include "../assets/fonts/fixed_8x16_sprite_font.h"
 
 #include "bn_keypad.h"
 
@@ -12,16 +9,26 @@ const unsigned TARGET_BEAT_MS = 2000;
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::CALIBRATION, _fs),
-      textGenerator(fixed_8x16_sprite_font) {}
+      horse(bn::unique_ptr{new Horse({88, 34})}) {}
 
 void CalibrationScene::init() {
-  bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
+  horse->setFlipX(true);
+  horse->aim({-1, 0});
 
-  textGenerator.set_center_alignment();
-  showInstructions();
+  textGenerator.generate(0, 39, "Example test 1231231231234", textSprites);
+  textGenerator.generate(0, 55, "Example test 1231231231234", textSprites);
+  // player_play("calibrate_test.gsm");
+  // player_setLoop(true);
+
+  // showInstructions();
 }
 
 void CalibrationScene::update() {
+  UIScene::update();
+
+  horse->update();
+
+  return;
   switch (state) {
     case INTRO: {
       if (bn::keypad::a_pressed())

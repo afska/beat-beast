@@ -11,6 +11,8 @@ class UIScene : public Scene {
  public:
   UIScene(GameState::Screen _screen, const GBFS_FILE* _fs);
 
+  virtual void update() override;
+
   virtual ~UIScene() = default;
 
  protected:
@@ -18,6 +20,9 @@ class UIScene : public Scene {
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
+  bn::optional<bn::regular_bg_ptr> background;
+  unsigned videoFrame = 0;
+  int extraSpeed = 0;
   // bn::unique_ptr<Menu> menu;
 };
 

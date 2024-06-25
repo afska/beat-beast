@@ -9,7 +9,6 @@
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_dj_disco_bg0.h"
 #include "bn_regular_bg_items_back_dj_disco_bg1.h"
-#include "bn_regular_bg_items_back_dj_disco_bg2.h"
 #include "bn_regular_bg_items_back_dj_disco_bg3.h"
 #include "bn_sprite_items_dj_bad_bullet.h"
 #include "bn_sprite_items_dj_icon_octopus.h"
