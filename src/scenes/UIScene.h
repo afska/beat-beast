@@ -25,6 +25,7 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> talkbox2;
   bn::optional<bn::sprite_ptr> talkbox3;
   bn::optional<bn::sprite_ptr> talkbox4;
+  bn::optional<bn::sprite_ptr> icon;
   unsigned videoFrame = 0;
   int extraSpeed = 0;
   // bn::unique_ptr<Menu> menu;

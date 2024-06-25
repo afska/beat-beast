@@ -36,6 +36,8 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
   talkbox2->set_blending_enabled(true);
   talkbox3->set_blending_enabled(true);
   talkbox4->set_blending_enabled(true);
+  icon = SpriteProvider::iconHorse().create_sprite(
+      Math::toAbsTopLeft({10, 98}, 16, 16));
 }
 
 void UIScene::update() {
