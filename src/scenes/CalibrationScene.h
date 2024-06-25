@@ -1,11 +1,12 @@
 #ifndef CALIBRATION_SCENE_H
 #define CALIBRATION_SCENE_H
 
-#include "Scene.h"
+#include "UIScene.h"
 
-class CalibrationScene : public Scene {
+class CalibrationScene : public UIScene {
  public:
   CalibrationScene(const GBFS_FILE* _fs);
+
   void init() override;
   void update() override;
 

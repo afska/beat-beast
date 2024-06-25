@@ -11,7 +11,7 @@
 const unsigned TARGET_BEAT_MS = 2000;
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
-    : Scene(GameState::Screen::CALIBRATION, _fs),
+    : UIScene(GameState::Screen::CALIBRATION, _fs),
       textGenerator(fixed_8x16_sprite_font) {}
 
 void CalibrationScene::init() {

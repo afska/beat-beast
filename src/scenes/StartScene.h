@@ -8,6 +8,7 @@
 class StartScene : public Scene {
  public:
   StartScene(const GBFS_FILE* _fs);
+
   void init() override;
   void update() override;
 
