@@ -21,6 +21,10 @@ class UIScene : public Scene {
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::optional<bn::regular_bg_ptr> background;
+  bn::optional<bn::sprite_ptr> talkbox1;
+  bn::optional<bn::sprite_ptr> talkbox2;
+  bn::optional<bn::sprite_ptr> talkbox3;
+  bn::optional<bn::sprite_ptr> talkbox4;
   unsigned videoFrame = 0;
   int extraSpeed = 0;
   // bn::unique_ptr<Menu> menu;
