@@ -15,8 +15,8 @@ void CalibrationScene::init() {
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
-  textGenerator.generate(0, 39, "Example test 1231231231234", textSprites);
-  textGenerator.generate(0, 55, "Example test 1231231231234", textSprites);
+  textGenerator.generate(0, 39, "Lorem ipsum.", textSprites);
+  textGenerator.generate(0, 55, "LOREM IPSUM!!!", textSprites);
   // player_play("calibrate_test.gsm");
   // player_setLoop(true);
 
