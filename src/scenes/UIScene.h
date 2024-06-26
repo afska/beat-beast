@@ -26,9 +26,21 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> talkbox3;
   bn::optional<bn::sprite_ptr> talkbox4;
   bn::optional<bn::sprite_ptr> icon;
+  bn::vector<bn::string<32>, 2> textLines;
+  bool isWriting = false;
+  unsigned lineIndex = 0;
+  unsigned characterIndex = 0;
+  bool characterWait = false;
+
   unsigned videoFrame = 0;
   int extraSpeed = 0;
   // bn::unique_ptr<Menu> menu;
+
+  void write(bn::vector<bn::string<32>, 2> lines);
+
+ private:
+  void updateVideo();
+  void autoWrite();
 };
 
 #endif  // UI_SCENE_H

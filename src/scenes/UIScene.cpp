@@ -10,6 +10,7 @@
 #include "../assets/fonts/common_variable_8x16_sprite_font_accent.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
+#include "bn_log.h"
 #include "bn_sprite_items_ui_talkbox1.h"
 #include "bn_sprite_items_ui_talkbox23.h"
 #include "bn_sprite_items_ui_talkbox4.h"
@@ -41,6 +42,22 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
 }
 
 void UIScene::update() {
+  updateVideo();
+  autoWrite();
+}
+
+void UIScene::write(bn::vector<bn::string<32>, 2> _lines) {
+  textSprites.clear();
+  lineIndex = 0;
+  characterIndex = 0;
+  characterWait = true;
+
+  textLines = _lines;
+  isWriting = true;
+  // TODO: WRITE ALL THE TEXT HERE AND ENABLE THE SPRITES ONE BY ONE
+}
+
+void UIScene::updateVideo() {
   background.reset();
   background = UIVideo::getFrame(videoFrame)
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
@@ -51,4 +68,34 @@ void UIScene::update() {
   videoFrame += 1 + extraSpeed / 2;
   if (videoFrame >= 10)
     videoFrame = 0;
+}
+
+void UIScene::autoWrite() {
+  if (!isWriting)
+    return;
+
+  characterWait = !characterWait;
+  if (characterWait || (int)lineIndex == textLines.size())
+    return;
+
+  unsigned totalCharacters = textLines[lineIndex].size();
+  auto totalWidth = textGenerator.width(textLines[lineIndex]);
+
+  if (characterIndex < totalCharacters) {
+    auto character =
+        bn::string_view(textLines[lineIndex]).substr(characterIndex, 1);
+    auto partialString =
+        bn::string_view(textLines[lineIndex]).substr(0, characterIndex + 1);
+    textGenerator.generate(
+        textGenerator.width(partialString) + characterIndex - (totalWidth / 2),
+        39, character, textSprites);
+    characterIndex++;
+    if (character == " ")
+      characterWait = true;
+  } else {
+    lineIndex++;
+    characterIndex = 0;
+    if ((int)lineIndex == textLines.size())
+      isWriting = false;
+  }
 }

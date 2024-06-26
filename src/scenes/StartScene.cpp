@@ -58,6 +58,10 @@ void StartScene::update() {
   if (isNewBeat)
     horse->jump();
 
+  updateVideo();
+}
+
+void StartScene::updateVideo() {
   background.reset();
   background = StartVideo::getFrame(videoFrame)
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
@@ -69,7 +73,6 @@ void StartScene::update() {
   if (videoFrame >= 600)
     videoFrame = 0;
 }
-
 void StartScene::processMenuOption(int option) {
   switch (option) {
     case 0: {  // Start

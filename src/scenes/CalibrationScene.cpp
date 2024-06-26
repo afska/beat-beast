@@ -15,8 +15,9 @@ void CalibrationScene::init() {
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
-  textGenerator.generate(0, 39, "Lorem ipsum.", textSprites);
-  textGenerator.generate(0, 55, "LOREM IPSUM!!!", textSprites);
+  bn::vector<bn::string<32>, 2> strs;
+  strs.push_back("Lorem ipsum DOLOR");
+  write(strs);
   // player_play("calibrate_test.gsm");
   // player_setLoop(true);
 

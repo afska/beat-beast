@@ -23,6 +23,7 @@ class StartScene : public Scene {
   int lastBeat = 0;
   int extraSpeed = 0;
 
+  void updateVideo();
   void processMenuOption(int option);
 };
 
