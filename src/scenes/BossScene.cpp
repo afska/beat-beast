@@ -4,8 +4,8 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 
-#include "../assets/fonts/fixed_8x16_sprite_font.h"
-#include "../assets/fonts/fixed_8x16_sprite_font_accent.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
 
@@ -22,8 +22,8 @@ BossScene::BossScene(GameState::Screen _screen,
                      const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
       fileName(_fileName),
-      textGenerator(fixed_8x16_sprite_font),
-      textGeneratorAccent(fixed_8x16_sprite_font_accent),
+      textGenerator(common_fixed_8x16_sprite_font),
+      textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       horse(bn::move(_horse)),
       lifeBar(bn::unique_ptr{new LifeBar({0, 0},
                                          LIFE_PLAYER,

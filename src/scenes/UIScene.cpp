@@ -6,8 +6,8 @@
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
-#include "../assets/fonts/fixed_8x16_sprite_font.h"
-#include "../assets/fonts/fixed_8x16_sprite_font_accent.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_sprite_items_ui_talkbox1.h"
@@ -16,8 +16,8 @@
 
 UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
-      textGenerator(fixed_8x16_sprite_font),
-      textGeneratorAccent(fixed_8x16_sprite_font_accent),
+      textGenerator(common_fixed_8x16_sprite_font),
+      textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}) {
   textGenerator.set_center_alignment();
   textGeneratorAccent.set_center_alignment();
