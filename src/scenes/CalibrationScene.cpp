@@ -16,7 +16,8 @@ void CalibrationScene::init() {
   horse->aim({-1, 0});
 
   bn::vector<bn::string<32>, 2> strs;
-  strs.push_back("Lorem ipsum DOLOR");
+  strs.push_back("Lorem ipsum!");
+  strs.push_back("ASDasdasdasd");
   write(strs);
   // player_play("calibrate_test.gsm");
   // player_setLoop(true);

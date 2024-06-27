@@ -22,6 +22,8 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}) {
   textGenerator.set_center_alignment();
   textGeneratorAccent.set_center_alignment();
+  textGenerator.set_one_sprite_per_character(true);
+  textGeneratorAccent.set_one_sprite_per_character(true);
 
   bn::blending::set_transparency_alpha(0.5);
 
@@ -48,13 +50,19 @@ void UIScene::update() {
 
 void UIScene::write(bn::vector<bn::string<32>, 2> _lines) {
   textSprites.clear();
-  lineIndex = 0;
   characterIndex = 0;
   characterWait = true;
 
   textLines = _lines;
   isWriting = true;
-  // TODO: WRITE ALL THE TEXT HERE AND ENABLE THE SPRITES ONE BY ONE
+
+  auto y = 39;
+  for (auto& line : textLines) {
+    textGenerator.generate(0, y, line, textSprites);
+    y += 16;
+  }
+  for (auto& sprite : textSprites)
+    sprite.set_visible(false);
 }
 
 void UIScene::updateVideo() {
@@ -75,27 +83,13 @@ void UIScene::autoWrite() {
     return;
 
   characterWait = !characterWait;
-  if (characterWait || (int)lineIndex == textLines.size())
+  if (characterWait || (int)characterIndex == textSprites.size())
     return;
 
-  unsigned totalCharacters = textLines[lineIndex].size();
-  auto totalWidth = textGenerator.width(textLines[lineIndex]);
-
-  if (characterIndex < totalCharacters) {
-    auto character =
-        bn::string_view(textLines[lineIndex]).substr(characterIndex, 1);
-    auto partialString =
-        bn::string_view(textLines[lineIndex]).substr(0, characterIndex + 1);
-    textGenerator.generate(
-        textGenerator.width(partialString) + characterIndex - (totalWidth / 2),
-        39, character, textSprites);
-    characterIndex++;
-    if (character == " ")
-      characterWait = true;
-  } else {
-    lineIndex++;
+  textSprites[characterIndex].set_visible(true);
+  characterIndex++;
+  if ((int)characterIndex == textSprites.size()) {
     characterIndex = 0;
-    if ((int)lineIndex == textLines.size())
-      isWriting = false;
+    isWriting = false;
   }
 }

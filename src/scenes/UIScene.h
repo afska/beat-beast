@@ -28,7 +28,6 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> icon;
   bn::vector<bn::string<32>, 2> textLines;
   bool isWriting = false;
-  unsigned lineIndex = 0;
   unsigned characterIndex = 0;
   bool characterWait = false;
 
