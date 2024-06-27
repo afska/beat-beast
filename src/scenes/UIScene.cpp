@@ -15,13 +15,16 @@
 #include "bn_sprite_items_ui_talkbox23.h"
 #include "bn_sprite_items_ui_talkbox4.h"
 
+#define SEPARATOR '|'
+#define MARGIN_Y 16
+
 UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
       textGenerator(common_variable_8x16_sprite_font),
       textGeneratorAccent(common_variable_8x16_sprite_font_accent),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}) {
-  textGenerator.set_center_alignment();
-  textGeneratorAccent.set_center_alignment();
+  // textGenerator.set_center_alignment();
+  // textGeneratorAccent.set_center_alignment();
   textGenerator.set_one_sprite_per_character(true);
   textGeneratorAccent.set_one_sprite_per_character(true);
 
@@ -58,8 +61,23 @@ void UIScene::write(bn::vector<bn::string<32>, 2> _lines) {
 
   auto y = 39;
   for (auto& line : textLines) {
-    textGenerator.generate(0, y, line, textSprites);
-    y += 16;
+    int baseX = -textGenerator.width(removeSeparator(line, SEPARATOR)) / 2;
+    auto lineView = bn::string_view(line);
+    int cursorI = 0;
+    unsigned cursorX = 0;
+    bool accent = false;
+
+    for (int i = 0; i < line.size(); i++) {
+      if (line[i] == SEPARATOR || i == line.size() - 1) {
+        auto part = lineView.substr(cursorI, bn::max(i - cursorI, 1));
+        (accent ? textGeneratorAccent : textGenerator)
+            .generate(baseX + cursorX, y, part, textSprites);
+        cursorI = i + 1;
+        cursorX += textGenerator.width(part);
+        accent = !accent;
+      }
+    }
+    y += MARGIN_Y;
   }
   for (auto& sprite : textSprites)
     sprite.set_visible(false);
@@ -92,4 +110,12 @@ void UIScene::autoWrite() {
     characterIndex = 0;
     isWriting = false;
   }
+}
+
+bn::string<32> UIScene::removeSeparator(bn::string<32> str, char separator) {
+  bn::string<32> result;
+  for (char c : str)
+    if (c != separator)
+      result.push_back(c);
+  return result;
 }

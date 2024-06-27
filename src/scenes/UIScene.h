@@ -16,7 +16,7 @@ class UIScene : public Scene {
   virtual ~UIScene() = default;
 
  protected:
-  bn::vector<bn::sprite_ptr, 32> textSprites;
+  bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
@@ -40,6 +40,7 @@ class UIScene : public Scene {
  private:
   void updateVideo();
   void autoWrite();
+  bn::string<32> removeSeparator(bn::string<32> str, char separator);
 };
 
 #endif  // UI_SCENE_H

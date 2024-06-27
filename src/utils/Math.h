@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
 
 #include <stdint.h>
 #include "bn_array.h"
@@ -230,4 +230,4 @@ inline bn::fixed getBeatBasedXPositionForObject(int targetX,
 
 }  // namespace Math
 
-#endif  // MATH_H
+#endif  // MATH_UTILS_H
