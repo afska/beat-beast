@@ -15,12 +15,17 @@ void CalibrationScene::init() {
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
-  bn::vector<bn::string<32>, 2> strs;
-  strs.push_back("Lorem |ipsum| you see?");
-  strs.push_back("ASDasdasdasd");
+  bn::vector<bn::string<64>, 2> strs;
+  strs.push_back("Emulators require some |calibration|.");
+  strs.push_back("Are you using an emulator?");
   write(strs);
-  // player_play("calibrate_test.gsm");
-  // player_setLoop(true);
+
+  bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Yes"});
+  options.push_back(Menu::Option{.text = "No"});
+  menu->start(options, true, 0.5, 0.5);
+  player_play("calibrate_test.gsm");
+  player_setLoop(true);
 
   // showInstructions();
 }

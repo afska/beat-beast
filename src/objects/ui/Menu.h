@@ -10,14 +10,19 @@
 class Menu {
  public:
   struct Option {
-    bn::string<10> text;
+    bn::string<32> text;
   };
 
   Menu(bn::sprite_text_generator _normalTextGenerator,
        bn::sprite_text_generator _accentTextGenerator,
-       bn::vector<bn::sprite_ptr, 32> _textSprites);
+       bn::vector<bn::sprite_ptr, 64> _textSprites);
 
-  void start(bn::vector<Option, 10> _options, bool withSquare = true);
+  void start(bn::vector<Option, 32> _options,
+             bool withSquare = true,
+             bn::fixed scaleX = 1.5,
+             bn::fixed scaleY = 1.5,
+             bn::fixed _positionX = 0,
+             bn::fixed _positionY = 0);
   void update();
   void stop();
 
@@ -31,11 +36,13 @@ class Menu {
  private:
   bn::sprite_text_generator normalTextGenerator;
   bn::sprite_text_generator accentTextGenerator;
-  bn::vector<bn::sprite_ptr, 32> textSprites;
+  bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::optional<bn::vector<Option, 10>> options;
   bn::sprite_ptr square;
   unsigned selectedOption = 0;
   int confirmedOption = -1;
+  bn::fixed positionX = 0;
+  bn::fixed positionY = 0;
 
   void draw();
 };

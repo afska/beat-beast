@@ -205,7 +205,6 @@ void BossScene::pause() {
   options.push_back(Menu::Option{.text = "Calibrate"});
   options.push_back(Menu::Option{.text = "WIZARD!"});
   options.push_back(Menu::Option{.text = "Quit"});
-
   menu->start(options);
 }
 

@@ -32,7 +32,6 @@ void StartScene::init() {
   options.push_back(Menu::Option{.text = "Wizard"});  // TODO: Mini game?
   options.push_back(Menu::Option{.text = "Settings"});
   options.push_back(Menu::Option{.text = "Quit"});
-
   menu->start(options, false);
 }
 

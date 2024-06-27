@@ -15,7 +15,7 @@ class DevPlaygroundScene : public Scene {
   void update() override;
 
  private:
-  bn::vector<bn::sprite_ptr, 32> textSprites;
+  bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::unique_ptr<PhysWorld> physWorld;
   bn::unique_ptr<Horse> horse;

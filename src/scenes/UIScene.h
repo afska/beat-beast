@@ -16,9 +16,12 @@ class UIScene : public Scene {
   virtual ~UIScene() = default;
 
  protected:
-  bn::vector<bn::sprite_ptr, 64> textSprites;
+  bn::vector<bn::sprite_ptr, 128> textSprites;
+  bn::vector<bn::sprite_ptr, 128> menuSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
+  bn::sprite_text_generator menuTextGenerator;
+  bn::sprite_text_generator menuTextGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::optional<bn::regular_bg_ptr> background;
   bn::optional<bn::sprite_ptr> talkbox1;
@@ -26,21 +29,21 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> talkbox3;
   bn::optional<bn::sprite_ptr> talkbox4;
   bn::optional<bn::sprite_ptr> icon;
-  bn::vector<bn::string<32>, 2> textLines;
+  bn::vector<bn::string<64>, 2> textLines;
   bool isWriting = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
 
   unsigned videoFrame = 0;
   int extraSpeed = 0;
-  // bn::unique_ptr<Menu> menu;
+  bn::unique_ptr<Menu> menu;
 
-  void write(bn::vector<bn::string<32>, 2> lines);
+  void write(bn::vector<bn::string<64>, 2> lines);
 
  private:
   void updateVideo();
   void autoWrite();
-  bn::string<32> removeSeparator(bn::string<32> str, char separator);
+  bn::string<64> removeSeparator(bn::string<64> str, char separator);
 };
 
 #endif  // UI_SCENE_H

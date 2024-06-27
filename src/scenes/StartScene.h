@@ -15,7 +15,7 @@ class StartScene : public Scene {
  private:
   bn::optional<bn::regular_bg_ptr> background;
   bn::unique_ptr<Horse> horse;
-  bn::vector<bn::sprite_ptr, 32> textSprites;
+  bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<Menu> menu;

@@ -30,7 +30,7 @@ class BossScene : public Scene {
 
  protected:
   bn::string<32> fileName;
-  bn::vector<bn::sprite_ptr, 32> textSprites;
+  bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<ChartReader> chartReader;
