@@ -55,6 +55,9 @@ void Menu::update() {
       square.set_scale(targetScale);
   }
 
+  if (!hasStarted())
+    return;
+
   if (bn::keypad::down_pressed()) {
     if ((int)selectedOption < options->size() - 1) {
       selectedOption++;
@@ -86,6 +89,7 @@ void Menu::update() {
 
 void Menu::stop() {
   square.set_visible(false);
+  options.reset();
   textSprites.clear();
   confirmedOption = -1;
 }

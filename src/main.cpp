@@ -9,6 +9,7 @@
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
+#include "bn_blending.h"
 #include "bn_core.h"
 #include "bn_optional.h"
 #include "bn_sprite_text_generator.h"
@@ -20,20 +21,22 @@ static const GBFS_FILE* fs = find_first_gbfs_file(0);
 bn::optional<bn::unique_ptr<Scene>> scene;
 
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
+  auto previousScreen = GameState::data.currentScreen;
   GameState::data.currentScreen = nextScreen;
 
   switch (nextScreen) {
+    case GameState::Screen::NO:
     case GameState::Screen::START:
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
     case GameState::Screen::CALIBRATION:
-      return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
+      return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
     case GameState::Screen::DJ:
       return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
     case GameState::Screen::WIZARD:
       return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
     default: {
       BN_ASSERT(false, "Next screen not found?");
-      return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
+      return bn::unique_ptr{(Scene*)new StartScene(fs)};
     }
   }
 }
@@ -63,13 +66,16 @@ int main() {
 
   while (true) {
     scene->get()->update();
+
     if (scene->get()->hasNextScreen()) {
       auto nextScreen = scene->get()->getNextScreen();
       scene.reset();
-      scene = setNextScene(nextScreen);
 
+      bn::blending::restore();
       player_stop();
       player_sfx_stop();
+
+      scene = setNextScene(nextScreen);
       scene->get()->init();
     }
 

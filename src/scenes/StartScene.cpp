@@ -21,6 +21,7 @@ StartScene::StartScene(const GBFS_FILE* _fs)
       menu(bn::unique_ptr{
           new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
   horse->showGun = false;
+  horse->setPosition({HORSE_X, HORSE_Y}, true);
 }
 
 void StartScene::init() {

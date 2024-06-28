@@ -27,6 +27,7 @@ class Menu {
   void update();
   void stop();
 
+  bool hasStarted() { return options.has_value(); }
   bool hasConfirmedOption() { return confirmedOption > -1; }
   int receiveConfirmedOption() {
     int option = confirmedOption;

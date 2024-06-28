@@ -28,14 +28,14 @@ class Scene {
 
   GameState::Screen getScreen() { return screen; }
   void setNextScreen(GameState::Screen _nextScreen) {
-    nextScreen = _nextScreen;
+    ___nextScreen = _nextScreen;
   }
-  bool hasNextScreen() { return nextScreen != GameState::Screen::NO; }
-  GameState::Screen getNextScreen() { return nextScreen; }
+  bool hasNextScreen() { return ___nextScreen != GameState::Screen::NO; }
+  GameState::Screen getNextScreen() { return ___nextScreen; }
 
  protected:
   GameState::Screen screen;
-  GameState::Screen nextScreen;
+  GameState::Screen ___nextScreen = GameState::Screen::NO;
   const GBFS_FILE* fs;
 };
 

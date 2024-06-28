@@ -7,23 +7,17 @@
 
 const unsigned TARGET_BEAT_MS = 2000;
 
-CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
+CalibrationScene::CalibrationScene(const GBFS_FILE* _fs,
+                                   GameState::Screen _nextScreen)
     : UIScene(GameState::Screen::CALIBRATION, _fs),
-      horse(bn::unique_ptr{new Horse({88, 34})}) {}
+      horse(bn::unique_ptr{new Horse({88, 34})}),
+      nextScreen(_nextScreen) {}
 
 void CalibrationScene::init() {
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
-  bn::vector<bn::string<64>, 2> strs;
-  strs.push_back("Emulators require some calibration.");
-  strs.push_back("Are you using an |emulator|?");
-  write(strs);
-
-  // player_play("calibrate_test.gsm");
-  // player_setLoop(true);
-
-  // showInstructions();
+  showInstructions();
 }
 
 void CalibrationScene::update() {
@@ -31,11 +25,11 @@ void CalibrationScene::update() {
 
   if (hasFinishedWriting) {
     hasFinishedWriting = false;
-
-    bn::vector<Menu::Option, 10> options;
-    options.push_back(Menu::Option{.text = "Yes"});
-    options.push_back(Menu::Option{.text = "No", .bDefault = true});
-    ask(options);
+    onFinishWriting();
+  }
+  if (menu->hasConfirmedOption()) {
+    auto confirmedOption = menu->receiveConfirmedOption();
+    onConfirmedOption(confirmedOption);
   }
 
   menu->update();
@@ -72,11 +66,39 @@ void CalibrationScene::update() {
   }
 }
 
+void CalibrationScene::onFinishWriting() {
+  switch (state) {
+    case CalibrationState::INTRO: {
+      bn::vector<Menu::Option, 10> options;
+      options.push_back(Menu::Option{.text = "Yes"});
+      options.push_back(Menu::Option{.text = "No", .bDefault = true});
+      ask(options);
+    }
+    default: {
+    }
+  }
+}
+
+void CalibrationScene::onConfirmedOption(int option) {
+  switch (state) {
+    case CalibrationState::INTRO: {
+      if (option == 0) {  // Yes
+
+      } else {  // No
+        measuredLag = 0;
+        saveAndGoToGame();
+      }
+    }
+    default: {
+    }
+  }
+}
+
 void CalibrationScene::showInstructions() {
-  textSprites.clear();
-  textGenerator.generate(0, -16, "Audio lag calibration", textSprites);
-  textGenerator.generate(0, 16, "Si estás emulando, tocá A", textSprites);
-  textGenerator.generate(0, 32, "Si no, tocá B", textSprites);
+  bn::vector<bn::string<64>, 2> strs;
+  strs.push_back("Emulators require some calibration.");
+  strs.push_back("Are you using an |emulator|?");
+  write(strs);
 }
 
 void CalibrationScene::start() {
@@ -105,7 +127,7 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
   SaveFile::save();
 
-  setNextScreen(GameState::Screen::DJ);
+  setNextScreen(nextScreen);
 }
 
 void CalibrationScene::cancel() {
