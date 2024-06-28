@@ -34,6 +34,7 @@ class UIScene : public Scene {
   bool isWriting = false;
   bool hasFinishedWriting = false;
   bool hasMoreMessages = false;
+  bool wantsToContinue = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
 

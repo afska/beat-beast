@@ -41,6 +41,9 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
 }
 
 void UIScene::update() {
+  if (!isWriting && hasMoreMessages && bn::keypad::a_pressed())
+    wantsToContinue = true;
+
   pixelBlink->update();
   updateVideo();
   autoWrite();
@@ -130,6 +133,8 @@ void UIScene::startWriting() {
 }
 
 void UIScene::stopWriting() {
+  wantsToContinue = false;
+
   talkbox1.reset();
   talkbox2.reset();
   talkbox3.reset();

@@ -13,7 +13,8 @@ class CalibrationScene : public UIScene {
   void update() override;
 
  private:
-  enum CalibrationState { INTRO, INSTRUCTIONS, MEASURING, REVIEWING };
+  enum CalibrationState { INTRO, INSTRUCTIONS, MEASURING, REVIEWING, ERROR };
+  enum CalibrationError { TOO_EARLY, DIDNT_PRESS };
 
   bn::unique_ptr<Horse> horse;
   GameState::Screen nextScreen;
@@ -22,7 +23,9 @@ class CalibrationScene : public UIScene {
   CalibrationState state = INTRO;
 
   void onFinishWriting();
+  void onContinue();
   void onConfirmedOption(int option);
+  void onError(CalibrationError error);
 
   void showIntro();
   void showInstructions();
