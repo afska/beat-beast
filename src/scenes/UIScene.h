@@ -42,6 +42,8 @@ class UIScene : public Scene {
   int extraSpeed = 0;
   bn::unique_ptr<Menu> menu;
 
+  virtual bool canSkipAutoWrite() { return true; }
+
   void write(bn::vector<bn::string<64>, 2> lines,
              bool _hasMoreMessages = false);
   void ask(bn::vector<Menu::Option, 32> options,
@@ -57,6 +59,7 @@ class UIScene : public Scene {
   void startWriting();
   void stopWriting();
   void autoWrite();
+  void finishAutoWrite();
   bn::string<64> removeSeparator(bn::string<64> str, char separator);
 };
 

@@ -42,6 +42,9 @@ class CalibrationScene : public UIScene {
   void finish();
   void test();
   void saveAndGoToGame();
+
+ protected:
+  bool canSkipAutoWrite() override { return state != MEASURING; }
 };
 
 #endif  // CALIBRATION_SCENE_H

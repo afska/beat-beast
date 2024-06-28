@@ -74,7 +74,6 @@ void CalibrationScene::update() {
     onConfirmedOption(confirmedOption);
   }
 
-  menu->update();
   horse->update();
 }
 

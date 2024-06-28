@@ -43,6 +43,15 @@ void UIScene::update() {
   if (!isWriting && hasMoreMessages && bn::keypad::a_pressed())
     wantsToContinue = true;
 
+  if (canSkipAutoWrite() && isWriting &&
+      (bn::keypad::a_pressed() || bn::keypad::b_pressed())) {
+    for (auto& sprite : textSprites)
+      sprite.set_visible(true);
+    characterIndex = textSprites.size();
+    finishAutoWrite();
+  }
+
+  menu->update();
   pixelBlink->update();
   updateVideo();
   autoWrite();
@@ -158,17 +167,20 @@ void UIScene::autoWrite() {
 
   textSprites[characterIndex].set_visible(true);
   characterIndex++;
-  if ((int)characterIndex == textSprites.size()) {
-    characterIndex = 0;
-    isWriting = false;
-    hasFinishedWriting = true;
-    if (hasMoreMessages) {
-      continueIcon = bn::sprite_items::ui_chat.create_sprite(
-          Math::toAbsTopLeft({222, 139}, 16, 16));
-      continueIcon->set_mosaic_enabled(true);
-      pixelBlink->blink();
-      player_sfx_play(SFX_QUESTION);
-    }
+  if ((int)characterIndex == textSprites.size())
+    finishAutoWrite();
+}
+
+void UIScene::finishAutoWrite() {
+  characterIndex = 0;
+  isWriting = false;
+  hasFinishedWriting = true;
+  if (hasMoreMessages) {
+    continueIcon = bn::sprite_items::ui_chat.create_sprite(
+        Math::toAbsTopLeft({222, 139}, 16, 16));
+    continueIcon->set_mosaic_enabled(true);
+    pixelBlink->blink();
+    player_sfx_play(SFX_QUESTION);
   }
 }
 
