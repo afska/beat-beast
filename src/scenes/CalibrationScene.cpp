@@ -43,9 +43,9 @@ void CalibrationScene::update() {
     bool isNewBeat = beat != lastBeat;
     lastBeat = beat;
     if (isNewBeat && beat > 0) {
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      bullets.push_back(bn::unique_ptr{
+          new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                     SpriteProvider::bullet(), 2)});
     }
 
     for (auto it = bullets.begin(); it != bullets.end();) {

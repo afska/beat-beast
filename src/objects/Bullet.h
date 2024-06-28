@@ -7,7 +7,8 @@ class Bullet : public RhythmicBullet {
  public:
   Bullet(bn::fixed_point initialPosition,
          bn::fixed_point _direction,
-         bn::sprite_item _bullet);
+         bn::sprite_item _bullet,
+         bn::fixed scale = 1);
 
   bn::fixed_point getPosition() { return sprite.position(); }
   bool update(int msecs,
