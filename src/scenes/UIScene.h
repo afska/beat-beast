@@ -47,7 +47,8 @@ class UIScene : public Scene {
   void ask(bn::vector<Menu::Option, 32> options,
            bn::fixed scale = 1,
            bn::fixed positionX = 0,
-           bn::fixed positionY = 0);
+           bn::fixed positionY = 0,
+           bool withSound = true);
   void closeMenu(bool withSound = true);
   void closeText();
 

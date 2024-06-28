@@ -3,6 +3,7 @@
 
 #include "UIScene.h"
 
+#include "../objects/Bullet.h"
 #include "../objects/Horse.h"
 
 class CalibrationScene : public UIScene {
@@ -28,6 +29,7 @@ class CalibrationScene : public UIScene {
   int lastBeat = 0;
   int measuredLag = 0;
   CalibrationState state = INTRO;
+  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
 
   void onFinishWriting();
   void onContinue();

@@ -1,7 +1,9 @@
 #include "CalibrationScene.h"
 
+#include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
+#include "../utils/Math.h"
 
 #include "bn_keypad.h"
 
@@ -33,18 +35,40 @@ void CalibrationScene::update() {
       if (bn::keypad::a_pressed())
         finish();
     }
+  } else if (state == TESTING) {
+    const int BPM = 125;
+    const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
+    int msecs = PlaybackState.msecs - measuredLag;
+    int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);
+    bool isNewBeat = beat != lastBeat;
+    lastBeat = beat;
+    if (isNewBeat && beat > 0) {
+      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                                  horse->getShootingDirection(),
+                                                  SpriteProvider::bullet())});
+    }
+
+    for (auto it = bullets.begin(); it != bullets.end();) {
+      auto bullet = it->get();
+      bool isOut = bullet->update(msecs, false, horse->getCenteredPosition());
+
+      if (isOut)
+        it = bullets.erase(it);
+      else
+        ++it;
+    }
   }
-  if (PlaybackState.hasFinished && state == MEASURING)
-    onError(CalibrationError::DIDNT_PRESS);
 
   if (hasFinishedWriting) {
     hasFinishedWriting = false;
     onFinishWriting();
   }
+
   if (wantsToContinue) {
     wantsToContinue = false;
     onContinue();
   }
+
   if (menu->hasConfirmedOption()) {
     auto confirmedOption = menu->receiveConfirmedOption();
     onConfirmedOption(confirmedOption);
@@ -52,36 +76,6 @@ void CalibrationScene::update() {
 
   menu->update();
   horse->update();
-
-  return;
-  switch (state) {
-    case INTRO: {
-      if (bn::keypad::a_pressed()) {
-        start();
-      } else if (bn::keypad::b_pressed()) {
-        measuredLag = 0;
-        saveAndGoToGame();
-      }
-
-      break;
-    }
-    case MEASURING: {
-      if (bn::keypad::a_pressed())
-        finish();
-
-      break;
-    }
-    case REVIEWING: {
-      if (bn::keypad::a_pressed())
-        saveAndGoToGame();
-      else if (bn::keypad::b_pressed())
-        showIntro();
-
-      break;
-    }
-    default: {
-    }
-  }
 }
 
 void CalibrationScene::onFinishWriting() {
@@ -98,7 +92,7 @@ void CalibrationScene::onFinishWriting() {
       options.push_back(Menu::Option{.text = "Yes, save"});
       options.push_back(Menu::Option{.text = "No, retry"});
       options.push_back(Menu::Option{.text = "No, cancel", .bDefault = true});
-      ask(options, 1.5, 71, -32);
+      ask(options, 1.5, 71, -32, false);
       break;
     }
     case CalibrationState::ERROR: {
@@ -238,13 +232,14 @@ void CalibrationScene::finish() {
 void CalibrationScene::test() {
   state = TESTING;
 
+  lastBeat = 0;
   player_play(SOUND_CALIBRATE_TEST);
   player_setLoop(true);
 
   bn::vector<bn::string<64>, 2> strs;
   strs.push_back("Does this look right?");
-  strs.push_back("I should be jumping on beats.");
-  write(strs, true);
+  strs.push_back("I'll try to shoot on beats.");
+  write(strs);
 }
 
 void CalibrationScene::saveAndGoToGame() {
