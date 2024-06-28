@@ -31,6 +31,7 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> icon;
   bn::vector<bn::string<64>, 2> textLines;
   bool isWriting = false;
+  bool hasFinishedWriting = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
 
@@ -39,9 +40,13 @@ class UIScene : public Scene {
   bn::unique_ptr<Menu> menu;
 
   void write(bn::vector<bn::string<64>, 2> lines);
+  void ask(bn::vector<Menu::Option, 32> options);
+  void closeText();
 
  private:
   void updateVideo();
+  void startWriting();
+  void stopWriting();
   void autoWrite();
   bn::string<64> removeSeparator(bn::string<64> str, char separator);
 };

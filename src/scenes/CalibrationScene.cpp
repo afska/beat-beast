@@ -16,16 +16,12 @@ void CalibrationScene::init() {
   horse->aim({-1, 0});
 
   bn::vector<bn::string<64>, 2> strs;
-  strs.push_back("Emulators require some |calibration|.");
-  strs.push_back("Are you using an emulator?");
+  strs.push_back("Emulators require some calibration.");
+  strs.push_back("Are you using an |emulator|?");
   write(strs);
 
-  bn::vector<Menu::Option, 10> options;
-  options.push_back(Menu::Option{.text = "Yes"});
-  options.push_back(Menu::Option{.text = "No"});
-  menu->start(options, true, 0.5, 0.5);
-  player_play("calibrate_test.gsm");
-  player_setLoop(true);
+  // player_play("calibrate_test.gsm");
+  // player_setLoop(true);
 
   // showInstructions();
 }
@@ -33,6 +29,16 @@ void CalibrationScene::init() {
 void CalibrationScene::update() {
   UIScene::update();
 
+  if (hasFinishedWriting) {
+    hasFinishedWriting = false;
+
+    bn::vector<Menu::Option, 10> options;
+    options.push_back(Menu::Option{.text = "Yes"});
+    options.push_back(Menu::Option{.text = "No", .bDefault = true});
+    ask(options);
+  }
+
+  menu->update();
   horse->update();
 
   return;

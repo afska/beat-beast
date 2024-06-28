@@ -21,20 +21,88 @@
 #define MARGIN_Y 16
 #define OFFSET_Y 0
 
+#define SFX_QUESTION "menu_question.pcm"
+
 UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
       textGenerator(common_variable_8x16_sprite_font),
       textGeneratorAccent(common_variable_8x16_sprite_font_accent),
       menuTextGenerator(common_fixed_8x16_sprite_font),
       menuTextGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
       menu(bn::unique_ptr{
           new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
   textGenerator.set_one_sprite_per_character(true);
   textGeneratorAccent.set_one_sprite_per_character(true);
 
   bn::blending::set_transparency_alpha(0.5);
+}
 
+void UIScene::update() {
+  pixelBlink->update();
+  updateVideo();
+  autoWrite();
+}
+
+void UIScene::write(bn::vector<bn::string<64>, 2> _lines) {
+  startWriting();
+
+  textSprites.clear();
+  characterIndex = 0;
+  characterWait = true;
+
+  textLines = _lines;
+  isWriting = true;
+
+  auto y = OFFSET_Y + 39;
+  for (auto& line : textLines) {
+    int baseX = -textGenerator.width(removeSeparator(line, SEPARATOR)) / 2;
+    auto lineView = bn::string_view(line);
+    int cursorI = 0;
+    unsigned cursorX = 0;
+    bool accent = false;
+
+    for (int i = 0; i <= line.size(); i++) {
+      if (i == line.size() || line[i] == SEPARATOR) {
+        auto part = lineView.substr(cursorI, bn::max(i - cursorI, 1));
+        (accent ? textGeneratorAccent : textGenerator)
+            .generate(baseX + cursorX, y, part, textSprites);
+        cursorI = i + 1;
+        cursorX += textGenerator.width(part);
+        accent = !accent;
+      }
+    }
+    y += MARGIN_Y;
+  }
+  for (auto& sprite : textSprites)
+    sprite.set_visible(false);
+}
+
+void UIScene::ask(bn::vector<Menu::Option, 32> options) {
+  menu->start(options, true, 0.1, 1);
+  player_sfx_play(SFX_QUESTION);
+  pixelBlink->blink();
+}
+
+void UIScene::closeText() {
+  hasFinishedWriting = false;
+  stopWriting();
+  textSprites.clear();
+}
+
+void UIScene::updateVideo() {
+  background.reset();
+  background = UIVideo::getFrame(videoFrame)
+                   .create_bg((256 - Math::SCREEN_WIDTH) / 2,
+                              (256 - Math::SCREEN_HEIGHT) / 2);
+  background.get()->set_blending_enabled(false);
+  extraSpeed = bn::max(extraSpeed - 1, 0);
+  videoFrame += 1 + extraSpeed / 2;
+  if (videoFrame >= 10)
+    videoFrame = 0;
+}
+
+void UIScene::startWriting() {
   talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(
       Math::toAbsTopLeft({0, OFFSET_Y + 96}, 64, 64));
   talkbox2 = bn::sprite_items::ui_talkbox23.create_sprite(
@@ -51,54 +119,12 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       Math::toAbsTopLeft({4, OFFSET_Y + 98}, 16, 16));
 }
 
-void UIScene::update() {
-  updateVideo();
-  autoWrite();
-}
-
-void UIScene::write(bn::vector<bn::string<64>, 2> _lines) {
-  textSprites.clear();
-  characterIndex = 0;
-  characterWait = true;
-
-  textLines = _lines;
-  isWriting = true;
-
-  auto y = OFFSET_Y + 39;
-  for (auto& line : textLines) {
-    int baseX = -textGenerator.width(removeSeparator(line, SEPARATOR)) / 2;
-    auto lineView = bn::string_view(line);
-    int cursorI = 0;
-    unsigned cursorX = 0;
-    bool accent = false;
-
-    for (int i = 0; i < line.size(); i++) {
-      if (line[i] == SEPARATOR || i == line.size() - 1) {
-        auto part = lineView.substr(cursorI, bn::max(i - cursorI, 1));
-        (accent ? textGeneratorAccent : textGenerator)
-            .generate(baseX + cursorX, y, part, textSprites);
-        cursorI = i + 1;
-        cursorX += textGenerator.width(part);
-        accent = !accent;
-      }
-    }
-    y += MARGIN_Y;
-  }
-  for (auto& sprite : textSprites)
-    sprite.set_visible(false);
-}
-
-void UIScene::updateVideo() {
-  background.reset();
-  background = UIVideo::getFrame(videoFrame)
-                   .create_bg((256 - Math::SCREEN_WIDTH) / 2,
-                              (256 - Math::SCREEN_HEIGHT) / 2);
-  background.get()->set_mosaic_enabled(true);
-  background.get()->set_blending_enabled(false);
-  extraSpeed = bn::max(extraSpeed - 1, 0);
-  videoFrame += 1 + extraSpeed / 2;
-  if (videoFrame >= 10)
-    videoFrame = 0;
+void UIScene::stopWriting() {
+  talkbox1.reset();
+  talkbox2.reset();
+  talkbox3.reset();
+  talkbox4.reset();
+  icon.reset();
 }
 
 void UIScene::autoWrite() {
@@ -114,6 +140,7 @@ void UIScene::autoWrite() {
   if ((int)characterIndex == textSprites.size()) {
     characterIndex = 0;
     isWriting = false;
+    hasFinishedWriting = true;
   }
 }
 

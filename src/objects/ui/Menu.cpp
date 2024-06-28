@@ -22,17 +22,19 @@ Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
 
 void Menu::start(bn::vector<Option, 32> _options,
                  bool withSquare,
-                 bn::fixed scaleX,
-                 bn::fixed scaleY,
+                 bn::fixed initialScale,
+                 bn::fixed _targetScale,
                  bn::fixed _positionX,
                  bn::fixed _positionY) {
   options = _options;
   selectedOption = 0;
   confirmedOption = -1;
+  targetScale = _targetScale;
   positionX = _positionX;
   positionY = _positionY;
 
   square.set_visible(withSquare);
+  square.set_scale(initialScale);
 
   textSprites.clear();
   normalTextGenerator.set_z_order(-2);
@@ -41,14 +43,18 @@ void Menu::start(bn::vector<Option, 32> _options,
   accentTextGenerator.set_bg_priority(0);
   normalTextGenerator.set_center_alignment();
   accentTextGenerator.set_center_alignment();
-  square.set_horizontal_scale(scaleX);
-  square.set_vertical_scale(scaleY);
   square.set_position(positionX, positionY);
 
   draw();
 }
 
 void Menu::update() {
+  if (square.horizontal_scale() < targetScale) {
+    square.set_scale(square.horizontal_scale() + 0.25);
+    if (square.horizontal_scale() > targetScale)
+      square.set_scale(targetScale);
+  }
+
   if (bn::keypad::down_pressed()) {
     if ((int)selectedOption < options->size() - 1) {
       selectedOption++;
@@ -61,6 +67,17 @@ void Menu::update() {
       player_sfx_play(SFX_MOVE);
       draw();
     }
+  } else if (bn::keypad::b_pressed()) {
+    int bDefaultIndex = -1;
+    for (int i = 0; i < options->size(); i++) {
+      if (options->at(i).bDefault)
+        bDefaultIndex = i;
+    }
+    if (bDefaultIndex > -1) {
+      selectedOption = bDefaultIndex;
+      player_sfx_play(SFX_MOVE);
+      draw();
+    }
   } else if (bn::keypad::a_pressed()) {
     player_sfx_play(SFX_CLICK);
     confirmedOption = selectedOption;
@@ -70,6 +87,7 @@ void Menu::update() {
 void Menu::stop() {
   square.set_visible(false);
   textSprites.clear();
+  confirmedOption = -1;
 }
 
 void Menu::draw() {
@@ -82,4 +100,6 @@ void Menu::draw() {
     generator.generate(positionX, positionY + startY + i * 16,
                        options->at(i).text, textSprites);
   }
+  for (auto& sprite : textSprites)
+    sprite.set_mosaic_enabled(true);
 }
