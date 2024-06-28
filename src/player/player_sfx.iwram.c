@@ -12,6 +12,8 @@
 
 #include "../utils/gbfs/gbfs.h"
 
+#define BUFFER_SIZE 608
+
 #define TIMER_16MHZ 0
 #define FIFO_ADDR_A 0x040000a0
 #define CHANNEL_A_MUTE 0xfcff  /*0b1111110011111111*/
@@ -43,21 +45,24 @@ static bool is_paused = false;
 
 #define AS_MSECS AS_MSECS_PCM
 
-#define AUDIO_PROCESS(ON_STOP)                          \
-  did_run = true;                                       \
-  buffer = double_buffers[cur_buffer];                  \
-                                                        \
-  if (src != NULL) {                                    \
-    if (src_pos < src_len) {                            \
-      for (u32 i = 0; i < 608 / 4; i++)                 \
-        ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i]; \
-      src_pos += 608;                                   \
-      if (src_pos > src_len) {                          \
-        ON_STOP;                                        \
-      }                                                 \
-    } else {                                            \
-      ON_STOP;                                          \
-    }                                                   \
+#define AUDIO_PROCESS(ON_STOP)                                       \
+  did_run = true;                                                    \
+  buffer = double_buffers[cur_buffer];                               \
+                                                                     \
+  if (src != NULL) {                                                 \
+    if (src_pos < src_len) {                                         \
+      u32 pending_bytes = src_len - src_pos;                         \
+      u32 bytes_to_read =                                            \
+          pending_bytes < BUFFER_SIZE ? pending_bytes : BUFFER_SIZE; \
+      for (u32 i = 0; i < bytes_to_read / 4; i++)                    \
+        ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i];              \
+      src_pos += BUFFER_SIZE;                                        \
+      if (src_pos > src_len) {                                       \
+        ON_STOP;                                                     \
+      }                                                              \
+    } else {                                                         \
+      ON_STOP;                                                       \
+    }                                                                \
   }
 
 uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
@@ -65,7 +70,7 @@ static const GBFS_FILE* fs;
 static const unsigned char* src = NULL;
 static u32 src_len = 0;
 static u32 src_pos = 0;
-static s8 double_buffers[2][608] __attribute__((aligned(4)));
+static s8 double_buffers[2][BUFFER_SIZE] __attribute__((aligned(4)));
 static u32 cur_buffer = 0;
 static s8* buffer;
 
@@ -98,7 +103,7 @@ INLINE void stop() {
   src = NULL;
   for (u32 i = 0; i < 2; i++) {
     u32* bufferPtr = (u32*)double_buffers[i];
-    for (u32 j = 0; j < 608 / 4; j++)
+    for (u32 j = 0; j < BUFFER_SIZE / 4; j++)
       bufferPtr[j] = 0;
   }
 }

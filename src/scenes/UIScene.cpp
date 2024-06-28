@@ -95,7 +95,7 @@ void UIScene::ask(bn::vector<Menu::Option, 32> options,
 }
 
 void UIScene::closeMenu(bool withSound) {
-  if (withSound)
+  if (withSound && menu->hasStarted())
     player_sfx_play(SFX_QUESTION_CLOSE);
   menu->stop();
 }

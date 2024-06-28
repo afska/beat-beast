@@ -84,7 +84,7 @@ void Menu::update() {
       draw();
     }
   } else if (bn::keypad::a_pressed()) {
-    player_sfx_play(SFX_CLICK);
+    // player_sfx_play(SFX_CLICK);
     confirmedOption = selectedOption;
   }
 }

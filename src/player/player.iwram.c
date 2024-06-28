@@ -15,6 +15,8 @@
 #include "core/gsm.h"
 #include "core/private.h" /* for sizeof(struct gsm_state) */
 
+#define BUFFER_SIZE 608
+
 #define TIMER_16MHZ 0
 #define FIFO_ADDR_B 0x040000A4
 #define CHANNEL_B_MUTE 0xcfff   /*0b1100111111111111*/
@@ -69,7 +71,7 @@ static bool is_paused = false;
                                                                 \
   if (src != NULL) {                                            \
     if (src_pos < src_len) {                                    \
-      for (int i = 304 / 4; i > 0; i--) {                       \
+      for (int i = (BUFFER_SIZE / 2) / 4; i > 0; i--) {         \
         int cur_sample;                                         \
         if (decode_pos >= 160) {                                \
           if (src_pos < src_len)                                \
@@ -112,7 +114,7 @@ static u32 src_len = 0;
 static u32 src_pos = 0;
 static struct gsm_state decoder;
 static s16 out_samples[160];
-static s8 double_buffers[2][608] __attribute__((aligned(4)));
+static s8 double_buffers[2][BUFFER_SIZE] __attribute__((aligned(4)));
 static u32 decode_pos = 160, cur_buffer = 0;
 static s8* buffer;
 static int last_sample = 0;
@@ -154,7 +156,7 @@ INLINE void stop() {
   last_sample = 0;
   for (u32 i = 0; i < 2; i++) {
     u32* bufferPtr = (u32*)double_buffers[i];
-    for (u32 j = 0; j < 608 / 4; j++)
+    for (u32 j = 0; j < BUFFER_SIZE / 4; j++)
       bufferPtr[j] = 0;
   }
 }

@@ -4,6 +4,7 @@
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../player/player.h"
+#include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 #include "bn_blending.h"
@@ -41,6 +42,7 @@ void StartScene::update() {
   horse->update();
 
   menu->update();
+  player_sfx_stop();
   if (menu->hasConfirmedOption()) {
     auto confirmedOption = menu->receiveConfirmedOption();
     processMenuOption(confirmedOption);
@@ -73,6 +75,7 @@ void StartScene::updateVideo() {
   if (videoFrame >= 600)
     videoFrame = 0;
 }
+
 void StartScene::processMenuOption(int option) {
   switch (option) {
     case 0: {  // Start
