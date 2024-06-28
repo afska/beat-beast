@@ -85,14 +85,18 @@ void UIScene::write(bn::vector<bn::string<64>, 2> _lines,
     sprite.set_visible(false);
 }
 
-void UIScene::ask(bn::vector<Menu::Option, 32> options) {
-  menu->start(options, true, 0.1, 1);
+void UIScene::ask(bn::vector<Menu::Option, 32> options,
+                  bn::fixed scale,
+                  bn::fixed positionX,
+                  bn::fixed positionY) {
+  menu->start(options, true, true, 0.1, scale, positionX, positionY);
   player_sfx_play(SFX_QUESTION);
   pixelBlink->blink();
 }
 
-void UIScene::closeMenu() {
-  player_sfx_play(SFX_QUESTION_CLOSE);
+void UIScene::closeMenu(bool withSound) {
+  if (withSound)
+    player_sfx_play(SFX_QUESTION_CLOSE);
   menu->stop();
 }
 

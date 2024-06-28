@@ -20,6 +20,7 @@ class Menu {
 
   void start(bn::vector<Option, 32> _options,
              bool withSquare = true,
+             bool withBlending = false,
              bn::fixed initialScale = 1.5,
              bn::fixed _targetScale = 1.5,
              bn::fixed _positionX = 0,

@@ -13,7 +13,14 @@ class CalibrationScene : public UIScene {
   void update() override;
 
  private:
-  enum CalibrationState { INTRO, INSTRUCTIONS, MEASURING, REVIEWING, ERROR };
+  enum CalibrationState {
+    INTRO,
+    INSTRUCTIONS,
+    MEASURING,
+    REVIEWING,
+    TESTING,
+    ERROR
+  };
   enum CalibrationError { TOO_EARLY, DIDNT_PRESS };
 
   bn::unique_ptr<Horse> horse;
@@ -31,8 +38,8 @@ class CalibrationScene : public UIScene {
   void showInstructions();
   void start();
   void finish();
+  void test();
   void saveAndGoToGame();
-  void cancel();
 };
 
 #endif  // CALIBRATION_SCENE_H

@@ -22,6 +22,7 @@ Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
 
 void Menu::start(bn::vector<Option, 32> _options,
                  bool withSquare,
+                 bool withBlending,
                  bn::fixed initialScale,
                  bn::fixed _targetScale,
                  bn::fixed _positionX,
@@ -34,6 +35,7 @@ void Menu::start(bn::vector<Option, 32> _options,
   positionY = _positionY;
 
   square.set_visible(withSquare);
+  square.set_blending_enabled(withBlending);
   square.set_scale(initialScale);
 
   textSprites.clear();

@@ -44,8 +44,11 @@ class UIScene : public Scene {
 
   void write(bn::vector<bn::string<64>, 2> lines,
              bool _hasMoreMessages = false);
-  void ask(bn::vector<Menu::Option, 32> options);
-  void closeMenu();
+  void ask(bn::vector<Menu::Option, 32> options,
+           bn::fixed scale = 1,
+           bn::fixed positionX = 0,
+           bn::fixed positionY = 0);
+  void closeMenu(bool withSound = true);
   void closeText();
 
  private:

@@ -5,6 +5,9 @@
 
 #include "bn_keypad.h"
 
+#define SOUND_CALIBRATE "calibrate.gsm"
+#define SOUND_CALIBRATE_TEST "calibrate_test.gsm"
+
 const unsigned TARGET_BEAT_MS = 2000;
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs,
@@ -23,6 +26,14 @@ void CalibrationScene::init() {
 void CalibrationScene::update() {
   UIScene::update();
 
+  if (state == MEASURING) {
+    if (PlaybackState.hasFinished) {
+      onError(CalibrationError::DIDNT_PRESS);
+    } else {
+      if (bn::keypad::a_pressed())
+        finish();
+    }
+  }
   if (PlaybackState.hasFinished && state == MEASURING)
     onError(CalibrationError::DIDNT_PRESS);
 
@@ -64,7 +75,7 @@ void CalibrationScene::update() {
       if (bn::keypad::a_pressed())
         saveAndGoToGame();
       else if (bn::keypad::b_pressed())
-        cancel();
+        showIntro();
 
       break;
     }
@@ -82,6 +93,14 @@ void CalibrationScene::onFinishWriting() {
       ask(options);
       break;
     }
+    case CalibrationState::TESTING: {
+      bn::vector<Menu::Option, 10> options;
+      options.push_back(Menu::Option{.text = "Yes, save"});
+      options.push_back(Menu::Option{.text = "No, retry"});
+      options.push_back(Menu::Option{.text = "No, cancel", .bDefault = true});
+      ask(options, 1.5, 71, -32);
+      break;
+    }
     case CalibrationState::ERROR: {
       bn::vector<Menu::Option, 10> options;
       options.push_back(Menu::Option{.text = "Retry"});
@@ -97,11 +116,11 @@ void CalibrationScene::onFinishWriting() {
 void CalibrationScene::onContinue() {
   switch (state) {
     case CalibrationState::INSTRUCTIONS: {
-      bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("OK, press A in the |5th beat|!");
-      write(strs);
-
       start();
+      break;
+    }
+    case CalibrationState::REVIEWING: {
+      test();
       break;
     }
     default: {
@@ -118,6 +137,16 @@ void CalibrationScene::onConfirmedOption(int option) {
       } else {  // No
         measuredLag = 0;
         saveAndGoToGame();
+      }
+      break;
+    }
+    case CalibrationState::TESTING: {
+      if (option == 0) {  // Yes, save
+        saveAndGoToGame();
+      } else if (option == 1) {  // No, retry
+        start();
+      } else {  // No, cancel
+        showIntro();
       }
       break;
     }
@@ -145,12 +174,23 @@ void CalibrationScene::onError(CalibrationError error) {
       write(strs);
       break;
     }
+    case CalibrationError::TOO_EARLY: {
+      state = ERROR;
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("No!! You pressed |ahead| of time.");
+      strs.push_back("Do you want to |retry|?");
+      write(strs);
+      break;
+    }
     default: {
     }
   }
 }
 
 void CalibrationScene::showIntro() {
+  player_stop();
+  measuredLag = 0;
   state = INTRO;
 
   closeMenu();
@@ -172,20 +212,39 @@ void CalibrationScene::showInstructions() {
 void CalibrationScene::start() {
   state = MEASURING;
 
-  closeMenu();
-  player_play("calibrate.gsm");
+  closeMenu(false);
+  bn::vector<bn::string<64>, 2> strs;
+  strs.push_back("OK, press A in the |5th beat|!");
+  write(strs);
+
+  player_play(SOUND_CALIBRATE);
 }
 
 void CalibrationScene::finish() {
   state = REVIEWING;
 
-  player_setLoop(false);
   measuredLag = PlaybackState.msecs - TARGET_BEAT_MS;
 
-  textSprites.clear();
-  textGenerator.generate(
-      0, 0, "Audio lag medido: " + bn::to_string<32>(measuredLag), textSprites);
-  textGenerator.generate(0, 16, "A = Guardar, B = Repetir", textSprites);
+  if (measuredLag < 0) {
+    onError(CalibrationError::TOO_EARLY);
+  } else {
+    bn::vector<bn::string<64>, 2> strs;
+    strs.push_back("Measured audio lag: |" + bn::to_string<64>(measuredLag) +
+                   "| ms.");
+    write(strs, true);
+  }
+}
+
+void CalibrationScene::test() {
+  state = TESTING;
+
+  player_play(SOUND_CALIBRATE_TEST);
+  player_setLoop(true);
+
+  bn::vector<bn::string<64>, 2> strs;
+  strs.push_back("Does this look right?");
+  strs.push_back("I should be jumping on beats.");
+  write(strs, true);
 }
 
 void CalibrationScene::saveAndGoToGame() {
@@ -193,11 +252,4 @@ void CalibrationScene::saveAndGoToGame() {
   SaveFile::save();
 
   setNextScreen(nextScreen);
-}
-
-void CalibrationScene::cancel() {
-  player_stop();
-  measuredLag = 0;
-
-  showIntro();
 }
