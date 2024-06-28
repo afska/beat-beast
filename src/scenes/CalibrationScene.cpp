@@ -9,13 +9,14 @@
 
 #define SOUND_CALIBRATE "calibrate.gsm"
 #define SOUND_CALIBRATE_TEST "calibrate_test.gsm"
+#define HORSE_Y 34
 
 const unsigned TARGET_BEAT_MS = 2000;
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs,
                                    GameState::Screen _nextScreen)
     : UIScene(GameState::Screen::CALIBRATION, _fs),
-      horse(bn::unique_ptr{new Horse({88, 34})}),
+      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
       nextScreen(_nextScreen) {}
 
 void CalibrationScene::init() {
@@ -42,10 +43,14 @@ void CalibrationScene::update() {
     int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);
     bool isNewBeat = beat != lastBeat;
     lastBeat = beat;
-    if (isNewBeat && beat > 0) {
-      bullets.push_back(bn::unique_ptr{
-          new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                     SpriteProvider::bullet(), 2)});
+    if (isNewBeat) {
+      if (beat == 0) {
+        horse->jump();
+      } else if (beat > 0) {
+        bullets.push_back(bn::unique_ptr{
+            new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                       SpriteProvider::bullet(), 2)});
+      }
     }
 
     for (auto it = bullets.begin(); it != bullets.end();) {
@@ -74,6 +79,7 @@ void CalibrationScene::update() {
     onConfirmedOption(confirmedOption);
   }
 
+  horse->setPosition({horse->getPosition().x(), HORSE_Y}, false);
   horse->update();
 }
 
@@ -182,6 +188,7 @@ void CalibrationScene::onError(CalibrationError error) {
 }
 
 void CalibrationScene::showIntro() {
+  bullets.clear();
   player_stop();
   measuredLag = 0;
   state = INTRO;
@@ -205,6 +212,7 @@ void CalibrationScene::showInstructions() {
 void CalibrationScene::start() {
   state = MEASURING;
 
+  bullets.clear();
   closeMenu(false);
   bn::vector<bn::string<64>, 2> strs;
   strs.push_back("OK, press A in the |5th beat|!");
@@ -231,7 +239,7 @@ void CalibrationScene::finish() {
 void CalibrationScene::test() {
   state = TESTING;
 
-  lastBeat = 0;
+  lastBeat = -1;
   player_play(SOUND_CALIBRATE_TEST);
   player_setLoop(true);
 

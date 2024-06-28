@@ -26,7 +26,7 @@ class CalibrationScene : public UIScene {
 
   bn::unique_ptr<Horse> horse;
   GameState::Screen nextScreen;
-  int lastBeat = 0;
+  int lastBeat = -1;
   int measuredLag = 0;
   CalibrationState state = INTRO;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
