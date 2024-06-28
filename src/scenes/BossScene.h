@@ -40,6 +40,9 @@ class BossScene : public Scene {
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::optional<bn::unique_ptr<AutoFire>> autoFire;
+  bn::optional<bn::sprite_ptr> deadHorse;
+  bn::optional<bn::sprite_ptr> progress;
+  bn::optional<bn::sprite_ptr> progressIndicator;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::unique_ptr<Menu> menu;
   bn::string<32> lastSfxFileName = "";
@@ -50,6 +53,7 @@ class BossScene : public Scene {
   bool isNewBeatNow = false;
   bool isNewTickNow = false;
   bool isPaused = false;
+  bool isDead = false;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
@@ -71,6 +75,7 @@ class BossScene : public Scene {
   void playSfx(bn::string<32> sfxFileName, bool loop = false);
   void addExplosion(bn::fixed_point position);
   void sufferDamage(unsigned amount);
+  void die();
   void processMovementInput(bn::fixed horseY);
   void processAimInput(bool aim360 = false);
   void updateCommonSprites();

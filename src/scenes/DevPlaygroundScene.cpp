@@ -34,7 +34,7 @@ void DevPlaygroundScene::init() {
                                bn::fixed(16));
   physWorld->addObject(newObj);
 
-  player_play("testboss.gsm");
+  // player_play("testboss.gsm");
 }
 
 void DevPlaygroundScene::update() {

@@ -6,6 +6,8 @@ module.exports = class Chart {
     this.metadata = metadata;
     this.header = header;
     this.content = content;
+
+    this._calculateLastTimestamp();
   }
 
   /**
@@ -174,6 +176,19 @@ module.exports = class Chart {
   /** Return finite BPM changes, ignoring fast-bpm warps. */
   _getFiniteBpms() {
     return [{ key: 0, value: this.metadata.bpm }];
+  }
+
+  /**
+   * This is used for the complexity index.
+   * If #LASTSECONDHINT is not provided, last event's timestamp will be used.
+   */
+  _calculateLastTimestamp() {
+    try {
+      this.lastTimestamp = _.last(this.events).timestamp;
+    } catch (e) {
+      console.error(e);
+      throw new Error("event_parsing_failed");
+    }
   }
 };
 

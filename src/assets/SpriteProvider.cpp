@@ -9,6 +9,7 @@
 #include "bn_sprite_items_gun.h"
 #include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_menu.h"
+#include "bn_sprite_items_progress.h"
 
 #include "bn_sprite_items_start_3dhorse.h"
 
@@ -55,6 +56,10 @@ bn::sprite_item SpriteProvider::menu() {
 
 bn::sprite_item SpriteProvider::autofire() {
   return bn::sprite_items::autofire;
+}
+
+bn::sprite_item SpriteProvider::progress() {
+  return bn::sprite_items::progress;
 }
 
 bn::sprite_item SpriteProvider::hitbox() {

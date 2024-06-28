@@ -215,7 +215,7 @@ void CalibrationScene::start() {
   bullets.clear();
   closeMenu(false);
   bn::vector<bn::string<64>, 2> strs;
-  strs.push_back("OK, press A in the |5th beat|!");
+  strs.push_back("OK, press A on the |5th beat|!");
   write(strs);
 
   player_play(SOUND_CALIBRATE);

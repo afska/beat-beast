@@ -11,6 +11,7 @@
 
 #define LIFE_PLAYER 30
 #define SFX_PAUSE "menu_pause.pcm"
+#define SFX_LOSE "stopdj.pcm"
 
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".gsm";
@@ -43,11 +44,13 @@ void BossScene::init() {
 }
 
 void BossScene::update() {
-  if (isPaused) {
+  pixelBlink->update();
+
+  if (isPaused || isDead) {
     if (bn::blending::fade_alpha() < 0.7)
       bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
     menu->update();
-    if (bn::keypad::start_pressed()) {
+    if (bn::keypad::start_pressed() && !isDead) {
       unpause();
       return;
     }
@@ -61,7 +64,6 @@ void BossScene::update() {
 
   updateChartReader();
   updateBossFight();
-  pixelBlink->update();
 
   if (bn::keypad::start_pressed() && !isPaused)
     pause();
@@ -77,19 +79,44 @@ void BossScene::addExplosion(bn::fixed_point position) {
   explosions.push_back(bn::unique_ptr{new Explosion(position)});
 }
 
-bool dead = false;  // TODO: REMOVE AND MAKE PROPER DEATH SCENE
-
 void BossScene::sufferDamage(unsigned amount) {
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
 
   horse->hurt();
-  bool isDead = lifeBar->setLife(lifeBar->getLife() - amount);
-  if (isDead && !dead) {
-    dead = true;
-    textGenerator.set_center_alignment();
-    textGenerator.generate(-30, -30, "YOU LOSE!", textSprites);
-  }
+  bool dead = lifeBar->setLife(lifeBar->getLife() - amount);
+  if (dead && !isDead)
+    die();
+}
+
+void BossScene::die() {
+  isDead = true;
+
+  auto msecs = PlaybackState.msecs;
+  auto total = chartReader->getSong()->duration;
+  int progressX = msecs * 64 / total - 32;
+
+  player_stop();
+  player_sfx_play(SFX_LOSE);
+  pixelBlink->blink();
+
+  deadHorse = SpriteProvider::horse().create_sprite(2, -53, 13);
+  deadHorse->set_z_order(-2);
+  deadHorse->set_bg_priority(0);
+
+  progress = SpriteProvider::progress().create_sprite(0, 64 + 8 - 36);
+  progress->set_z_order(-2);
+  progress->set_bg_priority(0);
+
+  progressIndicator =
+      SpriteProvider::iconHorse().create_sprite(8 + progressX, 64 + 4 - 36);
+  progressIndicator->set_z_order(-2);
+  progressIndicator->set_bg_priority(0);
+
+  bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Retry"});
+  options.push_back(Menu::Option{.text = "Quit"});
+  menu->start(options);
 }
 
 void BossScene::processMovementInput(bn::fixed horseY) {
@@ -220,6 +247,23 @@ void BossScene::unpause() {
 }
 
 void BossScene::processMenuOption(int option) {
+  if (isDead) {
+    switch (option) {
+      case 0: {  // Retry
+        setNextScreen(screen);
+        break;
+      }
+      case 1: {  // Quit
+        setNextScreen(GameState::Screen::START);
+        break;
+      }
+      default: {
+      }
+    }
+
+    return;
+  }
+
   switch (option) {
     case 0: {  // Continue
       unpause();

@@ -20,6 +20,7 @@ module.exports = class LevelSerializer {
     return buffer
       .UInt8(metadata.bpm)
       .UInt8(metadata.tickcount)
+      .UInt32LE(normalizeInt(charts[0].lastTimestamp))
       .UInt32LE(oneDivBeatDurationMs)
       .ChartArray(charts).result;
   }

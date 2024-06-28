@@ -14,6 +14,7 @@ module.exports = (name, filePath, outputPath) => {
       metadata: it.metadata,
       header: it.header,
       events: it.events,
+      lastTimestamp: it.lastTimestamp,
     })),
   };
 
