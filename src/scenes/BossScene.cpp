@@ -31,8 +31,7 @@ BossScene::BossScene(GameState::Screen _screen,
                                          SpriteProvider::lifebarFill())}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
-      menu(bn::unique_ptr{
-          new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
+      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =

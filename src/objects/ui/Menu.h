@@ -12,11 +12,12 @@ class Menu {
   struct Option {
     bn::string<32> text;
     bool bDefault = false;
+    int startSpriteIndex = 0;
+    int endSpriteIndex = 0;
   };
 
   Menu(bn::sprite_text_generator _normalTextGenerator,
-       bn::sprite_text_generator _accentTextGenerator,
-       bn::vector<bn::sprite_ptr, 64> _textSprites);
+       bn::sprite_text_generator _accentTextGenerator);
 
   void start(bn::vector<Option, 32> _options,
              bool withSquare = true,
@@ -39,7 +40,8 @@ class Menu {
  private:
   bn::sprite_text_generator normalTextGenerator;
   bn::sprite_text_generator accentTextGenerator;
-  bn::vector<bn::sprite_ptr, 64> textSprites;
+  bn::vector<bn::sprite_ptr, 64> normalTextSprites;
+  bn::vector<bn::sprite_ptr, 64> accentTextSprites;
   bn::optional<bn::vector<Option, 10>> options;
   bn::sprite_ptr square;
   unsigned selectedOption = 0;
@@ -48,7 +50,9 @@ class Menu {
   bn::fixed positionX = 0;
   bn::fixed positionY = 0;
 
-  void draw();
+  void draw(bn::sprite_text_generator& generator,
+            bn::vector<bn::sprite_ptr, 64>& target);
+  void refresh();
 };
 
 #endif  // MENU_H

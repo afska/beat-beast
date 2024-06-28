@@ -4,7 +4,6 @@
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../player/player.h"
-#include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 #include "bn_blending.h"
@@ -19,8 +18,7 @@ StartScene::StartScene(const GBFS_FILE* _fs)
       horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      menu(bn::unique_ptr{
-          new Menu(textGenerator, textGeneratorAccent, textSprites)}) {
+      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
 }
@@ -42,7 +40,6 @@ void StartScene::update() {
   horse->update();
 
   menu->update();
-  player_sfx_stop();
   if (menu->hasConfirmedOption()) {
     auto confirmedOption = menu->receiveConfirmedOption();
     processMenuOption(confirmedOption);
