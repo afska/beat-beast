@@ -17,7 +17,7 @@ void CalibrationScene::init() {
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
-  showInstructions();
+  showIntro();
 }
 
 void CalibrationScene::update() {
@@ -38,9 +38,10 @@ void CalibrationScene::update() {
   return;
   switch (state) {
     case INTRO: {
-      if (bn::keypad::a_pressed())
+      if (bn::keypad::a_pressed()) {
+        closeMenu();
         start();
-      else if (bn::keypad::b_pressed()) {
+      } else if (bn::keypad::b_pressed()) {
         measuredLag = 0;
         saveAndGoToGame();
       }
@@ -73,6 +74,7 @@ void CalibrationScene::onFinishWriting() {
       options.push_back(Menu::Option{.text = "Yes"});
       options.push_back(Menu::Option{.text = "No", .bDefault = true});
       ask(options);
+      break;
     }
     default: {
     }
@@ -83,22 +85,35 @@ void CalibrationScene::onConfirmedOption(int option) {
   switch (state) {
     case CalibrationState::INTRO: {
       if (option == 0) {  // Yes
-
+        closeMenu();
+        showInstructions();
       } else {  // No
         measuredLag = 0;
         saveAndGoToGame();
       }
+      break;
     }
     default: {
     }
   }
 }
 
-void CalibrationScene::showInstructions() {
+void CalibrationScene::showIntro() {
+  state = INTRO;
+
   bn::vector<bn::string<64>, 2> strs;
   strs.push_back("Emulators require some calibration.");
   strs.push_back("Are you using an |emulator|?");
   write(strs);
+}
+
+void CalibrationScene::showInstructions() {
+  state = INSTRUCTIONS;
+
+  bn::vector<bn::string<64>, 2> strs;
+  strs.push_back("You will hear 5 beats.");
+  strs.push_back("Press A in the |5th beat|.");
+  write(strs, true);
 }
 
 void CalibrationScene::start() {
@@ -133,7 +148,6 @@ void CalibrationScene::saveAndGoToGame() {
 void CalibrationScene::cancel() {
   player_stop();
   measuredLag = 0;
-  state = INTRO;
 
-  showInstructions();
+  showIntro();
 }

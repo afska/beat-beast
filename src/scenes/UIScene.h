@@ -29,9 +29,11 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> talkbox3;
   bn::optional<bn::sprite_ptr> talkbox4;
   bn::optional<bn::sprite_ptr> icon;
+  bn::optional<bn::sprite_ptr> continueIcon;
   bn::vector<bn::string<64>, 2> textLines;
   bool isWriting = false;
   bool hasFinishedWriting = false;
+  bool hasMoreMessages = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
 
@@ -39,8 +41,10 @@ class UIScene : public Scene {
   int extraSpeed = 0;
   bn::unique_ptr<Menu> menu;
 
-  void write(bn::vector<bn::string<64>, 2> lines);
+  void write(bn::vector<bn::string<64>, 2> lines,
+             bool _hasMoreMessages = false);
   void ask(bn::vector<Menu::Option, 32> options);
+  void closeMenu();
   void closeText();
 
  private:

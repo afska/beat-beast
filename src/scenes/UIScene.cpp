@@ -13,6 +13,7 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_log.h"
+#include "bn_sprite_items_ui_chat.h"
 #include "bn_sprite_items_ui_talkbox1.h"
 #include "bn_sprite_items_ui_talkbox23.h"
 #include "bn_sprite_items_ui_talkbox4.h"
@@ -22,6 +23,7 @@
 #define OFFSET_Y 0
 
 #define SFX_QUESTION "menu_question.pcm"
+#define SFX_QUESTION_CLOSE "menu_pause.pcm"
 
 UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
@@ -44,7 +46,8 @@ void UIScene::update() {
   autoWrite();
 }
 
-void UIScene::write(bn::vector<bn::string<64>, 2> _lines) {
+void UIScene::write(bn::vector<bn::string<64>, 2> _lines,
+                    bool _hasMoreMessages) {
   startWriting();
 
   textSprites.clear();
@@ -53,6 +56,7 @@ void UIScene::write(bn::vector<bn::string<64>, 2> _lines) {
 
   textLines = _lines;
   isWriting = true;
+  hasMoreMessages = _hasMoreMessages;
 
   auto y = OFFSET_Y + 39;
   for (auto& line : textLines) {
@@ -84,6 +88,11 @@ void UIScene::ask(bn::vector<Menu::Option, 32> options) {
   pixelBlink->blink();
 }
 
+void UIScene::closeMenu() {
+  player_sfx_play(SFX_QUESTION_CLOSE);
+  menu->stop();
+}
+
 void UIScene::closeText() {
   hasFinishedWriting = false;
   stopWriting();
@@ -103,6 +112,7 @@ void UIScene::updateVideo() {
 }
 
 void UIScene::startWriting() {
+  stopWriting();
   talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(
       Math::toAbsTopLeft({0, OFFSET_Y + 96}, 64, 64));
   talkbox2 = bn::sprite_items::ui_talkbox23.create_sprite(
@@ -125,6 +135,7 @@ void UIScene::stopWriting() {
   talkbox3.reset();
   talkbox4.reset();
   icon.reset();
+  continueIcon.reset();
 }
 
 void UIScene::autoWrite() {
@@ -141,6 +152,13 @@ void UIScene::autoWrite() {
     characterIndex = 0;
     isWriting = false;
     hasFinishedWriting = true;
+    if (hasMoreMessages) {
+      continueIcon = bn::sprite_items::ui_chat.create_sprite(
+          Math::toAbsTopLeft({222, 139}, 16, 16));
+      continueIcon->set_mosaic_enabled(true);
+      pixelBlink->blink();
+      player_sfx_play(SFX_QUESTION);
+    }
   }
 }
 

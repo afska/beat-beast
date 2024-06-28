@@ -13,7 +13,7 @@ class CalibrationScene : public UIScene {
   void update() override;
 
  private:
-  enum CalibrationState { INTRO, MEASURING, REVIEWING };
+  enum CalibrationState { INTRO, INSTRUCTIONS, MEASURING, REVIEWING };
 
   bn::unique_ptr<Horse> horse;
   GameState::Screen nextScreen;
@@ -24,6 +24,7 @@ class CalibrationScene : public UIScene {
   void onFinishWriting();
   void onConfirmedOption(int option);
 
+  void showIntro();
   void showInstructions();
   void start();
   void finish();
