@@ -37,10 +37,16 @@ BossScene::BossScene(GameState::Screen _screen,
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =
       bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
+
+  textGenerator.set_z_order(-2);
+  textGenerator.set_bg_priority(0);
+  textGeneratorAccent.set_z_order(-2);
+  textGeneratorAccent.set_bg_priority(0);
 }
 
 void BossScene::init() {
   player_play((fileName + AUDIO_EXTENSION).c_str());
+  printLife(lifeBar->getLife());
 }
 
 void BossScene::update() {
@@ -85,6 +91,7 @@ void BossScene::sufferDamage(unsigned amount) {
 
   horse->hurt();
   bool dead = lifeBar->setLife(lifeBar->getLife() - amount);
+  printLife(dead ? 0 : lifeBar->getLife());
   if (dead && !isDead)
     die();
 }
@@ -194,11 +201,19 @@ void BossScene::reportFailedShot() {
 void BossScene::enableAutoFire() {
   if (autoFire.has_value())
     return;
-  autoFire = bn::unique_ptr{new AutoFire({22, 12})};
+  autoFire = bn::unique_ptr{new AutoFire({22, 12 + 10})};
 }
 
 void BossScene::disableAutoFire() {
   autoFire.reset();
+}
+
+void BossScene::printLife(unsigned life) {
+  textSprites.clear();
+  textGenerator.generate({-102, -61},
+                         (life < 10 ? "0" : "") + bn::to_string<32>(life) +
+                             "/" + bn::to_string<32>(lifeBar->getMaxLife()),
+                         textSprites);
 }
 
 void BossScene::updateChartReader() {

@@ -12,6 +12,7 @@ class LifeBar : public TopLeftGameObject {
           bn::sprite_item _fill);
 
   unsigned getLife() { return life; }
+  unsigned getMaxLife() { return maxLife; }
   bool setLife(unsigned _life);
 
   void update();

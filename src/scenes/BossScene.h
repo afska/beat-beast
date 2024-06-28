@@ -85,6 +85,7 @@ class BossScene : public Scene {
   void disableAutoFire();
 
  private:
+  void printLife(unsigned life);
   void updateChartReader();
   void processMenuOption(int option);
   void pause();
