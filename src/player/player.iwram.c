@@ -351,9 +351,11 @@ void player_update(int expectedAudioChunk,
           current_audio_chunk++;
       },
       {
-        if (PlaybackState.isLooping)
-          player_seek(0);
-        else {
+        if (PlaybackState.isLooping) {
+          src_pos = 0;
+          rate_counter = 0;
+          current_audio_chunk = 0;
+        } else {
           player_stop();
           PlaybackState.hasFinished = true;
         }
