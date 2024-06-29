@@ -22,7 +22,7 @@ class CalibrationScene : public UIScene {
     TESTING,
     ERROR
   };
-  enum CalibrationError { TOO_EARLY, DIDNT_PRESS };
+  enum CalibrationError { TOO_EARLY, TOO_MUCH, DIDNT_PRESS };
 
   bn::unique_ptr<Horse> horse;
   GameState::Screen nextScreen;

@@ -14,14 +14,21 @@ class Lightning : public TopLeftGameObject {
   bool hasReallyStarted(int msecs) {
     return startEvent != NULL && msecs >= startEvent->timestamp;
   }
+  bool didStartAnimation() { return hasStartedAnimation; }
   bool update(int msecs);
+
+  void freeAnimations() {
+    animation1.reset();
+    animation2.reset();
+    animation3.reset();
+  }
 
  private:
   bn::sprite_ptr sprite2;
   bn::sprite_ptr sprite3;
-  bn::sprite_animate_action<8> animation1;
-  bn::sprite_animate_action<8> animation2;
-  bn::sprite_animate_action<8> animation3;
+  bn::optional<bn::sprite_animate_action<8>> animation1;
+  bn::optional<bn::sprite_animate_action<8>> animation2;
+  bn::optional<bn::sprite_animate_action<8>> animation3;
   Event* event;
   Event* startEvent = NULL;
   bool hasStartedAnimation = false;

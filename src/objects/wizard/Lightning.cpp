@@ -12,42 +12,6 @@ Lightning::Lightning(bn::fixed_point _topLeftPosition, Event* _event)
           bn::sprite_items::wizard_lightning1.create_sprite(0, 0)),
       sprite2(bn::sprite_items::wizard_lightning2.create_sprite(0, 0)),
       sprite3(bn::sprite_items::wizard_lightning3.create_sprite(0, 0)),
-      animation1(bn::create_sprite_animate_action_forever(
-          mainSprite,
-          2,
-          bn::sprite_items::wizard_lightning1.tiles_item(),
-          HINT_OFFSET + 0,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 2,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1)),
-      animation2(bn::create_sprite_animate_action_forever(
-          sprite2,
-          2,
-          bn::sprite_items::wizard_lightning2.tiles_item(),
-          HINT_OFFSET + 0,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 2,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1)),
-      animation3(bn::create_sprite_animate_action_forever(
-          sprite3,
-          2,
-          bn::sprite_items::wizard_lightning3.tiles_item(),
-          HINT_OFFSET + 0,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 2,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1,
-          HINT_OFFSET + 3,
-          HINT_OFFSET + 1)),
       event(_event) {
   setPosition(_topLeftPosition);
   boundingBox.set_dimensions(bn::fixed_size(16, 160));
@@ -67,10 +31,22 @@ bool Lightning::update(int msecs) {
     sprite2.set_visible(false);
     sprite3.set_visible(false);
     return false;
-  } else {
+  } else if (!mainSprite.visible()) {
     mainSprite.set_visible(true);
     sprite2.set_visible(true);
     sprite3.set_visible(true);
+    animation1 = (bn::create_sprite_animate_action_forever(
+        mainSprite, 2, bn::sprite_items::wizard_lightning1.tiles_item(),
+        HINT_OFFSET + 0, HINT_OFFSET + 1, HINT_OFFSET + 2, HINT_OFFSET + 1,
+        HINT_OFFSET + 3, HINT_OFFSET + 1, HINT_OFFSET + 3, HINT_OFFSET + 1));
+    animation2 = (bn::create_sprite_animate_action_forever(
+        sprite2, 2, bn::sprite_items::wizard_lightning2.tiles_item(),
+        HINT_OFFSET + 0, HINT_OFFSET + 1, HINT_OFFSET + 2, HINT_OFFSET + 1,
+        HINT_OFFSET + 3, HINT_OFFSET + 1, HINT_OFFSET + 3, HINT_OFFSET + 1)),
+    animation3 = (bn::create_sprite_animate_action_forever(
+        sprite3, 2, bn::sprite_items::wizard_lightning3.tiles_item(),
+        HINT_OFFSET + 0, HINT_OFFSET + 1, HINT_OFFSET + 2, HINT_OFFSET + 1,
+        HINT_OFFSET + 3, HINT_OFFSET + 1, HINT_OFFSET + 3, HINT_OFFSET + 1));
   }
 
   if (!hasStartedAnimation && hasReallyStarted(msecs)) {
@@ -86,14 +62,17 @@ bool Lightning::update(int msecs) {
     hasStartedAnimation = true;
   }
 
-  if (animation1.done())
-    return true;
-  else {
-    animation1.update();
-    animation2.update();
-    animation3.update();
+  if (animation1.has_value()) {
+    if (animation1->done())
+      return true;
+    else {
+      animation1->update();
+      animation2->update();
+      animation3->update();
+      return false;
+    }
+  } else
     return false;
-  }
 }
 
 void Lightning::setPosition(bn::fixed_point newPosition) {

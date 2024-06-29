@@ -183,6 +183,15 @@ void CalibrationScene::onError(CalibrationError error) {
       write(strs);
       break;
     }
+    case CalibrationError::TOO_MUCH: {
+      state = ERROR;
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("More than |500 ms|?!");
+      strs.push_back("That's too much lag, sorry.");
+      write(strs);
+      break;
+    }
     default: {
     }
   }
@@ -229,6 +238,8 @@ void CalibrationScene::finish() {
 
   if (measuredLag < 0) {
     onError(CalibrationError::TOO_EARLY);
+  } else if (measuredLag > 500) {
+    onError(CalibrationError::TOO_MUCH);
   } else {
     bn::vector<bn::string<64>, 2> strs;
     strs.push_back("Measured audio lag: |" + bn::to_string<64>(measuredLag) +

@@ -292,6 +292,12 @@ void BossWizardScene::processChart() {
         lightnings.push_back(bn::unique_ptr{new Lightning({160, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
+        iterate(lightnings, [](Lightning* lightning) {
+          if (!lightning->didStartAnimation())
+            lightning->freeAnimations();
+          return false;
+        });
+
         iterate(lightnings, [&event](Lightning* lightning) {
           lightning->start(event);
           player_sfx_play(SFX_LIGHTNING);
@@ -802,8 +808,6 @@ void BossWizardScene::causeDamage(unsigned amount) {
 }
 
 // TODO: REMOVE ALL BN_LOGS
-// TODO: ENSURE THE LEVEL WORKS WELL WITH AUDIO LAG; IN updateBackground() THERE
-// ARE MOVING THINGS THAT DEPEND ON VISUAL MOVEMENT
 // TODO: IF WIZARD IS ON TOP (COLLIDES) OF BLACKHOLE; DON'T SHOW ATTACK
 // ANIMATION TO AVOID FLICKER
 // TODO: BLINKING OPTIONS -> dd3041b7baf903ff6991dcf8317c9ca682f84185
