@@ -90,7 +90,8 @@ void BossScene::sufferDamage(unsigned amount) {
     return;  // (you're invincible while displaying the hurt animation)
 
   horse->hurt();
-  bool dead = lifeBar->setLife(lifeBar->getLife() - amount);
+  int newLife = (int)lifeBar->getLife() - amount;
+  bool dead = lifeBar->setLife(newLife >= 0 ? (unsigned)newLife : 0);
   printLife(dead ? 0 : lifeBar->getLife());
   if (dead && !isDead)
     die();
