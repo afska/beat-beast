@@ -98,6 +98,7 @@ void CalibrationScene::onFinishWriting() {
       options.push_back(Menu::Option{.text = "No, retry"});
       options.push_back(Menu::Option{.text = "No, cancel", .bDefault = true});
       ask(options, 1.5, 71, -32, false);
+      pauseVideo = false;
       break;
     }
     case CalibrationState::ERROR: {
@@ -239,6 +240,7 @@ void CalibrationScene::finish() {
 void CalibrationScene::test() {
   state = TESTING;
 
+  pauseVideo = true;
   lastBeat = -1;
   player_play(SOUND_CALIBRATE_TEST);
   player_setLoop(true);

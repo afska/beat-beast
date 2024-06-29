@@ -37,6 +37,7 @@ class UIScene : public Scene {
   bool wantsToContinue = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
+  bool pauseVideo = false;
 
   unsigned videoFrame = 0;
   int extraSpeed = 0;

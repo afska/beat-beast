@@ -102,6 +102,9 @@ static bool is_paused = false;
         *buffer++ = cur_sample >> 8;                            \
         last_sample = cur_sample;                               \
       }                                                         \
+      if (src_pos >= src_len) {                                 \
+        ON_STOP;                                                \
+      }                                                         \
     } else {                                                    \
       ON_STOP;                                                  \
     }                                                           \
@@ -351,11 +354,9 @@ void player_update(int expectedAudioChunk,
           current_audio_chunk++;
       },
       {
-        if (PlaybackState.isLooping) {
-          src_pos = 0;
-          rate_counter = 0;
-          current_audio_chunk = 0;
-        } else {
+        if (PlaybackState.isLooping)
+          player_seek(0);
+        else {
           player_stop();
           PlaybackState.hasFinished = true;
         }

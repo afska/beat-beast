@@ -322,7 +322,7 @@ void BossDJScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
 
-    if (bullet->collidesWith(horse.get())) {
+    if (bullet->collidesWith(horse.get()) && !bullet->didExplode()) {
       if (horse->isJumping() && bullet->isHeadDeflectable) {
         bullet->explode({});
         return false;

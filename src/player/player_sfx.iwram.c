@@ -57,7 +57,7 @@ static bool is_paused = false;
       for (u32 i = 0; i < bytes_to_read / 4; i++)                    \
         ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i];              \
       src_pos += BUFFER_SIZE;                                        \
-      if (src_pos > src_len) {                                       \
+      if (src_pos >= src_len) {                                      \
         ON_STOP;                                                     \
       }                                                              \
     } else {                                                         \

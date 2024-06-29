@@ -117,6 +117,9 @@ void UIScene::closeText() {
 }
 
 void UIScene::updateVideo() {
+  if (pauseVideo)
+    return;
+
   background.reset();
   background = UIVideo::getFrame(videoFrame)
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
