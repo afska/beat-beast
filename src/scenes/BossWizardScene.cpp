@@ -22,7 +22,7 @@
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
-#define LIFE_BOSS 150
+#define LIFE_BOSS 125
 
 // Loop
 // #define LOOP_END_MS 158580
@@ -540,8 +540,10 @@ void BossWizardScene::updateSprites() {
 
   // Black hole
   if (blackHole.has_value()) {
-    if (blackHole->get()->didDisappear())
+    if (blackHole->get()->didDisappear()) {
+      // TODO: if (didWin) ...
       setNextScreen(GameState::Screen::START);
+    }
 
     if (horse->collidesWith(blackHole->get()) && !horse->isHurt())
       sufferDamage(DMG_BLACKHOLE_TO_PLAYER);
@@ -606,8 +608,13 @@ void BossWizardScene::updateSprites() {
       auto targetPosition = blackHole->get()->getTargetPosition();
       if (targetPosition.has_value() &&
           bullet->collidesWith(blackHole->get())) {
+        bn::fixed distanceX = bn::abs(blackHole->get()->getPosition().x() -
+                                      horse->getCenteredPosition().x());
+        if (distanceX > 100)
+          distanceX = 100;
+        bn::fixed extraForce = (100 - distanceX) / 40;
         blackHole->get()->setTargetPosition(targetPosition.value() +
-                                            bn::fixed_point(5, 0));
+                                            bn::fixed_point(5 + extraForce, 0));
         collided = true;
       }
     }
