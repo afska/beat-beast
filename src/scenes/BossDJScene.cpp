@@ -95,7 +95,6 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
   // background2.set_mosaic_enabled(true);
   background3.set_blending_enabled(true);
   background3.set_mosaic_enabled(true);
-  bn::blending::set_fade_alpha(0.2);
   chartReader->eventsThatNeedAudioLagPrediction =
       15728880 /* 0b111100000000000011110000*/;
 }

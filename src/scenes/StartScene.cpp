@@ -21,18 +21,20 @@ StartScene::StartScene(const GBFS_FILE* _fs)
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
+  horse->update();
+  updateVideo();
 }
 
 void StartScene::init() {
-  player_play("lazer.gsm");
-  player_setLoop(true);
-
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "DJ OctoBass"});
   options.push_back(Menu::Option{.text = "Synth Wizard"});
   options.push_back(Menu::Option{.text = "Settings"});
   options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options, false);
+
+  player_play("lazer.gsm");
+  player_setLoop(true);
 }
 
 void StartScene::update() {

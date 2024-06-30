@@ -125,7 +125,6 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background2.get()->set_mosaic_enabled(true);
   background3.get()->set_blending_enabled(true);
   background3.get()->set_mosaic_enabled(true);
-  bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
   chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
 
@@ -812,4 +811,3 @@ void BossWizardScene::causeDamage(unsigned amount) {
 // ANIMATION TO AVOID FLICKER
 // TODO: BLINKING OPTIONS -> dd3041b7baf903ff6991dcf8317c9ca682f84185
 // TODO: RUMBLE
-// TODO: TRANSITIONS

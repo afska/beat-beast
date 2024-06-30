@@ -35,7 +35,10 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   textGenerator.set_one_sprite_per_character(true);
   textGeneratorAccent.set_one_sprite_per_character(true);
+  updateVideo();
+}
 
+void UIScene::init() {
   bn::blending::set_transparency_alpha(0.5);
 }
 

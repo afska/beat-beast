@@ -11,6 +11,7 @@ class UIScene : public Scene {
  public:
   UIScene(GameState::Screen _screen, const GBFS_FILE* _fs);
 
+  virtual void init() override;
   virtual void update() override;
 
   virtual ~UIScene() = default;

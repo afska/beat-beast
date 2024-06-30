@@ -42,11 +42,13 @@ BossScene::BossScene(GameState::Screen _screen,
   textGenerator.set_bg_priority(0);
   textGeneratorAccent.set_z_order(-2);
   textGeneratorAccent.set_bg_priority(0);
+
+  printLife(lifeBar->getLife());
 }
 
 void BossScene::init() {
+  bn::blending::set_fade_alpha(0.2);
   player_play((fileName + AUDIO_EXTENSION).c_str());
-  printLife(lifeBar->getLife());
 }
 
 void BossScene::update() {

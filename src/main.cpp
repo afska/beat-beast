@@ -12,33 +12,16 @@
 #include "bn_blending.h"
 #include "bn_core.h"
 #include "bn_optional.h"
+#include "bn_sprite_palettes.h"
 #include "bn_sprite_text_generator.h"
 #include "bn_unique_ptr.h"
 
-void ISR_VBlank();
 static const GBFS_FILE* fs = find_first_gbfs_file(0);
-
 bn::optional<bn::unique_ptr<Scene>> scene;
 
-bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
-  auto previousScreen = GameState::data.currentScreen;
-  GameState::data.currentScreen = nextScreen;
-
-  switch (nextScreen) {
-    case GameState::Screen::START:
-      return bn::unique_ptr{(Scene*)new StartScene(fs)};
-    case GameState::Screen::CALIBRATION:
-      return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
-    case GameState::Screen::DJ:
-      return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
-    case GameState::Screen::WIZARD:
-      return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
-    default: {
-      BN_ASSERT(false, "Next screen not found?");
-      return bn::unique_ptr{(Scene*)new StartScene(fs)};
-    }
-  }
-}
+void ISR_VBlank();
+bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen);
+void transitionToNextScene();
 
 int main() {
   bn::core::init(ISR_VBlank);
@@ -58,25 +41,14 @@ int main() {
 
   scene = isNewSave ? setNextScene(GameState::Screen::CALIBRATION)
                     : setNextScene(GameState::Screen::START);
-  // : setNextScene(GameState::Screen::DJ);
-  // : setNextScene(GameState::Screen::WIZARD);
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->get()->init();
 
   while (true) {
     scene->get()->update();
 
-    if (scene->get()->hasNextScreen()) {
-      auto nextScreen = scene->get()->getNextScreen();
-      scene.reset();
-
-      bn::blending::restore();
-      player_stop();
-      player_sfx_stop();
-
-      scene = setNextScene(nextScreen);
-      scene->get()->init();
-    }
+    if (scene->get()->hasNextScreen())
+      transitionToNextScene();
 
     bn::core::update();
     player_update(0, [](unsigned current) {});
@@ -88,4 +60,57 @@ BN_CODE_IWRAM void ISR_VBlank() {
   player_onVBlank();
   player_sfx_onVBlank();
   bn::core::default_vblank_handler();
+}
+
+bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
+  auto previousScreen = GameState::data.currentScreen;
+  GameState::data.currentScreen = nextScreen;
+
+  switch (nextScreen) {
+    case GameState::Screen::START:
+      return bn::unique_ptr{(Scene*)new StartScene(fs)};
+    case GameState::Screen::CALIBRATION:
+      return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
+    case GameState::Screen::DJ:
+      return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
+    case GameState::Screen::WIZARD:
+      return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
+    default: {
+      BN_ERROR("Next screen not found?");
+      return bn::unique_ptr{(Scene*)new StartScene(fs)};
+    }
+  }
+}
+
+void transitionToNextScene() {
+  auto nextScreen = scene->get()->getNextScreen();
+
+  player_stop();
+  player_sfx_stop();
+
+  bn::bg_palettes::set_fade_intensity(0);
+  bn::sprite_palettes::set_fade_intensity(0);
+  bn::fixed alpha = 0;
+  for (int i = 0; i < 10; i++) {
+    alpha += 0.1;
+    bn::bg_palettes::set_fade_intensity(alpha);
+    bn::sprite_palettes::set_fade_intensity(alpha);
+
+    bn::core::update();
+  }
+
+  scene.reset();
+  bn::blending::restore();
+  scene = setNextScene(nextScreen);
+  scene->get()->init();
+  bn::core::update();
+
+  for (int i = 0; i < 10; i++) {
+    alpha -= 0.1;
+    bn::bg_palettes::set_fade_intensity(alpha);
+    bn::sprite_palettes::set_fade_intensity(alpha);
+
+    scene->get()->update();
+    bn::core::update();
+  }
 }
