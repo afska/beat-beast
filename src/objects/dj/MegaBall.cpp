@@ -38,7 +38,7 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition, Event* _event)
   sprite1.set_scale(scale);
   sprite2.set_scale(scale);
   damage = 5;
-  isShootable = true;
+  isShootable = false;
   hasDamageAfterExploding = true;
   hasLoopSound = true;
 
@@ -85,6 +85,11 @@ bool MegaBall::update(int msecs,
   if (waitFrames > 0) {
     waitFrames--;
     return false;
+  }
+  if (damageWaitFrames > 0) {
+    damageWaitFrames--;
+    if (damageWaitFrames == 0)
+      isShootable = true;
   }
 
   int speed = isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED;

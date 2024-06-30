@@ -375,6 +375,6 @@ void BossDJScene::addMegaBallSfx() {
 
 void BossDJScene::removeMegaBallSfx() {
   megaBallSfxCount--;
-  if (megaBallSfxCount <= 0 && playerSfxState.isLooping)
+  if (megaBallSfxCount <= 0 && player_sfx_getState().isLooping)
     player_sfx_stop();
 }
