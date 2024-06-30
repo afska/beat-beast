@@ -24,8 +24,9 @@ Portal::Portal(bn::fixed_point initialPosition, Event* _event, bool _followY)
           2,
           1)),
       followY(_followY) {
-  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_dimensions({64, 64});
   boundingBox.set_position(initialPosition);
+  sprite.set_scale(2);
 }
 
 bool Portal::update(int msecs,
