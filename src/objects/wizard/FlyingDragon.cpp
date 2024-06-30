@@ -25,6 +25,8 @@ FlyingDragon::FlyingDragon(bn::fixed_point initialPosition,
       flapForce(_flapForce) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
+
+  sprite.set_visible(false);
 }
 
 bool FlyingDragon::update(int msecs, bool isInsideBeat) {

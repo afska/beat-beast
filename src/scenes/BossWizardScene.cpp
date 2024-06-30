@@ -291,12 +291,6 @@ void BossWizardScene::processChart() {
         lightnings.push_back(bn::unique_ptr{new Lightning({160, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
-        iterate(lightnings, [](Lightning* lightning) {
-          if (!lightning->didStartAnimation())
-            lightning->freeAnimations();
-          return false;
-        });
-
         iterate(lightnings, [&event](Lightning* lightning) {
           lightning->start(event);
           player_sfx_play(SFX_LIGHTNING);
@@ -653,11 +647,18 @@ void BossWizardScene::updateSprites() {
   });
 
   // Lightnings
+  iterate(lightnings, [](Lightning* lightning) {
+    if (lightning->needsToStart())
+      lightning->start1();
+    return false;
+  });
   iterate(lightnings, [this](Lightning* lightning) {
+    if (lightning->needsToStart())
+      lightning->start2();
     bool isOut = lightning->update(chartReader->getMsecs());
 
-    if (lightning->hasReallyStarted(chartReader->getMsecs()) &&
-        !lightning->causedDamage && lightning->collidesWith(horse.get())) {
+    if (lightning->didStart() && !lightning->causedDamage &&
+        lightning->collidesWith(horse.get())) {
       sufferDamage(DMG_LIGHTNING_TO_PLAYER);
       lightning->causedDamage = true;
       return false;

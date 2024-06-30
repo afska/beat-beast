@@ -11,17 +11,12 @@ class Lightning : public TopLeftGameObject {
   Lightning(bn::fixed_point _topLeftPosition, Event* _event);
 
   void start(Event* event);
-  bool hasReallyStarted(int msecs) {
-    return startEvent != NULL && msecs >= startEvent->timestamp;
-  }
-  bool didStartAnimation() { return hasStartedAnimation; }
+  bool needsToStart() { return hasPendingStartAnimation; }
+  bool didStart() { return didStartAnimation; }
   bool update(int msecs);
 
-  void freeAnimations() {
-    animation1.reset();
-    animation2.reset();
-    animation3.reset();
-  }
+  void start1();
+  void start2();
 
  private:
   bn::sprite_ptr sprite2;
@@ -31,9 +26,13 @@ class Lightning : public TopLeftGameObject {
   bn::optional<bn::sprite_animate_action<8>> animation3;
   Event* event;
   Event* startEvent = NULL;
-  bool hasStartedAnimation = false;
+  bool hasPendingStartAnimation = false;
+  bool didStartAnimation = false;
 
-  bool hasStarted() { return startEvent != NULL; }
+  bool hasReallyStarted(int msecs) {
+    return startEvent != NULL && msecs >= startEvent->timestamp;
+  }
+
   void setPosition(bn::fixed_point newPosition);
 };
 #endif  // LIGHTNING_H

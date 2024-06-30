@@ -27,6 +27,8 @@ FireBall::FireBall(bn::fixed_point _initialPosition, Event* _event)
   sprite.set_scale(scale);
   damage = 5;
   isShootable = true;
+
+  sprite.set_visible(false);
 }
 
 bool FireBall::update(int msecs,
