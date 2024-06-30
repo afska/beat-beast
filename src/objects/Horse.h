@@ -28,6 +28,8 @@ class Horse : public TopLeftGameObject {
   bool getIsMoving() { return isMoving; }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
+  bool canReallyShoot() { return canShoot && shootCooldown == 0; }
+  void failShoot() { shootCooldown = 30; }
   int getBounceFrame() { return bounceFrame; }
   void enableAlternativeRunAnimation() {
     useAlternativeRunAnimation = true;
@@ -56,6 +58,7 @@ class Horse : public TopLeftGameObject {
   int bounceFrame = 0;
   int jumpFrame = 0;
   int hurtFrame = 0;
+  int shootCooldown = 0;
 
   void setIsMoving(bool isNowMoving);
 

@@ -202,6 +202,7 @@ void BossScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
+  horse->failShoot();
 }
 
 void BossScene::enableAutoFire() {

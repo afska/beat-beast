@@ -192,7 +192,7 @@ void BossWizardScene::processInput() {
     }
   } else {
     if (bn::keypad::b_pressed() && !horse->isBusy()) {
-      if (chartReader->isInsideTick() && horse->canShoot) {
+      if (chartReader->isInsideTick() && horse->canReallyShoot()) {
         horse->shoot();
         bullets.push_back(bn::unique_ptr{
             new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),

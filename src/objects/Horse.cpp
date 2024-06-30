@@ -50,6 +50,22 @@ void Horse::update() {
         Math::normalizeAngle(mainSprite.rotation_angle() + 5));
     Math::moveSpriteTowards(mainSprite, disappearPosition.value(), 1, 1, false);
     setCenteredPosition(mainSprite.position());
+  } else {
+    if (shootCooldown > 0) {
+      if (gunSprite.horizontal_scale() == 1)
+        gunSprite.set_scale(0.002);
+      else if (gunSprite.horizontal_scale() == 0.002)
+        gunSprite.set_scale(0.001);
+      else if (gunSprite.horizontal_scale() == 0.001)
+        gunSprite.set_scale(1.01);
+      else
+        gunSprite.set_scale(1);
+      shootCooldown--;
+      if (shootCooldown <= 0) {
+        shootCooldown = 0;
+        gunSprite.set_scale(1);
+      }
+    }
   }
 
   setPosition(topLeftPosition, isMoving);
