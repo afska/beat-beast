@@ -144,7 +144,7 @@ void BossWizardScene::updateBossFight() {
 }
 
 void BossWizardScene::processInput() {
-  if (end)
+  if (didFinish)
     return;
 
   const bool isRunning = phase == 1 || phase == 3 || phase == 4;
@@ -420,7 +420,7 @@ void BossWizardScene::processChart() {
         goToNextPhase();
       }
       if (event->getType() == EVENT_SONG_END) {
-        end = true;
+        didFinish = true;
         disableAutoFire();
         if (didWin) {
           wizard->get()->disappearInto(blackHole->get()->getPosition());

@@ -32,6 +32,11 @@ Octopus::Octopus(bn::fixed_point initialPosition)
 void Octopus::update(bn::fixed_point playerPosition, bool isInsideBeat) {
   updateAnimations();
 
+  if (isSpinning) {
+    sprite.set_rotation_angle(
+        Math::normalizeAngle(sprite.rotation_angle() + 5));
+  }
+
   for (auto& tentacle : tentacles)
     tentacle->update();
   for (auto& turntable : turntables)
@@ -52,6 +57,10 @@ void Octopus::setTargetPosition(bn::fixed_point newTargetPosition,
            beatDurationFrames;
   speedY = bn::abs(newTargetPosition.y() - sprite.position().y()) /
            beatDurationFrames;
+}
+
+void Octopus::spin() {
+  isSpinning = true;
 }
 
 void Octopus::setPosition(bn::fixed_point newPosition) {

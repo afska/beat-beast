@@ -25,8 +25,6 @@ class BossDJScene : public BossScene {
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
-  bool didWin = false;
-  bool didShowMessage = false;
   int megaBallSfxCount = 0;
 
   void processInput();

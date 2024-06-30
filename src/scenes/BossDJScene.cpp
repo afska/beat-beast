@@ -117,6 +117,9 @@ void BossDJScene::updateBossFight() {
 }
 
 void BossDJScene::processInput() {
+  if (didFinish)
+    return;
+
   processMovementInput(HORSE_Y);
   processAimInput();
 
@@ -231,11 +234,10 @@ void BossDJScene::processChart() {
       }
     } else {
       if (event->getType() == EVENT_SONG_END) {
-        if (!didShowMessage) {
-          textGenerator.set_center_alignment();
-          textGenerator.generate(-30, -30, "YOU WIN!", textSprites);
-          didShowMessage = true;
-        }
+        didFinish = true;
+        octopus->setTargetPosition({0, 130},
+                                   chartReader->getBeatDurationMs() * 4);
+        octopus->spin();
       }
     }
   }
@@ -373,6 +375,6 @@ void BossDJScene::addMegaBallSfx() {
 
 void BossDJScene::removeMegaBallSfx() {
   megaBallSfxCount--;
-  if (megaBallSfxCount <= 0)
+  if (megaBallSfxCount <= 0 && playerSfxState.isLooping)
     player_sfx_stop();
 }

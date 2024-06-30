@@ -21,6 +21,7 @@ class Octopus : public GameObject {
   bool isBusy() { return isHurt() || isAttacking(); }
   Turntable* getUpperTurntable() { return turntables[0].get(); }
   Turntable* getLowerTurntable() { return turntables[1].get(); }
+  void spin();
 
  private:
   bn::sprite_ptr sprite;
@@ -33,6 +34,7 @@ class Octopus : public GameObject {
   bn::fixed_point targetPosition;
   bn::fixed speedX = 1;
   bn::fixed speedY = 1;
+  bool isSpinning = false;
 
   bool isHurt() { return hurtAnimation.has_value(); }
   bool isAttacking() { return attackAnimation.has_value(); }

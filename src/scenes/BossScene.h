@@ -54,6 +54,8 @@ class BossScene : public Scene {
   bool isNewTickNow = false;
   bool isPaused = false;
   bool isDead = false;
+  bool didWin = false;
+  bool didFinish = false;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
