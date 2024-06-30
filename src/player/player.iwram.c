@@ -173,9 +173,8 @@ INLINE void play(const char* name) {
 }
 
 INLINE void disable_audio_dma() {
-  // ----------------------------------------------------
-  // This convoluted process was taken from the official manual.
-  // It's supposed to disable DMA2 in a "safe" way, avoiding DMA lockups.
+  // This convoluted process disables DMA2 in a "safe" way,
+  // avoiding DMA lockups.
   //
   // 32-bit write
   // enabled = 1; start timing = immediately; transfer type = 32 bits;

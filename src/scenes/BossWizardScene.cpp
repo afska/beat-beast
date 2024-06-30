@@ -612,9 +612,9 @@ void BossWizardScene::updateSprites() {
                                       horse->getCenteredPosition().x());
         if (distanceX > 100)
           distanceX = 100;
-        bn::fixed extraForce = (100 - distanceX) / 40;
-        blackHole->get()->setTargetPosition(targetPosition.value() +
-                                            bn::fixed_point(5 + extraForce, 0));
+        bn::fixed extraForce = (100 - distanceX) / 10;
+        blackHole->get()->setTargetPosition(
+            targetPosition.value() + bn::fixed_point(3.5 + extraForce, 0));
         collided = true;
       }
     }
@@ -647,7 +647,7 @@ void BossWizardScene::updateSprites() {
       if (targetPosition.has_value() &&
           bullet->collidesWith(blackHole->get())) {
         blackHole->get()->setTargetPosition(targetPosition.value() +
-                                            bn::fixed_point(-5, 0));
+                                            bn::fixed_point(-7, 0));
         return true;
       }
     }

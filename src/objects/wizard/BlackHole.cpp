@@ -75,6 +75,12 @@ bool BlackHole::update() {
 void BlackHole::setTargetPosition(bn::fixed_point _targetPosition) {
   if (isMoving)
     return;
+
+  if (_targetPosition.x() < -Math::SCREEN_WIDTH / 2 + 64)
+    _targetPosition.set_x(-Math::SCREEN_WIDTH / 2 + 64);
+  if (_targetPosition.x() > Math::SCREEN_WIDTH / 2 - 64)
+    _targetPosition.set_x(Math::SCREEN_WIDTH / 2 - 64);
+
   targetPosition = _targetPosition;
   targetScale = 2;
   isMoving = true;

@@ -20,6 +20,8 @@ CalibrationScene::CalibrationScene(const GBFS_FILE* _fs,
       nextScreen(_nextScreen) {}
 
 void CalibrationScene::init() {
+  UIScene::init();
+
   horse->setFlipX(true);
   horse->aim({-1, 0});
 
