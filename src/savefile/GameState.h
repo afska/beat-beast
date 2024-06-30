@@ -8,7 +8,7 @@ namespace GameState {
 enum Screen { NO, START, CALIBRATION, DJ, WIZARD };
 
 struct GameStateData {
-  Screen currentScreen = Screen::NO;
+  Screen currentScreen = Screen::START;
 };
 
 extern GameStateData data;

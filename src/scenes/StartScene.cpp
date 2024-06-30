@@ -28,8 +28,8 @@ void StartScene::init() {
   player_setLoop(true);
 
   bn::vector<Menu::Option, 10> options;
-  options.push_back(Menu::Option{.text = "Start"});
-  options.push_back(Menu::Option{.text = "Wizard"});  // TODO: Mini game?
+  options.push_back(Menu::Option{.text = "DJ OctoBass"});
+  options.push_back(Menu::Option{.text = "Synth Wizard"});
   options.push_back(Menu::Option{.text = "Settings"});
   options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options, false);

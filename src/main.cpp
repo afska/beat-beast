@@ -25,7 +25,6 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
   GameState::data.currentScreen = nextScreen;
 
   switch (nextScreen) {
-    case GameState::Screen::NO:
     case GameState::Screen::START:
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
     case GameState::Screen::CALIBRATION:
