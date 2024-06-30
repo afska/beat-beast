@@ -53,6 +53,9 @@ void Wizard::bounce() {
 }
 
 void Wizard::attack() {
+  if (isHurt())
+    return;
+
   setAttackState();
 }
 
