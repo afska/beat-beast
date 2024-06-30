@@ -37,7 +37,7 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition, Event* _event)
 
   sprite1.set_scale(scale);
   sprite2.set_scale(scale);
-  damage = 5;
+  damage = 8;
   isShootable = false;
   hasDamageAfterExploding = true;
   hasLoopSound = true;

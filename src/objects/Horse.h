@@ -4,6 +4,7 @@
 #include "TopLeftGameObject.h"
 
 #define HORSE_SPEED 1.5
+#define HORSE_JUMP_SPEEDX_BONUS 1.25
 
 class Horse : public TopLeftGameObject {
  public:

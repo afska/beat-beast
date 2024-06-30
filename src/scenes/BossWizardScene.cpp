@@ -22,23 +22,20 @@
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
-#define LIFE_BOSS 75
+#define LIFE_BOSS 150
 
 // Loop
 // #define LOOP_END_MS 158580
 // #define LOOP_OFFSET_CURSOR -218856
 
 // Damage to player
-#define DMG_MINI_ROCK_TO_PLAYER 2
-#define DMG_ROCK_TO_PLAYER 6
-#define DMG_LIGHTNING_TO_PLAYER 5
+#define DMG_MINI_ROCK_TO_PLAYER 1
+#define DMG_ROCK_TO_PLAYER 5
+#define DMG_LIGHTNING_TO_PLAYER 4
 #define DMG_WIZARD_TO_PLAYER 1
-#define DMG_BLACKHOLE_TO_PLAYER 1
-#define DMG_BLACKHOLE_TO_WIZARD 1
-#define DMG_LAVA_TO_PLAYER 2
-
-// Damage to enemy
-// #define DMG_MEGABALL_TO_ENEMY 10
+#define DMG_BLACKHOLE_TO_PLAYER 3
+#define DMG_BLACKHOLE_TO_WIZARD 3
+#define DMG_LAVA_TO_PLAYER 1
 
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
@@ -133,14 +130,6 @@ void BossWizardScene::updateBossFight() {
   processChart();
   updateBackground();
   updateSprites();
-
-  // if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
-  //   player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
-  //   chartReader->restoreLoop();
-  //   bullets.clear();
-  //   enemyBullets.clear();
-  //   pixelBlink->blink();
-  // }
 }
 
 void BossWizardScene::processInput() {
@@ -156,9 +145,11 @@ void BossWizardScene::processInput() {
     horse->setFlipX(false);
     if (!bn::keypad::r_held()) {  // (R locks target)
       if (bn::keypad::left_held()) {
-        speedX = -HORSE_SPEED;
+        speedX =
+            -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       } else if (bn::keypad::right_held()) {
-        speedX = HORSE_SPEED;
+        speedX =
+            HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       }
       if (speedX != 0 && chartReader->isInsideBeat())
         speedX *= 2;  // rhythmic movement?
@@ -430,6 +421,14 @@ void BossWizardScene::processChart() {
           allyDragon->get()->disappearInto(blackHole->get()->getPosition());
         }
         blackHole->get()->disappear();
+
+        miniRocks.clear();
+        rocks.clear();
+        bullets.clear();
+        enemyBullets.clear();
+        lightnings.clear();
+        flyingDragons.clear();
+        portals.clear();
       }
     }
   }
@@ -541,6 +540,9 @@ void BossWizardScene::updateSprites() {
 
   // Black hole
   if (blackHole.has_value()) {
+    if (blackHole->get()->didDisappear())
+      setNextScreen(GameState::Screen::START);
+
     if (horse->collidesWith(blackHole->get()) && !horse->isHurt())
       sufferDamage(DMG_BLACKHOLE_TO_PLAYER);
     if (wizard->get()->collidesWith(blackHole->get()) &&

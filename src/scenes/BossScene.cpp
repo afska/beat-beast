@@ -136,10 +136,11 @@ void BossScene::processMovementInput(bn::fixed horseY) {
   bn::fixed speedX;
   if (!bn::keypad::r_held()) {  // (R locks target)
     if (bn::keypad::left_held()) {
-      speedX = -HORSE_SPEED;
+      speedX =
+          -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       horse->setFlipX(true);
     } else if (bn::keypad::right_held()) {
-      speedX = HORSE_SPEED;
+      speedX = HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       horse->setFlipX(false);
     }
     if (speedX != 0 && chartReader->isInsideBeat())

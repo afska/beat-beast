@@ -22,6 +22,7 @@ class Octopus : public GameObject {
   Turntable* getUpperTurntable() { return turntables[0].get(); }
   Turntable* getLowerTurntable() { return turntables[1].get(); }
   void spin();
+  bool didFinalSpinEnd() { return isSpinning && sprite.position().y() > 120; }
 
  private:
   bn::sprite_ptr sprite;

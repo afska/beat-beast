@@ -30,7 +30,7 @@ FloatingVinyl::FloatingVinyl(bn::fixed_point initialPosition,
   sprite.set_scale(scale);
   isShootable = true;
   isHeadDeflectable = true;
-  damage = 2;
+  damage = 4;
 }
 
 bool FloatingVinyl::update(int msecs,

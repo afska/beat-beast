@@ -27,7 +27,7 @@ Meteorite::Meteorite(bn::fixed_point initialPosition,
 
   sprite.set_scale(scale);
   isShootable = true;
-  damage = 2;
+  damage = 1;
 }
 
 bool Meteorite::update(int msecs,

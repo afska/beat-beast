@@ -117,8 +117,10 @@ void BossDJScene::updateBossFight() {
 }
 
 void BossDJScene::processInput() {
-  if (didFinish)
+  if (didFinish) {
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, false);
     return;
+  }
 
   processMovementInput(HORSE_Y);
   processAimInput();
@@ -236,8 +238,13 @@ void BossDJScene::processChart() {
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
         octopus->setTargetPosition({0, 130},
-                                   chartReader->getBeatDurationMs() * 4);
+                                   chartReader->getBeatDurationMs() * 8);
         octopus->spin();
+
+        bullets.clear();
+        enemyBullets.clear();
+        vinyls.clear();
+        player_sfx_stop();
       }
     }
   }
@@ -260,6 +267,9 @@ void BossDJScene::updateBackground() {
 
 void BossDJScene::updateSprites() {
   updateCommonSprites();
+
+  if (octopus->didFinalSpinEnd())
+    setNextScreen(GameState::Screen::START);
 
   // Octopus
   if (isNewBeat)

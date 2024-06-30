@@ -23,6 +23,12 @@ void ISR_VBlank();
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen);
 void transitionToNextScene();
 
+void update() {
+  bn::core::update();
+  player_update(0, [](unsigned current) {});
+  player_sfx_update();
+}
+
 int main() {
   bn::core::init(ISR_VBlank);
 
@@ -50,9 +56,7 @@ int main() {
     if (scene->get()->hasNextScreen())
       transitionToNextScene();
 
-    bn::core::update();
-    player_update(0, [](unsigned current) {});
-    player_sfx_update();
+    update();
   }
 }
 
@@ -85,9 +89,6 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
 void transitionToNextScene() {
   auto nextScreen = scene->get()->getNextScreen();
 
-  player_stop();
-  player_sfx_stop();
-
   bn::bg_palettes::set_fade_intensity(0);
   bn::sprite_palettes::set_fade_intensity(0);
   bn::fixed alpha = 0;
@@ -96,11 +97,14 @@ void transitionToNextScene() {
     bn::bg_palettes::set_fade_intensity(alpha);
     bn::sprite_palettes::set_fade_intensity(alpha);
 
-    bn::core::update();
+    update();
   }
 
   scene.reset();
+  player_stop();
+  player_sfx_stop();
   bn::blending::restore();
+
   scene = setNextScene(nextScreen);
   scene->get()->init();
   bn::core::update();
@@ -111,6 +115,6 @@ void transitionToNextScene() {
     bn::sprite_palettes::set_fade_intensity(alpha);
 
     scene->get()->update();
-    bn::core::update();
+    update();
   }
 }

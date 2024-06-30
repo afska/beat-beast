@@ -16,6 +16,7 @@ class BlackHole : public GameObject {
   bn::optional<bn::fixed_point> getTargetPosition() { return targetPosition; }
   void setTargetPosition(bn::fixed_point _targetPosition);
   void disappear() { isDisappearing = true; }
+  bool didDisappear() { return isDisappearing && !sprite.visible(); }
 
  private:
   bn::sprite_ptr sprite;
