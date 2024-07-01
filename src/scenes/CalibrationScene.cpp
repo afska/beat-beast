@@ -66,10 +66,8 @@ void CalibrationScene::update() {
     }
   }
 
-  if (hasFinishedWriting) {
-    hasFinishedWriting = false;
+  if (finishedWriting())
     onFinishWriting();
-  }
 
   if (wantsToContinue) {
     wantsToContinue = false;
@@ -99,7 +97,7 @@ void CalibrationScene::onFinishWriting() {
       options.push_back(Menu::Option{.text = "Yes, save"});
       options.push_back(Menu::Option{.text = "No, retry"});
       options.push_back(Menu::Option{.text = "No, cancel", .bDefault = true});
-      ask(options, 1.5, 71, -32, false);
+      ask(options, 1.5, 1.5, 71, -32, false);
       pauseVideo = false;
       break;
     }

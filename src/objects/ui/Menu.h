@@ -23,7 +23,8 @@ class Menu {
              bool withSquare = true,
              bool withBlending = false,
              bn::fixed initialScale = 1.5,
-             bn::fixed _targetScale = 1.5,
+             bn::fixed _targetScaleX = 1.5,
+             bn::fixed _targetScaleY = 1.5,
              bn::fixed _positionX = 0,
              bn::fixed _positionY = 0);
   void update();
@@ -46,7 +47,8 @@ class Menu {
   bn::sprite_ptr square;
   unsigned selectedOption = 0;
   int confirmedOption = -1;
-  bn::fixed targetScale = 1.5;
+  bn::fixed targetScaleX = 1.5;
+  bn::fixed targetScaleY = 1.5;
   bn::fixed positionX = 0;
   bn::fixed positionY = 0;
 

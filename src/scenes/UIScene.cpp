@@ -97,11 +97,12 @@ void UIScene::write(bn::vector<bn::string<64>, 2> _lines,
 }
 
 void UIScene::ask(bn::vector<Menu::Option, 32> options,
-                  bn::fixed scale,
+                  bn::fixed scaleX,
+                  bn::fixed scaleY,
                   bn::fixed positionX,
                   bn::fixed positionY,
                   bool withSound) {
-  menu->start(options, true, true, 0.1, scale, positionX, positionY);
+  menu->start(options, true, true, 0.1, scaleX, scaleY, positionX, positionY);
   if (withSound)
     player_sfx_play(SFX_QUESTION);
   pixelBlink->blink();

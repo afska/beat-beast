@@ -33,7 +33,6 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> continueIcon;
   bn::vector<bn::string<64>, 2> textLines;
   bool isWriting = false;
-  bool hasFinishedWriting = false;
   bool hasMoreMessages = false;
   bool wantsToContinue = false;
   unsigned characterIndex = 0;
@@ -44,12 +43,21 @@ class UIScene : public Scene {
   int extraSpeed = 0;
   bn::unique_ptr<Menu> menu;
 
+  bool finishedWriting() {
+    if (hasFinishedWriting) {
+      hasFinishedWriting = false;
+      return true;
+    }
+    return false;
+  }
+
   virtual bool canSkipAutoWrite() { return true; }
 
   void write(bn::vector<bn::string<64>, 2> lines,
              bool _hasMoreMessages = false);
   void ask(bn::vector<Menu::Option, 32> options,
-           bn::fixed scale = 1,
+           bn::fixed scaleX = 1,
+           bn::fixed scaleY = 1,
            bn::fixed positionX = 0,
            bn::fixed positionY = 0,
            bool withSound = true);
@@ -57,6 +65,8 @@ class UIScene : public Scene {
   void closeText();
 
  private:
+  bool hasFinishedWriting = false;
+
   void updateVideo();
   void startWriting();
   void stopWriting();

@@ -22,13 +22,15 @@ void Menu::start(bn::vector<Option, 32> _options,
                  bool withSquare,
                  bool withBlending,
                  bn::fixed initialScale,
-                 bn::fixed _targetScale,
+                 bn::fixed _targetScaleX,
+                 bn::fixed _targetScaleY,
                  bn::fixed _positionX,
                  bn::fixed _positionY) {
   options = _options;
   selectedOption = 0;
   confirmedOption = -1;
-  targetScale = _targetScale;
+  targetScaleX = _targetScaleX;
+  targetScaleY = _targetScaleY;
   positionX = _positionX;
   positionY = _positionY;
 
@@ -53,10 +55,15 @@ void Menu::start(bn::vector<Option, 32> _options,
 }
 
 void Menu::update() {
-  if (square.horizontal_scale() < targetScale) {
-    square.set_scale(square.horizontal_scale() + 0.25);
-    if (square.horizontal_scale() > targetScale)
-      square.set_scale(targetScale);
+  if (square.horizontal_scale() < targetScaleX) {
+    square.set_horizontal_scale(square.horizontal_scale() + 0.25);
+    if (square.horizontal_scale() > targetScaleX)
+      square.set_horizontal_scale(targetScaleX);
+  }
+  if (square.vertical_scale() < targetScaleY) {
+    square.set_vertical_scale(square.vertical_scale() + 0.25);
+    if (square.vertical_scale() > targetScaleY)
+      square.set_vertical_scale(targetScaleY);
   }
 
   if (!hasStarted())

@@ -25,8 +25,6 @@ void TutorialScene::init() {
 void TutorialScene::update() {
   UIScene::update();
 
-  updateDialog();
-
   const int BPM = 85;
   const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
   int msecs = PlaybackState.msecs - SaveFile::data.audioLag;
@@ -44,20 +42,12 @@ void TutorialScene::update() {
       ++it;
   }
 
-  // if (hasFinishedWriting) {
-  //   hasFinishedWriting = false;
-  //   onFinishWriting();
-  // }
+  if (wantsToContinue) {
+    wantsToContinue = false;
+    state++;
+  }
 
-  // if (wantsToContinue) {
-  //   wantsToContinue = false;
-  //   onContinue();
-  // }
-
-  // if (menu->hasConfirmedOption()) {
-  //   auto confirmedOption = menu->receiveConfirmedOption();
-  //   onConfirmedOption(confirmedOption);
-  // }
+  updateDialog();
 
   horse->setPosition({horse->getPosition().x(), HORSE_Y}, false);
   horse->update();
@@ -66,11 +56,48 @@ void TutorialScene::update() {
 void TutorialScene::updateDialog() {
   switch (state) {
     case 0: {
-      // TODO
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Do you know how to play?");
+      write(strs);
+      state = 1;
       break;
     }
     case 1: {
+      if (finishedWriting()) {
+        bn::vector<Menu::Option, 10> options;
+        options.push_back(Menu::Option{.text = "No, teach me"});
+        options.push_back(
+            Menu::Option{.text = "Yes, I know", .bDefault = true});
+        ask(options, 1.5);
+        state = 2;
+      }
       break;
+    }
+    case 2: {
+      if (menu->hasConfirmedOption()) {
+        auto confirmedOption = menu->receiveConfirmedOption();
+        closeMenu();
+        if (confirmedOption == 0) {  // No
+          bn::vector<bn::string<64>, 2> strs;
+          strs.push_back("You can |move| me with the |D-Pad|.");
+          strs.push_back("Try walking to the |?|.");
+          write(strs);
+          state = 5;
+        } else {
+          bn::vector<bn::string<64>, 2> strs;
+          strs.push_back("Gotcha, if you ever forget,");
+          strs.push_back("you can come back any time!");
+          write(strs, true);
+          state = 3;
+        }
+      }
+      break;
+    }
+    case 4: {
+      setNextScreen(GameState::Screen::START);
+      break;
+    }
+    case 5: {
     }
     default: {
     }
