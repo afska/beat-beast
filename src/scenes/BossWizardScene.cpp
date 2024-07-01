@@ -152,7 +152,7 @@ void BossWizardScene::processInput() {
             HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       }
       if (speedX != 0 && chartReader->isInsideBeat())
-        speedX *= 2;  // rhythmic movement?
+        speedX *= 2;
       horse->setPosition({horse->getPosition().x() + speedX, HORSE_Y}, true);
     } else {
       horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);

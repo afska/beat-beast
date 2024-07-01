@@ -144,7 +144,7 @@ void BossScene::processMovementInput(bn::fixed horseY) {
       horse->setFlipX(false);
     }
     if (speedX != 0 && chartReader->isInsideBeat())
-      speedX *= 2;  // rhythmic movement?
+      speedX *= 2;
     horse->setPosition({horse->getPosition().x() + speedX, horseY},
                        speedX != 0);
   } else {
