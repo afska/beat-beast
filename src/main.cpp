@@ -6,6 +6,7 @@
 #include "scenes/CalibrationScene.h"
 #include "scenes/DevPlaygroundScene.h"
 #include "scenes/StartScene.h"
+#include "scenes/TutorialScene.h"
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
@@ -75,6 +76,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
     case GameState::Screen::CALIBRATION:
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
+    case GameState::Screen::TUTORIAL:
+      return bn::unique_ptr{(Scene*)new TutorialScene(fs)};
     case GameState::Screen::DJ:
       return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
     case GameState::Screen::WIZARD:

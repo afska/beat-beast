@@ -8,43 +8,22 @@
 
 class TutorialScene : public UIScene {
  public:
-  TutorialScene(const GBFS_FILE* _fs, GameState::Screen _nextScreen);
+  TutorialScene(const GBFS_FILE* _fs);
 
   void init() override;
   void update() override;
 
  private:
-  enum CalibrationState {
-    INTRO,
-    INSTRUCTIONS,
-    MEASURING,
-    REVIEWING,
-    TESTING,
-    ERROR
-  };
-  enum CalibrationError { TOO_EARLY, TOO_MUCH, DIDNT_PRESS };
-
   bn::unique_ptr<Horse> horse;
-  GameState::Screen nextScreen;
-  int lastBeat = -1;
-  int measuredLag = 0;
-  CalibrationState state = INTRO;
+  unsigned state = 0;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
+  int lastBeat = 0;
+  bool isNewBeat = false;
 
-  void onFinishWriting();
-  void onContinue();
-  void onConfirmedOption(int option);
-  void onError(CalibrationError error);
-
-  void showIntro();
-  void showInstructions();
-  void start();
-  void finish();
-  void test();
-  void saveAndGoToGame();
+  void updateDialog();
 
  protected:
-  bool canSkipAutoWrite() override { return state != MEASURING; }
+  bool canSkipAutoWrite() override { return true; }
 };
 
 #endif  // TUTORIAL_SCENE_H

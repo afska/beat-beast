@@ -71,6 +71,7 @@ bn::sprite_item SpriteProvider::hitbox() {
 bn::sprite_item SpriteProvider::horse() {
   switch (GameState::data.currentScreen) {
     case GameState::Screen::CALIBRATION:
+    case GameState::Screen::TUTORIAL:
       return bn::sprite_items::ui_horse;
     case GameState::Screen::DJ:
       return bn::sprite_items::dj_horse;
@@ -86,6 +87,7 @@ bn::sprite_item SpriteProvider::horse() {
 bn::sprite_item SpriteProvider::iconHorse() {
   switch (GameState::data.currentScreen) {
     case GameState::Screen::CALIBRATION:
+    case GameState::Screen::TUTORIAL:
       return bn::sprite_items::ui_icon_horse;
     case GameState::Screen::DJ:
       return bn::sprite_items::dj_icon_horse;
@@ -99,6 +101,7 @@ bn::sprite_item SpriteProvider::iconHorse() {
 bn::sprite_item SpriteProvider::lifebar() {
   switch (GameState::data.currentScreen) {
     case GameState::Screen::CALIBRATION:
+    case GameState::Screen::TUTORIAL:
       return bn::sprite_items::ui_lifebar;
     case GameState::Screen::DJ:
       return bn::sprite_items::dj_lifebar;
@@ -112,6 +115,7 @@ bn::sprite_item SpriteProvider::lifebar() {
 bn::sprite_item SpriteProvider::lifebarFill() {
   switch (GameState::data.currentScreen) {
     case GameState::Screen::CALIBRATION:
+    case GameState::Screen::TUTORIAL:
       return bn::sprite_items::ui_lifebar_fill;
     case GameState::Screen::DJ:
       return bn::sprite_items::dj_lifebar_fill;
