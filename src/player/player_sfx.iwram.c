@@ -101,6 +101,7 @@ INLINE void init() {
 INLINE void stop() {
   mute();
   src = NULL;
+  cur_buffer = 0;
   for (u32 i = 0; i < 2; i++) {
     u32* bufferPtr = (u32*)double_buffers[i];
     for (u32 j = 0; j < BUFFER_SIZE / 4; j++)
