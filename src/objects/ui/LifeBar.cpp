@@ -42,17 +42,19 @@ LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
   fill.set_bg_priority(0);
 }
 
-bool LifeBar::setLife(unsigned _life) {
-  if (_life == 0)
+bool LifeBar::setLife(int _life) {
+  unsigned _unsignedLife = _life >= 0 ? (unsigned)_life : 0;
+
+  if (_unsignedLife == 0)
     if (!loopingCross.has_value())
       loopingCross = bn::unique_ptr{new LoopingCross(mainSprite.position())};
 
   if (_life <= 0)
     return true;
-  if (_life > maxLife)
+  if (_unsignedLife > maxLife)
     return false;
 
-  life = _life;
+  life = _unsignedLife;
   visualLife =
       Math::lerp(_life, 0, maxLife, 0, MAX_DIFFERENT_VALUES).ceil_integer();
   animationIndex = Math::SCALE_STEPS.size() - 1;

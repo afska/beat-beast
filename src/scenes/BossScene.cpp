@@ -94,8 +94,7 @@ void BossScene::sufferDamage(unsigned amount) {
     return;
 
   horse->hurt();
-  int newLife = (int)lifeBar->getLife() - amount;
-  bool dead = lifeBar->setLife(newLife >= 0 ? (unsigned)newLife : 0);
+  bool dead = lifeBar->setLife((int)lifeBar->getLife() - amount);
   printLife(dead ? 0 : lifeBar->getLife());
   if (dead && !isDead)
     die();

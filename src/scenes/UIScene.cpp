@@ -35,6 +35,7 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   textGenerator.set_one_sprite_per_character(true);
   textGeneratorAccent.set_one_sprite_per_character(true);
+  textGenerator.set_z_order(-2);
   updateVideo();
 }
 
@@ -82,11 +83,14 @@ void UIScene::write(bn::vector<bn::string<64>, 2> _lines,
 
     for (int i = 0; i <= line.size(); i++) {
       if (i == line.size() || line[i] == SEPARATOR) {
-        auto part = lineView.substr(cursorI, bn::max(i - cursorI, 1));
-        (accent ? textGeneratorAccent : textGenerator)
-            .generate(baseX + cursorX, y, part, textSprites);
-        cursorI = i + 1;
-        cursorX += textGenerator.width(part);
+        if (i > 0) {
+          auto part = lineView.substr(cursorI, bn::max(i - cursorI, 1));
+          (accent ? textGeneratorAccent : textGenerator)
+              .generate(baseX + cursorX, y, part, textSprites);
+          cursorI = i + 1;
+          cursorX += textGenerator.width(part);
+        } else
+          cursorI++;
         accent = !accent;
       }
     }

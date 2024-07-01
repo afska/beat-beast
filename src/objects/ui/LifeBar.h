@@ -13,7 +13,7 @@ class LifeBar : public TopLeftGameObject {
 
   unsigned getLife() { return life; }
   unsigned getMaxLife() { return maxLife; }
-  bool setLife(unsigned _life);
+  bool setLife(int _life);
 
   void update();
   void bounce();

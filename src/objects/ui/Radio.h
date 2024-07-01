@@ -1,14 +1,15 @@
-#ifndef QUESTION_MARK_H
-#define QUESTION_MARK_H
+#ifndef RADIO_H
+#define RADIO_H
 
 #include "../GameObject.h"
 
-class QuestionMark : public GameObject {
+class Radio : public GameObject {
  public:
-  QuestionMark(bn::fixed_point initialPosition);
+  Radio(bn::fixed_point initialPosition);
 
   bool update();
   void explode();
+  bool hasBeenHit() { return isExploding; }
   bn::fixed_point getPosition() { return sprite.position(); }
   void setPosition(bn::fixed_point position) { sprite.set_position(position); }
 
@@ -20,4 +21,4 @@ class QuestionMark : public GameObject {
   bool isDestroying = false;
 };
 
-#endif  // QUESTION_MARK_H
+#endif  // RADIO_H

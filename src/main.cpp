@@ -10,11 +10,13 @@
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
+#include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_core.h"
 #include "bn_optional.h"
 #include "bn_sprite_palettes.h"
 #include "bn_sprite_text_generator.h"
+#include "bn_sprites_mosaic.h"
 #include "bn_unique_ptr.h"
 
 static const GBFS_FILE* fs = find_first_gbfs_file(0);
@@ -104,8 +106,13 @@ void transitionToNextScene() {
   }
 
   scene.reset();
-  player_stop();
+  if (nextScreen != GameState::Screen::TUTORIAL) {
+    player_stop();
+    PlaybackState.msecs = 0;
+  }
   player_sfx_stop();
+  bn::bgs_mosaic::set_stretch(0);
+  bn::sprites_mosaic::set_stretch(0);
   bn::blending::restore();
 
   scene = setNextScene(nextScreen);

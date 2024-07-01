@@ -374,7 +374,7 @@ void BossDJScene::updateSprites() {
 
 void BossDJScene::causeDamage(unsigned amount) {
   octopus->hurt();
-  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
+  if (enemyLifeBar->setLife((int)enemyLifeBar->getLife() - amount))
     didWin = true;
 }
 

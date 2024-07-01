@@ -812,7 +812,7 @@ void BossWizardScene::goToNextPhase() {
 
 void BossWizardScene::causeDamage(unsigned amount) {
   wizard->get()->hurt();
-  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
+  if (enemyLifeBar->setLife((int)enemyLifeBar->getLife() - amount))
     didWin = true;
 }
 

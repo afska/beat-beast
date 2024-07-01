@@ -22,6 +22,7 @@ class Horse : public TopLeftGameObject {
   void setPosition(bn::fixed_point newPosition, bool isNowMoving);
   bn::fixed_point getPosition() { return topLeftPosition; }
   void setFlipX(bool flipX);
+  bool getFlipX() { return mainSprite.horizontal_flip(); }
   bool isBusy() { return isJumping() || isHurt(); }
   bool isJumping() { return jumpingAnimation.has_value(); }
   bool isHurt() { return hurtAnimation.has_value(); }
