@@ -587,6 +587,7 @@ void TutorialScene::reportSuccess() {
 }
 
 void TutorialScene::addRadio() {
+  bullets.clear();
   constexpr bn::array<int, 11> sequence = {0,   -40, 40,  80, -80, 0,
                                            -90, 70,  -20, 30, -40};
   radios.push_back(bn::unique_ptr{new Radio({sequence[count], -60})});
@@ -644,5 +645,3 @@ void TutorialScene::updateCountdown() {
     textGenerator.generate({0, -70}, "1...", tmpText);
   }
 }
-
-// TODO: BUG - SOMETIMES RADIOS EXPLODE SIMULTANEOUSLY

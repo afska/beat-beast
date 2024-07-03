@@ -92,6 +92,8 @@ void Horse::jump() {
 }
 
 void Horse::hurt() {
+  if (isHurt())
+    return;
   setHurtState();
 }
 
