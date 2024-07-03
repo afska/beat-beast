@@ -32,7 +32,9 @@ BossScene::BossScene(GameState::Screen _screen,
                                          SpriteProvider::lifebarFill())}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
-      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
+      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
+      settingsMenu(bn::unique_ptr{
+          new SettingsMenu(textGenerator, textGeneratorAccent)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
   auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
   chartReader =
@@ -58,6 +60,7 @@ void BossScene::update() {
     if (bn::blending::fade_alpha() < 0.7)
       bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
     menu->update();
+    settingsMenu->update();
     if (bn::keypad::start_pressed() && !isDead) {
       unpause();
       return;
@@ -65,6 +68,13 @@ void BossScene::update() {
     if (menu->hasConfirmedOption()) {
       auto confirmedOption = menu->receiveConfirmedOption();
       processMenuOption(confirmedOption);
+    }
+    if (settingsMenu->getNextScreen() != GameState::Screen::NO)
+      setNextScreen(settingsMenu->getNextScreen());
+    if (settingsMenu->isClosing()) {
+      menu->clickSound();
+      settingsMenu->stop();
+      showPauseMenu();
     }
 
     return;
@@ -247,9 +257,14 @@ void BossScene::pause() {
   player_setPause(true);
   player_sfx_play(SFX_PAUSE);
 
+  showPauseMenu();
+}
+
+void BossScene::showPauseMenu() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Continue"});
-  options.push_back(Menu::Option{.text = "Calibrate"});
+  options.push_back(Menu::Option{.text = "Restart"});
+  options.push_back(Menu::Option{.text = "Settings"});
   options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options);
 }
@@ -264,6 +279,7 @@ void BossScene::unpause() {
     lastSfxFileName = "";
   }
   menu->stop();
+  settingsMenu->stop();
 }
 
 void BossScene::processMenuOption(int option) {
@@ -289,11 +305,17 @@ void BossScene::processMenuOption(int option) {
       unpause();
       break;
     }
-    case 1: {  // Calibrate
-      setNextScreen(GameState::Screen::CALIBRATION);
+    case 1: {  // Restart
+      setNextScreen(getScreen());
       break;
     }
-    case 2: {  // Quit
+    case 2: {  // Settings
+      menu->stop();
+      menu->clickSound();
+      settingsMenu->start();
+      break;
+    }
+    case 3: {  // Quit
       setNextScreen(GameState::Screen::START);
       break;
     }

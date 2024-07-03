@@ -9,6 +9,7 @@
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Menu.h"
+#include "../objects/ui/SettingsMenu.h"
 #include "../player/player_sfx.h"
 #include "../rhythm/ChartReader.h"
 #include "../utils/PixelBlink.h"
@@ -45,6 +46,7 @@ class BossScene : public Scene {
   bn::optional<bn::sprite_ptr> progressIndicator;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::unique_ptr<Menu> menu;
+  bn::unique_ptr<SettingsMenu> settingsMenu;
   bn::string<32> lastSfxFileName = "";
   PlayerSFXState playerSfxState;
   bn::random random;
@@ -91,6 +93,7 @@ class BossScene : public Scene {
   void updateChartReader();
   void processMenuOption(int option);
   void pause();
+  void showPauseMenu();
   void unpause();
 };
 

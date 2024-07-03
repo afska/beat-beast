@@ -93,7 +93,6 @@ void Menu::update() {
       refresh();
     }
   } else if (bn::keypad::a_pressed()) {
-    // player_sfx_play(SFX_CLICK); // (disabled)
     confirmedOption = selectedOption;
   }
 }
@@ -104,6 +103,10 @@ void Menu::stop() {
   normalTextSprites.clear();
   accentTextSprites.clear();
   confirmedOption = -1;
+}
+
+void Menu::clickSound() {
+  player_sfx_play(SFX_CLICK);
 }
 
 void Menu::draw(bn::sprite_text_generator& generator,

@@ -29,6 +29,7 @@ class Menu {
              bn::fixed _positionY = 0);
   void update();
   void stop();
+  void clickSound();
 
   bool hasStarted() { return options.has_value(); }
   bool hasConfirmedOption() { return confirmedOption > -1; }
