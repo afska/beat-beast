@@ -28,6 +28,7 @@ class SettingsMenu {
   bn::unique_ptr<Menu> menu;
   GameState::Screen nextScreen = GameState::Screen::NO;
   bool closing = false;
+  int wipeSureLevel = 0;
 };
 
 #endif  // SETTINGS_MENU_H
