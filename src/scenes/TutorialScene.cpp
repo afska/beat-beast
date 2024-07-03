@@ -18,7 +18,7 @@
 #define SFX_SUCCESS "ui_success.pcm"
 
 TutorialScene::TutorialScene(const GBFS_FILE* _fs)
-    : UIScene(GameState::Screen::CALIBRATION, _fs),
+    : UIScene(GameState::Screen::TUTORIAL, _fs),
       horse(bn::unique_ptr{new Horse({88, HORSE_Y})}) {}
 
 void TutorialScene::init() {

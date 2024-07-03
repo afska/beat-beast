@@ -6,6 +6,7 @@
 #include "scenes/CalibrationScene.h"
 #include "scenes/DevPlaygroundScene.h"
 #include "scenes/StartScene.h"
+#include "scenes/StoryScene.h"
 #include "scenes/TutorialScene.h"
 #include "utils/gbfs/gbfs.h"
 
@@ -76,6 +77,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
   switch (nextScreen) {
     case GameState::Screen::START:
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
+    case GameState::Screen::STORY:
+      return bn::unique_ptr{(Scene*)new StoryScene(fs)};
     case GameState::Screen::CALIBRATION:
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
     case GameState::Screen::TUTORIAL:
@@ -92,6 +95,7 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
 }
 
 void transitionToNextScene() {
+  auto currentScreen = scene->get()->getScreen();
   auto nextScreen = scene->get()->getNextScreen();
 
   bn::bg_palettes::set_fade_intensity(0);
@@ -106,7 +110,12 @@ void transitionToNextScene() {
   }
 
   scene.reset();
-  if (nextScreen != GameState::Screen::TUTORIAL) {
+  bool keepMusic = nextScreen == GameState::Screen::STORY ||
+                   nextScreen == GameState::Screen::TUTORIAL ||
+                   (nextScreen == GameState::Screen::START &&
+                    (currentScreen == GameState::Screen::STORY ||
+                     currentScreen == GameState::Screen::TUTORIAL));
+  if (!keepMusic) {
     player_stop();
     PlaybackState.msecs = 0;
   }

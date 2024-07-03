@@ -27,15 +27,18 @@ StartScene::StartScene(const GBFS_FILE* _fs)
 
 void StartScene::init() {
   bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Story"});
   options.push_back(Menu::Option{.text = "Tutorial"});
   options.push_back(Menu::Option{.text = "DJ OctoBass"});
   options.push_back(Menu::Option{.text = "Synth Wizard"});
   options.push_back(Menu::Option{.text = "Settings"});
-  options.push_back(Menu::Option{.text = "Quit"});
+  // options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options, false);
 
-  player_play("lazer.gsm");
-  player_setLoop(true);
+  if (!PlaybackState.isLooping) {
+    player_play("lazer.gsm");
+    player_setLoop(true);
+  }
 }
 
 void StartScene::update() {
@@ -79,23 +82,27 @@ void StartScene::updateVideo() {
 void StartScene::processMenuOption(int option) {
   switch (option) {
     case 0: {
+      setNextScreen(GameState::Screen::STORY);
+      break;
+    }
+    case 1: {
       setNextScreen(GameState::Screen::TUTORIAL);
       break;
     }
-    case 1: {  // Start
+    case 2: {  // Start
       setNextScreen(GameState::Screen::DJ);
       break;
     }
-    case 2: {  // Mini game
+    case 3: {  // Mini game
       setNextScreen(GameState::Screen::WIZARD);
       break;
     }
-    case 3: {  // Settings
+    case 4: {  // Settings
                // ???
       setNextScreen(GameState::Screen::CALIBRATION);
       break;
     }
-    case 4: {  // Quit
+    case 5: {  // Quit
       // ???
       break;
     }
