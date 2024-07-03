@@ -14,7 +14,7 @@ Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
       accentTextGenerator(_accentTextGenerator),
       square(SpriteProvider::menu().create_sprite(0, 0)) {
   square.set_visible(false);
-  square.set_z_order(-1);
+  square.set_z_order(-2);
   square.set_bg_priority(0);
 }
 
