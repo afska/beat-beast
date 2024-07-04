@@ -21,9 +21,13 @@ class Lightning : public TopLeftGameObject {
  private:
   bn::sprite_ptr sprite2;
   bn::sprite_ptr sprite3;
+  bn::sprite_ptr sprite4;
+  bn::sprite_ptr sprite5;
   bn::optional<bn::sprite_animate_action<8>> animation1;
   bn::optional<bn::sprite_animate_action<8>> animation2;
   bn::optional<bn::sprite_animate_action<8>> animation3;
+  bn::optional<bn::sprite_animate_action<8>> animation4;
+  bn::optional<bn::sprite_animate_action<8>> animation5;
   Event* event;
   Event* startEvent = NULL;
   bool hasPendingStartAnimation = false;
