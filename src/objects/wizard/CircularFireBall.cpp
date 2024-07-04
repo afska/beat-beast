@@ -26,7 +26,6 @@ CircularFireBall::CircularFireBall(bn::fixed_point _initialPosition,
   sprite.set_z_order(-1);
 
   sprite.set_scale(scale);
-  damage = 5;
   isShootable = true;
 
   sprite.set_visible(false);

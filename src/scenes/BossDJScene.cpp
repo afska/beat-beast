@@ -22,8 +22,8 @@
 #define LOOP_OFFSET_CURSOR -218856
 
 // Damage to player
-#define DMG_VINYL_TO_PLAYER 2
-#define DMG_TURNTABLE_TO_PLAYER 3
+#define DMG_VINYL_TO_PLAYER 1
+#define DMG_TURNTABLE_TO_PLAYER 1
 
 // Damage to enemy
 #define DMG_MEGABALL_TO_ENEMY 10
