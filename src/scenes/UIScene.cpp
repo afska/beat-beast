@@ -6,8 +6,8 @@
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
-#include "../assets/fonts/common_fixed_8x8_sprite_font.h"
-#include "../assets/fonts/common_fixed_8x8_sprite_font_accent.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../assets/fonts/common_variable_8x16_sprite_font.h"
 #include "../assets/fonts/common_variable_8x16_sprite_font_accent.h"
 #include "bn_blending.h"
@@ -29,8 +29,8 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
       textGenerator(common_variable_8x16_sprite_font),
       textGeneratorAccent(common_variable_8x16_sprite_font_accent),
-      menuTextGenerator(common_fixed_8x8_sprite_font),
-      menuTextGeneratorAccent(common_fixed_8x8_sprite_font_accent),
+      menuTextGenerator(common_fixed_8x16_sprite_font),
+      menuTextGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   textGenerator.set_one_sprite_per_character(true);
