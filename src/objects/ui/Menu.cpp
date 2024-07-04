@@ -50,8 +50,8 @@ void Menu::start(bn::vector<Option, 32> _options,
   accentTextGenerator.set_center_alignment();
   square.set_position(positionX, positionY);
 
-  draw(normalTextGenerator, normalTextSprites);
-  draw(accentTextGenerator, accentTextSprites);
+  draw();
+  drawSelected();
   refresh();
 }
 
@@ -75,10 +75,18 @@ void Menu::update() {
       selectedOption++;
       player_sfx_play(SFX_MOVE);
       refresh();
+    } else if ((int)selectedOption == options->size() - 1) {
+      selectedOption = 0;
+      player_sfx_play(SFX_MOVE);
+      refresh();
     }
   } else if (bn::keypad::up_pressed()) {
     if (selectedOption > 0) {
       selectedOption--;
+      player_sfx_play(SFX_MOVE);
+      refresh();
+    } else if (selectedOption == 0) {
+      selectedOption = options->size() - 1;
       player_sfx_play(SFX_MOVE);
       refresh();
     }
@@ -110,32 +118,40 @@ void Menu::clickSound() {
   player_sfx_play(SFX_CLICK);
 }
 
-void Menu::draw(bn::sprite_text_generator& generator,
-                bn::vector<bn::sprite_ptr, 64>& target) {
-  target.clear();
+void Menu::draw() {
+  normalTextSprites.clear();
 
   bn::fixed startY = -(options->size() * 16 - 8) / 2 + 3;
   for (int i = 0; i < options->size(); i++) {
-    auto startSpriteIndex = target.size();
-    generator.generate(positionX, positionY + startY + i * 16,
-                       options->at(i).text, target);
-    auto endSpriteIndex = target.size();
+    auto startSpriteIndex = normalTextSprites.size();
+    normalTextGenerator.generate(positionX, positionY + startY + i * 16,
+                                 options->at(i).text, normalTextSprites);
+    auto endSpriteIndex = normalTextSprites.size();
     options->at(i).startSpriteIndex = startSpriteIndex;
     options->at(i).endSpriteIndex = endSpriteIndex;
   }
-  for (auto& sprite : target)
+  for (auto& sprite : normalTextSprites)
+    sprite.set_mosaic_enabled(true);
+}
+
+void Menu::drawSelected() {
+  accentTextSprites.clear();
+
+  for (int i = options->at(selectedOption).startSpriteIndex;
+       i < options->at(selectedOption).endSpriteIndex; i++)
+    normalTextSprites[i].set_visible(false);
+
+  bn::fixed startY = -(options->size() * 16 - 8) / 2 + 3;
+  accentTextGenerator.generate(
+      positionX, positionY + startY + selectedOption * 16,
+      options->at(selectedOption).text, accentTextSprites);
+  for (auto& sprite : accentTextSprites)
     sprite.set_mosaic_enabled(true);
 }
 
 void Menu::refresh() {
   for (auto& sprite : normalTextSprites)
     sprite.set_visible(true);
-  for (auto& sprite : accentTextSprites)
-    sprite.set_visible(false);
 
-  auto option = options->at(selectedOption);
-  for (int i = option.startSpriteIndex; i < option.endSpriteIndex; i++) {
-    normalTextSprites[i].set_visible(false);
-    accentTextSprites[i].set_visible(true);
-  }
+  drawSelected();
 }

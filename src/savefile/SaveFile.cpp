@@ -18,6 +18,7 @@ bool SaveFile::initialize() {
     data.rumble = true;
     data.bgBlink = false;
     data.intensity = 0;
+    data.contrast = 0;
 
     save();
 

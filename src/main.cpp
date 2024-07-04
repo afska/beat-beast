@@ -56,6 +56,13 @@ int main() {
   //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
   scene->get()->init();
 
+  auto intensity = bn::fixed(SaveFile::data.intensity) / 10;
+  auto contrast = bn::fixed(SaveFile::data.contrast) / 10;
+  bn::bg_palettes::set_intensity(intensity);
+  bn::sprite_palettes::set_intensity(intensity);
+  bn::bg_palettes::set_contrast(contrast);
+  bn::sprite_palettes::set_contrast(contrast);
+
   while (true) {
     scene->get()->update();
 

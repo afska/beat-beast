@@ -11,6 +11,7 @@ struct __attribute__((__packed__)) SaveFileData {
   bool rumble;
   bool bgBlink;
   unsigned char intensity;
+  unsigned char contrast;
 };
 
 extern SaveFileData data;

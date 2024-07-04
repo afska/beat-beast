@@ -1,6 +1,8 @@
 #include "SettingsMenu.h"
 
 #include "../../savefile/SaveFile.h"
+#include "bn_bg_palettes.h"
+#include "bn_sprite_palettes.h"
 
 const bn::array<bn::string<32>, 5> WIPE_TEXTS = {
     "Wipe save", "Really delete?", "You sure?!", "Really sure?!", "Bye save?!"};
@@ -15,11 +17,13 @@ void SettingsMenu::start(unsigned selectedOption) {
   auto rumbleX = bn::string<32>(SaveFile::data.rumble ? "X" : " ");
   auto bgBlinkX = bn::string<32>(SaveFile::data.bgBlink ? "X" : " ");
   auto intensityN = bn::to_string<32>(SaveFile::data.intensity);
+  auto contrastN = bn::to_string<32>(SaveFile::data.contrast);
 
   options.push_back(Menu::Option{.text = "Audio sync"});
   options.push_back(Menu::Option{.text = "Rumble     <" + rumbleX + ">"});
   options.push_back(Menu::Option{.text = "BG Blink   <" + bgBlinkX + ">"});
   options.push_back(Menu::Option{.text = "Intensity  <" + intensityN + ">"});
+  options.push_back(Menu::Option{.text = "Contrast   <" + contrastN + ">"});
   options.push_back(Menu::Option{.text = WIPE_TEXTS[wipeSureLevel]});
   options.push_back(Menu::Option{.text = "Back", .bDefault = true});
   menu->start(options, true, false, 2, 2, 2, 0, 0, selectedOption);
@@ -49,10 +53,28 @@ void SettingsMenu::update() {
         break;
       }
       case 3: {  // Intensity
-        // TODO:
+        SaveFile::data.intensity = (SaveFile::data.intensity + 1) % 5;
+        SaveFile::save();
+
+        auto intensity = bn::fixed(SaveFile::data.intensity) / 10;
+        bn::bg_palettes::set_intensity(intensity);
+        bn::sprite_palettes::set_intensity(intensity);
+
+        refresh();
         break;
       }
-      case 4: {  // Wipe save
+      case 4: {  // Contrast
+        SaveFile::data.contrast = (SaveFile::data.contrast + 1) % 5;
+        SaveFile::save();
+
+        auto contrast = bn::fixed(SaveFile::data.contrast) / 10;
+        bn::bg_palettes::set_contrast(contrast);
+        bn::sprite_palettes::set_contrast(contrast);
+
+        refresh();
+        break;
+      }
+      case 5: {  // Wipe save
         if (wipeSureLevel < WIPE_TEXTS.size() - 1) {
           wipeSureLevel++;
           menu->clickSound();
@@ -63,7 +85,7 @@ void SettingsMenu::update() {
         }
         break;
       }
-      case 5: {  // Back
+      case 6: {  // Back
         closing = true;
         break;
       }

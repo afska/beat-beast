@@ -55,8 +55,8 @@ class Menu {
   bn::fixed positionX = 0;
   bn::fixed positionY = 0;
 
-  void draw(bn::sprite_text_generator& generator,
-            bn::vector<bn::sprite_ptr, 64>& target);
+  void draw();
+  void drawSelected();
   void refresh();
 };
 
