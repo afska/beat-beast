@@ -10,7 +10,7 @@ SettingsMenu::SettingsMenu(bn::sprite_text_generator _normalTextGenerator,
     : menu(bn::unique_ptr{
           new Menu(_normalTextGenerator, _accentTextGenerator)}) {}
 
-void SettingsMenu::start() {
+void SettingsMenu::start(unsigned selectedOption) {
   bn::vector<Menu::Option, 10> options;
   auto rumbleX = bn::string<32>(SaveFile::data.rumble ? "X" : " ");
   auto bgBlinkX = bn::string<32>(SaveFile::data.bgBlink ? "X" : " ");
@@ -22,7 +22,7 @@ void SettingsMenu::start() {
   options.push_back(Menu::Option{.text = "Intensity  <" + intensityN + ">"});
   options.push_back(Menu::Option{.text = WIPE_TEXTS[wipeSureLevel]});
   options.push_back(Menu::Option{.text = "Back", .bDefault = true});
-  menu->start(options, true, false, 2, 2, 2);
+  menu->start(options, true, false, 2, 2, 2, 0, 0, selectedOption);
 }
 
 void SettingsMenu::update() {
@@ -55,7 +55,9 @@ void SettingsMenu::update() {
       case 4: {  // Wipe save
         if (wipeSureLevel < WIPE_TEXTS.size() - 1) {
           wipeSureLevel++;
-          refresh();
+          menu->clickSound();
+          menu->stop();
+          start();
         } else {
           SaveFile::wipe();
         }
@@ -79,11 +81,10 @@ void SettingsMenu::stop() {
 }
 
 void SettingsMenu::refresh() {
+  auto selectedOption = menu->getSelectedOption();
   menu->clickSound();
   menu->stop();
-  start();
+  start(selectedOption);
 }
 
 // TODO: DEPENDING ON SCENE, VRAM TILE SECTION IS FULL
-// TODO: DON'T RESET CURSOR
-// TODO: Low light level when pausing if bgBlink is off

@@ -25,9 +25,10 @@ void Menu::start(bn::vector<Option, 32> _options,
                  bn::fixed _targetScaleX,
                  bn::fixed _targetScaleY,
                  bn::fixed _positionX,
-                 bn::fixed _positionY) {
+                 bn::fixed _positionY,
+                 unsigned _selectedOption) {
   options = _options;
-  selectedOption = 0;
+  selectedOption = _selectedOption;
   confirmedOption = -1;
   targetScaleX = _targetScaleX;
   targetScaleY = _targetScaleY;

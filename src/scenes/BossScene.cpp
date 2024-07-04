@@ -11,6 +11,7 @@
 #include "bn_keypad.h"
 
 #define LIFE_PLAYER 30
+#define BG_DARK_ALPHA 0.2
 #define SFX_PAUSE "menu_pause.pcm"
 #define SFX_LOSE "stopdj.pcm"
 
@@ -50,7 +51,7 @@ BossScene::BossScene(GameState::Screen _screen,
 }
 
 void BossScene::init() {
-  bn::blending::set_fade_alpha(0.2);
+  bn::blending::set_fade_alpha(BG_DARK_ALPHA);
   player_play((fileName + AUDIO_EXTENSION).c_str());
 }
 

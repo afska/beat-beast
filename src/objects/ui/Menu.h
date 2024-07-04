@@ -26,7 +26,8 @@ class Menu {
              bn::fixed _targetScaleX = 1.5,
              bn::fixed _targetScaleY = 1.5,
              bn::fixed _positionX = 0,
-             bn::fixed _positionY = 0);
+             bn::fixed _positionY = 0,
+             unsigned _selectedOption = 0);
   void update();
   void stop();
   void clickSound();
@@ -38,6 +39,7 @@ class Menu {
     confirmedOption = -1;
     return option;
   }
+  unsigned getSelectedOption() { return selectedOption; }
 
  private:
   bn::sprite_text_generator normalTextGenerator;

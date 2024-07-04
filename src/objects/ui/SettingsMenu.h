@@ -16,7 +16,7 @@ class SettingsMenu {
   SettingsMenu(bn::sprite_text_generator _normalTextGenerator,
                bn::sprite_text_generator _accentTextGenerator);
 
-  void start();
+  void start(unsigned selectedOption = 0);
   void update();
   void stop();
 

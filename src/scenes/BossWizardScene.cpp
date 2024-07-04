@@ -495,10 +495,8 @@ void BossWizardScene::updateBackground() {
   }
 
   if (!fadingToWhite) {
-    if (SaveFile::data.bgBlink) {
-      bn::blending::set_fade_alpha(
-          Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
-    }
+    int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
+    bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
   } else {
     bn::fixed newAlpha = bn::blending::fade_alpha() + 0.01;
     if (newAlpha > 1)
