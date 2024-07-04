@@ -30,7 +30,10 @@ class Horse : public TopLeftGameObject {
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
   bool canReallyShoot() { return canShoot && shootCooldown == 0; }
-  void failShoot() { shootCooldown = 30; }
+  void failShoot() {
+    if (shootCooldown == 0)
+      shootCooldown = 30;
+  }
   int getBounceFrame() { return bounceFrame; }
   void enableAlternativeRunAnimation() {
     useAlternativeRunAnimation = true;
