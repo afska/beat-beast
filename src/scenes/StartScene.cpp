@@ -18,7 +18,9 @@ StartScene::StartScene(const GBFS_FILE* _fs)
       horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
+      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
+      settingsMenu(bn::unique_ptr{
+          new SettingsMenu(textGenerator, textGeneratorAccent)}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
@@ -32,7 +34,7 @@ void StartScene::init() {
   options.push_back(Menu::Option{.text = "DJ OctoBass"});
   options.push_back(Menu::Option{.text = "Synth Wizard"});
   options.push_back(Menu::Option{.text = "Settings"});
-  // options.push_back(Menu::Option{.text = "Quit"});
+  // options.push_back(Menu::Option{.text = "Credits"});
   menu->start(options, false);
 
   if (!PlaybackState.isLooping) {
@@ -46,9 +48,17 @@ void StartScene::update() {
   horse->update();
 
   menu->update();
+  settingsMenu->update();
   if (menu->hasConfirmedOption()) {
     auto confirmedOption = menu->receiveConfirmedOption();
     processMenuOption(confirmedOption);
+  }
+  if (settingsMenu->getNextScreen() != GameState::Screen::NO)
+    setNextScreen(settingsMenu->getNextScreen());
+  if (settingsMenu->isClosing()) {
+    menu->clickSound();
+    settingsMenu->stop();
+    init();
   }
 
   const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff
@@ -98,8 +108,9 @@ void StartScene::processMenuOption(int option) {
       break;
     }
     case 4: {  // Settings
-               // ???
-      setNextScreen(GameState::Screen::CALIBRATION);
+      menu->stop();
+      menu->clickSound();
+      settingsMenu->start();
       break;
     }
     case 5: {  // Quit

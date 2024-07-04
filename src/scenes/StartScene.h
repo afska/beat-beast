@@ -3,6 +3,7 @@
 
 #include "../objects/Horse.h"
 #include "../objects/ui/Menu.h"
+#include "../objects/ui/SettingsMenu.h"
 #include "Scene.h"
 
 class StartScene : public Scene {
@@ -19,6 +20,7 @@ class StartScene : public Scene {
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<Menu> menu;
+  bn::unique_ptr<SettingsMenu> settingsMenu;
   unsigned videoFrame = 0;
   int lastBeat = 0;
   int extraSpeed = 0;
