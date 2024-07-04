@@ -265,6 +265,7 @@ void BossScene::pause() {
   player_sfx_play(SFX_PAUSE);
 
   showPauseMenu();
+  RUMBLE_stop();
 }
 
 void BossScene::showPauseMenu() {
