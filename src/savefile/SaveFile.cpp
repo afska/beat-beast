@@ -1,5 +1,10 @@
 #include "SaveFile.h"
 
+#include "../../../butano/butano/hw/include/bn_hw_core.h"
+#include "../player/player.h"
+#include "../player/player_sfx.h"
+#include "../utils/Rumble.h"
+
 BN_DATA_EWRAM SaveFile::SaveFileData SaveFile::data;
 
 #define MAGIC_NUMBER 13579513
@@ -10,6 +15,10 @@ bool SaveFile::initialize() {
   if (data.magicNumber != MAGIC_NUMBER) {
     data.magicNumber = MAGIC_NUMBER;
     data.audioLag = 0;
+    data.rumble = true;
+    data.bgBlink = false;
+    data.intensity = 0;
+
     save();
 
     return true;
@@ -23,4 +32,17 @@ void SaveFile::load() {
 
 void SaveFile::save() {
   bn::sram::write(data);
+}
+
+void SaveFile::wipe() {
+  data.magicNumber = 1;
+  save();
+
+  player_stop();
+  player_unload();
+  player_sfx_stop();
+  player_sfx_unload();
+  RUMBLE_stop();
+
+  bn::hw::core::reset();
 }

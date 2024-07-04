@@ -1,5 +1,7 @@
 #include "SettingsMenu.h"
 
+#include "../../savefile/SaveFile.h"
+
 const bn::array<bn::string<32>, 5> WIPE_TEXTS = {
     "Wipe save", "Really delete?", "You sure?!", "Really sure?!", "Bye save?!"};
 
@@ -48,8 +50,7 @@ void SettingsMenu::update() {
           menu->stop();
           start();
         } else {
-          // TODO: WIPE!
-          BN_ERROR("BOOM!");
+          SaveFile::wipe();
         }
         break;
       }
