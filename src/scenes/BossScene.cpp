@@ -3,6 +3,7 @@
 #include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
+#include "../utils/Rumble.h"
 
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
@@ -248,6 +249,12 @@ void BossScene::updateChartReader() {
 
   if (isNewTick)
     horse->canShoot = true;
+
+  if (isNewBeat) {
+    RUMBLE_start();
+  } else if (wasInsideBeat && !chartReader->isInsideBeat()) {
+    RUMBLE_stop();
+  }
 }
 
 void BossScene::pause() {

@@ -8,6 +8,7 @@
 #include "scenes/StartScene.h"
 #include "scenes/StoryScene.h"
 #include "scenes/TutorialScene.h"
+#include "utils/Rumble.h"
 #include "utils/gbfs/gbfs.h"
 
 #include "bn_bg_palettes.h"
@@ -34,6 +35,7 @@ void update() {
 }
 
 int main() {
+  RUMBLE_init();
   bn::core::init(ISR_VBlank);
 
   BN_ASSERT(fs != NULL,
@@ -95,6 +97,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
 }
 
 void transitionToNextScene() {
+  RUMBLE_stop();
+
   auto currentScreen = scene->get()->getScreen();
   auto nextScreen = scene->get()->getNextScreen();
 
