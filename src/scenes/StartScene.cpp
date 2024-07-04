@@ -1,8 +1,8 @@
 #include "StartScene.h"
 
 #include "../assets/StartVideo.h"
-#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
-#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
+#include "../assets/fonts/common_fixed_8x8_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x8_sprite_font_accent.h"
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
@@ -16,8 +16,8 @@
 StartScene::StartScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::START, _fs),
       horse(bn::unique_ptr{new Horse({0, 0})}),
-      textGenerator(common_fixed_8x16_sprite_font),
-      textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
+      textGenerator(common_fixed_8x8_sprite_font),
+      textGeneratorAccent(common_fixed_8x8_sprite_font_accent),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);

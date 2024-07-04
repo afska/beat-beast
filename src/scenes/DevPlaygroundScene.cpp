@@ -6,14 +6,14 @@
 #include "../scenes/CalibrationScene.h"
 #include "../utils/Math.h"
 
-#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x8_sprite_font.h"
 
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_synth.h"
 
 DevPlaygroundScene::DevPlaygroundScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::DJ, _fs),
-      textGenerator(common_fixed_8x16_sprite_font),
+      textGenerator(common_fixed_8x8_sprite_font),
       physWorld(new PhysWorld),
       horse(new Horse({20, 90})),
       background(bn::regular_bg_items::back_synth.create_bg(0, 0)),
