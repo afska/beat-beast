@@ -8,18 +8,23 @@
 Bullet::Bullet(bn::fixed_point initialPosition,
                bn::fixed_point _direction,
                bn::sprite_item _bullet,
-               bn::fixed scale)
+               bn::fixed scale,
+               bn::fixed _offBeatSpeed,
+               bn::fixed _onBeatSpeed)
     : sprite(_bullet.create_sprite(initialPosition)),
       animation(bn::create_sprite_animate_action_forever(sprite,
                                                          5,
                                                          _bullet.tiles_item(),
                                                          0,
                                                          1)),
-      direction(_direction) {
+      direction(_direction),
+      offBeatSpeed(_offBeatSpeed),
+      onBeatSpeed(_onBeatSpeed) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
 
   sprite.set_scale(scale);
+  sprite.set_bg_priority(1);
 }
 
 bool Bullet::update(int msecs,
@@ -32,8 +37,7 @@ bool Bullet::update(int msecs,
   }
 
   sprite.set_position(sprite.position() +
-                      direction *
-                          (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));
+                      direction * (isInsideBeat ? onBeatSpeed : offBeatSpeed));
 
   animation.update();
 

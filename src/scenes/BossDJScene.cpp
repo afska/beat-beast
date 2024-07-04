@@ -207,13 +207,13 @@ void BossDJScene::processChart() {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1.5),
-                       bn::sprite_items::dj_bad_bullet)});
+                       bn::sprite_items::dj_bad_bullet, 1, 1, 2)});
       }
       if (IS_EVENT_BULLET_SLOW(type)) {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
-                       bn::sprite_items::dj_bad_bullet)});
+                       bn::sprite_items::dj_bad_bullet, 1, 1, 2)});
       }
 
       // Turntable throw

@@ -3,12 +3,17 @@
 
 #include "RhythmicBullet.h"
 
+#define BULLET_OFF_BEAT_SPEED 1.5
+#define BULLET_ON_BEAT_SPEED 2.5
+
 class Bullet : public RhythmicBullet {
  public:
   Bullet(bn::fixed_point initialPosition,
          bn::fixed_point _direction,
          bn::sprite_item _bullet,
-         bn::fixed scale = 1);
+         bn::fixed scale = 1,
+         bn::fixed _offBeatSpeed = BULLET_OFF_BEAT_SPEED,
+         bn::fixed _onBeatSpeed = BULLET_ON_BEAT_SPEED);
 
   bn::fixed_point getPosition() { return sprite.position(); }
   bool update(int msecs,
@@ -19,6 +24,8 @@ class Bullet : public RhythmicBullet {
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<2> animation;
   bn::fixed_point direction;
+  bn::fixed offBeatSpeed;
+  bn::fixed onBeatSpeed;
 };
 
 #endif  // BULLET_H

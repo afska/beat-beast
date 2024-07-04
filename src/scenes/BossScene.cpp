@@ -111,6 +111,7 @@ void BossScene::die() {
 
   player_stop();
   player_sfx_play(SFX_LOSE);
+  RUMBLE_stop();
   pixelBlink->blink();
 
   deadHorse = SpriteProvider::horse().create_sprite(2, -53, 13);
