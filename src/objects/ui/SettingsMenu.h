@@ -29,6 +29,8 @@ class SettingsMenu {
   GameState::Screen nextScreen = GameState::Screen::NO;
   bool closing = false;
   int wipeSureLevel = 0;
+
+  void refresh();
 };
 
 #endif  // SETTINGS_MENU_H

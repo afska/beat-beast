@@ -3,6 +3,7 @@
 #include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
+#include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
 #include "bn_blending.h"
@@ -494,8 +495,10 @@ void BossWizardScene::updateBackground() {
   }
 
   if (!fadingToWhite) {
-    bn::blending::set_fade_alpha(
-        Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+    if (SaveFile::data.bgBlink) {
+      bn::blending::set_fade_alpha(
+          Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+    }
   } else {
     bn::fixed newAlpha = bn::blending::fade_alpha() + 0.01;
     if (newAlpha > 1)

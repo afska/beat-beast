@@ -12,10 +12,14 @@ SettingsMenu::SettingsMenu(bn::sprite_text_generator _normalTextGenerator,
 
 void SettingsMenu::start() {
   bn::vector<Menu::Option, 10> options;
+  auto rumbleX = bn::string<32>(SaveFile::data.rumble ? "X" : " ");
+  auto bgBlinkX = bn::string<32>(SaveFile::data.bgBlink ? "X" : " ");
+  auto intensityN = bn::to_string<32>(SaveFile::data.intensity);
+
   options.push_back(Menu::Option{.text = "Audio sync"});
-  options.push_back(Menu::Option{.text = "Rumble     <X>"});
-  options.push_back(Menu::Option{.text = "BG Blink   < >"});
-  options.push_back(Menu::Option{.text = "Intensity  <0>"});
+  options.push_back(Menu::Option{.text = "Rumble     <" + rumbleX + ">"});
+  options.push_back(Menu::Option{.text = "BG Blink   <" + bgBlinkX + ">"});
+  options.push_back(Menu::Option{.text = "Intensity  <" + intensityN + ">"});
   options.push_back(Menu::Option{.text = WIPE_TEXTS[wipeSureLevel]});
   options.push_back(Menu::Option{.text = "Back", .bDefault = true});
   menu->start(options, true, false, 2, 2, 2);
@@ -33,22 +37,25 @@ void SettingsMenu::update() {
         break;
       }
       case 1: {  // Rumble
-        // TODO:
+        SaveFile::data.rumble = !SaveFile::data.rumble;
+        SaveFile::save();
+        refresh();
         break;
       }
       case 2: {  // BG Blink
-        // TODO:
+        SaveFile::data.bgBlink = !SaveFile::data.bgBlink;
+        SaveFile::save();
+        refresh();
         break;
       }
-      case 3: {  // Saturation
+      case 3: {  // Intensity
         // TODO:
         break;
       }
       case 4: {  // Wipe save
         if (wipeSureLevel < WIPE_TEXTS.size() - 1) {
           wipeSureLevel++;
-          menu->stop();
-          start();
+          refresh();
         } else {
           SaveFile::wipe();
         }
@@ -70,3 +77,13 @@ void SettingsMenu::stop() {
   closing = false;
   wipeSureLevel = 0;
 }
+
+void SettingsMenu::refresh() {
+  menu->clickSound();
+  menu->stop();
+  start();
+}
+
+// TODO: DEPENDING ON SCENE, VRAM TILE SECTION IS FULL
+// TODO: DON'T RESET CURSOR
+// TODO: Low light level when pausing if bgBlink is off

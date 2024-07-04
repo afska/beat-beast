@@ -250,10 +250,12 @@ void BossScene::updateChartReader() {
   if (isNewTick)
     horse->canShoot = true;
 
-  if (isNewBeat) {
-    RUMBLE_start();
-  } else if (wasInsideBeat && !chartReader->isInsideBeat()) {
-    RUMBLE_stop();
+  if (SaveFile::data.rumble) {
+    if (isNewBeat) {
+      RUMBLE_start();
+    } else if (wasInsideBeat && !chartReader->isInsideBeat()) {
+      RUMBLE_stop();
+    }
   }
 }
 

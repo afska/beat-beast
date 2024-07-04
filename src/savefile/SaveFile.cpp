@@ -39,9 +39,7 @@ void SaveFile::wipe() {
   save();
 
   player_stop();
-  player_unload();
   player_sfx_stop();
-  player_sfx_unload();
   RUMBLE_stop();
 
   bn::hw::core::reset();

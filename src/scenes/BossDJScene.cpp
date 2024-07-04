@@ -3,6 +3,7 @@
 #include "../assets/SpriteProvider.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
+#include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
 #include "bn_blending.h"
@@ -261,8 +262,10 @@ void BossDJScene::updateBackground() {
   //     background2.position().x() - (chartReader->isInsideBeat() ? 0.5 :
   //     0.25), background2.position().y());
 
-  bn::blending::set_fade_alpha(
-      Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+  if (SaveFile::data.bgBlink) {
+    bn::blending::set_fade_alpha(
+        Math::BOUNCE_BLENDING_STEPS[horse->getBounceFrame()]);
+  }
 }
 
 void BossDJScene::updateSprites() {
