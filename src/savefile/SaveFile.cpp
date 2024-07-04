@@ -12,7 +12,7 @@ BN_DATA_EWRAM SaveFile::SaveFileData SaveFile::data;
 bool SaveFile::initialize() {
   load();
 
-  if (data.magicNumber != MAGIC_NUMBER) {
+  if (!isValid()) {
     data.magicNumber = MAGIC_NUMBER;
     data.audioLag = 0;
     data.rumble = true;
@@ -25,6 +25,17 @@ bool SaveFile::initialize() {
     return true;
   } else
     return false;
+}
+
+bool SaveFile::isValid() {
+  if (data.magicNumber != MAGIC_NUMBER)
+    return false;
+  if (data.audioLag < 0 || data.audioLag > 500)
+    return false;
+  if (data.intensity >= 5 || data.contrast >= 5)
+    return false;
+
+  return true;
 }
 
 void SaveFile::load() {

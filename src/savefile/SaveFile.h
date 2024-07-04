@@ -17,6 +17,7 @@ struct __attribute__((__packed__)) SaveFileData {
 extern SaveFileData data;
 
 bool initialize();
+bool isValid();
 void load();
 void save();
 void wipe();
