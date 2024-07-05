@@ -12,6 +12,7 @@ class GunReload : public TopLeftGameObject {
 
  private:
   bn::optional<bn::sprite_animate_action<15>> animation;
+  bn::sprite_ptr crossSprite;
   int animationIndex = -1;
 
   void resetAnimation();

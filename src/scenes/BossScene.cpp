@@ -33,7 +33,7 @@ BossScene::BossScene(GameState::Screen _screen,
                                          SpriteProvider::iconHorse(),
                                          SpriteProvider::lifebarFill())}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
-      gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
+      gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12 + 4})}),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
