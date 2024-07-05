@@ -7,6 +7,7 @@
 #include "../objects/Horse.h"
 #include "../objects/ui/AutoFire.h"
 #include "../objects/ui/Cross.h"
+#include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Menu.h"
 #include "../player/player_sfx.h"
@@ -39,6 +40,7 @@ class BossScene : public Scene {
   bn::unique_ptr<LifeBar> enemyLifeBar;
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
+  bn::unique_ptr<GunReload> gunReload;
   bn::optional<bn::unique_ptr<AutoFire>> autoFire;
   bn::optional<bn::sprite_ptr> deadHorse;
   bn::optional<bn::sprite_ptr> progress;

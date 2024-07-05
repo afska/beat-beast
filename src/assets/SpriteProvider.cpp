@@ -7,6 +7,7 @@
 #include "bn_sprite_items_cross.h"
 #include "bn_sprite_items_explosion.h"
 #include "bn_sprite_items_gun.h"
+#include "bn_sprite_items_gunreload.h"
 #include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_menu.h"
 #include "bn_sprite_items_progress.h"
@@ -36,6 +37,10 @@ bn::sprite_item unknownScreen() {
 
 bn::sprite_item SpriteProvider::gun() {
   return bn::sprite_items::gun;
+}
+
+bn::sprite_item SpriteProvider::gunreload() {
+  return bn::sprite_items::gunreload;
 }
 
 bn::sprite_item SpriteProvider::bullet() {

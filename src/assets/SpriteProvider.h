@@ -6,6 +6,7 @@
 namespace SpriteProvider {
 
 bn::sprite_item gun();
+bn::sprite_item gunreload();
 bn::sprite_item bullet();
 bn::sprite_item cross();
 bn::sprite_item explosion();

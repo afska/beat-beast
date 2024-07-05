@@ -33,6 +33,7 @@ BossScene::BossScene(GameState::Screen _screen,
                                          SpriteProvider::iconHorse(),
                                          SpriteProvider::lifebarFill())}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
+      gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
@@ -190,6 +191,7 @@ void BossScene::updateCommonSprites() {
     if (cross->get()->update())
       cross.reset();
   }
+  gunReload->update();
   if (autoFire.has_value())
     autoFire->get()->update();
 }
@@ -204,7 +206,8 @@ void BossScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
-  horse->failShoot();
+  if (horse->failShoot())
+    gunReload->show();
 }
 
 void BossScene::enableAutoFire() {
