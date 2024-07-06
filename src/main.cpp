@@ -4,6 +4,7 @@
 #include "scenes/BossDJScene.h"
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
+#include "scenes/ControlsScene.h"
 #include "scenes/DevPlaygroundScene.h"
 #include "scenes/StartScene.h"
 #include "scenes/StoryScene.h"
@@ -51,9 +52,11 @@ int main() {
   player_init();
   player_sfx_init();
 
-  scene = isNewSave ? setNextScene(GameState::Screen::CALIBRATION)
-                    : setNextScene(GameState::Screen::START);
-  //                : bn::unique_ptr{(Scene*)new DevPlaygroundScene(fs)};
+  auto initialScreen = SaveFile::data.didCalibrate
+                           ? GameState::Screen::START
+                           : GameState::Screen::CALIBRATION;
+  GameState::data.currentScreen = initialScreen;
+  scene = setNextScene(GameState::Screen::CONTROLS);
   scene->get()->init();
 
   auto intensity = bn::fixed(SaveFile::data.intensity) / 10;
@@ -80,16 +83,18 @@ BN_CODE_IWRAM void ISR_VBlank() {
 }
 
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
-  auto previousScreen = GameState::data.currentScreen;
+  auto continuationScreen = GameState::data.currentScreen;
   GameState::data.currentScreen = nextScreen;
 
   switch (nextScreen) {
+    case GameState::Screen::CONTROLS:
+      return bn::unique_ptr{(Scene*)new ControlsScene(fs, continuationScreen)};
     case GameState::Screen::START:
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
     case GameState::Screen::STORY:
       return bn::unique_ptr{(Scene*)new StoryScene(fs)};
     case GameState::Screen::CALIBRATION:
-      return bn::unique_ptr{(Scene*)new CalibrationScene(fs, previousScreen)};
+      return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
     case GameState::Screen::TUTORIAL:
       return bn::unique_ptr{(Scene*)new TutorialScene(fs)};
     case GameState::Screen::DJ:

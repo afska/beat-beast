@@ -8,7 +8,7 @@
 
 class CalibrationScene : public UIScene {
  public:
-  CalibrationScene(const GBFS_FILE* _fs, GameState::Screen _nextScreen);
+  CalibrationScene(const GBFS_FILE* _fs);
 
   void init() override;
   void update() override;
@@ -25,7 +25,6 @@ class CalibrationScene : public UIScene {
   enum CalibrationError { TOO_EARLY, TOO_MUCH, DIDNT_PRESS };
 
   bn::unique_ptr<Horse> horse;
-  GameState::Screen nextScreen;
   int lastBeat = -1;
   int measuredLag = 0;
   CalibrationState state = INTRO;

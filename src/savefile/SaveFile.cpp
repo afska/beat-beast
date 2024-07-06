@@ -15,6 +15,7 @@ bool SaveFile::initialize() {
   if (!isValid()) {
     data.magicNumber = MAGIC_NUMBER;
     data.audioLag = 0;
+    data.didCalibrate = false;
     data.rumble = true;
     data.bgBlink = false;
     data.intensity = 0;

@@ -13,11 +13,9 @@
 
 const unsigned TARGET_BEAT_MS = 2000;
 
-CalibrationScene::CalibrationScene(const GBFS_FILE* _fs,
-                                   GameState::Screen _nextScreen)
+CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::CALIBRATION, _fs),
-      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
-      nextScreen(_nextScreen) {}
+      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}) {}
 
 void CalibrationScene::init() {
   UIScene::init();
@@ -265,7 +263,8 @@ void CalibrationScene::test() {
 
 void CalibrationScene::saveAndGoToGame() {
   SaveFile::data.audioLag = measuredLag;
+  SaveFile::data.didCalibrate = true;
   SaveFile::save();
 
-  setNextScreen(nextScreen);
+  setNextScreen(GameState::Screen::START);
 }

@@ -471,7 +471,7 @@ void TutorialScene::updateDialog() {
     case 29: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("While looking to the |left|,");
-      strs.push_back("shoot to the |upper-right| corner.");
+      strs.push_back("shoot to the |top-right| corner.");
       write(strs);
       state++;
       break;
@@ -479,6 +479,9 @@ void TutorialScene::updateDialog() {
     case 30: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
+        questionMark.reset();
+        questionMark =
+            bn::unique_ptr{new QuestionMark(bn::fixed_point{100, -60})};
         state++;
       }
       break;
@@ -490,10 +493,11 @@ void TutorialScene::updateDialog() {
     }
     case 32: {
       reportSuccess();
+      questionMark.reset();
 
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Now, while looking to the |right|,");
-      strs.push_back("shoot to the |upper-left| corner.");
+      strs.push_back("shoot to the |top-left| corner.");
       write(strs);
       state++;
       break;
@@ -501,6 +505,9 @@ void TutorialScene::updateDialog() {
     case 33: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
+        questionMark.reset();
+        questionMark =
+            bn::unique_ptr{new QuestionMark(bn::fixed_point{-100, -60})};
         state++;
       }
       break;
@@ -512,6 +519,7 @@ void TutorialScene::updateDialog() {
     }
     case 35: {
       reportSuccess();
+      questionMark.reset();
 
       dummyBoss = bn::unique_ptr{new DummyBoss({80, -30})};
       enemyLifeBar = bn::unique_ptr{
