@@ -23,7 +23,7 @@ class MegaBall : public RhythmicBullet {
   bn::sprite_animate_action<2> animation1;
   bn::sprite_animate_action<7> animation2;
   u32 waitFrames = 10;
-  u32 damageWaitFrames = 60;
+  u32 damageWaitFrames = 40;
 };
 
 #endif  // MEGA_BALL_H
