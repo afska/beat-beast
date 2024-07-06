@@ -21,9 +21,9 @@ class StartScene : public Scene {
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<Menu> menu;
   bn::unique_ptr<SettingsMenu> settingsMenu;
-  unsigned videoFrame = 0;
+  bn::fixed videoFrame = 0;
   int lastBeat = 0;
-  int extraSpeed = 0;
+  bn::fixed extraSpeed = 0;
 
   void updateVideo();
   void processMenuOption(int option);

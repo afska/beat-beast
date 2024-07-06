@@ -78,14 +78,14 @@ void StartScene::update() {
 
 void StartScene::updateVideo() {
   background.reset();
-  background = StartVideo::getFrame(videoFrame)
+  background = StartVideo::getFrame(videoFrame.floor_integer())
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
   background.get()->set_mosaic_enabled(true);
   background.get()->set_blending_enabled(true);
-  extraSpeed = bn::max(extraSpeed - 1, 0);
-  videoFrame += 1 + extraSpeed / 2;
-  if (videoFrame >= 600)
+  extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
+  videoFrame += (1 + extraSpeed / 2) / 2;
+  if (videoFrame >= 300)
     videoFrame = 0;
 }
 
