@@ -132,7 +132,6 @@ void UIScene::closeText() {
 }
 
 void UIScene::setUpBlending() {
-  bn::blending::restore();
   bn::blending::set_transparency_alpha(0.5);
 }
 
@@ -217,8 +216,6 @@ bn::string<64> UIScene::removeSeparator(bn::string<64> str, char separator) {
 
 bool UIScene::processPauseInput() {
   if (isPaused) {
-    if (bn::blending::fade_alpha() < 0.7)
-      bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
     menu->update();
     if (bn::keypad::start_pressed()) {
       unpause();
@@ -248,7 +245,6 @@ void UIScene::pause() {
 
   showPauseMenu();
   RUMBLE_stop();
-  bn::blending::restore();
 }
 
 void UIScene::showPauseMenu() {
