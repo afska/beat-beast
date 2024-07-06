@@ -4,6 +4,7 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+#include "../utils/Rumble.h"
 
 #include "bn_keypad.h"
 #include "bn_sprite_items_ui_icon_example_guardian.h"
@@ -12,7 +13,7 @@
 #define BPM 85
 #define BEAT_DURATION_MS 705
 #define ONE_DIV_BEAT_DURATION_MS 6084537
-#define OFFSET 50
+#define OFFSET 32
 #define HORSE_Y 34
 #define SFX_OBJECTIVE "ui_objective.pcm"
 #define SFX_SUCCESS "ui_success.pcm"
@@ -145,6 +146,14 @@ void TutorialScene::processBeats() {
 
   if (isNewTick)
     horse->canShoot = true;
+
+  if (SaveFile::data.rumble) {
+    if (isNewBeat) {
+      RUMBLE_start();
+    } else if (wasInsideBeat && !isInsideBeat) {
+      RUMBLE_stop();
+    }
+  }
 }
 
 void TutorialScene::updateSprites() {
