@@ -5,6 +5,7 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+#include "../utils/Rumble.h"
 
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
@@ -24,6 +25,7 @@
 
 #define SFX_QUESTION "menu_question.pcm"
 #define SFX_QUESTION_CLOSE "menu_pause.pcm"
+#define SFX_PAUSE "menu_pause.pcm"
 
 UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
@@ -40,10 +42,13 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
 }
 
 void UIScene::init() {
-  bn::blending::set_transparency_alpha(0.5);
+  setUpBlending();
 }
 
-void UIScene::update() {
+bool UIScene::updateUI() {
+  if (processPauseInput())
+    return true;
+
   if (!isWriting && hasMoreMessages && bn::keypad::a_pressed())
     wantsToContinue = true;
 
@@ -59,6 +64,8 @@ void UIScene::update() {
   pixelBlink->update();
   updateVideo();
   autoWrite();
+
+  return false;
 }
 
 void UIScene::write(bn::vector<bn::string<64>, 2> _lines,
@@ -122,6 +129,11 @@ void UIScene::closeText() {
   hasFinishedWriting = false;
   stopWriting();
   textSprites.clear();
+}
+
+void UIScene::setUpBlending() {
+  bn::blending::restore();
+  bn::blending::set_transparency_alpha(0.5);
 }
 
 void UIScene::updateVideo() {
@@ -201,4 +213,78 @@ bn::string<64> UIScene::removeSeparator(bn::string<64> str, char separator) {
     if (c != separator)
       result.push_back(c);
   return result;
+}
+
+bool UIScene::processPauseInput() {
+  if (isPaused) {
+    if (bn::blending::fade_alpha() < 0.7)
+      bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
+    menu->update();
+    if (bn::keypad::start_pressed()) {
+      unpause();
+      return true;
+    }
+    if (menu->hasConfirmedOption()) {
+      auto confirmedOption = menu->receiveConfirmedOption();
+      processMenuOption(confirmedOption);
+    }
+
+    return true;
+  }
+
+  if (bn::keypad::start_pressed() && !isPaused && !menu->hasStarted()) {
+    pause();
+    return true;
+  }
+
+  return false;
+}
+
+void UIScene::pause() {
+  isPaused = true;
+
+  player_setPause(true);
+  player_sfx_play(SFX_PAUSE);
+
+  showPauseMenu();
+  RUMBLE_stop();
+  bn::blending::restore();
+}
+
+void UIScene::showPauseMenu() {
+  bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Continue"});
+  options.push_back(Menu::Option{.text = "Restart"});
+  options.push_back(Menu::Option{.text = "Quit"});
+  menu->start(options, true, false, 1.25, 1.5, 1.25);
+}
+
+void UIScene::unpause() {
+  isPaused = false;
+
+  player_setPause(false);
+  player_sfx_stop();
+  menu->stop();
+  setUpBlending();
+}
+
+void UIScene::processMenuOption(int option) {
+  switch (option) {
+    case 0: {  // Continue
+      unpause();
+      break;
+    }
+    case 1: {  // Restart
+      setNextScreen(getScreen());
+      player_setPause(false);
+      break;
+    }
+    case 2: {  // Quit
+      setNextScreen(GameState::Screen::START);
+      player_setPause(false);
+      break;
+    }
+    default: {
+    }
+  }
 }

@@ -45,6 +45,7 @@ class CalibrationScene : public UIScene {
 
  protected:
   bool canSkipAutoWrite() override { return state != MEASURING; }
+  bool canPause() override { return false; }
 };
 
 #endif  // CALIBRATION_SCENE_H

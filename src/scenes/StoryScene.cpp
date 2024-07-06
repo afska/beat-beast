@@ -18,7 +18,8 @@ void StoryScene::init() {
 }
 
 void StoryScene::update() {
-  UIScene::update();
+  if (UIScene::updateUI())
+    return;
 
   horse->update();
 

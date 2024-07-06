@@ -12,7 +12,7 @@ class UIScene : public Scene {
   UIScene(GameState::Screen _screen, const GBFS_FILE* _fs);
 
   virtual void init() override;
-  virtual void update() override;
+  bool updateUI();
 
   virtual ~UIScene() = default;
 
@@ -52,6 +52,7 @@ class UIScene : public Scene {
   }
 
   virtual bool canSkipAutoWrite() { return true; }
+  virtual bool canPause() { return true; }
 
   void write(bn::vector<bn::string<64>, 2> lines,
              bool _hasMoreMessages = false);
@@ -66,13 +67,21 @@ class UIScene : public Scene {
 
  private:
   bool hasFinishedWriting = false;
+  bool isPaused = false;
 
+  void setUpBlending();
   void updateVideo();
   void startWriting();
   void stopWriting();
   void autoWrite();
   void finishAutoWrite();
   bn::string<64> removeSeparator(bn::string<64> str, char separator);
+
+  bool processPauseInput();
+  void pause();
+  void showPauseMenu();
+  void unpause();
+  void processMenuOption(int option);
 };
 
 #endif  // UI_SCENE_H

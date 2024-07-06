@@ -29,7 +29,8 @@ void CalibrationScene::init() {
 }
 
 void CalibrationScene::update() {
-  UIScene::update();
+  if (UIScene::updateUI())
+    return;
 
   if (state == MEASURING) {
     if (PlaybackState.hasFinished) {

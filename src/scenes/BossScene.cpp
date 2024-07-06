@@ -57,27 +57,11 @@ void BossScene::init() {
 void BossScene::update() {
   pixelBlink->update();
 
-  if (isPaused || isDead) {
-    if (bn::blending::fade_alpha() < 0.7)
-      bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
-    menu->update();
-    if (bn::keypad::start_pressed() && !isDead) {
-      unpause();
-      return;
-    }
-    if (menu->hasConfirmedOption()) {
-      auto confirmedOption = menu->receiveConfirmedOption();
-      processMenuOption(confirmedOption);
-    }
-
+  if (processPauseInput())
     return;
-  }
 
   updateChartReader();
   updateBossFight();
-
-  if (bn::keypad::start_pressed() && !isPaused)
-    pause();
 }
 
 void BossScene::playSfx(bn::string<32> sfxFileName, bool loop) {
@@ -254,6 +238,31 @@ void BossScene::updateChartReader() {
   }
 }
 
+bool BossScene::processPauseInput() {
+  if (isPaused || isDead) {
+    if (bn::blending::fade_alpha() < 0.7)
+      bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.075);
+    menu->update();
+    if (bn::keypad::start_pressed() && !isDead) {
+      unpause();
+      return true;
+    }
+    if (menu->hasConfirmedOption()) {
+      auto confirmedOption = menu->receiveConfirmedOption();
+      processMenuOption(confirmedOption);
+    }
+
+    return true;
+  }
+
+  if (bn::keypad::start_pressed() && !isPaused) {
+    pause();
+    return true;
+  }
+
+  return false;
+}
+
 void BossScene::pause() {
   isPaused = true;
 
@@ -294,6 +303,7 @@ void BossScene::processMenuOption(int option) {
       }
       case 1: {  // Quit
         setNextScreen(GameState::Screen::START);
+        player_setPause(false);
         break;
       }
       default: {
@@ -310,10 +320,12 @@ void BossScene::processMenuOption(int option) {
     }
     case 1: {  // Restart
       setNextScreen(getScreen());
+      player_setPause(false);
       break;
     }
     case 2: {  // Quit
       setNextScreen(GameState::Screen::START);
+      player_setPause(false);
       break;
     }
     default: {

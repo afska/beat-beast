@@ -91,10 +91,12 @@ class BossScene : public Scene {
  private:
   void printLife(unsigned life);
   void updateChartReader();
-  void processMenuOption(int option);
+
+  bool processPauseInput();
   void pause();
   void showPauseMenu();
   void unpause();
+  void processMenuOption(int option);
 };
 
 #endif  // BOSS_SCENE_H

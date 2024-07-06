@@ -4,6 +4,7 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+#include "../utils/Rumble.h"
 
 #include "bn_keypad.h"
 #include "bn_sprite_items_ui_icon_example_guardian.h"
@@ -31,7 +32,8 @@ void TutorialScene::init() {
 }
 
 void TutorialScene::update() {
-  UIScene::update();
+  if (UIScene::updateUI())
+    return;
 
   processInput();
   processBeats();
@@ -139,6 +141,14 @@ void TutorialScene::processBeats() {
 
   if (isNewTick)
     horse->canShoot = true;
+
+  if (SaveFile::data.rumble) {
+    if (isNewBeat) {
+      RUMBLE_start();
+    } else if (wasInsideBeat && !isInsideBeat) {
+      RUMBLE_stop();
+    }
+  }
 }
 
 void TutorialScene::updateSprites() {
