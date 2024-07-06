@@ -16,6 +16,7 @@ class MiniRock : public GameObject {
  private:
   bn::sprite_ptr sprite;
   Event* event;
+  bn::optional<bn::sprite_animate_action<2>> animation;
 };
 
 #endif  // MINI_ROCK_H

@@ -17,12 +17,25 @@ bool MiniRock::update(int msecs,
                       unsigned beatDurationMs,
                       unsigned oneDivBeatDurationMs,
                       int horseX) {
-  if (msecs < event->timestamp + (int)beatDurationMs * BEATS)
+  if (msecs < event->timestamp + (int)beatDurationMs * BEATS) {
     sprite.set_x(Math::getBeatBasedXPositionForObject(
         horseX, 64, -1, beatDurationMs * BEATS, oneDivBeatDurationMs / BEATS,
         msecs, event->timestamp, 16));
-  else
+    if (!animation.has_value() &&
+        msecs >= event->timestamp + (int)beatDurationMs * (BEATS / 2)) {
+      animation = bn::create_sprite_animate_action_forever(
+          sprite, 2, bn::sprite_items::wizard_minirock.tiles_item(), 1, 0);
+    }
+  } else
     sprite.set_x(sprite.x() - SPEED);
+
+  if (animation.has_value()) {
+    animation->update();
+    auto newScale = sprite.horizontal_scale() + 0.1;
+    if (newScale > 1.5)
+      newScale = 1.5;
+    sprite.set_scale(newScale);
+  }
 
   boundingBox.set_position(sprite.position());
 
