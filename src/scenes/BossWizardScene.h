@@ -30,7 +30,7 @@ class BossWizardScene : public BossScene {
   bn::optional<bn::regular_bg_ptr> background0;
   bn::vector<bn::unique_ptr<MiniRock>, 32> miniRocks;
   bn::vector<bn::unique_ptr<Rock>, 32> rocks;
-  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
+  bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;
   bn::vector<bn::unique_ptr<FlyingDragon>, 32> flyingDragons;

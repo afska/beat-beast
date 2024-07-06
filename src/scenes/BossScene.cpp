@@ -32,6 +32,7 @@ BossScene::BossScene(GameState::Screen _screen,
                                          LIFE_PLAYER,
                                          SpriteProvider::iconHorse(),
                                          SpriteProvider::lifebarFill())}),
+      comboBar(bn::unique_ptr{new ComboBar({0, 1})}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
@@ -81,8 +82,11 @@ void BossScene::sufferDamage(unsigned amount) {
     return;
 
   horse->hurt();
+  comboBar->setCombo(0);
   bool dead = lifeBar->setLife((int)lifeBar->getLife() - amount);
   printLife(dead ? 0 : lifeBar->getLife());
+  if (!dead)
+    comboBar->bump();
   if (dead && !isDead)
     die();
 }
@@ -160,6 +164,7 @@ void BossScene::updateCommonSprites() {
   if (isNewBeat) {
     horse->bounce();
     lifeBar->bounce();
+    comboBar->bounce();
     enemyLifeBar->bounce();
   }
   horse->update();
@@ -169,6 +174,7 @@ void BossScene::updateCommonSprites() {
 
   // UI
   lifeBar->update();
+  comboBar->update();
   enemyLifeBar->update();
 
   if (cross.has_value()) {
@@ -192,12 +198,14 @@ void BossScene::reportFailedShot() {
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
   if (horse->failShoot())
     gunReload->show();
+  comboBar->setCombo(0);
 }
 
 void BossScene::enableAutoFire() {
   if (autoFire.has_value())
     return;
   autoFire = bn::unique_ptr{new AutoFire({22, 12 + 10})};
+  gunReload->hide();
 }
 
 void BossScene::disableAutoFire() {

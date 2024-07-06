@@ -8,6 +8,7 @@ class GunReload : public TopLeftGameObject {
   GunReload(bn::fixed_point _topLeftPosition);
 
   void show();
+  void hide();
   void update();
 
  private:

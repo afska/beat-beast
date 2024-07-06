@@ -6,6 +6,7 @@
 #include "../objects/Explosion.h"
 #include "../objects/Horse.h"
 #include "../objects/ui/AutoFire.h"
+#include "../objects/ui/ComboBar.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
@@ -37,6 +38,7 @@ class BossScene : public Scene {
   bn::unique_ptr<ChartReader> chartReader;
   bn::unique_ptr<Horse> horse;
   bn::unique_ptr<LifeBar> lifeBar;
+  bn::unique_ptr<ComboBar> comboBar;
   bn::unique_ptr<LifeBar> enemyLifeBar;
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;

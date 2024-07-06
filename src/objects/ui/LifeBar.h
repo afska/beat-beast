@@ -31,7 +31,7 @@ class LifeBar : public TopLeftGameObject {
   bn::fixed_point defaultFillPosition;
   bn::optional<bn::unique_ptr<LoopingCross>> loopingCross;
 
-  void updateFill(unsigned visualLife);
+  void updateFill(unsigned drawLife);
 };
 
 #endif  // LIFE_BAR_H

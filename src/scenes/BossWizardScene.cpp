@@ -190,17 +190,30 @@ void BossWizardScene::processInput() {
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),
                                                   SpriteProvider::bullet())});
+      if (comboBar->isMaxedOut()) {
+        bullets.push_back(bn::unique_ptr{new Bullet(
+            horse->getShootingPoint() - horse->getShootingDirection() * 16,
+            horse->getShootingDirection(), SpriteProvider::bullet())});
+      }
     }
   } else {
     if (bn::keypad::b_pressed() && !horse->isBusy()) {
       if (chartReader->isInsideTick() && horse->canReallyShoot()) {
         horse->shoot();
+        comboBar->setCombo(comboBar->getCombo() + 1);
         bullets.push_back(bn::unique_ptr{
             new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
                        SpriteProvider::bullet())});
       } else {
         reportFailedShot();
       }
+    }
+    if (comboBar->isMaxedOut() && bn::keypad::b_released() &&
+        !horse->isBusy()) {
+      horse->shoot();
+      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                                  horse->getShootingDirection(),
+                                                  SpriteProvider::bullet())});
     }
   }
 

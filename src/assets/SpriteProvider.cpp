@@ -4,6 +4,7 @@
 
 #include "bn_sprite_items_autofire.h"
 #include "bn_sprite_items_bullet.h"
+#include "bn_sprite_items_combobar.h"
 #include "bn_sprite_items_cross.h"
 #include "bn_sprite_items_explosion.h"
 #include "bn_sprite_items_gun.h"
@@ -41,6 +42,10 @@ bn::sprite_item SpriteProvider::gun() {
 
 bn::sprite_item SpriteProvider::gunreload() {
   return bn::sprite_items::gunreload;
+}
+
+bn::sprite_item SpriteProvider::combobar() {
+  return bn::sprite_items::combobar;
 }
 
 bn::sprite_item SpriteProvider::bullet() {

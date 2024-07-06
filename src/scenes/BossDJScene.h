@@ -22,7 +22,7 @@ class BossDJScene : public BossScene {
   bn::regular_bg_ptr background1;
   bn::regular_bg_ptr background0;
   bn::unique_ptr<Octopus> octopus;
-  bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
+  bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   int megaBallSfxCount = 0;

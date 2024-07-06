@@ -17,13 +17,16 @@ void GunReload::show() {
   resetAnimation();
 }
 
+void GunReload::hide() {
+  animation.reset();
+  mainSprite.set_visible(false);
+}
+
 void GunReload::update() {
   if (animation.has_value()) {
     animation->update();
-    if (animation->done()) {
-      animation.reset();
-      mainSprite.set_visible(false);
-    }
+    if (animation->done())
+      hide();
   }
 
   if (animationIndex > -1) {

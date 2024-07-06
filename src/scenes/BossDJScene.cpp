@@ -129,6 +129,7 @@ void BossDJScene::processInput() {
   // shoot
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (chartReader->isInsideTick() && horse->canReallyShoot()) {
+      comboBar->setCombo(comboBar->getCombo() + 1);
       horse->shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),
@@ -136,6 +137,12 @@ void BossDJScene::processInput() {
     } else {
       reportFailedShot();
     }
+  }
+  if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
+    horse->shoot();
+    bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                                horse->getShootingDirection(),
+                                                SpriteProvider::bullet())});
   }
 
   // jump
