@@ -11,6 +11,7 @@
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../assets/fonts/common_variable_8x16_sprite_font.h"
 #include "../assets/fonts/common_variable_8x16_sprite_font_accent.h"
+#include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_log.h"
@@ -18,6 +19,7 @@
 #include "bn_sprite_items_ui_talkbox1.h"
 #include "bn_sprite_items_ui_talkbox23.h"
 #include "bn_sprite_items_ui_talkbox4.h"
+#include "bn_sprites_mosaic.h"
 
 #define SEPARATOR '|'
 #define MARGIN_Y 16
@@ -245,6 +247,8 @@ void UIScene::pause() {
 
   showPauseMenu();
   RUMBLE_stop();
+  bn::bgs_mosaic::set_stretch(0);
+  bn::sprites_mosaic::set_stretch(0);
 }
 
 void UIScene::showPauseMenu() {
