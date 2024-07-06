@@ -6,6 +6,7 @@
 #include "../objects/Bullet.h"
 #include "../objects/Horse.h"
 #include "../objects/ui/Check.h"
+#include "../objects/ui/ComboBar.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/DummyBoss.h"
 #include "../objects/ui/GunReload.h"
@@ -24,6 +25,7 @@ class TutorialScene : public UIScene {
  private:
   bn::unique_ptr<Horse> horse;
   bn::unique_ptr<LifeBar> lifeBar;
+  bn::optional<bn::unique_ptr<ComboBar>> comboBar;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<GunReload> gunReload;
@@ -55,6 +57,7 @@ class TutorialScene : public UIScene {
   bool isInsideBeat = false;
   bool didShootUpperRightWhileLookingLeft = false;
   bool didShootUpperLeftWhileLookingRight = false;
+  bool didDoubleShoot = false;
 
   void processInput();
   void processBeats();

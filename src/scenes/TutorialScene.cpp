@@ -102,6 +102,8 @@ void TutorialScene::processInput() {
       if (aimDirection == bn::fixed_point(-1, -1) && !horse->getFlipX())
         didShootUpperLeftWhileLookingRight = true;
 
+      if (comboBar.has_value())
+        comboBar->get()->setCombo(comboBar->get()->getCombo() + 1);
       shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
                                                   horse->getShootingDirection(),
@@ -109,6 +111,14 @@ void TutorialScene::processInput() {
     } else {
       reportFailedShot();
     }
+  }
+  if (comboBar.has_value() && comboBar->get()->isMaxedOut() &&
+      bn::keypad::b_released() && !horse->isBusy()) {
+    shoot();
+    bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
+                                                horse->getShootingDirection(),
+                                                SpriteProvider::bullet())});
+    didDoubleShoot = true;
   }
 
   // jump
@@ -161,6 +171,8 @@ void TutorialScene::updateSprites() {
   if (isNewBeat) {
     horse->bounce();
     lifeBar->bounce();
+    if (comboBar.has_value())
+      comboBar->get()->update();
     if (enemyLifeBar.has_value())
       enemyLifeBar->get()->bounce();
   }
@@ -168,6 +180,8 @@ void TutorialScene::updateSprites() {
 
   // UI
   lifeBar->update();
+  if (comboBar.has_value())
+    comboBar->get()->update();
 
   if (cross.has_value()) {
     if (cross->get()->update())
@@ -465,6 +479,39 @@ void TutorialScene::updateDialog() {
     }
     case 27: {
       bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Shooting increases your |combo bar|.");
+      strs.push_back("When it's full, I unlock |dual shots|!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 29: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Max out your |combo bar|, and");
+      strs.push_back("try the |dual shots|.");
+      write(strs);
+      state++;
+      break;
+    }
+    case 30: {
+      if (finishedWriting()) {
+        player_sfx_play(SFX_OBJECTIVE);
+        bullets.clear();
+        comboBar = bn::unique_ptr{new ComboBar({0, 1})};
+        state++;
+      }
+      break;
+    }
+    case 31: {
+      if (didDoubleShoot)
+        state++;
+      break;
+    }
+    case 32: {
+      reportSuccess();
+
+      bn::vector<bn::string<64>, 2> strs;
       strs.push_back("To aim without moving, you can");
       strs.push_back("|lock the target| using |R|.");
       write(strs, true);
@@ -473,7 +520,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 29: {
+    case 34: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("While looking to the |left|,");
       strs.push_back("shoot to the |top-right| corner.");
@@ -481,7 +528,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 30: {
+    case 35: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
@@ -491,12 +538,12 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 31: {
+    case 36: {
       if (didShootUpperRightWhileLookingLeft)
         state++;
       break;
     }
-    case 32: {
+    case 37: {
       reportSuccess();
       questionMark.reset();
 
@@ -507,7 +554,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 33: {
+    case 38: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
@@ -517,12 +564,12 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 34: {
+    case 39: {
       if (didShootUpperLeftWhileLookingRight)
         state++;
       break;
     }
-    case 35: {
+    case 40: {
       reportSuccess();
       questionMark.reset();
 
@@ -539,14 +586,14 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 37: {
+    case 42: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("|SHOOT HIM|!");
       write(strs);
       state++;
       break;
     }
-    case 38: {
+    case 43: {
       if (finishedWriting()) {
         didUnlockAim = true;
         player_sfx_play(SFX_OBJECTIVE);
@@ -554,7 +601,7 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 40: {
+    case 45: {
       reportSuccess();
 
       bn::vector<bn::string<64>, 2> strs;
@@ -564,7 +611,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 42: {
+    case 47: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("This doesn't mean victory!");
       strs.push_back("We still have to |finish the level|.");
@@ -572,7 +619,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 44: {
+    case 49: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("That's all I can teach you for now.");
       strs.push_back("Let's battle these guardians!");
@@ -580,7 +627,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 46: {
+    case 51: {
       setNextScreen(GameState::Screen::START);
       break;
     }
@@ -601,6 +648,8 @@ void TutorialScene::reportFailedShot() {
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
   if (horse->failShoot())
     gunReload->show();
+  if (comboBar.has_value())
+    comboBar->get()->setCombo(0);
 }
 
 void TutorialScene::reportSuccess() {
@@ -677,4 +726,8 @@ void TutorialScene::sufferDamage() {
   horse->hurt();
   auto newLife = (int)lifeBar->getLife() - 1;
   lifeBar->setLife(newLife <= 0 ? 1 : newLife);
+  if (comboBar.has_value()) {
+    comboBar->get()->setCombo(0);
+    comboBar->get()->bump();
+  }
 }
