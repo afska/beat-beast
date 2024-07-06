@@ -92,6 +92,7 @@ void BossScene::sufferDamage(unsigned amount) {
 }
 
 void BossScene::die() {
+  return;
   isDead = true;
 
   auto msecs = PlaybackState.msecs;
