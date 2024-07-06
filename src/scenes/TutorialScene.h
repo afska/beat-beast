@@ -8,6 +8,7 @@
 #include "../objects/ui/Check.h"
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/DummyBoss.h"
+#include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Obstacle.h"
 #include "../objects/ui/QuestionMark.h"
@@ -22,8 +23,10 @@ class TutorialScene : public UIScene {
 
  private:
   bn::unique_ptr<Horse> horse;
+  bn::unique_ptr<LifeBar> lifeBar;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
+  bn::unique_ptr<GunReload> gunReload;
   bn::optional<bn::unique_ptr<Check>> check;
   bn::optional<bn::unique_ptr<QuestionMark>> questionMark;
   bn::optional<bn::unique_ptr<DummyBoss>> dummyBoss;
@@ -65,6 +68,7 @@ class TutorialScene : public UIScene {
   void addMultipleRadios();
   bool updateCount();
   void updateCountdown();
+  void sufferDamage();
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {

@@ -20,7 +20,12 @@
 
 TutorialScene::TutorialScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::TUTORIAL, _fs),
-      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}) {}
+      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
+      lifeBar(bn::unique_ptr{new LifeBar({0, 0},
+                                         30,
+                                         SpriteProvider::iconHorse(),
+                                         SpriteProvider::lifebarFill())}),
+      gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 4})}) {}
 
 void TutorialScene::init() {
   UIScene::init();
@@ -155,19 +160,20 @@ void TutorialScene::updateSprites() {
   // Horse
   if (isNewBeat) {
     horse->bounce();
-    // lifeBar->bounce();
-    // enemyLifeBar->bounce();
+    lifeBar->bounce();
+    if (enemyLifeBar.has_value())
+      enemyLifeBar->get()->bounce();
   }
   horse->update();
 
   // UI
-  // lifeBar->update();
-  // enemyLifeBar->update();
+  lifeBar->update();
 
   if (cross.has_value()) {
     if (cross->get()->update())
       cross.reset();
   }
+  gunReload->update();
   if (check.has_value()) {
     if (check->get()->update())
       check.reset();
@@ -224,7 +230,7 @@ void TutorialScene::updateSprites() {
                          horse->getPosition().x().ceil_integer());
 
     if (obstacle->collidesWith(horse.get()) && !horse->isJumping()) {
-      horse->hurt();
+      sufferDamage();
       count = 10;
       updateCount();
       return true;
@@ -250,9 +256,8 @@ void TutorialScene::updateSprites() {
     }
 
     if (dummyBoss.has_value()) {
-      if (dummyBoss->get()->collidesWith(horse.get())) {
-        horse->hurt();
-      }
+      if (dummyBoss->get()->collidesWith(horse.get()))
+        sufferDamage();
 
       enemyLifeBar->get()->update();
     }
@@ -594,7 +599,8 @@ void TutorialScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
-  horse->failShoot();
+  if (horse->failShoot())
+    gunReload->show();
 }
 
 void TutorialScene::reportSuccess() {
@@ -662,4 +668,13 @@ void TutorialScene::updateCountdown() {
   } else if (count > 60 * 0) {
     textGenerator.generate({0, -70}, "1...", tmpText);
   }
+}
+
+void TutorialScene::sufferDamage() {
+  if (horse->isHurt())
+    return;
+
+  horse->hurt();
+  auto newLife = (int)lifeBar->getLife() - 1;
+  lifeBar->setLife(newLife <= 0 ? 1 : newLife);
 }
