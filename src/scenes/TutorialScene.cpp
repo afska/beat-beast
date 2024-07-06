@@ -112,7 +112,7 @@ void TutorialScene::processInput() {
       reportFailedShot();
     }
   }
-  if (comboBar.has_value() && comboBar->get()->isMaxedOut() &&
+  if (didUnlockAim && comboBar.has_value() && comboBar->get()->isMaxedOut() &&
       bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
     bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
@@ -172,7 +172,7 @@ void TutorialScene::updateSprites() {
     horse->bounce();
     lifeBar->bounce();
     if (comboBar.has_value())
-      comboBar->get()->update();
+      comboBar->get()->bounce();
     if (enemyLifeBar.has_value())
       enemyLifeBar->get()->bounce();
   }
@@ -498,7 +498,7 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         bullets.clear();
-        comboBar = bn::unique_ptr{new ComboBar({0, 1})};
+        comboBar = bn::unique_ptr{new ComboBar({0, 1}, 15, 1)};
         state++;
       }
       break;

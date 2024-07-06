@@ -3,15 +3,15 @@
 
 #include "../TopLeftGameObject.h"
 
-#define COMBO_MAX 30
-
 class ComboBar : public TopLeftGameObject {
  public:
-  ComboBar(bn::fixed_point _topLeftPosition);
+  ComboBar(bn::fixed_point _topLeftPosition,
+           unsigned _maxCombo = 30,
+           unsigned _divisor = 2);
 
   unsigned getCombo() { return combo; }
   void setCombo(unsigned _combo);
-  bool isMaxedOut() { return combo == COMBO_MAX; }
+  bool isMaxedOut() { return combo == maxCombo; }
 
   void update();
   void bump();
@@ -19,6 +19,8 @@ class ComboBar : public TopLeftGameObject {
 
  private:
   unsigned combo;
+  unsigned maxCombo;
+  unsigned divisor;
   int animationIndex = -1;
   int animationOffset = 0;
   unsigned animationWait = 0;
