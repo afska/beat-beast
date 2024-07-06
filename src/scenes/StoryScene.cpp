@@ -133,7 +133,7 @@ void StoryScene::updateDialog() {
       break;
     }
     case 12: {
-      setNextScreen(GameState::Screen::START);
+      setNextScreen(GameState::Screen::TUTORIAL);
       break;
     }
     default: {
