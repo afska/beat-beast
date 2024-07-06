@@ -56,7 +56,7 @@ bool LifeBar::setLife(int _life) {
 
   life = _unsignedLife;
   visualLife =
-      Math::lerp(_life, 0, maxLife, 0, MAX_DIFFERENT_VALUES).ceil_integer();
+      Math::lerp(_life, 0, maxLife, 0, MAX_DIFFERENT_VALUES).floor_integer();
   animationIndex = Math::SCALE_STEPS.size() - 1;
   return false;
 }

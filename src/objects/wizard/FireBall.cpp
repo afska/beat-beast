@@ -73,7 +73,7 @@ bool FireBall::update(int msecs,
       sprite.position().y() - target.y();  // (inverted for Y-down)
   bn::fixed deltaX = target.x() - sprite.position().x();
   bn::fixed angle = Math::normalizeAngle(
-      bn::degrees_atan2((deltaY).ceil_integer(), (deltaX).ceil_integer()) +
+      bn::degrees_atan2((deltaY).floor_integer(), (deltaX).floor_integer()) +
       128 + 45);
   sprite.set_rotation_angle(angle);
 

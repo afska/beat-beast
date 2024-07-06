@@ -241,7 +241,7 @@ void TutorialScene::updateSprites() {
 
     bool isOut =
         obstacle->update(msecs, BEAT_DURATION_MS, ONE_DIV_BEAT_DURATION_MS,
-                         horse->getPosition().x().ceil_integer());
+                         horse->getPosition().x().floor_integer());
 
     if (obstacle->collidesWith(horse.get()) && !horse->isJumping()) {
       sufferDamage();

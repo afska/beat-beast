@@ -450,14 +450,14 @@ void BossWizardScene::processChart() {
 
 void BossWizardScene::updateBackground() {
   // transition to lava stop
-  int bg0ScrollX = background0.get()->position().x().ceil_integer();
+  int bg0ScrollX = background0.get()->position().x().floor_integer();
   if (phase == 3 && bg0ScrollX <= -3577) {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
     background0.get()->set_blending_enabled(true);
     background0.get()->set_mosaic_enabled(true);
-    bg0ScrollX = background0.get()->position().x().ceil_integer();
+    bg0ScrollX = background0.get()->position().x().floor_integer();
     dragonEgg = bn::unique_ptr{new DragonEgg({260, 59})};
     goToNextPhase();
   }
@@ -491,7 +491,7 @@ void BossWizardScene::updateBackground() {
               (256 - Math::SCREEN_HEIGHT) / 2);
       background0.get()->set_blending_enabled(true);
       background0.get()->set_mosaic_enabled(true);
-      bg0ScrollX = background0.get()->position().x().ceil_integer();
+      bg0ScrollX = background0.get()->position().x().floor_integer();
       goToNextPhase();
     }
   }
@@ -503,7 +503,7 @@ void BossWizardScene::updateBackground() {
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
     background0.get()->set_blending_enabled(true);
     background0.get()->set_mosaic_enabled(true);
-    bg0ScrollX = background0.get()->position().x().ceil_integer();
+    bg0ScrollX = background0.get()->position().x().floor_integer();
     goToNextPhase();
   }
 
@@ -695,7 +695,7 @@ void BossWizardScene::updateSprites() {
     bool isOut = miniRock->update(chartReader->getMsecs(),
                                   chartReader->getBeatDurationMs(),
                                   chartReader->getSong()->oneDivBeatDurationMs,
-                                  horse->getPosition().x().ceil_integer());
+                                  horse->getPosition().x().floor_integer());
 
     if (miniRock->collidesWith(horse.get()) && !horse->isJumping()) {
       sufferDamage(DMG_MINI_ROCK_TO_PLAYER);
@@ -711,7 +711,7 @@ void BossWizardScene::updateSprites() {
     bool isOut =
         rock->update(chartReader->getMsecs(), chartReader->getBeatDurationMs(),
                      chartReader->getSong()->oneDivBeatDurationMs,
-                     horse->getPosition().x().ceil_integer());
+                     horse->getPosition().x().floor_integer());
 
     if (rock->collidesWith(horse.get()) && !rock->isBreaking()) {
       rock->smash();
