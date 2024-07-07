@@ -8,6 +8,7 @@
 #include "../utils/Math.h"
 #include "bn_blending.h"
 
+#include "bn_sprite_items_start_preview_mask.h"
 #include "bn_sprite_items_start_previewdj.h"
 
 #define HORSE_X 40
@@ -66,7 +67,6 @@ void SelectionScene::updateVideo() {
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
   background.get()->set_mosaic_enabled(true);
-  background.get()->set_blending_enabled(true);
   videoFrame += 0.5;
   if (videoFrame >= 150)
     videoFrame = 0;
@@ -87,5 +87,18 @@ void SelectionScene::updateVideo() {
         137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
         151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164,
         165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176);
+
+    bn::window outsideWindow = bn::window::outside();
+    outsideWindow.set_show_sprites(false);
+
+    windowSprite = bn::sprite_items::start_preview_mask.create_sprite(0, 0);
+    windowSprite.get()->set_window_enabled(true);
+    // windowSprite.get()->set_scale(2);
+
+    background.get()->set_visible_in_window(true, outsideWindow);
+    preview->set_blending_enabled(true);
+    // preview->set_scale(2);
+
+    bn::blending::set_transparency_alpha(0.5);
   }
 }

@@ -23,6 +23,7 @@ class SelectionScene : public Scene {
   bool playVideo = true;
   bn::optional<bn::sprite_ptr> preview;
   bn::optional<bn::sprite_animate_action<177>> previewAnimation;
+  bn::optional<bn::sprite_ptr> windowSprite;
 
   void processBeats();
   void updateVideo();
