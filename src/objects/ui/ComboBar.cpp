@@ -43,10 +43,13 @@ void ComboBar::update() {
   } else if (animationWait > 0)
     animationWait--;
 
-  animationFlag = !animationFlag;
+  int maxComboFrame = animatedFlag <= 2 ? 16 : 15;
+  animatedFlag++;
+  if (animatedFlag > 4)
+    animatedFlag = 1;
 
   if (combo == maxCombo)
-    mainSprite.set_item(SpriteProvider::combobar(), animationFlag ? 16 : 15);
+    mainSprite.set_item(SpriteProvider::combobar(), maxComboFrame);
   else
     updateFill((unsigned)bn::min((int)(combo / divisor) + animationOffset, 14));
 }

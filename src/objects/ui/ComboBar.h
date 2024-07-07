@@ -24,7 +24,7 @@ class ComboBar : public TopLeftGameObject {
   int animationIndex = -1;
   int animationOffset = 0;
   unsigned animationWait = 0;
-  bool animationFlag = false;
+  int animatedFlag = 1;
 
   void updateFill(unsigned visualCombo);
 };
