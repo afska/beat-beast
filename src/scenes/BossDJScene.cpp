@@ -19,7 +19,9 @@
 
 // Loop
 #define LOOP_END_MS 158580
-#define LOOP_OFFSET_CURSOR -218856
+#define LOOP_OFFSET_CURSOR -2121312
+// ^^^ for PCM => -2121312
+// ^^^ for GSM => -218856
 
 // Damage to player
 #define DMG_VINYL_TO_PLAYER 1
@@ -107,6 +109,7 @@ void BossDJScene::updateBossFight() {
   updateSprites();
 
   if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
+    BN_LOG(player_getCursor());
     player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
     chartReader->restoreLoop();
     bullets.clear();

@@ -16,7 +16,7 @@
 #define SFX_LOSE "stopdj.pcm"
 
 const bn::string<32> CHART_EXTENSION = ".boss";
-const bn::string<32> AUDIO_EXTENSION = ".gsm";
+const bn::string<32> AUDIO_EXTENSION = ".pcm";
 
 BossScene::BossScene(GameState::Screen _screen,
                      bn::string<32> _fileName,
@@ -52,7 +52,7 @@ BossScene::BossScene(GameState::Screen _screen,
 
 void BossScene::init() {
   bn::blending::set_fade_alpha(BG_DARK_ALPHA);
-  player_play((fileName + AUDIO_EXTENSION).c_str());
+  player_playPCM((fileName + AUDIO_EXTENSION).c_str());
 }
 
 void BossScene::update() {
@@ -92,7 +92,6 @@ void BossScene::sufferDamage(unsigned amount) {
 }
 
 void BossScene::die() {
-  return;
   isDead = true;
 
   auto msecs = PlaybackState.msecs;

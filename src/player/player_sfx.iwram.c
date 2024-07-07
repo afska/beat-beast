@@ -109,13 +109,6 @@ INLINE void stop() {
   }
 }
 
-INLINE void play(const char* name) {
-  stop();
-
-  src = gbfs_get_obj(fs, name, &src_len);
-  src_pos = 0;
-}
-
 INLINE void disable_audio_dma() {
   // This convoluted process disables DMA1 in a "safe" way,
   // avoiding DMA lockups.
@@ -152,8 +145,12 @@ INLINE void dsound_start_audio_copy(const void* source) {
                 DMA_ENABLE | 1;
 }
 
-INLINE void loadFile(const char* name) {
-  play(name);
+INLINE void load_file(const char* name) {
+  stop();
+
+  src = gbfs_get_obj(fs, name, &src_len);
+  src_pos = 0;
+
   is_looping = false;
   is_paused = false;
 }
@@ -169,7 +166,7 @@ CODE_ROM void player_sfx_unload() {
 }
 
 CODE_ROM void player_sfx_play(const char* name) {
-  loadFile(name);
+  load_file(name);
 }
 
 CODE_ROM void player_sfx_setLoop(bool enable) {

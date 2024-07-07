@@ -227,7 +227,7 @@ void CalibrationScene::start() {
   strs.push_back("OK, press A on the |5th beat|!");
   write(strs);
 
-  player_play(SOUND_CALIBRATE);
+  player_playGSM(SOUND_CALIBRATE);
 }
 
 void CalibrationScene::finish() {
@@ -252,7 +252,7 @@ void CalibrationScene::test() {
 
   pauseVideo = true;
   lastBeat = -1;
-  player_play(SOUND_CALIBRATE_TEST);
+  player_playGSM(SOUND_CALIBRATE_TEST);
   player_setLoop(true);
 
   bn::vector<bn::string<64>, 2> strs;

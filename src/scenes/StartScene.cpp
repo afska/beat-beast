@@ -38,7 +38,7 @@ void StartScene::init() {
   menu->start(options, false);
 
   if (!PlaybackState.isLooping) {
-    player_play("lazer.gsm");
+    player_playGSM("lazer.gsm");
     player_setLoop(true);
   }
 }
