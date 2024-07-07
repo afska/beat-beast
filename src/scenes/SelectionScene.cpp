@@ -88,17 +88,17 @@ void SelectionScene::updateVideo() {
         151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164,
         165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176);
 
-    bn::window outsideWindow = bn::window::outside();
-    outsideWindow.set_show_sprites(false);
+    bn::window window = bn::window::sprites();
+    window.set_show_sprites(false);
 
     windowSprite = bn::sprite_items::start_preview_mask.create_sprite(0, 0);
     windowSprite.get()->set_window_enabled(true);
-    // windowSprite.get()->set_scale(2);
+    // windowSprite.get()->set_scale(1.5);
 
-    background.get()->set_visible_in_window(true, outsideWindow);
+    background.get()->set_visible_in_window(true, window);
     preview->set_blending_enabled(true);
-    // preview->set_scale(2);
+    // preview->set_scale(1.5);
 
-    bn::blending::set_transparency_alpha(0.5);
+    bn::blending::set_transparency_alpha(0.6);
   }
 }
