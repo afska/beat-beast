@@ -18,6 +18,7 @@ class SelectionScene : public Scene {
   bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
+  bn::window window;
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
   bool playVideo = true;
