@@ -65,7 +65,7 @@ for file in *.wav; do
 done
 ```
 
-### Build videos
+### Build background videos
 
 ```bash
 ffmpeg -y -i "input.mp4" -r 30 "output_%05d.png"
@@ -76,6 +76,14 @@ for file in *.png; do
   output="${file%.png}.bmp"
   magick "$file" -define bmp:format=bmp3 -compress None -type Palette "$output"
 done
+```
+
+### Build preview videos
+
+```bash
+ffmpeg -y -i "input.mp4" -r 12 -vf "scale=64:64" "preview_%03d.png"
+# select frames, sort files from preview_000.png to preview_yyy.png
+ffmpeg -y -i "preview_%03d.png" -filter_complex "tile=1xNUMBER_OF_FRAMES" "preview.png"
 ```
 
 ## VS Code settings

@@ -34,6 +34,9 @@ fs.writeFileSync(scriptFilePath, gimpScript);
 exec(`gimp -i -b - < ${scriptFilePath}`, (error, stdout, stderr) => {
   fs.unlinkSync(scriptFilePath); // Remove temporary file
   
+  if (stderr != null && stderr.includes("gegl_tile_cache_destroy: runtime check failed"))
+    stderr = null;
+  
   if (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
