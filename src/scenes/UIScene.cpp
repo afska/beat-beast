@@ -276,12 +276,12 @@ void UIScene::processMenuOption(int option) {
     }
     case 1: {  // Restart
       setNextScreen(getScreen());
-      player_setPause(false);
+      player_stop();
       break;
     }
     case 2: {  // Quit
       setNextScreen(GameState::Screen::START);
-      player_setPause(false);
+      player_stop();
       break;
     }
     default: {

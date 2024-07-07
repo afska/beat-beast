@@ -459,7 +459,7 @@ void TutorialScene::updateDialog() {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("A sub-beat would be half a beat.");
       strs.push_back("Destroy |4| radios in |3| seconds.");
-      write(strs, true);
+      write(strs);
       state++;
       break;
     }
