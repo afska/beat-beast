@@ -85,7 +85,7 @@ void StartScene::updateVideo() {
   background.get()->set_blending_enabled(true);
   extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
   videoFrame += (1 + extraSpeed / 2) / 2;
-  if (videoFrame >= 300)
+  if (videoFrame >= 150)
     videoFrame = 0;
 }
 
