@@ -48,6 +48,8 @@ void UIScene::init() {
 }
 
 bool UIScene::updateUI() {
+  pixelBlink->update();
+
   if (processPauseInput())
     return true;
 
@@ -63,7 +65,6 @@ bool UIScene::updateUI() {
   }
 
   menu->update();
-  pixelBlink->update();
   updateVideo();
   autoWrite();
 
@@ -247,8 +248,6 @@ void UIScene::pause() {
 
   showPauseMenu();
   RUMBLE_stop();
-  bn::bgs_mosaic::set_stretch(0);
-  bn::sprites_mosaic::set_stretch(0);
 }
 
 void UIScene::showPauseMenu() {

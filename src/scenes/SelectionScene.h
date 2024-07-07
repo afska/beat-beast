@@ -1,15 +1,13 @@
-#ifndef START_SCENE_H
-#define START_SCENE_H
+#ifndef SELECTION_SCENE_H
+#define SELECTION_SCENE_H
 
 #include "Scene.h"
 
 #include "../objects/Horse.h"
-#include "../objects/ui/Menu.h"
-#include "../objects/ui/SettingsMenu.h"
 
-class StartScene : public Scene {
+class SelectionScene : public Scene {
  public:
-  StartScene(const GBFS_FILE* _fs);
+  SelectionScene(const GBFS_FILE* _fs);
 
   void init() override;
   void update() override;
@@ -20,14 +18,11 @@ class StartScene : public Scene {
   bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
-  bn::unique_ptr<Menu> menu;
-  bn::unique_ptr<SettingsMenu> settingsMenu;
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
-  bn::fixed extraSpeed = 0;
 
+  void processBeats();
   void updateVideo();
-  void processMenuOption(int option);
 };
 
-#endif  // START_SCENE_H
+#endif  // SELECTION_SCENE_H

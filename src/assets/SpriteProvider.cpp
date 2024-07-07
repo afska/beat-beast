@@ -85,6 +85,7 @@ bn::sprite_item SpriteProvider::horse() {
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_horse;
     case GameState::Screen::START:
+    case GameState::Screen::SELECTION:
       return bn::sprite_items::start_3dhorse;
     default:
       return bn::sprite_items::ui_horse;

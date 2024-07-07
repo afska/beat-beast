@@ -92,7 +92,7 @@ void StartScene::updateVideo() {
 void StartScene::processMenuOption(int option) {
   switch (option) {
     case 0: {
-      setNextScreen(GameState::Screen::STORY);
+      setNextScreen(GameState::Screen::SELECTION);
       break;
     }
     case 1: {

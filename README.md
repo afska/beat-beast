@@ -82,7 +82,7 @@ done
 
 ```bash
 ffmpeg -y -i "input.mp4" -r 12 -vf "scale=64:64" "preview_%03d.png"
-# select frames, sort files from preview_000.png to preview_yyy.png
+# -> select frames, sort files from preview_000.png to preview_yyy.png
 ffmpeg -y -i "preview_%03d.png" -filter_complex "tile=1xNUMBER_OF_FRAMES" "preview.png"
 ```
 

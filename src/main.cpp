@@ -6,6 +6,7 @@
 #include "scenes/CalibrationScene.h"
 #include "scenes/ControlsScene.h"
 #include "scenes/DevPlaygroundScene.h"
+#include "scenes/SelectionScene.h"
 #include "scenes/StartScene.h"
 #include "scenes/StoryScene.h"
 #include "scenes/TutorialScene.h"
@@ -90,12 +91,14 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
   switch (nextScreen) {
     case GameState::Screen::CONTROLS:
       return bn::unique_ptr{(Scene*)new ControlsScene(fs, continuationScreen)};
-    case GameState::Screen::START:
-      return bn::unique_ptr{(Scene*)new StartScene(fs)};
-    case GameState::Screen::STORY:
-      return bn::unique_ptr{(Scene*)new StoryScene(fs)};
     case GameState::Screen::CALIBRATION:
       return bn::unique_ptr{(Scene*)new CalibrationScene(fs)};
+    case GameState::Screen::START:
+      return bn::unique_ptr{(Scene*)new StartScene(fs)};
+    case GameState::Screen::SELECTION:
+      return bn::unique_ptr{(Scene*)new SelectionScene(fs)};
+    case GameState::Screen::STORY:
+      return bn::unique_ptr{(Scene*)new StoryScene(fs)};
     case GameState::Screen::TUTORIAL:
       return bn::unique_ptr{(Scene*)new TutorialScene(fs)};
     case GameState::Screen::DJ:
@@ -127,10 +130,12 @@ void transitionToNextScene() {
   }
 
   scene.reset();
-  bool keepMusic = nextScreen == GameState::Screen::STORY ||
+  bool keepMusic = nextScreen == GameState::Screen::SELECTION ||
+                   nextScreen == GameState::Screen::STORY ||
                    nextScreen == GameState::Screen::TUTORIAL ||
                    (nextScreen == GameState::Screen::START &&
-                    (currentScreen == GameState::Screen::STORY ||
+                    (currentScreen == GameState::Screen::SELECTION ||
+                     currentScreen == GameState::Screen::STORY ||
                      currentScreen == GameState::Screen::TUTORIAL));
   if (!keepMusic) {
     player_stop();
