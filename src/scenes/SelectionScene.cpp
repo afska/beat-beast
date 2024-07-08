@@ -6,9 +6,18 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+
 #include "bn_blending.h"
 #include "bn_keypad.h"
 
+#include "bn_sprite_items_selection_icon_dj.h"
+#include "bn_sprite_items_selection_icon_horse.h"
+#include "bn_sprite_items_selection_icon_question.h"
+#include "bn_sprite_items_selection_icon_riffer.h"
+#include "bn_sprite_items_selection_icon_wizard.h"
+#include "bn_sprite_items_selection_line.h"
+#include "bn_sprite_items_selection_previewdj.h"
+#include "bn_sprite_items_selection_previewtutorial.h"
 #include "bn_sprite_items_selection_previewwizard.h"
 
 #define HORSE_X 40
@@ -157,8 +166,37 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
       142, 143, 144, 145, 146, 147, 148, 149);
   preview->set_blending_enabled(true);
 
-  // textGeneratorAccent.generate(bn::fixed_point(0, 0), "HELLO WORLD!",
-  //                              textSprites);
+  textGenerator.set_center_alignment();
+  textGeneratorAccent.set_center_alignment();
+
+  textGeneratorAccent.generate(bn::fixed_point(0, -80 + 11), "Hard",
+                               accentTextSprites);
+
+  textGenerator.generate(bn::fixed_point(0, 80 - 13), "Synth Wizard",
+                         textSprites);
+
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_horse, {220, 120})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_dj, {220, 96})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_wizard, {220, 72})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_riffer, {220, 48})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_question, {220, 24})});
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({224, 112}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({224, 88}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({224, 64}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({224, 40}, 8, 8)));
+
+  selectedLevel = bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_wizard, {110, 124})};
+  levelIcons[2]->setSelected();
 }
 
 void SelectionScene::init() {
@@ -169,15 +207,13 @@ void SelectionScene::init() {
 }
 
 void SelectionScene::update() {
-  horse->setPosition({HORSE_X, HORSE_Y}, true);
-  horse->update();
-
   processBeats();
 
   if (previewAnimation.has_value())
     previewAnimation->update();
 
   updateVideo();
+  updateSprites();
 }
 
 void SelectionScene::processBeats() {
@@ -214,4 +250,14 @@ void SelectionScene::updateVideo() {
   videoFrame += (1 + extraSpeed / 2) / 2;
   if (videoFrame >= 150)
     videoFrame = 0;
+}
+
+void SelectionScene::updateSprites() {
+  horse->setPosition({HORSE_X, HORSE_Y}, true);
+  horse->update();
+
+  iterate(levelIcons, [this](LevelIcon* levelIcon) {
+    levelIcon->update();
+    return false;
+  });
 }

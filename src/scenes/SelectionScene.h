@@ -4,6 +4,7 @@
 #include "Scene.h"
 
 #include "../objects/Horse.h"
+#include "../objects/ui/LevelIcon.h"
 
 class SelectionScene : public Scene {
  public:
@@ -15,17 +16,39 @@ class SelectionScene : public Scene {
  private:
   bn::optional<bn::regular_bg_ptr> background;
   bn::unique_ptr<Horse> horse;
+  bn::vector<bn::unique_ptr<LevelIcon>, 8> levelIcons;
+  bn::vector<bn::sprite_ptr, 8> iconSeparators;
+  bn::optional<bn::unique_ptr<LevelIcon>> selectedLevel;
+
   bn::vector<bn::sprite_ptr, 64> textSprites;
+  bn::vector<bn::sprite_ptr, 10> accentTextSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
+
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
   bn::fixed extraSpeed = 0;
+
   bn::optional<bn::sprite_ptr> preview;
   bn::optional<bn::sprite_animate_action<150>> previewAnimation;
 
   void processBeats();
   void updateVideo();
+  void updateSprites();
+
+  template <typename F, typename Type, int MaxSize>
+  inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
+    for (auto it = vector.begin(); it != vector.end();) {
+      bool erase = action(it->get());
+      if (vector.empty())
+        return;
+
+      if (erase)
+        it = vector.erase(it);
+      else
+        ++it;
+    }
+  }
 };
 
 #endif  // SELECTION_SCENE_H

@@ -5,6 +5,7 @@
 #include "bn_fixed_rect.h"
 #include "bn_log.h"
 #include "bn_sprite_animate_actions.h"
+#include "bn_sprite_item.h"
 #include "bn_sprite_ptr.h"
 #include "bn_string.h"
 #include "bn_unique_ptr.h"
