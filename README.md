@@ -13,7 +13,7 @@ sudo ./install-devkitpro-pacman
 sudo dkp-pacman -Sy
 sudo dkp-pacman -Syu
 sudo dkp-pacman -S gba-dev
-# (restart shell)
+# [!] manual: restart shell
 
 git clone https://github.com/Hazematman/butano
 git clone https://github.com/afska/synthbattle
@@ -31,7 +31,7 @@ make rebuild # the `rebuild` target builds the levels && the code
 ### Install required tools
 
 ```bash
-# -> install nvm / node 18
+# [!] manual: install nvm / node 18
 sudo apt install gimp -y
 sudo apt install -y imagemagick-6.q16
 ```
@@ -39,8 +39,10 @@ sudo apt install -y imagemagick-6.q16
 ### Import levels
 
 ```bash
-# cd importer && npm install && cd ..
-cd importer && node src/importer.js && cd ..
+cd importer/
+# [!] first time:  npm install
+node src/importer.js
+# (generates `*.boss` files in `gbfs_files`)
 ```
 
 ### Export sprites
@@ -54,11 +56,12 @@ make sprites XCF=dj
 
 ```bash
 # GSM (music)
-ffmpeg -y -i file.wav -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm file.gsm
-ffplay -ar 18157 file.gsm
+ffmpeg -y -i input.wav -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm output.gsm
+ffplay -ar 18157 output.gsm
 # PCM (sfx)
-ffmpeg -y -i file.wav -ac 1 -ar 36314 -f s8 file.pcm
-# Batch:
+ffmpeg -y -i input.wav -ac 1 -ar 36314 -f s8 output.pcm
+ffplay -ar 36314 -f s8 output.pcm
+# Batch convert:
 for file in *.wav; do
   output="${file%.wav}.pcm"
   ffmpeg -y -i "$file" -ac 1 -ar 36314 -f s8 "$output"
@@ -87,7 +90,9 @@ ffmpeg -y -i "input.mp4" -r 30 -vf "scale=64:64:flags=neighbor" "preview_%03d.pn
 for file in preview_*.png; do
   ffmpeg -y -i "$file" -i triangle.png -filter_complex "[0:v][1:v]alphamerge, format=yuva420p, lut=a=val*255" "$file"
 done
-ffmpeg -y -i "preview_%03d.png" -filter_complex "tile=1xNUMBER_OF_FRAMES" "preview.png"
+# [!] manual: only keep 150 frames (5 seconds loop), then set `start` and `end` in the next command
+start=188; end=337; for i in $(seq $start $end); do mv "preview_${i}.png" "$(printf "preview_%03d.png" $(($i - $start)))"; done
+ffmpeg -y -i "preview_%03d.png" -filter_complex "tile=1x150" "preview.png"
 ```
 
 ## VS Code settings

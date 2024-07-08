@@ -1,3 +1,7 @@
 {scene}: 224 colors
 {text}: 16 colors
 {shared}: 16 colors
+
+---
+
+start scene: 240 colors

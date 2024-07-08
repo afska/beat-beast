@@ -11,7 +11,6 @@
 #include "bn_string.h"
 #include "bn_unique_ptr.h"
 #include "bn_vector.h"
-#include "bn_window.h"
 
 #include "../savefile/GameState.h"
 
