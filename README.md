@@ -85,7 +85,6 @@ done
 
 ```bash
 ffmpeg -y -i "input.mp4" -r 30 -vf "scale=64:64:flags=neighbor" "preview_%03d.png"
-# -> select frames, sort files from preview_000.png to preview_yyy.png
 # -> use triangle.png from graphics/sprites/triangle.png
 for file in preview_*.png; do
   ffmpeg -y -i "$file" -i triangle.png -filter_complex "[0:v][1:v]alphamerge, format=yuva420p, lut=a=val*255" "$file"

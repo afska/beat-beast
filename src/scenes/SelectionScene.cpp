@@ -115,20 +115,20 @@ constexpr const bn::array<bn::fixed, 150> TRIANGLE_SCALE = {
     0.729,   0.73388, 0.74121, 0.75097, 0.76318, 0.78027};
 
 constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  false, false, false, true, false, false,
-    false, true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true,  true,  true, true,  true,
-    true,  false, false, true, false, false, false, true,  true, true,  true,
-    true,  true,  true,  true, true,  true,  true};
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  false, false, false, false, false, false, true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  false, false, false, true, false, false,
+    false, true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true,  true,  true, true,  true,
+    true,  false, false, true,  false, false, false, true,  true, true,  true,
+    true,  true,  true,  true,  true,  true,  true};
 
 constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
 
