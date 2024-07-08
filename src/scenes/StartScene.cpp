@@ -29,10 +29,8 @@ StartScene::StartScene(const GBFS_FILE* _fs)
 
 void StartScene::init() {
   bn::vector<Menu::Option, 10> options;
+  options.push_back(Menu::Option{.text = "Play"});
   options.push_back(Menu::Option{.text = "Story"});
-  options.push_back(Menu::Option{.text = "Tutorial"});
-  options.push_back(Menu::Option{.text = "DJ OctoBass"});
-  options.push_back(Menu::Option{.text = "Synth Wizard"});
   options.push_back(Menu::Option{.text = "Settings"});
   // options.push_back(Menu::Option{.text = "Credits"});
   menu->start(options, false);
@@ -96,18 +94,10 @@ void StartScene::processMenuOption(int option) {
       break;
     }
     case 1: {
-      setNextScreen(GameState::Screen::TUTORIAL);
+      setNextScreen(GameState::Screen::STORY);
       break;
     }
-    case 2: {  // Start
-      setNextScreen(GameState::Screen::DJ);
-      break;
-    }
-    case 3: {  // Mini game
-      setNextScreen(GameState::Screen::WIZARD);
-      break;
-    }
-    case 4: {  // Settings
+    case 2: {  // Settings
       menu->stop();
       menu->clickSound();
       settingsMenu->start();

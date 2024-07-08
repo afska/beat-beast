@@ -5,6 +5,7 @@
 
 #include "../objects/Horse.h"
 #include "../objects/ui/LevelIcon.h"
+#include "../utils/PixelBlink.h"
 
 class SelectionScene : public Scene {
  public:
@@ -19,11 +20,13 @@ class SelectionScene : public Scene {
   bn::vector<bn::unique_ptr<LevelIcon>, 8> levelIcons;
   bn::vector<bn::sprite_ptr, 8> iconSeparators;
   bn::optional<bn::unique_ptr<LevelIcon>> selectedLevel;
+  int selectedIndex = 0;
 
   bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::vector<bn::sprite_ptr, 10> accentTextSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
+  bn::unique_ptr<PixelBlink> pixelBlink;
 
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
@@ -31,10 +34,6 @@ class SelectionScene : public Scene {
 
   bn::optional<bn::sprite_ptr> preview;
   bn::optional<bn::sprite_animate_action<150>> previewAnimation;
-
-  void processBeats();
-  void updateVideo();
-  void updateSprites();
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {
@@ -49,6 +48,13 @@ class SelectionScene : public Scene {
         ++it;
     }
   }
+
+  void processInput();
+  void processBeats();
+  void updateVideo();
+  void updateSprites();
+  void updateSelection(bool withSound = true);
+  void createPreviewAnimation();
 };
 
 #endif  // SELECTION_SCENE_H

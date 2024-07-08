@@ -4,6 +4,7 @@
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../player/player.h"
+#include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
@@ -24,6 +25,8 @@
 #define HORSE_Y 90
 #define BPM 85
 #define BEAT_PREDICTION_WINDOW 100
+
+#define SFX_MOVE "menu_move.pcm"
 
 constexpr const bn::array<bn::fixed_point, 150> TRIANGLE_POSITION = {
     bn::fixed_point(2, -6),   bn::fixed_point(2, -6),
@@ -141,30 +144,32 @@ constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
 
 constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
 
+constexpr const bn::array<bn::sprite_item, 5> ICONS = {
+    bn::sprite_items::selection_icon_horse, bn::sprite_items::selection_icon_dj,
+    bn::sprite_items::selection_icon_wizard,
+    bn::sprite_items::selection_icon_riffer,
+    bn::sprite_items::selection_icon_question};
+
+constexpr const bn::array<bn::sprite_item, 5> PREVIEWS = {
+    bn::sprite_items::selection_previewtutorial,
+    bn::sprite_items::selection_previewdj,
+    bn::sprite_items::selection_previewwizard,
+    bn::sprite_items::selection_previewwizard,
+    bn::sprite_items::selection_previewwizard};
+
+constexpr const bn::array<const char*, 5> NAMES = {
+    "Tutorial", "DJ OctoBass", "Synth Wizard", "Grim Riffer", "???"};
+
 SelectionScene::SelectionScene(const GBFS_FILE* _fs)
-    : Scene(GameState::Screen::START, _fs),
+    : Scene(GameState::Screen::SELECTION, _fs),
       horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(common_fixed_8x16_sprite_font),
-      textGeneratorAccent(common_fixed_8x16_sprite_font_accent) {
+      textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   updateVideo();
-
-  preview = bn::sprite_items::selection_previewwizard.create_sprite(0, 0);
-  previewAnimation = bn::create_sprite_animate_action_forever(
-      preview.value(), 1,
-      bn::sprite_items::selection_previewwizard.tiles_item(), 0, 1, 2, 3, 4, 5,
-      6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-      43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-      61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78,
-      79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
-      97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
-      112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126,
-      127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141,
-      142, 143, 144, 145, 146, 147, 148, 149);
-  preview->set_blending_enabled(true);
 
   textGenerator.set_center_alignment();
   textGeneratorAccent.set_center_alignment();
@@ -172,31 +177,26 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   textGeneratorAccent.generate(bn::fixed_point(0, -80 + 11), "Hard",
                                accentTextSprites);
 
-  textGenerator.generate(bn::fixed_point(0, 80 - 13), "Synth Wizard",
-                         textSprites);
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_horse, {216, 120})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_dj, {216, 96})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_wizard, {216, 72})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_riffer, {216, 48})});
+  levelIcons.push_back(bn::unique_ptr{
+      new LevelIcon(bn::sprite_items::selection_icon_question, {216, 24})});
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({220, 112}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({220, 88}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({220, 64}, 8, 8)));
+  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
+      Math::toAbsTopLeft({220, 40}, 8, 8)));
 
-  levelIcons.push_back(bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_horse, {220, 120})});
-  levelIcons.push_back(bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_dj, {220, 96})});
-  levelIcons.push_back(bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_wizard, {220, 72})});
-  levelIcons.push_back(bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_riffer, {220, 48})});
-  levelIcons.push_back(bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_question, {220, 24})});
-  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
-      Math::toAbsTopLeft({224, 112}, 8, 8)));
-  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
-      Math::toAbsTopLeft({224, 88}, 8, 8)));
-  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
-      Math::toAbsTopLeft({224, 64}, 8, 8)));
-  iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
-      Math::toAbsTopLeft({224, 40}, 8, 8)));
-
-  selectedLevel = bn::unique_ptr{
-      new LevelIcon(bn::sprite_items::selection_icon_wizard, {110, 124})};
-  levelIcons[2]->setSelected();
+  updateSelection(false);
 }
 
 void SelectionScene::init() {
@@ -207,6 +207,9 @@ void SelectionScene::init() {
 }
 
 void SelectionScene::update() {
+  pixelBlink->update();
+
+  processInput();
   processBeats();
 
   if (previewAnimation.has_value())
@@ -214,6 +217,36 @@ void SelectionScene::update() {
 
   updateVideo();
   updateSprites();
+}
+
+void SelectionScene::processInput() {
+  if (bn::keypad::up_pressed()) {
+    if (selectedIndex < levelIcons.size() - 1) {
+      levelIcons[selectedIndex]->setUnselected();
+      selectedIndex++;
+      updateSelection();
+    }
+  }
+  if (bn::keypad::down_pressed()) {
+    if (selectedIndex > 0) {
+      levelIcons[selectedIndex]->setUnselected();
+      selectedIndex--;
+      updateSelection();
+    }
+  }
+  if (bn::keypad::b_pressed()) {
+    setNextScreen(GameState::Screen::START);
+  }
+  if (bn::keypad::a_pressed()) {
+    // TODO: ANIMATE
+    if (selectedIndex == 0) {
+      setNextScreen(GameState::Screen::TUTORIAL);
+    } else if (selectedIndex == 1) {
+      setNextScreen(GameState::Screen::DJ);
+    } else if (selectedIndex == 2) {
+      setNextScreen(GameState::Screen::WIZARD);
+    }
+  }
 }
 
 void SelectionScene::processBeats() {
@@ -235,7 +268,6 @@ void SelectionScene::updateVideo() {
   background = StartVideo::getFrame(videoFrame.floor_integer())
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
-  background.get()->set_mosaic_enabled(true);
 
   auto scale = TRIANGLE_SCALE[videoFrame.floor_integer()];
   preview.get()->set_position(TRIANGLE_POSITION[videoFrame.floor_integer()]);
@@ -260,4 +292,57 @@ void SelectionScene::updateSprites() {
     levelIcon->update();
     return false;
   });
+}
+
+void SelectionScene::updateSelection(bool withSound) {
+  if (withSound)
+    player_sfx_play(SFX_MOVE);
+  pixelBlink->blink();
+
+  selectedLevel.reset();
+  selectedLevel =
+      bn::unique_ptr{new LevelIcon(ICONS[selectedIndex], {110, 124})};
+  levelIcons[selectedIndex]->setSelected();
+  createPreviewAnimation();
+
+  textSprites.clear();
+  textGenerator.generate(bn::fixed_point(0, 80 - 13), NAMES[selectedIndex],
+                         textSprites);
+
+  preview.get()->set_mosaic_enabled(true);
+  selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);
+  for (auto& sprite : textSprites)
+    sprite.set_mosaic_enabled(true);
+}
+
+void SelectionScene::createPreviewAnimation() {
+  preview.reset();
+  previewAnimation.reset();
+
+  preview = PREVIEWS[selectedIndex].create_sprite(0, 0);
+  if (selectedIndex == 0) {
+    previewAnimation = bn::create_sprite_animate_action_forever(
+        preview.value(), 1, PREVIEWS[selectedIndex].tiles_item(), 0, 1, 2, 3, 4,
+        5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 1, 2, 3,
+        4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 1, 2,
+        3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 1,
+        2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0,
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+        20, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+        19, 20, 0, 1, 2);
+  } else {
+    previewAnimation = bn::create_sprite_animate_action_forever(
+        preview.value(), 1, PREVIEWS[selectedIndex].tiles_item(), 0, 1, 2, 3, 4,
+        5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+        24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+        42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+        60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+        78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+        96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+        111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124,
+        125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138,
+        139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149);
+  }
+  preview->set_blending_enabled(true);
 }

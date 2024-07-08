@@ -39,6 +39,6 @@ void LevelIcon::setUnselected() {
 void LevelIcon::setSelected() {
   animation.reset();
   animation = bn::create_sprite_animate_action_forever(
-      mainSprite, 3, spriteItem.tiles_item(), 0, 1);
+      mainSprite, 2, spriteItem.tiles_item(), 0, 1);
   isSelected = true;
 }
