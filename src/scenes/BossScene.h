@@ -18,7 +18,8 @@
 class BossScene : public Scene {
  public:
   BossScene(GameState::Screen _screen,
-            bn::string<32> fileName,
+            bn::string<32> _fileName,
+            bool _isPCM,
             bn::unique_ptr<Horse> _horse,
             bn::unique_ptr<LifeBar> _enemyLifeBar,
             const GBFS_FILE* _fs);
@@ -32,6 +33,7 @@ class BossScene : public Scene {
 
  protected:
   bn::string<32> fileName;
+  bool isPCM;
   bn::vector<bn::sprite_ptr, 64> textSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;

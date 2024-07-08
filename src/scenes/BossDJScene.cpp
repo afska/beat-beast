@@ -19,7 +19,7 @@
 
 // Loop
 #define LOOP_END_MS 158580
-#define LOOP_OFFSET_CURSOR -2121312
+#define LOOP_OFFSET_CURSOR -218856
 // ^^^ for PCM => -2121312
 // ^^^ for GSM => -218856
 
@@ -70,6 +70,7 @@ const bn::fixed HORSE_Y = 90;
 BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::DJ,
                 "dj",
+                false,
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},
