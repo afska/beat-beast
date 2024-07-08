@@ -4,4 +4,9 @@
 
 ---
 
-start scene: 240 colors
+selection scene: 240 colors
+
+---
+
+highlighted icons:
+- _selection_icon_horse (hue/saturation + 50 lightness + 50 saturation)

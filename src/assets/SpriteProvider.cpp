@@ -13,6 +13,9 @@
 #include "bn_sprite_items_menu.h"
 #include "bn_sprite_items_progress.h"
 
+#include "bn_sprite_items_ui_radio.h"
+
+#include "bn_sprite_items_selection_3dhorse.h"
 #include "bn_sprite_items_start_3dhorse.h"
 
 #include "bn_sprite_items_ui_horse.h"
@@ -37,6 +40,10 @@ bn::sprite_item unknownScreen() {
 }
 
 bn::sprite_item SpriteProvider::gun() {
+  if (GameState::data.currentScreen == GameState::Screen::SELECTION)
+    return bn::sprite_items::ui_radio;  // HACK to avoid loading Horse's gun
+                                        // sprite, dropping 16 palette colors
+
   return bn::sprite_items::gun;
 }
 
@@ -85,8 +92,9 @@ bn::sprite_item SpriteProvider::horse() {
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_horse;
     case GameState::Screen::START:
-    case GameState::Screen::SELECTION:
       return bn::sprite_items::start_3dhorse;
+    case GameState::Screen::SELECTION:
+      return bn::sprite_items::selection_3dhorse;
     default:
       return bn::sprite_items::ui_horse;
   }
