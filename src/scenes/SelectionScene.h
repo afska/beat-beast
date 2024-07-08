@@ -20,7 +20,7 @@ class SelectionScene : public Scene {
   bn::sprite_text_generator textGeneratorAccent;
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
-  bool playVideo = true;
+  bn::fixed extraSpeed = 0;
   bn::optional<bn::sprite_ptr> preview;
   bn::optional<bn::sprite_animate_action<150>> previewAnimation;
 

@@ -90,7 +90,7 @@ for file in preview_*.png; do
   ffmpeg -y -i "$file" -i triangle.png -filter_complex "[0:v][1:v]alphamerge, format=yuva420p, lut=a=val*255" "$file"
 done
 # [!] manual: only keep 150 frames (5 seconds loop), then set `start` and `end` in the next command
-start=188; end=337; for i in $(seq $start $end); do mv "preview_${i}.png" "$(printf "preview_%03d.png" $(($i - $start)))"; done
+start=188; end=337; for i in $(seq $start $end); do mv "preview_$(printf "%03d" $i).png" "preview_$(printf "%03d" $(($i - $start))).png"; done
 ffmpeg -y -i "preview_%03d.png" -filter_complex "tile=1x150" "preview.png"
 ```
 
