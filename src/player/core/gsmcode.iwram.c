@@ -269,8 +269,7 @@ P2((LARpp_j, LARp), word* LARpp_j, word* LARp) {
 
 /* 4.2.9.2 */
 
-// [!] MOVED TO EWRAM
-__attribute__((section(".ewram"))) static void LARp_to_rp
+__attribute__((section(".iwram"))) static void LARp_to_rp
 P1((LARp), word* LARp) /* [0..7] IN/OUT  */
                        /*
                         *  The input of this procedure is the interpolated LARp[0..7] array.
