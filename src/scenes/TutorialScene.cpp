@@ -323,7 +323,7 @@ void TutorialScene::updateDialog() {
       break;
     }
     case 4: {
-      setNextScreen(GameState::Screen::START);
+      setNextScreen(GameState::Screen::SELECTION);
       break;
     }
     case 5: {

@@ -22,7 +22,7 @@ class SelectionScene : public Scene {
   bn::optional<bn::unique_ptr<LevelIcon>> selectedLevel;
   int selectedIndex = 0;
 
-  bn::vector<bn::sprite_ptr, 64> textSprites;
+  bn::array<bn::vector<bn::sprite_ptr, 10>, 5> textSprites;
   bn::vector<bn::sprite_ptr, 10> accentTextSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
@@ -53,6 +53,7 @@ class SelectionScene : public Scene {
   void processBeats();
   void updateVideo();
   void updateSprites();
+  void unselect();
   void updateSelection(bool withSound = true);
   void createPreviewAnimation();
 };

@@ -310,7 +310,7 @@ void BossScene::processMenuOption(int option) {
         break;
       }
       case 1: {  // Quit
-        setNextScreen(GameState::Screen::START);
+        setNextScreen(GameState::Screen::SELECTION);
         player_setPause(false);
         break;
       }
@@ -332,7 +332,7 @@ void BossScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Quit
-      setNextScreen(GameState::Screen::START);
+      setNextScreen(GameState::Screen::SELECTION);
       player_stop();
       break;
     }

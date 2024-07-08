@@ -198,6 +198,15 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
       Math::toAbsTopLeft({220, 40}, 8, 8)));
 
+  for (int i = 0; i < 5; i++) {
+    textGenerator.generate(bn::fixed_point(0, 80 - 13), NAMES[i],
+                           textSprites[i]);
+    for (auto& sprite : textSprites[i]) {
+      sprite.set_mosaic_enabled(true);
+      sprite.set_visible(false);
+    }
+  }
+
   updateSelection(false);
 }
 
@@ -224,14 +233,14 @@ void SelectionScene::update() {
 void SelectionScene::processInput() {
   if (bn::keypad::up_pressed()) {
     if (selectedIndex < levelIcons.size() - 1) {
-      levelIcons[selectedIndex]->setUnselected();
+      unselect();
       selectedIndex++;
       updateSelection();
     }
   }
   if (bn::keypad::down_pressed()) {
     if (selectedIndex > 0) {
-      levelIcons[selectedIndex]->setUnselected();
+      unselect();
       selectedIndex--;
       updateSelection();
     }
@@ -240,7 +249,6 @@ void SelectionScene::processInput() {
     setNextScreen(GameState::Screen::START);
   }
   if (bn::keypad::a_pressed()) {
-    // TODO: ANIMATE
     if (selectedIndex == 0) {
       setNextScreen(GameState::Screen::TUTORIAL);
     } else if (selectedIndex == 1) {
@@ -296,6 +304,12 @@ void SelectionScene::updateSprites() {
   });
 }
 
+void SelectionScene::unselect() {
+  levelIcons[selectedIndex]->setUnselected();
+  for (auto& sprite : textSprites[selectedIndex])
+    sprite.set_visible(false);
+}
+
 void SelectionScene::updateSelection(bool withSound) {
   if (withSound)
     player_sfx_play(SFX_MOVE);
@@ -307,14 +321,11 @@ void SelectionScene::updateSelection(bool withSound) {
   levelIcons[selectedIndex]->setSelected();
   createPreviewAnimation();
 
-  textSprites.clear();
-  textGenerator.generate(bn::fixed_point(0, 80 - 13), NAMES[selectedIndex],
-                         textSprites);
+  for (auto& sprite : textSprites[selectedIndex])
+    sprite.set_visible(true);
 
   preview.get()->set_mosaic_enabled(true);
   selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);
-  for (auto& sprite : textSprites)
-    sprite.set_mosaic_enabled(true);
 }
 
 void SelectionScene::createPreviewAnimation() {
