@@ -16,18 +16,15 @@
 #define SFX_LOSE "stopdj.pcm"
 
 const bn::string<32> CHART_EXTENSION = ".boss";
-const bn::string<32> AUDIO_EXTENSION_PCM = ".pcm";
-const bn::string<32> AUDIO_EXTENSION_GSM = ".gsm";
+const bn::string<32> AUDIO_EXTENSION = ".pcm";
 
 BossScene::BossScene(GameState::Screen _screen,
                      bn::string<32> _fileName,
-                     bool _isPCM,
                      bn::unique_ptr<Horse> _horse,
                      bn::unique_ptr<LifeBar> _enemyLifeBar,
                      const GBFS_FILE* _fs)
     : Scene(_screen, _fs),
       fileName(_fileName),
-      isPCM(_isPCM),
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       horse(bn::move(_horse)),
@@ -55,11 +52,7 @@ BossScene::BossScene(GameState::Screen _screen,
 
 void BossScene::init() {
   bn::blending::set_fade_alpha(BG_DARK_ALPHA);
-
-  if (isPCM)
-    player_playPCM((fileName + AUDIO_EXTENSION_PCM).c_str());
-  else
-    player_playGSM((fileName + AUDIO_EXTENSION_GSM).c_str());
+  player_playPCM((fileName + AUDIO_EXTENSION).c_str());
 }
 
 void BossScene::update() {

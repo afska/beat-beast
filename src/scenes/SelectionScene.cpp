@@ -203,7 +203,7 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
 
 void SelectionScene::init() {
   if (!PlaybackState.isLooping) {
-    player_playPCM("lazer.pcm");
+    player_playGSM("lazer.gsm");
     player_setLoop(true);
   }
 }
