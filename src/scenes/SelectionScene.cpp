@@ -172,7 +172,9 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   updateVideo();
 
   textGenerator.set_center_alignment();
+  textGenerator.set_z_order(-1);
   textGeneratorAccent.set_center_alignment();
+  textGeneratorAccent.set_z_order(-1);
 
   textGeneratorAccent.generate(bn::fixed_point(0, -80 + 11), "Hard",
                                accentTextSprites);
