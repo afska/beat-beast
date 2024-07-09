@@ -255,6 +255,8 @@ void SelectionScene::processInput() {
       setNextScreen(GameState::Screen::DJ);
     } else if (selectedIndex == 2) {
       setNextScreen(GameState::Screen::WIZARD);
+    } else if (selectedIndex == 3) {
+      setNextScreen(GameState::Screen::RIFFER);
     }
   }
 }

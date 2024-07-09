@@ -2,6 +2,7 @@
 #include "player/player_sfx.h"
 #include "savefile/SaveFile.h"
 #include "scenes/BossDJScene.h"
+#include "scenes/BossRifferScene.h"
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
 #include "scenes/ControlsScene.h"
@@ -105,6 +106,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new BossDJScene(fs)};
     case GameState::Screen::WIZARD:
       return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
+    case GameState::Screen::RIFFER:
+      return bn::unique_ptr{(Scene*)new BossRifferScene(fs)};
     default: {
       BN_ERROR("Next screen not found?");
       return bn::unique_ptr{(Scene*)new StartScene(fs)};

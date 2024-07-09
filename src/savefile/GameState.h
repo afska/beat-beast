@@ -14,7 +14,8 @@ enum Screen {
   STORY,
   TUTORIAL,
   DJ,
-  WIZARD
+  WIZARD,
+  RIFFER
 };
 
 struct GameStateData {

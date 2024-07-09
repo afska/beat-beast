@@ -25,10 +25,6 @@
 
 #define LIFE_BOSS 125
 
-// Loop
-// #define LOOP_END_MS 158580
-// #define LOOP_OFFSET_CURSOR -218856
-
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1
 #define DMG_ROCK_TO_PLAYER 1
@@ -831,5 +827,3 @@ void BossWizardScene::causeDamage(unsigned amount) {
 }
 
 // TODO: REMOVE ALL BN_LOGS
-// TODO: BLINKING OPTIONS -> dd3041b7baf903ff6991dcf8317c9ca682f84185
-// TODO: RUMBLE

@@ -17,15 +17,17 @@ class BossDJScene : public BossScene {
   void updateBossFight() override;
 
  private:
-  bn::regular_bg_ptr background3;
+  // bn::regular_bg_ptr background3;
   // bn::regular_bg_ptr background2;
-  bn::regular_bg_ptr background1;
-  bn::regular_bg_ptr background0;
+  // bn::regular_bg_ptr background1;
+  bn::optional<bn::regular_bg_ptr> background0;
   bn::unique_ptr<Octopus> octopus;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Vinyl>, 32> vinyls;
   int megaBallSfxCount = 0;
+  bn::fixed videoFrame = 0;
+  bn::fixed extraSpeed = 0;
 
   void processInput();
   void processChart();
