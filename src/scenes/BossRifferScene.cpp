@@ -99,7 +99,7 @@ void BossRifferScene::processInput() {
             {background0.get()->position().x() - speedX,
              background0.get()->position().y()});
         background3.get()->set_position(
-            {background3.get()->position().x() - speedX,
+            {background3.get()->position().x() - speedX / 2,
              background3.get()->position().y()});
         horseX = scrollLimit1;
       } else if (horseX > scrollLimit2) {
@@ -107,7 +107,7 @@ void BossRifferScene::processInput() {
             {background0.get()->position().x() - speedX,
              background0.get()->position().y()});
         background3.get()->set_position(
-            {background3.get()->position().x() - speedX,
+            {background3.get()->position().x() - speedX / 2,
              background3.get()->position().y()});
         horseX = scrollLimit2;
       }
