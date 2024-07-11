@@ -1,7 +1,6 @@
 #include "BossDJScene.h"
 
 #include "../assets/SpriteProvider.h"
-#include "../assets/StartVideo.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
@@ -78,9 +77,27 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::dj_icon_octopus,
                                 bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
+      background3(bn::regular_bg_items::back_dj_disco_bg3.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      // background2(bn::regular_bg_items::back_dj_disco_bg2.create_bg(
+      //     (256 - Math::SCREEN_WIDTH) / 2,
+      //     (256 - Math::SCREEN_HEIGHT) / 2)),
+      background1(bn::regular_bg_items::back_dj_disco_bg1.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      background0(bn::regular_bg_items::back_dj_disco_bg0.create_bg(
+          (256 - Math::SCREEN_WIDTH) / 2,
+          (256 - Math::SCREEN_HEIGHT) / 2)),
       octopus(bn::unique_ptr{new Octopus({200, -70})}) {
-  // background0.set_blending_enabled(true);
-  // background0.set_mosaic_enabled(true);
+  background0.set_blending_enabled(true);
+  background0.set_mosaic_enabled(true);
+  background1.set_blending_enabled(true);
+  background1.set_mosaic_enabled(true);
+  // background2.set_blending_enabled(true);
+  // background2.set_mosaic_enabled(true);
+  background3.set_blending_enabled(true);
+  background3.set_mosaic_enabled(true);
   chartReader->eventsThatNeedAudioLagPrediction =
       15728880 /* 0b111100000000000011110000*/;
 }
@@ -245,16 +262,15 @@ void BossDJScene::processChart() {
 }
 
 void BossDJScene::updateBackground() {
-  background0.reset();
-  background0 = StartVideo::getFrame(videoFrame.floor_integer())
-                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
-                               (256 - Math::SCREEN_HEIGHT) / 2);
-  background0.get()->set_mosaic_enabled(true);
-  background0.get()->set_blending_enabled(true);
-  extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
-  videoFrame += (1 + extraSpeed / 2) / 2;
-  if (videoFrame >= 150)
-    videoFrame = 0;
+  background0.set_position(
+      background0.position().x() - 1 - (chartReader->isInsideBeat() ? 1 : 0),
+      background0.position().y());
+  background1.set_position(
+      background1.position().x() - (chartReader->isInsideBeat() ? 0.75 : 0.5),
+      background1.position().y());
+  // background2.set_position(
+  //     background2.position().x() - (chartReader->isInsideBeat() ? 0.5 :
+  //     0.25), background2.position().y());
 
   int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
   bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
@@ -267,10 +283,8 @@ void BossDJScene::updateSprites() {
     setNextScreen(GameState::Screen::START);
 
   // Octopus
-  if (isNewBeat) {
+  if (isNewBeat)
     octopus->bounce();
-    extraSpeed = 10;
-  }
   octopus->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
   if (octopus->getUpperTurntable()->getIsAttacking() &&
