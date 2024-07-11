@@ -49,7 +49,7 @@ class BossWizardScene : public BossScene {
   void updateSprites();
 
   void goToNextPhase();
-  void causeDamage(unsigned amount);
+  void causeDamage(bn::fixed amount);
 };
 
 #endif  // BOSS_WIZARD_SCENE_H

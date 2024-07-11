@@ -8,6 +8,7 @@
 Bullet::Bullet(bn::fixed_point initialPosition,
                bn::fixed_point _direction,
                bn::sprite_item _bullet,
+               bn::fixed dmg,
                bn::fixed scale,
                bn::fixed _offBeatSpeed,
                bn::fixed _onBeatSpeed)
@@ -25,6 +26,8 @@ Bullet::Bullet(bn::fixed_point initialPosition,
 
   sprite.set_scale(scale);
   sprite.set_bg_priority(1);
+
+  damage = dmg;
 }
 
 bool Bullet::update(int msecs,

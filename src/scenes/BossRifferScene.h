@@ -28,7 +28,7 @@ class BossRifferScene : public BossScene {
   void updateBackground();
   void updateSprites();
 
-  void causeDamage(unsigned amount);
+  void causeDamage(bn::fixed amount);
 };
 
 #endif  // BOSS_RIFFER_SCENE_H

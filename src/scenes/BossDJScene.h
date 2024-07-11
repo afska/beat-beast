@@ -32,7 +32,7 @@ class BossDJScene : public BossScene {
   void updateBackground();
   void updateSprites();
 
-  void causeDamage(unsigned amount);
+  void causeDamage(bn::fixed amount);
   void addMegaBallSfx();
   void removeMegaBallSfx();
 };

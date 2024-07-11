@@ -18,7 +18,7 @@ const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
 LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
-                 unsigned _maxLife,
+                 bn::fixed _maxLife,
                  bn::sprite_item _icon,
                  bn::sprite_item _fill)
     : TopLeftGameObject(SpriteProvider::lifebar().create_sprite(0, 0)),
@@ -42,19 +42,21 @@ LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
   fill.set_bg_priority(0);
 }
 
-bool LifeBar::setLife(int _life) {
-  unsigned _unsignedLife = _life >= 0 ? (unsigned)_life : 0;
+bool LifeBar::setLife(bn::fixed _life) {
+  bn::fixed realLife = _life >= 0 ? _life : 0;
 
-  if (_unsignedLife == 0)
+  if (realLife == 0)
     if (!loopingCross.has_value())
       loopingCross = bn::unique_ptr{new LoopingCross(mainSprite.position())};
 
-  if (_life <= 0)
+  if (_life <= 0) {
+    extraDamage += -_life;
     return true;
-  if (_unsignedLife > maxLife)
+  }
+  if (realLife > maxLife)
     return false;
 
-  life = _unsignedLife;
+  life = realLife;
   visualLife =
       Math::lerp(_life, 0, maxLife, 0, MAX_DIFFERENT_VALUES).floor_integer();
   animationIndex = Math::SCALE_STEPS.size() - 1;

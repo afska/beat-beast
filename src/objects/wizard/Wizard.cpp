@@ -10,7 +10,7 @@ Wizard::Wizard(bn::fixed_point initialPosition)
   sprite.set_mosaic_enabled(true);
   sprite.set_z_order(-1);
 
-  boundingBox.set_dimensions(sprite.dimensions());
+  boundingBox.set_dimensions(bn::fixed_size(32, 58));
   boundingBox.set_position(initialPosition);
   setIdleState();
 }

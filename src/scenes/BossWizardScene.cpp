@@ -189,7 +189,8 @@ void BossWizardScene::processInput() {
       if (comboBar->isMaxedOut()) {
         bullets.push_back(bn::unique_ptr{new Bullet(
             horse->getShootingPoint() - horse->getShootingDirection() * 16,
-            horse->getShootingDirection(), SpriteProvider::bullet())});
+            horse->getShootingDirection(), SpriteProvider::bulletbonus(),
+            BULLET_BONUS_DMG)});
       }
     }
   } else {
@@ -207,9 +208,9 @@ void BossWizardScene::processInput() {
     if (comboBar->isMaxedOut() && bn::keypad::b_released() &&
         !horse->isBusy()) {
       shoot();
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      bullets.push_back(bn::unique_ptr{
+          new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                     SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
     }
   }
 
@@ -820,9 +821,9 @@ void BossWizardScene::goToNextPhase() {
   BN_LOG(phase);
 }
 
-void BossWizardScene::causeDamage(unsigned amount) {
+void BossWizardScene::causeDamage(bn::fixed amount) {
   wizard->get()->hurt();
-  if (enemyLifeBar->setLife((int)enemyLifeBar->getLife() - amount))
+  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }
 

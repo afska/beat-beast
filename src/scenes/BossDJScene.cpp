@@ -143,9 +143,9 @@ void BossDJScene::processInput() {
   }
   if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
-    bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                horse->getShootingDirection(),
-                                                SpriteProvider::bullet())});
+    bullets.push_back(bn::unique_ptr{
+        new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
   }
 
   // jump
@@ -217,13 +217,13 @@ void BossDJScene::processChart() {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1.5),
-                       bn::sprite_items::dj_bad_bullet, 1, 1, 2)});
+                       bn::sprite_items::dj_bad_bullet, 1, 1, 1, 2)});
       }
       if (IS_EVENT_BULLET_SLOW(type)) {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
-                       bn::sprite_items::dj_bad_bullet, 1, 1, 2)});
+                       bn::sprite_items::dj_bad_bullet, 1, 1, 1, 2)});
       }
 
       // Turntable throw
@@ -383,9 +383,9 @@ void BossDJScene::updateSprites() {
   });
 }
 
-void BossDJScene::causeDamage(unsigned amount) {
+void BossDJScene::causeDamage(bn::fixed amount) {
   octopus->hurt();
-  if (enemyLifeBar->setLife((int)enemyLifeBar->getLife() - amount))
+  if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }
 

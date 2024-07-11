@@ -50,7 +50,7 @@ void CalibrationScene::update() {
       } else if (beat > 0) {
         bullets.push_back(bn::unique_ptr{
             new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                       SpriteProvider::bullet(), 2, 1, 2)});
+                       SpriteProvider::bullet(), 1, 2, 1, 2)});
       }
     }
 

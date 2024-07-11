@@ -115,9 +115,9 @@ void TutorialScene::processInput() {
   if (didUnlockAim && comboBar.has_value() && comboBar->get()->isMaxedOut() &&
       bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
-    bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                horse->getShootingDirection(),
-                                                SpriteProvider::bullet())});
+    bullets.push_back(bn::unique_ptr{
+        new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
     didDoubleShoot = true;
   }
 
@@ -222,8 +222,7 @@ void TutorialScene::updateSprites() {
           bullet->collidesWith(dummyBoss->get())) {
         collided = true;
         dummyBoss->get()->hurt();
-        if (enemyLifeBar->get()->setLife((int)enemyLifeBar->get()->getLife() -
-                                         1)) {
+        if (enemyLifeBar->get()->setLife(enemyLifeBar->get()->getLife() - 1)) {
           dummyBoss->get()->explode();
           state++;
         }
@@ -724,7 +723,7 @@ void TutorialScene::sufferDamage() {
     return;
 
   horse->hurt();
-  auto newLife = (int)lifeBar->getLife() - 1;
+  auto newLife = lifeBar->getLife() - 1;
   lifeBar->setLife(newLife <= 0 ? 1 : newLife);
   if (comboBar.has_value()) {
     comboBar->get()->setCombo(0);

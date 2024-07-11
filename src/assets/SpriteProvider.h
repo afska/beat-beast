@@ -9,6 +9,7 @@ bn::sprite_item gun();
 bn::sprite_item gunreload();
 bn::sprite_item combobar();
 bn::sprite_item bullet();
+bn::sprite_item bulletbonus();
 bn::sprite_item cross();
 bn::sprite_item explosion();
 bn::sprite_item menu();

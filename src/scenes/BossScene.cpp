@@ -75,7 +75,7 @@ void BossScene::addExplosion(bn::fixed_point position) {
   explosions.push_back(bn::unique_ptr{new Explosion(position)});
 }
 
-void BossScene::sufferDamage(unsigned amount) {
+void BossScene::sufferDamage(bn::fixed amount) {
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
@@ -83,7 +83,7 @@ void BossScene::sufferDamage(unsigned amount) {
 
   horse->hurt();
   comboBar->setCombo(0);
-  bool dead = lifeBar->setLife((int)lifeBar->getLife() - amount);
+  bool dead = lifeBar->setLife(lifeBar->getLife() - amount);
   printLife(dead ? 0 : lifeBar->getLife());
   if (!dead)
     comboBar->bump();
@@ -212,7 +212,7 @@ void BossScene::disableAutoFire() {
   autoFire.reset();
 }
 
-void BossScene::printLife(unsigned life) {
+void BossScene::printLife(bn::fixed life) {
   textSprites.clear();
   textGenerator.generate({-102, -61},
                          (life < 10 ? "0" : "") + bn::to_string<32>(life) +

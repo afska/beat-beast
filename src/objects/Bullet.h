@@ -5,12 +5,14 @@
 
 #define BULLET_OFF_BEAT_SPEED 1.5
 #define BULLET_ON_BEAT_SPEED 2.5
+#define BULLET_BONUS_DMG 0.25
 
 class Bullet : public RhythmicBullet {
  public:
   Bullet(bn::fixed_point initialPosition,
          bn::fixed_point _direction,
          bn::sprite_item _bullet,
+         bn::fixed dmg = 1,
          bn::fixed scale = 1,
          bn::fixed _offBeatSpeed = BULLET_OFF_BEAT_SPEED,
          bn::fixed _onBeatSpeed = BULLET_ON_BEAT_SPEED);
