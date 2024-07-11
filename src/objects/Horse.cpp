@@ -193,7 +193,7 @@ void Horse::updateAnimations() {
     if (jumpingAnimation->done())
       setIdleOrRunningState();
 
-    if (jumpFrame < jumpYOffset.size())
+    if (jumpFrame < jumpYOffset.size() && fakeJump)
       topLeftPosition.set_y(topLeftPosition.y() + jumpYOffset[jumpFrame] * 2);
     jumpFrame++;
   }
@@ -251,7 +251,8 @@ void Horse::setRunningState() {
 void Horse::setJumpingState() {
   resetAnimations();
   jumpingAnimation = bn::create_sprite_animate_action_once(
-      mainSprite, 5, SpriteProvider::horse().tiles_item(), 10, 11, 12, 12);
+      mainSprite, fakeJump ? 5 : 7, SpriteProvider::horse().tiles_item(), 10,
+      11, 12, 12);
   jumpFrame = 0;
 }
 

@@ -8,6 +8,7 @@
 #include "bn_sprite_item.h"
 #include "bn_sprite_ptr.h"
 #include "bn_string.h"
+#include "bn_top_left_fixed_rect.h"
 #include "bn_unique_ptr.h"
 
 class GameObject {

@@ -3,6 +3,7 @@
 
 #include "bn_fixed_point.h"
 #include "bn_fixed_rect.h"
+#include "bn_top_left_fixed_rect.h"
 #include "bn_vector.h"
 
 #define MAX_OBJECTS 1024
