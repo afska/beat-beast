@@ -18,6 +18,7 @@ class BossRifferScene : public BossScene {
   void updateBossFight() override;
 
  private:
+  bn::fixed scrollLimit1, scrollLimit2;
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;

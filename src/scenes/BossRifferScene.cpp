@@ -60,6 +60,9 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
   background0.get()->set_blending_enabled(true);
   background0.get()->set_mosaic_enabled(true);
 
+  scrollLimit1 = Math::SCREEN_WIDTH / 4 - 32;
+  scrollLimit2 = Math::SCREEN_WIDTH / 2 - 32;
+
   // chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
 
@@ -75,7 +78,45 @@ void BossRifferScene::processInput() {
     return;
 
   // move horse (left/right)
-  processMovementInput(HORSE_Y);
+  bn::fixed speedX;
+  if (!bn::keypad::r_held()) {  // (R locks target)
+    if (bn::keypad::left_held()) {
+      speedX =
+          -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
+      horse->setFlipX(true);
+    } else if (bn::keypad::right_held()) {
+      speedX = HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
+      horse->setFlipX(false);
+    }
+    if (speedX != 0 && chartReader->isInsideBeat())
+      speedX *= 2;
+
+    auto horseX = horse->getPosition().x() + speedX;
+
+    if (speedX != 0) {
+      if (horseX < scrollLimit1) {
+        background0.get()->set_position(
+            {background0.get()->position().x() - speedX,
+             background0.get()->position().y()});
+        background3.get()->set_position(
+            {background3.get()->position().x() - speedX,
+             background3.get()->position().y()});
+        horseX = scrollLimit1;
+      } else if (horseX > scrollLimit2) {
+        background0.get()->set_position(
+            {background0.get()->position().x() - speedX,
+             background0.get()->position().y()});
+        background3.get()->set_position(
+            {background3.get()->position().x() - speedX,
+             background3.get()->position().y()});
+        horseX = scrollLimit2;
+      }
+    }
+
+    horse->setPosition({horseX, HORSE_Y}, speedX != 0);
+  } else {
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, speedX != 0);
+  }
 
   processAimInput(false);
 
@@ -157,9 +198,7 @@ void BossRifferScene::processChart() {
   }
 }
 
-void BossRifferScene::updateBackground() {
-  // TODO
-}
+void BossRifferScene::updateBackground() {}
 
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
