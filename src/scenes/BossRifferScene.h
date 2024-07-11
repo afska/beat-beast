@@ -19,8 +19,6 @@ class BossRifferScene : public BossScene {
 
  private:
   bn::optional<bn::regular_bg_ptr> background3;
-  bn::optional<bn::regular_bg_ptr> background2;
-  bn::optional<bn::regular_bg_ptr> background1;
   bn::optional<bn::regular_bg_ptr> background0;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;

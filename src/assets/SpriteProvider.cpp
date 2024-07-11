@@ -33,6 +33,11 @@
 #include "bn_sprite_items_wizard_lifebar.h"
 #include "bn_sprite_items_wizard_lifebar_fill.h"
 
+#include "bn_sprite_items_riffer_horse.h"
+#include "bn_sprite_items_riffer_icon_horse.h"
+#include "bn_sprite_items_riffer_lifebar.h"
+#include "bn_sprite_items_riffer_lifebar_fill.h"
+
 bn::sprite_item unknownScreen() {
   BN_ASSERT(false, "Sprites not found for screen: " +
                        bn::to_string<32>(GameState::data.currentScreen));
@@ -87,14 +92,16 @@ bn::sprite_item SpriteProvider::hitbox() {
 
 bn::sprite_item SpriteProvider::horse() {
   switch (GameState::data.currentScreen) {
-    case GameState::Screen::DJ:
-      return bn::sprite_items::dj_horse;
-    case GameState::Screen::WIZARD:
-      return bn::sprite_items::wizard_horse;
     case GameState::Screen::START:
       return bn::sprite_items::start_3dhorse;
     case GameState::Screen::SELECTION:
       return bn::sprite_items::selection_3dhorse;
+    case GameState::Screen::DJ:
+      return bn::sprite_items::dj_horse;
+    case GameState::Screen::WIZARD:
+      return bn::sprite_items::wizard_horse;
+    case GameState::Screen::RIFFER:
+      return bn::sprite_items::riffer_horse;
     default:
       return bn::sprite_items::ui_horse;
   }
@@ -106,6 +113,8 @@ bn::sprite_item SpriteProvider::iconHorse() {
       return bn::sprite_items::dj_icon_horse;
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_icon_horse;
+    case GameState::Screen::RIFFER:
+      return bn::sprite_items::riffer_icon_horse;
     default:
       return bn::sprite_items::ui_icon_horse;
   }
@@ -117,6 +126,8 @@ bn::sprite_item SpriteProvider::lifebar() {
       return bn::sprite_items::dj_lifebar;
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_lifebar;
+    case GameState::Screen::RIFFER:
+      return bn::sprite_items::riffer_lifebar;
     default:
       return bn::sprite_items::ui_lifebar;
   }
@@ -128,6 +139,8 @@ bn::sprite_item SpriteProvider::lifebarFill() {
       return bn::sprite_items::dj_lifebar_fill;
     case GameState::Screen::WIZARD:
       return bn::sprite_items::wizard_lifebar_fill;
+    case GameState::Screen::RIFFER:
+      return bn::sprite_items::riffer_lifebar_fill;
     default:
       return bn::sprite_items::ui_lifebar_fill;
   }

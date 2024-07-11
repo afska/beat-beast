@@ -8,6 +8,8 @@
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
+#include "bn_regular_bg_items_back_riffer_wasteland_bg0.h"
+#include "bn_regular_bg_items_back_riffer_wasteland_bg3.h"
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
@@ -48,15 +50,16 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::wizard_icon_wizard,
                                 bn::sprite_items::wizard_lifebar_wizard_fill)},
                 _fs) {
-  // TODO: SET BACKGROUND
-  // background0.get()->set_blending_enabled(true);
-  // background0.get()->set_mosaic_enabled(true);
-  // background1.get()->set_blending_enabled(true);
-  // background1.get()->set_mosaic_enabled(true);
-  // background2.get()->set_blending_enabled(true);
-  // background2.get()->set_mosaic_enabled(true);
-  // background3.get()->set_blending_enabled(true);
-  // background3.get()->set_mosaic_enabled(true);
+  background3 = bn::regular_bg_items::back_riffer_wasteland_bg3.create_bg(
+      (1024 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+  background3.get()->set_blending_enabled(true);
+  background3.get()->set_mosaic_enabled(true);
+
+  background0 = bn::regular_bg_items::back_riffer_wasteland_bg0.create_bg(
+      (1024 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+  background0.get()->set_blending_enabled(true);
+  background0.get()->set_mosaic_enabled(true);
+
   // chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
 }
 
