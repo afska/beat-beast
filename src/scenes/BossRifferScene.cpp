@@ -10,8 +10,8 @@
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg0.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg3.h"
-#include "bn_sprite_items_wizard_icon_wizard.h"
-#include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
+#include "bn_sprite_items_riffer_icon_riffer.h"
+#include "bn_sprite_items_riffer_lifebar_riffer_fill.h"
 
 #define LIFE_BOSS 125
 
@@ -42,13 +42,13 @@ const bn::fixed HORSE_Y = 97;
 
 BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::RIFFER,
-                "dj",  // TODO: riffer
+                "riffer",
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
                 bn::unique_ptr{
                     new LifeBar({184, 0},
                                 LIFE_BOSS,
-                                bn::sprite_items::wizard_icon_wizard,
-                                bn::sprite_items::wizard_lifebar_wizard_fill)},
+                                bn::sprite_items::riffer_icon_riffer,
+                                bn::sprite_items::riffer_lifebar_riffer_fill)},
                 _fs) {
   background3 = bn::regular_bg_items::back_riffer_wasteland_bg3.create_bg(
       (1024 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
@@ -164,7 +164,32 @@ void BossRifferScene::updateBackground() {
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
 
-  // TODO
+  // Attacks
+  iterate(bullets, [this](Bullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
+
+    // if (bullet->collidesWith(octopus.get())) {
+    //   addExplosion(bullet->getPosition());
+    //   causeDamage(bullet->damage);
+
+    //   return true;
+    // }
+
+    bool collided = false;
+    iterate(
+        enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet) {
+          if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+            addExplosion(((Bullet*)bullet)->getPosition());
+            // enemyBullet->explode(octopus->getShootingPoint());
+            collided = true;
+          }
+          return false;
+        });
+
+    return isOut || collided;
+  });
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {
