@@ -552,8 +552,10 @@ void BossWizardScene::updateSprites() {
   // Black hole
   if (blackHole.has_value()) {
     if (blackHole->get()->didDisappear()) {
-      // TODO: if (didWin) ...
-      setNextScreen(GameState::Screen::START);
+      if (didWin)
+        setNextScreen(GameState::Screen::START);
+      else
+        die();
     }
 
     if (horse->collidesWith(blackHole->get()) && !horse->isHurt())

@@ -187,11 +187,18 @@ void BossScene::updateCommonSprites() {
 }
 
 void BossScene::shoot() {
+  reportSuccessfulShot();
   horse->shoot();
   horse->canShoot = false;
 }
 
+void BossScene::reportSuccessfulShot() {
+  successfulShots++;
+}
+
 void BossScene::reportFailedShot() {
+  failedShots++;
+
   horse->canShoot = false;
 
   cross.reset();

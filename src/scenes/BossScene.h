@@ -60,6 +60,8 @@ class BossScene : public Scene {
   bool isDead = false;
   bool didWin = false;
   bool didFinish = false;
+  unsigned failedShots = 0;
+  unsigned successfulShots = 0;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
@@ -86,6 +88,7 @@ class BossScene : public Scene {
   void processAimInput(bool aim360 = false);
   void updateCommonSprites();
   void shoot();
+  void reportSuccessfulShot();
   void reportFailedShot();
   void enableAutoFire();
   void disableAutoFire();
