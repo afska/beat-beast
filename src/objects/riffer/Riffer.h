@@ -20,7 +20,9 @@ class Riffer : public TopLeftGameObject {
   bool isHurt() { return hurtAnimation.has_value(); }
 
  private:
-  bn::sprite_ptr guitarSprite;
+  bn::sprite_ptr guitar;
+  bn::sprite_ptr handL;
+  bn::sprite_ptr handR;
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<2>> attackAnimation;
@@ -31,6 +33,7 @@ class Riffer : public TopLeftGameObject {
 
   bool isAttacking() { return attackAnimation.has_value(); }
 
+  void updateSubsprites();
   void updateAnimations();
   void setIdleState();
   void setHurtState();
