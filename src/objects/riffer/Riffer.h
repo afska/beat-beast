@@ -20,6 +20,7 @@ class Riffer : public TopLeftGameObject {
   bool isHurt() { return hurtAnimation.has_value(); }
 
  private:
+  bn::sprite_ptr guitarSprite;
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<2>> attackAnimation;

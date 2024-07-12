@@ -2,14 +2,21 @@
 
 #include "../../utils/Math.h"
 
+#include "bn_sprite_items_riffer_guitar.h"
 #include "bn_sprite_items_riffer_riffer.h"
 
 Riffer::Riffer(bn::fixed_point initialPosition)
-    : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)) {
+    : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)),
+      guitarSprite(bn::sprite_items::riffer_guitar.create_sprite(0, 0)) {
   setTopLeftPosition(initialPosition);
+
+  guitarSprite.set_position(getCenteredPosition());
+  guitarSprite.set_mosaic_enabled(true);
+  guitarSprite.set_z_order(0);
+
   targetPosition = initialPosition;
   mainSprite.set_mosaic_enabled(true);
-  mainSprite.set_z_order(-1);
+  mainSprite.set_z_order(1);
 
   boundingBox.set_dimensions(bn::fixed_size(24, 62));
   boundingBox.set_position(initialPosition);
@@ -27,6 +34,8 @@ bool Riffer::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 
   Math::moveSpriteTowards(mainSprite, targetPosition, speedX, speedY);
   setCenteredPosition(mainSprite.position());
+
+  guitarSprite.set_position(getCenteredPosition() + bn::fixed_point(-2, 28));
 
   boundingBox.set_position(mainSprite.position());
 
