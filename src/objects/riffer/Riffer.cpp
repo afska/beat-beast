@@ -5,8 +5,8 @@
 #include "bn_sprite_items_riffer_riffer.h"
 
 Riffer::Riffer(bn::fixed_point initialPosition)
-    : TopLeftGameObject(
-          bn::sprite_items::riffer_riffer.create_sprite(initialPosition)) {
+    : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)) {
+  setTopLeftPosition(initialPosition);
   targetPosition = initialPosition;
   mainSprite.set_mosaic_enabled(true);
   mainSprite.set_z_order(-1);
