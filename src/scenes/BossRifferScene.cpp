@@ -14,8 +14,8 @@
 #include "bn_sprite_items_riffer_lifebar_riffer_fill.h"
 
 #define LIFE_BOSS 125
-#define GRAVITY 0.45
-#define JUMP_FORCE 5
+#define GRAVITY 0.75
+#define JUMP_FORCE 7
 
 // Damage to player
 #define DMG_POWER_CHORD_TO_PLAYER 1
@@ -73,9 +73,9 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
   scrollLimit2 = Math::SCREEN_WIDTH / 2 - 32;
 
   platforms.push_back(bn::top_left_fixed_rect(0, 155, 144, 50));
-  platforms.push_back(bn::top_left_fixed_rect(144, 129 + 3, 62, 50));
-  platforms.push_back(bn::top_left_fixed_rect(206, 105 + 3, 56, 50));
-  platforms.push_back(bn::top_left_fixed_rect(262, 129 + 3, 56, 50));
+  platforms.push_back(bn::top_left_fixed_rect(144 - 8, 129 + 3, 62 + 8, 50));
+  platforms.push_back(bn::top_left_fixed_rect(206 - 8, 105 + 3, 56 + 8, 50));
+  platforms.push_back(bn::top_left_fixed_rect(262 - 8, 129 + 3, 56 + 8, 50));
   platforms.push_back(bn::top_left_fixed_rect(528, 187, 128, 50));
   platforms.push_back(bn::top_left_fixed_rect(672, 163, 128, 50));
   platforms.push_back(bn::top_left_fixed_rect(808, 131, 160, 50));

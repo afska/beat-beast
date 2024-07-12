@@ -251,8 +251,7 @@ void Horse::setRunningState() {
 void Horse::setJumpingState() {
   resetAnimations();
   jumpingAnimation = bn::create_sprite_animate_action_once(
-      mainSprite, fakeJump ? 5 : 7, SpriteProvider::horse().tiles_item(), 10,
-      11, 12, 12);
+      mainSprite, 5, SpriteProvider::horse().tiles_item(), 10, 11, 12, 12);
   jumpFrame = 0;
 }
 
