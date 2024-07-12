@@ -4,12 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
-#include "../objects/wizard/Lightning.h"
-#include "../objects/wizard/Meteorite.h"
-#include "../objects/wizard/MiniRock.h"
-#include "../objects/wizard/Portal.h"
-#include "../objects/wizard/Rock.h"
-#include "../objects/wizard/Wizard.h"
+#include "../objects/riffer/Riffer.h"
 
 #define HORSE_INITIAL_Y 50
 
@@ -29,6 +24,7 @@ class BossRifferScene : public BossScene {
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;
+  bn::unique_ptr<Riffer> riffer;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
 

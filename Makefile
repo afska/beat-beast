@@ -44,6 +44,7 @@ SOURCES     	:=  src \
 					src/objects/ui \
 					src/objects/dj \
 					src/objects/wizard \
+					src/objects/riffer \
 					src/utils \
 					src/utils/gbfs \
 					src/phys \

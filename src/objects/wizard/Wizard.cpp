@@ -41,14 +41,10 @@ bool Wizard::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 
   boundingBox.set_position(sprite.position());
 
-  return sprite.position().x() < -Math::SCREEN_WIDTH / 2 - 16 * 2 ||
-         sprite.position().x() > Math::SCREEN_WIDTH / 2 + 16 * 2;
+  return false;
 }
 
 void Wizard::bounce() {
-  if (isBusy())
-    return;
-
   animationIndex = Math::SCALE_STEPS.size() - 1;
 }
 

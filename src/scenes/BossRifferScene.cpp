@@ -43,6 +43,8 @@ const bn::fixed HORSE_INITIAL_X = 60;
 const bn::fixed MAP_BASE_X = (1024 - Math::SCREEN_WIDTH) / 2;
 const bn::fixed MAP_BASE_Y = (256 - Math::SCREEN_HEIGHT) / 2;
 
+// Probably, this would've been much simpler if we used bn::camera ¯\_(ツ)_/¯
+
 BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::RIFFER,
                 "riffer",
@@ -52,7 +54,8 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
                                 LIFE_BOSS,
                                 bn::sprite_items::riffer_icon_riffer,
                                 bn::sprite_items::riffer_lifebar_riffer_fill)},
-                _fs) {
+                _fs),
+      riffer(bn::unique_ptr{new Riffer({10, 10})}) {
   horse->fakeJump = false;
 
   background3 = bn::regular_bg_items::back_riffer_wasteland_bg3.create_bg(
@@ -227,6 +230,11 @@ void BossRifferScene::updateBackground() {}
 
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
+
+  // Riffer
+  if (isNewBeat)
+    riffer->bounce();
+  riffer->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
