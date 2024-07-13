@@ -5,6 +5,8 @@
 
 class Riffer : public TopLeftGameObject {
  public:
+  enum HandAnimation { PLAYING, ROCKING };
+
   Riffer(bn::fixed_point initialPosition);
 
   bool update(bn::fixed_point playerPosition, bool isInsideBeat);
@@ -30,6 +32,9 @@ class Riffer : public TopLeftGameObject {
   bn::fixed speedX = 1;
   bn::fixed speedY = 1;
   int animationIndex = -1;
+  int handLAnimationIndex = -1;
+  int handRAnimationIndex = -1;
+  HandAnimation handAnimation = PLAYING;
 
   bool isAttacking() { return attackAnimation.has_value(); }
 

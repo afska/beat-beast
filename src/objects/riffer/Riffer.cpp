@@ -7,6 +7,12 @@
 #include "bn_sprite_items_riffer_handr.h"
 #include "bn_sprite_items_riffer_riffer.h"
 
+constexpr const bn::array<bn::fixed, 25> handLAnimation = {
+    0,   -1,  -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12,
+    -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1,  0};
+constexpr const bn::array<bn::fixed, 12> handRAnimation = {
+    0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 3, 2, 0};
+
 Riffer::Riffer(bn::fixed_point initialPosition)
     : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)),
       guitar(bn::sprite_items::riffer_guitar.create_sprite(0, 0)),
@@ -54,6 +60,7 @@ bool Riffer::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 
 void Riffer::bounce() {
   animationIndex = Math::SCALE_STEPS.size() - 1;
+  handRAnimationIndex = handRAnimation.size() - 1;
 }
 
 void Riffer::attack() {
@@ -87,8 +94,22 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
 
 void Riffer::updateSubsprites() {
   guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
-  handL.set_position(getCenteredPosition() + bn::fixed_point(13, 5));
-  handR.set_position(getCenteredPosition() + bn::fixed_point(-24, 0));
+
+  bn::fixed handLOffset = 0;
+  if (handLAnimationIndex > -1) {
+    handLOffset = handLAnimation[handLAnimationIndex];
+    handLAnimationIndex--;
+  } else
+    handLAnimationIndex = handLAnimation.size() - 1;
+  bn::fixed handROffset = 0;
+  if (handRAnimationIndex > -1) {
+    handROffset = handRAnimation[handRAnimationIndex];
+    handRAnimationIndex--;
+  }
+
+  handL.set_position(getCenteredPosition() +
+                     bn::fixed_point(13 + handLOffset, 5));
+  handR.set_position(getCenteredPosition() + bn::fixed_point(-24, handROffset));
 }
 
 void Riffer::updateAnimations() {
