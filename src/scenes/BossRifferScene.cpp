@@ -46,6 +46,7 @@
 #define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 2, 1)
 
 #define EVENT_ADVANCE 1
+#define EVENT_STOP_WAIT 2
 #define EVENT_SONG_END 9
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -248,11 +249,6 @@ void BossRifferScene::processChart() {
             event, camera)});
       }
       if (IS_EVENT_PLATFORM_FIRE_START(type)) {
-        iterate(platformFires, [this](PlatformFire* platformFire) {
-          return platformFire->getTopLeftPosition().x() >
-                     platforms[0].right() &&
-                 platformFire->didStart();
-        });
         iterate(platformFires, [&event](PlatformFire* platformFire) {
           platformFire->start(event);
           // player_sfx_play(SFX_LIGHTNING);
@@ -268,6 +264,8 @@ void BossRifferScene::processChart() {
       if (event->getType() == EVENT_ADVANCE) {
         cameraTargetX = 151;
       }
+      if (event->getType() == EVENT_STOP_WAIT)
+        disableGunAlert();
 
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
@@ -328,6 +326,26 @@ void BossRifferScene::updateSprites() {
   });
 
   // Platform fires
+  int msecs = chartReader->getMsecs();
+  unsigned startedFires = 0;
+  int lastTimestamp = 0;
+  iterate(platformFires, [this, &startedFires, &lastTimestamp,
+                          &msecs](PlatformFire* platformFire) {
+    auto event = platformFire->getEvent();
+    if (platformFire->getTopLeftPosition().x() > platforms[0].right() &&
+        msecs >= event->timestamp) {
+      startedFires++;
+      if (event->timestamp > lastTimestamp)
+        lastTimestamp = event->timestamp;
+    }
+    return false;
+  });
+  if (startedFires > 1) {
+    iterate(platformFires,
+            [this, &startedFires, &lastTimestamp](PlatformFire* platformFire) {
+              return platformFire->getEvent()->timestamp != lastTimestamp;
+            });
+  }
   iterate(platformFires, [this](PlatformFire* platformFire) {
     bool isOut = platformFire->update(chartReader->getMsecs());
 

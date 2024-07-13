@@ -14,6 +14,7 @@ class PlatformFire : public TopLeftGameObject {
   void start(Event* event);
   bool didStart() { return didStartAnimation; }
   bool update(int msecs);
+  Event* getEvent() { return event; }
 
  private:
   bn::sprite_ptr sprite2;
