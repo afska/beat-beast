@@ -4,6 +4,7 @@
 #include "BossScene.h"
 
 #include "../objects/Bullet.h"
+#include "../objects/riffer/PlatformFire.h"
 #include "../objects/riffer/Riffer.h"
 
 #define HORSE_INITIAL_Y 50
@@ -27,6 +28,7 @@ class BossRifferScene : public BossScene {
   bn::unique_ptr<Riffer> riffer;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
+  bn::vector<bn::unique_ptr<PlatformFire>, 32> platformFires;
 
   void processInput();
   void processChart();

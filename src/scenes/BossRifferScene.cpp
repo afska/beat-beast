@@ -18,6 +18,7 @@
 #define JUMP_FORCE 7
 
 // Damage to player
+#define DMG_FIRE_TO_PLAYER 1
 #define DMG_POWER_CHORD_TO_PLAYER 1
 
 // Events
@@ -31,7 +32,12 @@
 #define IS_EVENT_MOVE_RIGHT(TYPE) IS_EVENT(TYPE, 0, 6)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
-#define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_PLATFORM_FIRE_2(TYPE) IS_EVENT(TYPE, 1, 2)
+#define IS_EVENT_PLATFORM_FIRE_3(TYPE) IS_EVENT(TYPE, 1, 3)
+#define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
+
+#define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 2, 1)
 
 #define EVENT_SONG_END 9
 
@@ -172,7 +178,7 @@ void BossRifferScene::processInput() {
 void BossRifferScene::processChart() {
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
-      // auto type = event->getType();
+      auto type = event->getType();
 
       // Movement
       // if (IS_EVENT_MOVE_COL1(type))
@@ -196,6 +202,33 @@ void BossRifferScene::processChart() {
       // if (IS_EVENT_MOVE_OFFSCREEN(type))
       //   wizard->get()->setTargetPosition({200, -70},
       //                                    chartReader->getBeatDurationMs());
+
+      // Platform fires
+      if (IS_EVENT_PLATFORM_FIRE_1(type)) {
+        platformFires.push_back(bn::unique_ptr{
+            new PlatformFire({platforms[1].left() - viewport.left(),
+                              platforms[1].top() - 16 - viewport.top()},
+                             event)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_2(type)) {
+        platformFires.push_back(bn::unique_ptr{
+            new PlatformFire({platforms[2].left() - viewport.left(),
+                              platforms[2].top() - 16 - viewport.top()},
+                             event)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_3(type)) {
+        platformFires.push_back(bn::unique_ptr{
+            new PlatformFire({platforms[3].left() - viewport.left(),
+                              platforms[3].top() - 16 - viewport.top()},
+                             event)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+        iterate(platformFires, [&event](PlatformFire* platformFire) {
+          platformFire->start(event);
+          // player_sfx_play(SFX_LIGHTNING);
+          return false;
+        });
+      }
 
       // Power Chords
       // if (IS_EVENT_POWER_CHORD(type)) {
@@ -258,6 +291,27 @@ void BossRifferScene::updateSprites() {
         });
 
     return isOut || collided;
+  });
+
+  // Platform fires
+  iterate(platformFires, [](PlatformFire* platformFire) {
+    if (platformFire->needsToStart())
+      platformFire->start1();
+    return false;
+  });
+  iterate(platformFires, [this](PlatformFire* platformFire) {
+    if (platformFire->needsToStart())
+      platformFire->start2();
+    bool isOut = platformFire->update(chartReader->getMsecs());
+
+    if (platformFire->didStart() && !platformFire->causedDamage &&
+        platformFire->collidesWith(horse.get())) {
+      sufferDamage(DMG_FIRE_TO_PLAYER);
+      platformFire->causedDamage = true;
+      return false;
+    }
+
+    return isOut;
   });
 }
 
