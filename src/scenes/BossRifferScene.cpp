@@ -49,8 +49,6 @@ const bn::fixed HORSE_INITIAL_X = 60;
 const bn::fixed MAP_BASE_X = (1024 - Math::SCREEN_WIDTH) / 2;
 const bn::fixed MAP_BASE_Y = (256 - Math::SCREEN_HEIGHT) / 2;
 
-// Probably, this would've been much simpler if we used bn::camera ¯\_(ツ)_/¯
-
 BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::RIFFER,
                 "riffer",
@@ -61,8 +59,10 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::riffer_icon_riffer,
                                 bn::sprite_items::riffer_lifebar_riffer_fill)},
                 _fs),
-      riffer(bn::unique_ptr{new Riffer({30, -30})}) {
+      camera(bn::camera_ptr::create(0, 0)),
+      riffer(bn::unique_ptr{new Riffer({240 + 30, 40})}) {
   horse->fakeJump = false;
+  riffer->setCamera(camera);
 
   background3 = bn::regular_bg_items::back_riffer_wasteland_bg3.create_bg(
       MAP_BASE_X, MAP_BASE_Y);
@@ -72,8 +72,6 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
       MAP_BASE_X, MAP_BASE_Y);
   background0.get()->set_blending_enabled(true);
   background0.get()->set_mosaic_enabled(true);
-  viewport =
-      bn::top_left_fixed_rect(0, 0, Math::SCREEN_WIDTH, Math::SCREEN_HEIGHT);
 
   scrollLimit1 = Math::SCREEN_WIDTH / 4 - 32;
   scrollLimit2 = Math::SCREEN_WIDTH / 2 - 32;
@@ -132,10 +130,10 @@ void BossRifferScene::processInput() {
 
     if (speedX != 0) {
       if (horseX < scrollLimit1) {
-        moveViewport(viewport.left() + speedX, 0);
+        moveViewport(camera.x() + speedX, 0);
         horseX = scrollLimit1;
       } else if (horseX > scrollLimit2) {
-        moveViewport(viewport.left() + speedX, 0);
+        moveViewport(camera.x() + speedX, 0);
         horseX = scrollLimit2;
       }
     }
@@ -206,20 +204,20 @@ void BossRifferScene::processChart() {
       // Platform fires
       if (IS_EVENT_PLATFORM_FIRE_1(type)) {
         platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[1].left() - viewport.left(),
-                              platforms[1].top() - 16 - viewport.top()},
+            new PlatformFire({platforms[1].left() - camera.x(),
+                              platforms[1].top() - 16 - camera.y()},
                              event)});
       }
       if (IS_EVENT_PLATFORM_FIRE_2(type)) {
         platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[2].left() - viewport.left(),
-                              platforms[2].top() - 16 - viewport.top()},
+            new PlatformFire({platforms[2].left() - camera.x(),
+                              platforms[2].top() - 16 - camera.y()},
                              event)});
       }
       if (IS_EVENT_PLATFORM_FIRE_3(type)) {
         platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[3].left() - viewport.left(),
-                              platforms[3].top() - 16 - viewport.top()},
+            new PlatformFire({platforms[3].left() - camera.x(),
+                              platforms[3].top() - 16 - camera.y()},
                              event)});
       }
       if (IS_EVENT_PLATFORM_FIRE_START(type)) {
@@ -317,16 +315,15 @@ void BossRifferScene::updateSprites() {
 
 bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
   auto horsePosition = horse->getPosition();
-  auto absHorsePosition = viewport.top_left() + horsePosition;
+  auto absHorsePosition = camera.position() + horsePosition;
 
   for (auto& platform : platforms) {
-    // TODO: BUG: Safe recovery bug
     if (absHorsePosition.x() + 32 >= platform.left() &&
         absHorsePosition.x() + 32 <= platform.right()) {
       if ((absHorsePosition.y() + 64 > platform.top() &&
            absHorsePosition.y() + 64 < platform.top() + 16) ||
           !requireYAlignment) {
-        auto newY = platform.top() - viewport.top() - 64;
+        auto newY = platform.top() - camera.y() - 64;
         horse->setPosition(bn::fixed_point(horsePosition.x(), newY),
                            horse->getIsMoving());
 
@@ -335,9 +332,9 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
 
         auto safeX = horsePosition.x();
         if (absHorsePosition.x() <= platform.left())
-          safeX = (platform.left()) - viewport.top_left().x();
+          safeX = (platform.left()) - camera.x();
         if (absHorsePosition.x() >= platform.right() - 64)
-          safeX = (platform.right() - 64) - viewport.top_left().x();
+          safeX = (platform.right() - 64) - camera.x();
 
         if (safeX < scrollLimit1) {
           safeX = scrollLimit1;
@@ -346,8 +343,7 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
         }
 
         lastSafePosition = bn::fixed_point(safeX, newY);
-        lastSafeViewportPosition =
-            bn::fixed_point(viewport.left(), viewport.top());
+        lastSafeViewportPosition = camera.position();
         return true;
       }
     }
@@ -359,13 +355,12 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
 void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
   background0.get()->set_position({MAP_BASE_X - newX, MAP_BASE_Y});
   background3.get()->set_position({MAP_BASE_X - newX / 2, MAP_BASE_Y});
-
-  viewport.set_position(newX, 0);
+  camera.set_position(newX, newY);
 
   BN_LOG("BG0 {" + bn::to_string<32>(background0.get()->position().x()) + ", " +
          bn::to_string<32>(background0.get()->position().y()) + "}");
-  BN_LOG("CAM {" + bn::to_string<32>(viewport.left()) + ", " +
-         bn::to_string<32>(viewport.top()) + "}");
+  BN_LOG("CAM {" + bn::to_string<32>(camera.x()) + ", " +
+         bn::to_string<32>(camera.y()) + "}");
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {

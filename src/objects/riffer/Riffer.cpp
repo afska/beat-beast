@@ -29,7 +29,7 @@ Riffer::Riffer(bn::fixed_point initialPosition)
   handR.set_mosaic_enabled(true);
   handR.set_z_order(0);
 
-  targetPosition = initialPosition;
+  targetPosition = getCenteredPosition();
   mainSprite.set_mosaic_enabled(true);
   mainSprite.set_z_order(2);
 

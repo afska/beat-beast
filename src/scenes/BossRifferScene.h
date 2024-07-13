@@ -18,7 +18,7 @@ class BossRifferScene : public BossScene {
  private:
   bn::fixed velocityY = 0;
   bn::fixed scrollLimit1, scrollLimit2;
-  bn::top_left_fixed_rect viewport;
+  bn::camera_ptr camera;
   bn::vector<bn::top_left_fixed_rect, 32> platforms;
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;

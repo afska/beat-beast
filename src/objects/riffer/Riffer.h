@@ -20,6 +20,12 @@ class Riffer : public TopLeftGameObject {
   }
   bool isBusy() { return isHurt() || isAttacking(); }
   bool isHurt() { return hurtAnimation.has_value(); }
+  void setCamera(bn::camera_ptr camera) {
+    mainSprite.set_camera(camera);
+    handL.set_camera(camera);
+    handR.set_camera(camera);
+    guitar.set_camera(camera);
+  }
 
  private:
   bn::sprite_ptr guitar;
