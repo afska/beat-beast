@@ -19,6 +19,7 @@ class BossRifferScene : public BossScene {
   bn::fixed velocityY = 0;
   bn::fixed scrollLimit1, scrollLimit2;
   bn::camera_ptr camera;
+  bn::fixed cameraTargetX = -1;
   bn::vector<bn::top_left_fixed_rect, 32> platforms;
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;
@@ -34,6 +35,7 @@ class BossRifferScene : public BossScene {
   void processChart();
   void updateBackground();
   void updateSprites();
+  void updatePhysics();
 
   bool snapToPlatform(bool requireYAlignment = true);
   void moveViewport(bn::fixed deltaX, bn::fixed deltaY);

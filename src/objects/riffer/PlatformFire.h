@@ -7,24 +7,20 @@
 
 class PlatformFire : public TopLeftGameObject {
  public:
-  bool causedDamage = false;
-  PlatformFire(bn::fixed_point _topLeftPosition, Event* _event);
+  PlatformFire(bn::fixed_point _topLeftPosition,
+               Event* _event,
+               bn::camera_ptr camera);
 
   void start(Event* event);
-  bool needsToStart() { return hasPendingStartAnimation; }
   bool didStart() { return didStartAnimation; }
   bool update(int msecs);
 
-  void start1();
-  void start2();
-
  private:
   bn::sprite_ptr sprite2;
-  bn::optional<bn::sprite_animate_action<12>> animation1;
-  bn::optional<bn::sprite_animate_action<12>> animation2;
+  bn::optional<bn::sprite_animate_action<2>> animation1;
+  bn::optional<bn::sprite_animate_action<2>> animation2;
   Event* event;
   Event* startEvent = NULL;
-  bool hasPendingStartAnimation = false;
   bool didStartAnimation = false;
 
   bool hasReallyStarted(int msecs) {

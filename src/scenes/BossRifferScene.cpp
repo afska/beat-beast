@@ -6,12 +6,14 @@
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
+#include "bn_bg_palettes.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg0.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg3.h"
 #include "bn_sprite_items_riffer_icon_riffer.h"
 #include "bn_sprite_items_riffer_lifebar_riffer_fill.h"
+#include "bn_sprite_palettes.h"
 
 #define LIFE_BOSS 125
 #define GRAVITY 0.75
@@ -35,10 +37,15 @@
 #define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_PLATFORM_FIRE_2(TYPE) IS_EVENT(TYPE, 1, 2)
 #define IS_EVENT_PLATFORM_FIRE_3(TYPE) IS_EVENT(TYPE, 1, 3)
+#define IS_EVENT_PLATFORM_FIRE_INTRO_1(TYPE) IS_EVENT(TYPE, 1, 5)
+#define IS_EVENT_PLATFORM_FIRE_INTRO_2(TYPE) IS_EVENT(TYPE, 1, 6)
+#define IS_EVENT_PLATFORM_FIRE_INTRO_3(TYPE) IS_EVENT(TYPE, 1, 7)
+#define IS_EVENT_PLATFORM_FIRE_INTRO_4(TYPE) IS_EVENT(TYPE, 1, 8)
 #define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
 #define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 2, 1)
 
+#define EVENT_ADVANCE 1
 #define EVENT_SONG_END 9
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -60,7 +67,7 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
                                 bn::sprite_items::riffer_lifebar_riffer_fill)},
                 _fs),
       camera(bn::camera_ptr::create(0, 0)),
-      riffer(bn::unique_ptr{new Riffer({240 + 30, 40})}) {
+      riffer(bn::unique_ptr{new Riffer({314, 78})}) {
   horse->fakeJump = false;
   riffer->setCamera(camera);
 
@@ -84,28 +91,31 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
   platforms.push_back(bn::top_left_fixed_rect(672, 163, 128, 50));
   platforms.push_back(bn::top_left_fixed_rect(808, 131, 160, 50));
 
-  // chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+
+  bn::bg_palettes::set_fade_intensity(1);
+  bn::sprite_palettes::set_fade_intensity(1);
+
+  enableGunAlert(SpriteProvider::wait());
+  horse->canShoot = false;
 }
 
 void BossRifferScene::updateBossFight() {
-  processInput();
+  if (gunAlert.has_value())
+    horse->canShoot = false;
 
-  velocityY += GRAVITY;
-  horse->setPosition(bn::fixed_point(horse->getPosition().x(),
-                                     horse->getPosition().y() + velocityY),
-                     horse->getIsMoving());
-
-  if (horse->getPosition().y() > Math::SCREEN_HEIGHT) {
-    sufferDamage(1);
-    // if (!snapToPlatform(false)) {
-    horse->setPosition(lastSafePosition, horse->getIsMoving());
-    moveViewport(lastSafeViewportPosition.x(), lastSafeViewportPosition.y());
-    // }
-    velocityY = 0;
+  if (isNewBeat) {
+    if (bn::bg_palettes::fade_intensity() > 0) {
+      auto newIntensity = bn::bg_palettes::fade_intensity() - 0.05;
+      if (newIntensity < 0)
+        newIntensity = 0;
+      bn::bg_palettes::set_fade_intensity(newIntensity);
+      bn::sprite_palettes::set_fade_intensity(newIntensity);
+    }
   }
 
-  snapToPlatform();
-
+  processInput();
+  updatePhysics();
   processChart();
   updateBackground();
   updateSprites();
@@ -203,24 +213,46 @@ void BossRifferScene::processChart() {
 
       // Platform fires
       if (IS_EVENT_PLATFORM_FIRE_1(type)) {
-        platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[1].left() - camera.x(),
-                              platforms[1].top() - 16 - camera.y()},
-                             event)});
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            {platforms[1].left() + 14, platforms[1].top() - 16}, event,
+            camera)});
       }
       if (IS_EVENT_PLATFORM_FIRE_2(type)) {
         platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[2].left() - camera.x(),
-                              platforms[2].top() - 16 - camera.y()},
-                             event)});
+            new PlatformFire({platforms[2].left() + 9, platforms[2].top() - 16},
+                             event, camera)});
       }
       if (IS_EVENT_PLATFORM_FIRE_3(type)) {
         platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[3].left() - camera.x(),
-                              platforms[3].top() - 16 - camera.y()},
-                             event)});
+            new PlatformFire({platforms[3].left() + 9, platforms[3].top() - 16},
+                             event, camera)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
+        platformFires.push_back(bn::unique_ptr{
+            new PlatformFire({8 + platforms[0].left(), platforms[0].top() - 16},
+                             event, camera)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            {8 + platforms[0].left() + 32, platforms[0].top() - 16}, event,
+            camera)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            {8 + platforms[0].left() + 32 + 32, platforms[0].top() - 16}, event,
+            camera)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            {8 + platforms[0].left() + 32 + 32 + 32, platforms[0].top() - 16},
+            event, camera)});
       }
       if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+        iterate(platformFires, [this](PlatformFire* platformFire) {
+          return platformFire->getTopLeftPosition().x() >
+                     platforms[0].right() &&
+                 platformFire->didStart();
+        });
         iterate(platformFires, [&event](PlatformFire* platformFire) {
           platformFire->start(event);
           // player_sfx_play(SFX_LIGHTNING);
@@ -233,9 +265,13 @@ void BossRifferScene::processChart() {
       // playSfx(SFX_POWER_CHORD);
       // }
     } else {
+      if (event->getType() == EVENT_ADVANCE) {
+        cameraTargetX = 151;
+      }
+
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
-        disableAutoFire();
+        disableGunAlert();
         if (didWin) {
           // TODO
         } else {
@@ -292,25 +328,45 @@ void BossRifferScene::updateSprites() {
   });
 
   // Platform fires
-  iterate(platformFires, [](PlatformFire* platformFire) {
-    if (platformFire->needsToStart())
-      platformFire->start1();
-    return false;
-  });
   iterate(platformFires, [this](PlatformFire* platformFire) {
-    if (platformFire->needsToStart())
-      platformFire->start2();
     bool isOut = platformFire->update(chartReader->getMsecs());
 
-    if (platformFire->didStart() && !platformFire->causedDamage &&
+    if (platformFire->didStart() && !horse->isHurt() &&
         platformFire->collidesWith(horse.get())) {
       sufferDamage(DMG_FIRE_TO_PLAYER);
-      platformFire->causedDamage = true;
       return false;
     }
 
     return isOut;
   });
+}
+
+void BossRifferScene::updatePhysics() {
+  if (cameraTargetX != -1) {
+    if (camera.x() < cameraTargetX) {
+      moveViewport(camera.x() + 0.5, camera.y());
+      if (camera.x() >= cameraTargetX)
+        cameraTargetX = -1;
+    } else if (camera.y() > cameraTargetX) {
+      moveViewport(camera.x() - 0.5, camera.y());
+      if (camera.x() <= cameraTargetX)
+        cameraTargetX = -1;
+    }
+  }
+
+  velocityY += GRAVITY;
+  horse->setPosition(bn::fixed_point(horse->getPosition().x(),
+                                     horse->getPosition().y() + velocityY),
+                     horse->getIsMoving());
+
+  if (horse->getPosition().y() > Math::SCREEN_HEIGHT) {
+    sufferDamage(1);
+    horse->setPosition(lastSafePosition, horse->getIsMoving());
+    moveViewport(lastSafeViewportPosition.x(), lastSafeViewportPosition.y());
+    velocityY = 0;
+  }
+
+  snapToPlatform();
 }
 
 bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
@@ -353,6 +409,9 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
 }
 
 void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
+  if (newX < 0)
+    return;
+
   background0.get()->set_position({MAP_BASE_X - newX, MAP_BASE_Y});
   background3.get()->set_position({MAP_BASE_X - newX / 2, MAP_BASE_Y});
   camera.set_position(newX, newY);
@@ -364,7 +423,7 @@ void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {
-  // wizard->get()->hurt();
+  riffer.get()->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }

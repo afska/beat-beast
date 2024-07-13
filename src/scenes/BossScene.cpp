@@ -182,8 +182,8 @@ void BossScene::updateCommonSprites() {
       cross.reset();
   }
   gunReload->update();
-  if (autoFire.has_value())
-    autoFire->get()->update();
+  if (gunAlert.has_value())
+    gunAlert->get()->update();
 }
 
 void BossScene::shoot() {
@@ -203,20 +203,20 @@ void BossScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
-  if (horse->failShoot())
+  if (horse->failShoot() && !gunAlert.has_value())
     gunReload->show();
   comboBar->setCombo(0);
 }
 
-void BossScene::enableAutoFire() {
-  if (autoFire.has_value())
+void BossScene::enableGunAlert(bn::sprite_item sprite) {
+  if (gunAlert.has_value())
     return;
-  autoFire = bn::unique_ptr{new AutoFire({22, 12 + 10})};
+  gunAlert = bn::unique_ptr{new GunAlert(sprite, {22, 12 + 10})};
   gunReload->hide();
 }
 
-void BossScene::disableAutoFire() {
-  autoFire.reset();
+void BossScene::disableGunAlert() {
+  gunAlert.reset();
 }
 
 void BossScene::printLife(bn::fixed life) {

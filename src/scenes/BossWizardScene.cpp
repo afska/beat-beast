@@ -180,7 +180,7 @@ void BossWizardScene::processInput() {
   processAimInput(isFlying);
 
   // shoot
-  if (autoFire.has_value()) {
+  if (gunAlert.has_value()) {
     if (isNewTickNow) {
       shoot();
       bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
@@ -405,7 +405,7 @@ void BossWizardScene::processChart() {
         bn::blending::set_black_fade_color();
         bn::blending::set_fade_alpha(INITIAL_FADE_ALPHA);
         fadingToWhite = false;
-        enableAutoFire();
+        enableGunAlert(SpriteProvider::autofire());
         pixelBlink->blink();
 
         background1 = bn::regular_bg_items::back_wizard_mountain_bg1.create_bg(
@@ -423,7 +423,7 @@ void BossWizardScene::processChart() {
       }
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
-        disableAutoFire();
+        disableGunAlert();
         if (didWin) {
           wizard->get()->disappearInto(blackHole->get()->getPosition());
           allyDragon->get()->stopFalling();
@@ -786,9 +786,9 @@ void BossWizardScene::goToNextPhase() {
     pixelBlink->blink();
     wizard = bn::unique_ptr{new Wizard({0, -40})};
   } else if (phase == 5) {
-    enableAutoFire();
+    enableGunAlert(SpriteProvider::autofire());
   } else if (phase == 7) {
-    disableAutoFire();
+    disableGunAlert();
     pixelBlink->blink();
 
     background3.reset();

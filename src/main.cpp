@@ -153,12 +153,14 @@ void transitionToNextScene() {
   scene->get()->init();
   bn::core::update();
 
-  for (int i = 0; i < 10; i++) {
-    alpha -= 0.1;
-    bn::bg_palettes::set_fade_intensity(alpha);
-    bn::sprite_palettes::set_fade_intensity(alpha);
+  if (nextScreen != GameState::Screen::RIFFER) {
+    for (int i = 0; i < 10; i++) {
+      alpha -= 0.1;
+      bn::bg_palettes::set_fade_intensity(alpha);
+      bn::sprite_palettes::set_fade_intensity(alpha);
 
-    scene->get()->update();
-    update();
+      scene->get()->update();
+      update();
+    }
   }
 }

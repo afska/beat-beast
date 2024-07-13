@@ -5,9 +5,9 @@
 
 #include "../objects/Explosion.h"
 #include "../objects/Horse.h"
-#include "../objects/ui/AutoFire.h"
 #include "../objects/ui/ComboBar.h"
 #include "../objects/ui/Cross.h"
+#include "../objects/ui/GunAlert.h"
 #include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/Menu.h"
@@ -43,7 +43,7 @@ class BossScene : public Scene {
   bn::vector<bn::unique_ptr<Explosion>, 32> explosions;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<GunReload> gunReload;
-  bn::optional<bn::unique_ptr<AutoFire>> autoFire;
+  bn::optional<bn::unique_ptr<GunAlert>> gunAlert;
   bn::optional<bn::sprite_ptr> deadHorse;
   bn::optional<bn::sprite_ptr> progress;
   bn::optional<bn::sprite_ptr> progressIndicator;
@@ -90,8 +90,8 @@ class BossScene : public Scene {
   void shoot();
   void reportSuccessfulShot();
   void reportFailedShot();
-  void enableAutoFire();
-  void disableAutoFire();
+  void enableGunAlert(bn::sprite_item sprite);
+  void disableGunAlert();
 
  private:
   void printLife(bn::fixed life);

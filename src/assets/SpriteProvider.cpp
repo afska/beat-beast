@@ -13,6 +13,7 @@
 #include "bn_sprite_items_hitbox.h"
 #include "bn_sprite_items_menu.h"
 #include "bn_sprite_items_progress.h"
+#include "bn_sprite_items_wait.h"
 
 #include "bn_sprite_items_ui_radio.h"
 
@@ -83,6 +84,10 @@ bn::sprite_item SpriteProvider::menu() {
 
 bn::sprite_item SpriteProvider::autofire() {
   return bn::sprite_items::autofire;
+}
+
+bn::sprite_item SpriteProvider::wait() {
+  return bn::sprite_items::wait;
 }
 
 bn::sprite_item SpriteProvider::progress() {
