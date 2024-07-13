@@ -76,9 +76,9 @@ void Riffer::hurt() {
 
 void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
                                unsigned beatDurationMs) {
-  targetPosition = newTargetPosition;
+  targetPosition = Math::toAbsTopLeft(newTargetPosition, 64, 64);
   if (beatDurationMs == 0) {
-    mainSprite.set_position(newTargetPosition);
+    setTopLeftPosition(newTargetPosition);
     setCenteredPosition(mainSprite.position());
     speedX = 0;
     speedY = 0;
@@ -86,9 +86,9 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
   }
 
   bn::fixed beatDurationFrames = bn::fixed(beatDurationMs) / GBA_FRAME;
-  speedX = bn::abs(newTargetPosition.x() - mainSprite.position().x()) /
+  speedX = bn::abs(targetPosition.x() - mainSprite.position().x()) /
            beatDurationFrames;
-  speedY = bn::abs(newTargetPosition.y() - mainSprite.position().y()) /
+  speedY = bn::abs(targetPosition.y() - mainSprite.position().y()) /
            beatDurationFrames;
 }
 

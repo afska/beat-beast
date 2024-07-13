@@ -18,6 +18,13 @@ class GameObject {
     return getBoundingBox().intersects(other->getBoundingBox());
   }
 
+  bool collidesWith(GameObject* other, bn::camera_ptr camera) {
+    auto otherBB = other->getBoundingBox();
+    return getBoundingBox().intersects(
+        bn::fixed_rect(camera.x() + otherBB.x(), camera.y() + otherBB.y(),
+                       otherBB.width(), otherBB.height()));
+  }
+
   bn::fixed_rect getBoundingBox() {
     if (boundingBoxPreview.has_value())  // (for debug)
       boundingBoxPreview.get()->set_position(boundingBox.position());

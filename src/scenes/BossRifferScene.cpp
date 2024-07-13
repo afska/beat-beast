@@ -21,6 +21,7 @@
 
 // Damage to player
 #define DMG_FIRE_TO_PLAYER 1
+#define DMG_RIFFER_TO_PLAYER 1
 #define DMG_POWER_CHORD_TO_PLAYER 1
 
 // Events
@@ -162,9 +163,11 @@ void BossRifferScene::processInput() {
     if (chartReader->isInsideTick() && horse->canReallyShoot()) {
       shoot();
       comboBar->setCombo(comboBar->getCombo() + 1);
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      auto bullet = bn::unique_ptr{
+          new Bullet(camera.position() + horse->getShootingPoint(),
+                     horse->getShootingDirection(), SpriteProvider::bullet())};
+      bullet->setCamera(camera);
+      bullets.push_back(bn::move(bullet));
     } else {
       reportFailedShot();
     }
@@ -190,15 +193,12 @@ void BossRifferScene::processChart() {
       auto type = event->getType();
 
       // Movement
-      // if (IS_EVENT_MOVE_COL1(type))
-      //   wizard->get()->setTargetPosition({-50, -40},
-      //                                    chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_COL2(type))
-      //   wizard->get()->setTargetPosition({0, -50},
-      //                                    chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_COL3(type))
-      //   wizard->get()->setTargetPosition({80, -40},
-      //                                    chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL1(type))
+        riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL2(type))
+        riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
+      if (IS_EVENT_MOVE_COL3(type))
+        riffer->setTargetPosition({289, 17}, chartReader->getBeatDurationMs());
       // if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
       //   wizard->get()->setTargetPosition({80, 60},
       //                                    chartReader->getBeatDurationMs());
@@ -297,6 +297,8 @@ void BossRifferScene::updateSprites() {
   if (isNewBeat)
     riffer->bounce();
   riffer->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
+  if (riffer->collidesWith(horse.get(), camera))
+    sufferDamage(DMG_RIFFER_TO_PLAYER);
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
@@ -341,16 +343,17 @@ void BossRifferScene::updateSprites() {
     return false;
   });
   if (startedFires > 1) {
-    iterate(platformFires,
-            [this, &startedFires, &lastTimestamp](PlatformFire* platformFire) {
-              return platformFire->getEvent()->timestamp != lastTimestamp;
-            });
+    iterate(platformFires, [this, &startedFires,
+                            &lastTimestamp](PlatformFire* platformFire) {
+      return platformFire->getTopLeftPosition().x() > platforms[0].right() &&
+             platformFire->getEvent()->timestamp != lastTimestamp;
+    });
   }
   iterate(platformFires, [this](PlatformFire* platformFire) {
     bool isOut = platformFire->update(chartReader->getMsecs());
 
     if (platformFire->didStart() && !horse->isHurt() &&
-        platformFire->collidesWith(horse.get())) {
+        platformFire->collidesWith(horse.get(), camera)) {
       sufferDamage(DMG_FIRE_TO_PLAYER);
       return false;
     }

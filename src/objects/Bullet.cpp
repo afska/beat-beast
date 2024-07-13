@@ -5,14 +5,15 @@
 #define ON_BEAT_SPEED 2
 #define OFF_BEAT_SPEED 1
 
-Bullet::Bullet(bn::fixed_point initialPosition,
+Bullet::Bullet(bn::fixed_point _initialPosition,
                bn::fixed_point _direction,
                bn::sprite_item _bullet,
                bn::fixed dmg,
                bn::fixed scale,
                bn::fixed _offBeatSpeed,
                bn::fixed _onBeatSpeed)
-    : sprite(_bullet.create_sprite(initialPosition)),
+    : initialPosition(_initialPosition),
+      sprite(_bullet.create_sprite(_initialPosition)),
       animation(bn::create_sprite_animate_action_forever(sprite,
                                                          5,
                                                          _bullet.tiles_item(),
@@ -22,7 +23,7 @@ Bullet::Bullet(bn::fixed_point initialPosition,
       offBeatSpeed(_offBeatSpeed),
       onBeatSpeed(_onBeatSpeed) {
   boundingBox.set_dimensions(sprite.dimensions());
-  boundingBox.set_position(initialPosition);
+  boundingBox.set_position(_initialPosition);
 
   sprite.set_scale(scale);
   sprite.set_bg_priority(1);
@@ -46,6 +47,8 @@ bool Bullet::update(int msecs,
 
   boundingBox.set_position(sprite.position());
 
-  return sprite.position().x() < -120 || sprite.position().y() < -80 ||
-         sprite.position().x() > 120 || sprite.position().y() > 80;
+  return sprite.position().x() < initialPosition.x() - 240 ||
+         sprite.position().y() < initialPosition.y() - 160 ||
+         sprite.position().x() > initialPosition.x() + 240 ||
+         sprite.position().y() > initialPosition.y() + 160;
 }
