@@ -40,6 +40,8 @@ class BossRifferScene : public BossScene {
   bool snapToPlatform(bool requireYAlignment = true);
   void moveViewport(bn::fixed deltaX, bn::fixed deltaY);
   void causeDamage(bn::fixed amount);
+
+  void addExplosion(bn::fixed_point position) override;
 };
 
 #endif  // BOSS_RIFFER_SCENE_H

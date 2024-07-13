@@ -81,7 +81,7 @@ class BossScene : public Scene {
   }
 
   void playSfx(bn::string<32> sfxFileName, bool loop = false);
-  void addExplosion(bn::fixed_point position);
+  virtual void addExplosion(bn::fixed_point position);
   void sufferDamage(bn::fixed amount);
   void die();
   void processMovementInput(bn::fixed horseY);

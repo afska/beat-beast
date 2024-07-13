@@ -47,7 +47,8 @@
 #define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 2, 1)
 
 #define EVENT_ADVANCE 1
-#define EVENT_STOP_WAIT 2
+#define EVENT_STOP 2
+#define EVENT_STOP_WAIT 3
 #define EVENT_SONG_END 9
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -264,6 +265,9 @@ void BossRifferScene::processChart() {
       if (event->getType() == EVENT_ADVANCE) {
         cameraTargetX = 151;
       }
+      if (event->getType() == EVENT_STOP) {
+        cameraTargetX = -1;
+      }
       if (event->getType() == EVENT_STOP_WAIT)
         disableGunAlert();
 
@@ -297,8 +301,8 @@ void BossRifferScene::updateSprites() {
   if (isNewBeat)
     riffer->bounce();
   riffer->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
-  if (riffer->collidesWith(horse.get(), camera))
-    sufferDamage(DMG_RIFFER_TO_PLAYER);
+  // if (riffer->collidesWith(horse.get(), camera))
+  //   sufferDamage(DMG_RIFFER_TO_PLAYER);
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
@@ -306,12 +310,12 @@ void BossRifferScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
 
-    // if (bullet->collidesWith(octopus.get())) {
-    //   addExplosion(bullet->getPosition());
-    //   causeDamage(bullet->damage);
+    if (bullet->collidesWith(riffer.get())) {
+      addExplosion(bullet->getPosition());
+      causeDamage(bullet->damage);
 
-    //   return true;
-    // }
+      return true;
+    }
 
     bool collided = false;
     iterate(
@@ -447,4 +451,9 @@ void BossRifferScene::causeDamage(bn::fixed amount) {
   riffer.get()->hurt();
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
+}
+
+void BossRifferScene::addExplosion(bn::fixed_point position) {
+  BossScene::addExplosion(position);
+  explosions[explosions.size() - 1]->setCamera(camera);
 }
