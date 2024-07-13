@@ -391,20 +391,29 @@ void BossRifferScene::updatePhysics() {
     velocityY = 0;
   }
 
-  snapToPlatform();
+  bool landedOnPlatform = snapToPlatform();
+  if (!landedOnPlatform && cameraTargetX != -1 && currentPlatformY != -1) {
+    if (velocityY > 0 && horse->getPosition().y() >= currentPlatformY) {
+      horse->jump();
+      velocityY = -JUMP_FORCE;
+    }
+  }
 }
 
 bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
   auto horsePosition = horse->getPosition();
   auto absHorsePosition = camera.position() + horsePosition;
 
+  currentPlatformY = -1;
   for (auto& platform : platforms) {
     if (absHorsePosition.x() + 32 >= platform.left() &&
         absHorsePosition.x() + 32 <= platform.right()) {
+      auto newY = platform.top() - camera.y() - 64;
+      currentPlatformY = newY;
+
       if ((absHorsePosition.y() + 64 > platform.top() &&
            absHorsePosition.y() + 64 < platform.top() + 16) ||
           !requireYAlignment) {
-        auto newY = platform.top() - camera.y() - 64;
         horse->setPosition(bn::fixed_point(horsePosition.x(), newY),
                            horse->getIsMoving());
 

@@ -23,6 +23,7 @@ class BossRifferScene : public BossScene {
   bn::vector<bn::top_left_fixed_rect, 32> platforms;
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;
+  bn::fixed currentPlatformY = -1;
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;
