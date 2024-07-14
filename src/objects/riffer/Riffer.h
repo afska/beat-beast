@@ -14,6 +14,7 @@ class Riffer : public TopLeftGameObject {
   void hurt();
   void swing();
   void swingEnd();
+  void breakGuitar();
   void headbang();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
@@ -33,6 +34,8 @@ class Riffer : public TopLeftGameObject {
   bn::sprite_ptr guitar;
   bn::sprite_ptr handL;
   bn::sprite_ptr handR;
+  bn::optional<bn::sprite_ptr> brokenGuitar1;
+  bn::optional<bn::sprite_ptr> brokenGuitar2;
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<2>> headbangAnimation;
@@ -43,6 +46,7 @@ class Riffer : public TopLeftGameObject {
   int swingAnimationIndex = -1;
   int handLAnimationIndex = -1;
   int handRAnimationIndex = -1;
+  int brokenGuitarShakeAnimationIndex = -1;
   bool waitingSwingEnd = false;
   HandAnimation handAnimation = PLAYING;
 

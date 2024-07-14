@@ -2,6 +2,8 @@
 
 #include "../../utils/Math.h"
 
+#include "bn_sprite_items_riffer_brokenguitar1.h"
+#include "bn_sprite_items_riffer_brokenguitar2.h"
 #include "bn_sprite_items_riffer_guitar.h"
 #include "bn_sprite_items_riffer_handl.h"
 #include "bn_sprite_items_riffer_handr.h"
@@ -88,6 +90,10 @@ bool Riffer::update(bn::fixed_point playerPosition, bool isInsideBeat) {
 void Riffer::bounce() {
   animationIndex = Math::SCALE_STEPS.size() - 1;
   handRAnimationIndex = handRAnimation.size() - 1;
+
+  if (brokenGuitar1.has_value()) {
+    brokenGuitarShakeAnimationIndex = Math::SCALE_STEPS.size() - 1;
+  }
 }
 
 void Riffer::swing() {
@@ -97,6 +103,23 @@ void Riffer::swing() {
 
 void Riffer::swingEnd() {
   waitingSwingEnd = false;
+}
+
+void Riffer::breakGuitar() {
+  guitar.set_visible(false);
+
+  brokenGuitar1 = bn::sprite_items::riffer_brokenguitar1.create_sprite(0, 0);
+  brokenGuitar2 = bn::sprite_items::riffer_brokenguitar2.create_sprite(0, 0);
+
+  brokenGuitar1->set_camera(guitar.camera());
+  brokenGuitar1->set_mosaic_enabled(true);
+  brokenGuitar1->set_z_order(1);
+
+  brokenGuitar2->set_camera(guitar.camera());
+  brokenGuitar2->set_mosaic_enabled(true);
+  brokenGuitar2->set_z_order(1);
+
+  brokenGuitarShakeAnimationIndex = Math::SCALE_STEPS.size() - 1;
 }
 
 void Riffer::headbang() {
@@ -130,6 +153,21 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
 
 void Riffer::updateSubsprites() {
   guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
+
+  if (brokenGuitar1.has_value()) {
+    brokenGuitar1->set_position(getCenteredPosition() +
+                                bn::fixed_point(-18, 31));
+    brokenGuitar2->set_position(
+        brokenGuitar1->position() +
+        bn::fixed_point(-32 / 2 + 32 + 32 / 2, -64 / 2 + 16 / 2 - 2));
+
+    if (brokenGuitarShakeAnimationIndex > -1) {
+      auto scale = Math::SCALE_STEPS[brokenGuitarShakeAnimationIndex];
+      brokenGuitar1->set_scale(scale);
+      brokenGuitar2->set_scale(scale);
+      brokenGuitarShakeAnimationIndex--;
+    }
+  }
 
   bn::fixed handLOffsetX = 0;
   bn::fixed handLOffsetY = 0;
