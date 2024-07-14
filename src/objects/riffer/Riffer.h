@@ -18,6 +18,12 @@ class Riffer : public TopLeftGameObject {
   void unsetAngryHands();
   void startThrow();
   bool getAngryHands() { return hasAngryHands; }
+  bool getNeedsToAddGuitar() {
+    auto val = needsToAddGuitar;
+    if (val)
+      needsToAddGuitar = false;
+    return val;
+  }
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
@@ -53,6 +59,7 @@ class Riffer : public TopLeftGameObject {
   bool waitingSwingEnd = false;
   bool hasAngryHands = false;
   bool isThrowing = false;
+  bool needsToAddGuitar = false;
 
   bool isHeadbanging() { return headbangAnimation.has_value(); }
 

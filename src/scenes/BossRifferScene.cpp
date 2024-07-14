@@ -357,6 +357,11 @@ void BossRifferScene::updateBackground() {}
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
 
+  if (riffer->getNeedsToAddGuitar()) {
+    horse->showGun = false;
+    // TODO: ADD GUITAR
+  }
+
   // Riffer
   if (isNewBeat)
     riffer->bounce();

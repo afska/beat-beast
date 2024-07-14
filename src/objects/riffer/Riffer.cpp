@@ -155,6 +155,7 @@ void Riffer::unsetAngryHands() {
 
 void Riffer::startThrow() {
   isThrowing = true;
+  unsetAngryHands();
 }
 
 void Riffer::hurt() {
@@ -183,13 +184,14 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
   guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
 
   if (brokenGuitar1.has_value()) {
-    auto guitar1Position = getCenteredPosition() + bn::fixed_point(-18, 31);
+    auto brokenGuitar1Position =
+        getCenteredPosition() + bn::fixed_point(-18, -13 + 31);
     if (!isThrowing)
-      brokenGuitar1->set_position(guitar1Position);
+      brokenGuitar1->set_position(brokenGuitar1Position);
 
     brokenGuitar2->set_position(
-        guitar1Position +
-        bn::fixed_point(-32 / 2 + 32 + 32 / 2, -64 / 2 + 16 / 2 - 2));
+        brokenGuitar1Position +
+        bn::fixed_point(-32 / 2 + 32 + 32 / 2, +13 + -64 / 2 + 16 / 2 - 2));
 
     if (brokenGuitarShakeAnimationIndex > -1) {
       auto scale = Math::SCALE_STEPS[brokenGuitarShakeAnimationIndex];
@@ -249,9 +251,17 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
     handL.set_position(getCenteredPosition() + bn::fixed_point(8, 5));
     handR.set_position(getCenteredPosition() + bn::fixed_point(16, 5));
 
-    Math::moveSpriteTowards(brokenGuitar1.value(), playerPosition, 1, 1);
-    brokenGuitar1->set_rotation_angle(
-        Math::normalizeAngle(brokenGuitar1->rotation_angle() + 5));
+    if (brokenGuitar1.has_value()) {
+      Math::moveSpriteTowards(brokenGuitar1.value(), playerPosition, 1, 1);
+
+      if (brokenGuitar1->position() == playerPosition) {
+        brokenGuitar1.reset();
+        needsToAddGuitar = true;
+      } else {
+        brokenGuitar1->set_rotation_angle(
+            Math::normalizeAngle(brokenGuitar1->rotation_angle() + 5));
+      }
+    }
   }
 }
 
