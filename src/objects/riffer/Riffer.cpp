@@ -41,6 +41,20 @@ constexpr const bn::array<bn::fixed_point, 11> handRSwingAnimation = {
     bn::fixed_point(14, -8), bn::fixed_point(14, -10), bn::fixed_point(14, -8),
     bn::fixed_point(14, -8), bn::fixed_point(10, -8),  bn::fixed_point(8, -6),
     bn::fixed_point(6, -4),  bn::fixed_point(2, -2)};
+constexpr const bn::array<bn::fixed_point, 11> angryHandLAnimation = {
+    bn::fixed_point(10, -10 + -20 + 0),  bn::fixed_point(10, -10 + -20 + 2),
+    bn::fixed_point(10, -10 + -20 + 6),  bn::fixed_point(10, -10 + -20 + 10),
+    bn::fixed_point(10, -10 + -20 + 12), bn::fixed_point(10, -10 + -20 + 10),
+    bn::fixed_point(10, -10 + -20 + 10), bn::fixed_point(10, -10 + -20 + 8),
+    bn::fixed_point(10, -10 + -20 + 6),  bn::fixed_point(10, -10 + -20 + 6),
+    bn::fixed_point(10, -10 + -20 + 2)};
+constexpr const bn::array<bn::fixed_point, 11> angryHandRAnimation = {
+    bn::fixed_point(-10, -10 + 0),   bn::fixed_point(-10, -10 + -2),
+    bn::fixed_point(-10, -10 + -6),  bn::fixed_point(-10, -10 + -8),
+    bn::fixed_point(-10, -10 + -10), bn::fixed_point(-10, -10 + -8),
+    bn::fixed_point(-10, -10 + -8),  bn::fixed_point(-10, -10 + -8),
+    bn::fixed_point(-10, -10 + -6),  bn::fixed_point(-10, -10 + -4),
+    bn::fixed_point(-10, -10 + -2)};
 
 Riffer::Riffer(bn::fixed_point initialPosition)
     : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)),
@@ -129,6 +143,11 @@ void Riffer::headbang() {
   setAttackState();
 }
 
+void Riffer::setAngryHands() {
+  hasAngryHands = true;
+  angryHandsAnimationIndex = angryHandLAnimation.size() - 1;
+}
+
 void Riffer::hurt() {
   setHurtState();
 }
@@ -195,6 +214,18 @@ void Riffer::updateSubsprites() {
       swingAnimationIndex--;
     if (swingAnimationIndex == 4)
       waitingSwingEnd = true;
+  }
+
+  if (hasAngryHands) {
+    if (angryHandsAnimationIndex > -1) {
+      handLOffsetX = angryHandLAnimation[angryHandsAnimationIndex].x();
+      handLOffsetY = angryHandLAnimation[angryHandsAnimationIndex].y();
+      handROffsetX = angryHandRAnimation[angryHandsAnimationIndex].x();
+      handROffsetY = angryHandRAnimation[angryHandsAnimationIndex].y();
+      angryHandsAnimationIndex--;
+    }
+    if (angryHandsAnimationIndex < 0)
+      angryHandsAnimationIndex = angryHandLAnimation.size() - 1;
   }
 
   handL.set_position(getCenteredPosition() +

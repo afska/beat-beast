@@ -5,8 +5,6 @@
 
 class Riffer : public TopLeftGameObject {
  public:
-  enum HandAnimation { PLAYING, ROCKING };
-
   Riffer(bn::fixed_point initialPosition);
 
   bool update(bn::fixed_point playerPosition, bool isInsideBeat);
@@ -16,6 +14,8 @@ class Riffer : public TopLeftGameObject {
   void swingEnd();
   void breakGuitar();
   void headbang();
+  void setAngryHands();
+  bool getAngryHands() { return hasAngryHands; }
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
@@ -46,9 +46,10 @@ class Riffer : public TopLeftGameObject {
   int swingAnimationIndex = -1;
   int handLAnimationIndex = -1;
   int handRAnimationIndex = -1;
+  int angryHandsAnimationIndex = -1;
   int brokenGuitarShakeAnimationIndex = -1;
   bool waitingSwingEnd = false;
-  HandAnimation handAnimation = PLAYING;
+  bool hasAngryHands = false;
 
   bool isHeadbanging() { return headbangAnimation.has_value(); }
 

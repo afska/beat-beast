@@ -317,6 +317,9 @@ void BossRifferScene::processChart() {
             riffer->getCenteredPosition() + bn::fixed_point(-10, 0), 0)};
         symbol->setCamera(camera);
         angrySymbols.push_back(bn::move(symbol));
+
+        if (!riffer->getAngryHands())
+          riffer->setAngryHands();
       }
       if (event->getType() == EVENT_ANGRY_SYMBOL_2) {
         auto symbol = bn::unique_ptr{new AngrySymbol(
