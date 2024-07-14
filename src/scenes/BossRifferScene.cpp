@@ -327,6 +327,9 @@ void BossRifferScene::processChart() {
         symbol->setCamera(camera);
         angrySymbols.push_back(bn::move(symbol));
       }
+      if (event->getType() == EVENT_THROW) {
+        riffer->startThrow();
+      }
 
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
@@ -357,7 +360,8 @@ void BossRifferScene::updateSprites() {
   // Riffer
   if (isNewBeat)
     riffer->bounce();
-  riffer->update(horse->getCenteredPosition(), chartReader->isInsideBeat());
+  riffer->update(camera.position() + horse->getCenteredPosition(),
+                 chartReader->isInsideBeat());
   // if (riffer->collidesWith(horse.get(), camera))
   //   sufferDamage(DMG_RIFFER_TO_PLAYER);
 

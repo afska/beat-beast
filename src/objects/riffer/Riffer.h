@@ -15,6 +15,8 @@ class Riffer : public TopLeftGameObject {
   void breakGuitar();
   void headbang();
   void setAngryHands();
+  void unsetAngryHands();
+  void startThrow();
   bool getAngryHands() { return hasAngryHands; }
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
@@ -50,10 +52,11 @@ class Riffer : public TopLeftGameObject {
   int brokenGuitarShakeAnimationIndex = -1;
   bool waitingSwingEnd = false;
   bool hasAngryHands = false;
+  bool isThrowing = false;
 
   bool isHeadbanging() { return headbangAnimation.has_value(); }
 
-  void updateSubsprites();
+  void updateSubsprites(bn::fixed_point playerPosition);
   void updateAnimations();
   void setIdleState();
   void setHurtState();
