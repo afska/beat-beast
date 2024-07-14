@@ -50,7 +50,13 @@
 #define EVENT_STOP_WAIT 3
 #define EVENT_FIRE_CLEAR 4
 #define EVENT_BREAK_GUITAR 5
-#define EVENT_SONG_END 9
+#define EVENT_CONFUSED_SYMBOL 6
+#define EVENT_ANGRY_SYMBOL_1 7
+#define EVENT_ANGRY_SYMBOL_2 8
+#define EVENT_THROW 9
+#define EVENT_GO_PHASE2 10
+#define EVENT_TRANSITION_PHASE2 11
+#define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
 
@@ -293,7 +299,30 @@ void BossRifferScene::processChart() {
         });
       }
       if (event->getType() == EVENT_BREAK_GUITAR) {
-        // TODO:
+        riffer->breakGuitar();
+
+        auto symbol = bn::unique_ptr{new AngrySymbol(
+            riffer->getCenteredPosition() + bn::fixed_point(-10, 0), 0)};
+        symbol->setCamera(camera);
+        angrySymbols.push_back(bn::move(symbol));
+      }
+      if (event->getType() == EVENT_CONFUSED_SYMBOL) {
+        auto symbol =
+            bn::unique_ptr{new AngrySymbol(riffer->getCenteredPosition(), 2)};
+        symbol->setCamera(camera);
+        angrySymbols.push_back(bn::move(symbol));
+      }
+      if (event->getType() == EVENT_ANGRY_SYMBOL_1) {
+        auto symbol = bn::unique_ptr{new AngrySymbol(
+            riffer->getCenteredPosition() + bn::fixed_point(-10, 0), 0)};
+        symbol->setCamera(camera);
+        angrySymbols.push_back(bn::move(symbol));
+      }
+      if (event->getType() == EVENT_ANGRY_SYMBOL_2) {
+        auto symbol = bn::unique_ptr{new AngrySymbol(
+            riffer->getCenteredPosition() + bn::fixed_point(10, 0), 1)};
+        symbol->setCamera(camera);
+        angrySymbols.push_back(bn::move(symbol));
       }
 
       if (event->getType() == EVENT_SONG_END) {
@@ -358,6 +387,21 @@ void BossRifferScene::updateSprites() {
     return isOut;  // || collided;
   });
 
+  // Enemy bullets
+  iterate(enemyBullets, [this](RhythmicBullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
+
+    if (bullet->collidesWith(horse.get(), camera) && !bullet->didExplode()) {
+      sufferDamage(bullet->damage);
+
+      return true;
+    }
+
+    return isOut;
+  });
+
   // Platform fires
   int msecs = chartReader->getMsecs();
   unsigned startedFires = 0;
@@ -392,20 +436,9 @@ void BossRifferScene::updateSprites() {
     return isOut;
   });
 
-  // Enemy bullets
-  iterate(enemyBullets, [this](RhythmicBullet* bullet) {
-    bool isOut =
-        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
-                       horse->getCenteredPosition());
-
-    if (bullet->collidesWith(horse.get(), camera) && !bullet->didExplode()) {
-      sufferDamage(bullet->damage);
-
-      return true;
-    }
-
-    return isOut;
-  });
+  // Angry symbols
+  iterate(angrySymbols,
+          [this](AngrySymbol* angrySymbol) { return angrySymbol->update(); });
 }
 
 void BossRifferScene::updatePhysics() {
