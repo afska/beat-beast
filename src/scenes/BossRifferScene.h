@@ -6,6 +6,7 @@
 #include "../objects/Bullet.h"
 #include "../objects/riffer/PlatformFire.h"
 #include "../objects/riffer/Riffer.h"
+#include "../objects/riffer/Wave.h"
 
 #define HORSE_INITIAL_Y 50
 
@@ -24,6 +25,7 @@ class BossRifferScene : public BossScene {
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;
   bn::fixed currentPlatformY = -1;
+  int lastTargetedPlatform = -1;
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;

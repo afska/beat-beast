@@ -1,8 +1,17 @@
-# synthbattle
+# BeatBeast
+
+*(codename: `synthbattle`)*
+
+This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
+
+The game was made in less than 3 months, so code quality isn't probably too good.
 
 ## Install
 
+The game uses **a fork** of the [Butano](https://github.com/GValiente/butano) engine (created from its `v17.7.0` version) that disables its audio player, so we can use [gsmplayer-gba](https://github.com/pinobatch/gsmplayer-gba) for menu's music and a custom player that plays PCM audio at 36314hz for main gameplay.
+
 ```bash
+# This assumes WSL2 on Windows, but it should be similar in other *nix environments.
 cd ~
 
 sudo apt update

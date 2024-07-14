@@ -12,13 +12,15 @@ class Riffer : public TopLeftGameObject {
   bool update(bn::fixed_point playerPosition, bool isInsideBeat);
   void bounce();
   void hurt();
-  void attack();
+  void swing();
+  void swingEnd();
+  void headbang();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
-    return mainSprite.position() + bn::fixed_point(0, 0);
+    return mainSprite.position() + bn::fixed_point(-18, 36);
   }
-  bool isBusy() { return isHurt() || isAttacking(); }
+  bool isBusy() { return isHurt() || isHeadbanging(); }
   bool isHurt() { return hurtAnimation.has_value(); }
   void setCamera(bn::camera_ptr camera) {
     mainSprite.set_camera(camera);
@@ -33,16 +35,18 @@ class Riffer : public TopLeftGameObject {
   bn::sprite_ptr handR;
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
-  bn::optional<bn::sprite_animate_action<2>> attackAnimation;
+  bn::optional<bn::sprite_animate_action<2>> headbangAnimation;
   bn::fixed_point targetPosition;
   bn::fixed speedX = 1;
   bn::fixed speedY = 1;
   int animationIndex = -1;
+  int swingAnimationIndex = -1;
   int handLAnimationIndex = -1;
   int handRAnimationIndex = -1;
+  bool waitingSwingEnd = false;
   HandAnimation handAnimation = PLAYING;
 
-  bool isAttacking() { return attackAnimation.has_value(); }
+  bool isHeadbanging() { return headbangAnimation.has_value(); }
 
   void updateSubsprites();
   void updateAnimations();

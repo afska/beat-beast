@@ -30,9 +30,7 @@
 #define IS_EVENT_MOVE_COL1(TYPE) IS_EVENT(TYPE, 0, 1)
 #define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 0, 2)
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
-#define IS_EVENT_MOVE_BOTTOMRIGHT(TYPE) IS_EVENT(TYPE, 0, 4)
-#define IS_EVENT_MOVE_BOTTOMLEFT(TYPE) IS_EVENT(TYPE, 0, 5)
-#define IS_EVENT_MOVE_RIGHT(TYPE) IS_EVENT(TYPE, 0, 6)
+#define IS_EVENT_MOVE_RIGHT(TYPE) IS_EVENT(TYPE, 0, 4)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
 #define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
@@ -44,11 +42,14 @@
 #define IS_EVENT_PLATFORM_FIRE_INTRO_4(TYPE) IS_EVENT(TYPE, 1, 8)
 #define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
-#define IS_EVENT_POWER_CHORD(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_WAVE_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_WAVE_SEND(TYPE) IS_EVENT(TYPE, 2, 2)
 
 #define EVENT_ADVANCE 1
 #define EVENT_STOP 2
 #define EVENT_STOP_WAIT 3
+#define EVENT_FIRE_CLEAR 4
+#define EVENT_BREAK_GUITAR 5
 #define EVENT_SONG_END 9
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -58,6 +59,7 @@
 const bn::fixed HORSE_INITIAL_X = 60;
 const bn::fixed MAP_BASE_X = (1024 - Math::SCREEN_WIDTH) / 2;
 const bn::fixed MAP_BASE_Y = (256 - Math::SCREEN_HEIGHT) / 2;
+const bn::fixed PLATFORMS_X[4] = {0, 176, 232, 288};
 
 BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::RIFFER,
@@ -132,12 +134,16 @@ void BossRifferScene::processInput() {
   bn::fixed speedX;
   if (!bn::keypad::r_held()) {  // (R locks target)
     if (bn::keypad::left_held()) {
-      speedX = -HORSE_SPEED;
+      speedX =
+          -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       horse->setFlipX(true);
     } else if (bn::keypad::right_held()) {
-      speedX = HORSE_SPEED;
+      speedX = HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
       horse->setFlipX(false);
     }
+
+    if (speedX != 0 && chartReader->isInsideBeat())
+      speedX *= 2;
 
     auto horseX = horse->getPosition().x() + speedX;
 
@@ -194,21 +200,20 @@ void BossRifferScene::processChart() {
       auto type = event->getType();
 
       // Movement
-      if (IS_EVENT_MOVE_COL1(type))
+      if (IS_EVENT_MOVE_COL1(type)) {
         riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
-      if (IS_EVENT_MOVE_COL2(type))
+        lastTargetedPlatform = 1;
+      }
+      if (IS_EVENT_MOVE_COL2(type)) {
         riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
-      if (IS_EVENT_MOVE_COL3(type))
+        lastTargetedPlatform = 2;
+      }
+      if (IS_EVENT_MOVE_COL3(type)) {
         riffer->setTargetPosition({289, 17}, chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
-      //   wizard->get()->setTargetPosition({80, 60},
-      //                                    chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_BOTTOMLEFT(type))
-      //   wizard->get()->setTargetPosition({-50, 60},
-      //                                    chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_RIGHT(type))
-      //   wizard->get()->setTargetPosition({80, 0},
-      //                                    chartReader->getBeatDurationMs());
+        lastTargetedPlatform = 3;
+      }
+      if (IS_EVENT_MOVE_RIGHT(type))
+        riffer->setTargetPosition({312, 41}, chartReader->getBeatDurationMs());
       // if (IS_EVENT_MOVE_OFFSCREEN(type))
       //   wizard->get()->setTargetPosition({200, -70},
       //                                    chartReader->getBeatDurationMs());
@@ -257,10 +262,20 @@ void BossRifferScene::processChart() {
         });
       }
 
-      // Power Chords
-      // if (IS_EVENT_POWER_CHORD(type)) {
-      // playSfx(SFX_POWER_CHORD);
-      // }
+      // Waves
+      if (IS_EVENT_WAVE_PREPARE(type)) {
+        riffer->swing();
+      }
+      if (IS_EVENT_WAVE_SEND(type)) {
+        riffer->swingEnd();
+        auto wave = bn::unique_ptr{new Wave(
+            bn::fixed_point(
+                PLATFORMS_X[lastTargetedPlatform] - 122 /* HACK: no idea why */,
+                riffer->getCenteredPosition().y()),
+            {0, 1}, event)};
+        wave->setCamera(camera);
+        enemyBullets.push_back(bn::move(wave));
+      }
     } else {
       if (event->getType() == EVENT_ADVANCE) {
         cameraTargetX = 151;
@@ -268,8 +283,18 @@ void BossRifferScene::processChart() {
       if (event->getType() == EVENT_STOP) {
         cameraTargetX = -1;
       }
-      if (event->getType() == EVENT_STOP_WAIT)
+      if (event->getType() == EVENT_STOP_WAIT) {
         disableGunAlert();
+        scrollLimit1 = (scrollLimit1 + scrollLimit2) / 2;
+      }
+      if (event->getType() == EVENT_FIRE_CLEAR) {
+        iterate(platformFires, [this](PlatformFire* platformFire) {
+          return platformFire->getTopLeftPosition().x() > platforms[0].right();
+        });
+      }
+      if (event->getType() == EVENT_BREAK_GUITAR) {
+        // TODO:
+      }
 
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
@@ -317,18 +342,20 @@ void BossRifferScene::updateSprites() {
       return true;
     }
 
-    bool collided = false;
-    iterate(
-        enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet) {
-          if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
-            addExplosion(((Bullet*)bullet)->getPosition());
-            // enemyBullet->explode(octopus->getShootingPoint());
-            collided = true;
-          }
-          return false;
-        });
+    // bool collided = false;
+    // iterate(
+    //     enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet)
+    //     {
+    //       if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet))
+    //       {
+    //         addExplosion(((Bullet*)bullet)->getPosition());
+    //         enemyBullet->explode({0, 0});
+    //         collided = true;
+    //       }
+    //       return false;
+    //     });
 
-    return isOut || collided;
+    return isOut;  // || collided;
   });
 
   // Platform fires
@@ -360,6 +387,21 @@ void BossRifferScene::updateSprites() {
         platformFire->collidesWith(horse.get(), camera)) {
       sufferDamage(DMG_FIRE_TO_PLAYER);
       return false;
+    }
+
+    return isOut;
+  });
+
+  // Enemy bullets
+  iterate(enemyBullets, [this](RhythmicBullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
+
+    if (bullet->collidesWith(horse.get(), camera) && !bullet->didExplode()) {
+      sufferDamage(bullet->damage);
+
+      return true;
     }
 
     return isOut;

@@ -12,6 +12,33 @@ constexpr const bn::array<bn::fixed, 25> handLAnimation = {
     -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1,  0};
 constexpr const bn::array<bn::fixed, 12> handRAnimation = {
     0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 3, 2, 0};
+constexpr const bn::array<bn::fixed, 11> guitarSwingAnimation = {
+    0, 350, 330, 310, 290, 300, 310, 320, 330, 340, 350};
+const int swingFactor = 2;
+constexpr const bn::array<bn::fixed_point, 11> guitarPositionSwingAnimation = {
+    bn::fixed_point(0, 0),
+    bn::fixed_point(-2 * swingFactor, 0),
+    bn::fixed_point(-6 * swingFactor, -2),
+    bn::fixed_point(-10 * swingFactor, -6),
+    bn::fixed_point(-14 * swingFactor, -10),
+    bn::fixed_point(-12 * swingFactor, -8),
+    bn::fixed_point(-10 * swingFactor, -6),
+    bn::fixed_point(-8 * swingFactor, -4),
+    bn::fixed_point(-6 * swingFactor, -2),
+    bn::fixed_point(-4 * swingFactor, 0),
+    bn::fixed_point(-2 * swingFactor, 0)};
+constexpr const bn::array<bn::fixed_point, 11> handLSwingAnimation = {
+    bn::fixed_point(0, 0),    bn::fixed_point(-2, 2),
+    bn::fixed_point(-4, 6),   bn::fixed_point(-10, 10),
+    bn::fixed_point(-16, 12), bn::fixed_point(-14, 10),
+    bn::fixed_point(-10, 10), bn::fixed_point(-6, 8),
+    bn::fixed_point(-4, 6),   bn::fixed_point(-4, 6),
+    bn::fixed_point(-2, 2)};
+constexpr const bn::array<bn::fixed_point, 11> handRSwingAnimation = {
+    bn::fixed_point(0, 0),   bn::fixed_point(2, -2),   bn::fixed_point(8, -6),
+    bn::fixed_point(14, -8), bn::fixed_point(14, -10), bn::fixed_point(14, -8),
+    bn::fixed_point(14, -8), bn::fixed_point(10, -8),  bn::fixed_point(8, -6),
+    bn::fixed_point(6, -4),  bn::fixed_point(2, -2)};
 
 Riffer::Riffer(bn::fixed_point initialPosition)
     : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)),
@@ -63,7 +90,16 @@ void Riffer::bounce() {
   handRAnimationIndex = handRAnimation.size() - 1;
 }
 
-void Riffer::attack() {
+void Riffer::swing() {
+  waitingSwingEnd = false;
+  swingAnimationIndex = guitarSwingAnimation.size() - 1;
+}
+
+void Riffer::swingEnd() {
+  waitingSwingEnd = false;
+}
+
+void Riffer::headbang() {
   if (isHurt())
     return;
 
@@ -95,21 +131,38 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
 void Riffer::updateSubsprites() {
   guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
 
-  bn::fixed handLOffset = 0;
+  bn::fixed handLOffsetX = 0;
+  bn::fixed handLOffsetY = 0;
   if (handLAnimationIndex > -1) {
-    handLOffset = handLAnimation[handLAnimationIndex];
+    handLOffsetX = handLAnimation[handLAnimationIndex];
     handLAnimationIndex--;
   } else
     handLAnimationIndex = handLAnimation.size() - 1;
-  bn::fixed handROffset = 0;
+  bn::fixed handROffsetX = 0;
+  bn::fixed handROffsetY = 0;
   if (handRAnimationIndex > -1) {
-    handROffset = handRAnimation[handRAnimationIndex];
+    handROffsetY = handRAnimation[handRAnimationIndex];
     handRAnimationIndex--;
   }
 
+  if (swingAnimationIndex > -1) {
+    guitar.set_rotation_angle(guitarSwingAnimation[swingAnimationIndex]);
+    guitar.set_position(guitar.position() +
+                        guitarPositionSwingAnimation[swingAnimationIndex]);
+    handLOffsetX = handLSwingAnimation[swingAnimationIndex].x();
+    handLOffsetY = handLSwingAnimation[swingAnimationIndex].y();
+    handROffsetX = handRSwingAnimation[swingAnimationIndex].x();
+    handROffsetY = handRSwingAnimation[swingAnimationIndex].y();
+    if (!waitingSwingEnd)
+      swingAnimationIndex--;
+    if (swingAnimationIndex == 4)
+      waitingSwingEnd = true;
+  }
+
   handL.set_position(getCenteredPosition() +
-                     bn::fixed_point(13 + handLOffset, 5));
-  handR.set_position(getCenteredPosition() + bn::fixed_point(-24, handROffset));
+                     bn::fixed_point(13 + handLOffsetX, 5 + handLOffsetY));
+  handR.set_position(getCenteredPosition() +
+                     bn::fixed_point(-24 + handROffsetX, handROffsetY));
 }
 
 void Riffer::updateAnimations() {
@@ -125,9 +178,9 @@ void Riffer::updateAnimations() {
     }
   }
 
-  if (attackAnimation.has_value()) {
-    attackAnimation->update();
-    if (attackAnimation->done()) {
+  if (headbangAnimation.has_value()) {
+    headbangAnimation->update();
+    if (headbangAnimation->done()) {
       resetAnimations();
       setIdleState();
     }
@@ -149,12 +202,12 @@ void Riffer::setHurtState() {
 
 void Riffer::setAttackState() {
   resetAnimations();
-  attackAnimation = bn::create_sprite_animate_action_once(
+  headbangAnimation = bn::create_sprite_animate_action_once(
       mainSprite, 15, bn::sprite_items::riffer_riffer.tiles_item(), 2, 2);
 }
 
 void Riffer::resetAnimations() {
   idleAnimation.reset();
   hurtAnimation.reset();
-  attackAnimation.reset();
+  headbangAnimation.reset();
 }
