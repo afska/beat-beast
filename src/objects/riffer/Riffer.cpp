@@ -252,14 +252,17 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
     handR.set_position(getCenteredPosition() + bn::fixed_point(16, 5));
 
     if (brokenGuitar1.has_value()) {
-      Math::moveSpriteTowards(brokenGuitar1.value(), playerPosition, 1, 1);
+      brokenGuitar1->set_position(brokenGuitar1->position() +
+                                  bn::fixed_point(-1, 1));
 
-      if (brokenGuitar1->position() == playerPosition) {
+      brokenGuitar1->set_rotation_angle(
+          Math::normalizeAngle(brokenGuitar1->rotation_angle() + 5));
+
+      if (brokenGuitar1->position().x() < -240 ||
+          brokenGuitar1->position().y() < -160 ||
+          brokenGuitar1->position().x() > 240 ||
+          brokenGuitar1->position().y() > 160) {
         brokenGuitar1.reset();
-        needsToAddGuitar = true;
-      } else {
-        brokenGuitar1->set_rotation_angle(
-            Math::normalizeAngle(brokenGuitar1->rotation_angle() + 5));
       }
     }
   }

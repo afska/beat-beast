@@ -357,16 +357,22 @@ void BossRifferScene::updateBackground() {}
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
 
-  if (riffer->getNeedsToAddGuitar()) {
-    horse->showGun = false;
-    // TODO: ADD GUITAR
-  }
-
   // Riffer
   if (isNewBeat)
     riffer->bounce();
   riffer->update(camera.position() + horse->getCenteredPosition(),
                  chartReader->isInsideBeat());
+  auto brokenGuitar1 = riffer->getBrokenGuitar1();
+  if (brokenGuitar1.has_value()) {
+    auto horseBB = horse->getBoundingBox();
+    if (bn::fixed_rect(brokenGuitar1->position(), bn::fixed_size(8, 8))
+            .intersects(bn::fixed_rect(camera.x() + horseBB.x(),
+                                       camera.y() + horseBB.y(),
+                                       horseBB.width(), horseBB.height()))) {
+      riffer->resetBrokenGuitar1();
+      sufferDamage(1);
+    }
+  }
   // if (riffer->collidesWith(horse.get(), camera))
   //   sufferDamage(DMG_RIFFER_TO_PLAYER);
 
