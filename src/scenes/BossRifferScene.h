@@ -22,6 +22,8 @@ class BossRifferScene : public BossScene {
   bn::fixed scrollLimit1, scrollLimit2;
   bn::camera_ptr camera;
   bn::fixed cameraTargetX = -1;
+  bn::fixed cameraTargetY = -1;
+  bn::fixed cameraTargetSpeed = 0.5;
   bn::vector<bn::top_left_fixed_rect, 32> platforms;
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;
@@ -29,6 +31,8 @@ class BossRifferScene : public BossScene {
   bn::fixed currentPlatformLeft = 0;
   bn::fixed currentPlatformRight = 0;
   int lastTargetedPlatform = -1;
+  bool phase2Transition = false;
+  bool phase2 = false;
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;
@@ -37,6 +41,8 @@ class BossRifferScene : public BossScene {
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<PlatformFire>, 32> platformFires;
   bn::vector<bn::unique_ptr<AngrySymbol>, 32> angrySymbols;
+  bn::vector<bn::sprite_ptr, 24> lines;
+  bn::vector<bn::sprite_ptr, 8> gamePlatforms;
 
   void processInput();
   void processChart();

@@ -21,7 +21,7 @@ Wave::Wave(bn::fixed_point initialPosition,
           bn::sprite_items::riffer_wave.tiles_item(),
           0,
           1)) {
-  boundingBox.set_dimensions({54, 16});
+  boundingBox.set_dimensions({48, 16});
   boundingBox.set_position(initialPosition);
 
   sprite.set_scale(scale);

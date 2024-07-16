@@ -11,8 +11,11 @@
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg0.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg3.h"
+#include "bn_sprite_items_riffer_gameplatform1.h"
+#include "bn_sprite_items_riffer_gameplatform2.h"
 #include "bn_sprite_items_riffer_icon_riffer.h"
 #include "bn_sprite_items_riffer_lifebar_riffer_fill.h"
+#include "bn_sprite_items_riffer_line.h"
 #include "bn_sprite_palettes.h"
 
 #define LIFE_BOSS 125
@@ -54,8 +57,8 @@
 #define EVENT_ANGRY_SYMBOL_1 7
 #define EVENT_ANGRY_SYMBOL_2 8
 #define EVENT_THROW 9
-#define EVENT_GO_PHASE2 10
-#define EVENT_TRANSITION_PHASE2 11
+#define EVENT_GO_PHASE2 11
+#define EVENT_TRANSITION_PHASE2 12
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -137,42 +140,46 @@ void BossRifferScene::processInput() {
     return;
 
   // move horse (left/right)
-  bn::fixed speedX;
-  if (!bn::keypad::r_held()) {  // (R locks target)
-    if (bn::keypad::left_held()) {
-      speedX =
-          -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
-      horse->setFlipX(true);
-    } else if (bn::keypad::right_held()) {
-      speedX = HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
-      horse->setFlipX(false);
-    }
-
-    if (speedX != 0 && chartReader->isInsideBeat())
-      speedX *= 2;
-
-    auto horseX = horse->getPosition().x() + speedX;
-
-    if (speedX != 0) {
-      if (horseX < scrollLimit1) {
-        moveViewport(camera.x() + speedX, 0);
-        horseX = scrollLimit1;
-      } else if (horseX > scrollLimit2) {
-        moveViewport(camera.x() + speedX, 0);
-        horseX = scrollLimit2;
+  if (!phase2Transition && !phase2) {
+    bn::fixed speedX;
+    if (!bn::keypad::r_held()) {  // (R locks target)
+      if (bn::keypad::left_held()) {
+        speedX =
+            -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
+        horse->setFlipX(true);
+      } else if (bn::keypad::right_held()) {
+        speedX =
+            HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
+        horse->setFlipX(false);
       }
-    }
 
-    horse->setPosition({horseX, horse->getPosition().y()}, speedX != 0);
-  } else {
-    horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
-                       speedX != 0);
+      if (speedX != 0 && chartReader->isInsideBeat())
+        speedX *= 2;
+
+      auto horseX = horse->getPosition().x() + speedX;
+
+      if (speedX != 0) {
+        if (horseX < scrollLimit1) {
+          moveViewport(camera.x() + speedX, 0);
+          horseX = scrollLimit1;
+        } else if (horseX > scrollLimit2) {
+          moveViewport(camera.x() + speedX, 0);
+          horseX = scrollLimit2;
+        }
+      }
+
+      horse->setPosition({horseX, horse->getPosition().y()}, speedX != 0);
+    } else {
+      horse->setPosition({horse->getPosition().x(), horse->getPosition().y()},
+                         speedX != 0);
+    }
   }
 
-  processAimInput(false);
+  if (!phase2)
+    processAimInput(false);
 
   // shoot
-  if (bn::keypad::b_pressed() && !horse->isBusy()) {
+  if (bn::keypad::b_pressed() && !horse->isBusy() && !phase2Transition) {
     if (chartReader->isInsideTick() && horse->canReallyShoot()) {
       shoot();
       comboBar->setCombo(comboBar->getCombo() + 1);
@@ -185,7 +192,8 @@ void BossRifferScene::processInput() {
       reportFailedShot();
     }
   }
-  if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
+  if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy() &&
+      !phase2Transition && !phase2) {
     shoot();
     bullets.push_back(bn::unique_ptr{
         new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
@@ -194,7 +202,7 @@ void BossRifferScene::processInput() {
 
   // jump
   if (bn::keypad::a_pressed() &&
-      horse->getPosition().y() == lastSafePosition.y()) {
+      horse->getPosition().y() == lastSafePosition.y() && !phase2) {
     horse->jump();
     velocityY = -JUMP_FORCE;
   }
@@ -329,6 +337,70 @@ void BossRifferScene::processChart() {
       }
       if (event->getType() == EVENT_THROW) {
         riffer->startThrow();
+
+        for (int i = 0; i < 6; i++)
+          lines.push_back(bn::sprite_items::riffer_line.create_sprite(
+              Math::toAbsTopLeft(bn::fixed_point(506 + i * 16, 17), 16, 8)));
+        for (int i = 0; i < 6; i++)
+          lines.push_back(bn::sprite_items::riffer_line.create_sprite(
+              Math::toAbsTopLeft(bn::fixed_point(506 + i * 16, 59), 16, 8)));
+        for (int i = 0; i < 6; i++)
+          lines.push_back(bn::sprite_items::riffer_line.create_sprite(
+              Math::toAbsTopLeft(bn::fixed_point(506 + i * 16, 101), 16, 8)));
+        for (int i = 0; i < 6; i++)
+          lines.push_back(bn::sprite_items::riffer_line.create_sprite(
+              Math::toAbsTopLeft(bn::fixed_point(506 + i * 16, 143), 16, 8)));
+        for (auto& spr : lines)
+          spr.set_camera(camera);
+
+        // green
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform1.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(439, 153), 32, 16), 0));
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform2.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(439 + 32, 153), 32, 16), 0));
+
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform1.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(438, 27), 32, 16), 3));
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform2.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(438 + 32, 27), 32, 16), 3));
+
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform1.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(450, 69), 32, 16), 2));
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform2.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(450 + 32, 69), 32, 16), 2));
+
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform1.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(459, 111), 32, 16), 1));
+        gamePlatforms.push_back(
+            bn::sprite_items::riffer_gameplatform2.create_sprite(
+                Math::toAbsTopLeft(bn::fixed_point(459 + 32, 111), 32, 16), 1));
+
+        for (auto& spr : gamePlatforms)
+          spr.set_camera(camera);
+      }
+      if (event->getType() == EVENT_GO_PHASE2) {
+        riffer->setTargetPosition({592, 112},
+                                  chartReader->getBeatDurationMs() * 4);
+      }
+      if (event->getType() == EVENT_TRANSITION_PHASE2) {
+        cameraTargetX = 421;
+        cameraTargetY = 6;
+        bn::fixed frames = chartReader->getBeatDurationMs() * 8 / GBA_FRAME;
+        cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
+        pixelBlink->blink();
+        horse->setPosition(horse->getPosition(), true);
+        horse->getMainSprite().set_scale(1.5);
+        enableGunAlert(SpriteProvider::wait());
+        horse->showGun = false;
+        horse->setFlipX(false);
+        phase2Transition = true;
       }
 
       if (event->getType() == EVENT_SONG_END) {
@@ -462,19 +534,50 @@ void BossRifferScene::updateSprites() {
 }
 
 void BossRifferScene::updatePhysics() {
+  if (phase2)
+    return;
+
   if (cameraTargetX != -1) {
     if (camera.x() < cameraTargetX) {
-      moveViewport(camera.x() + 0.5, camera.y());
+      moveViewport(camera.x() + cameraTargetSpeed, camera.y());
       if (camera.x() >= cameraTargetX)
         cameraTargetX = -1;
     } else if (camera.y() > cameraTargetX) {
-      moveViewport(camera.x() - 0.5, camera.y());
+      moveViewport(camera.x() - cameraTargetSpeed, camera.y());
       if (camera.x() <= cameraTargetX)
         cameraTargetX = -1;
     }
   }
+  if (cameraTargetY != -1) {
+    if (camera.y() < cameraTargetX) {
+      moveViewport(camera.x(), camera.y() + cameraTargetSpeed);
+      if (camera.y() >= cameraTargetY)
+        cameraTargetY = -1;
+    } else if (camera.y() > cameraTargetY) {
+      moveViewport(camera.x(), camera.y() - cameraTargetSpeed);
+      if (camera.y() <= cameraTargetY)
+        cameraTargetY = -1;
+    }
+  }
+  if (phase2Transition && cameraTargetX == -1 && cameraTargetY == -1) {
+    pixelBlink->blink();
+    horse->setPosition({28 - 8, 100 - 8}, false);
+    horse->getMainSprite().set_scale(1);
+    horse->getMainSprite().set_rotation_angle(0);
+    horse->showGun = true;
+    horse->aim({1, 0});
+    disableGunAlert();
+    phase2Transition = false;
+    phase2 = true;
+  }
 
   velocityY += GRAVITY;
+  if (phase2Transition) {
+    velocityY = 0;
+    horse->getMainSprite().set_rotation_angle(
+        Math::normalizeAngle(horse->getMainSprite().rotation_angle() + 10));
+  }
+
   horse->setPosition(bn::fixed_point(horse->getPosition().x(),
                                      horse->getPosition().y() + velocityY),
                      horse->getIsMoving());

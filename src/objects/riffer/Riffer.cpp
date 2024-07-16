@@ -183,17 +183,17 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
 void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
   guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
 
-  if (brokenGuitar1.has_value()) {
+  if (brokenGuitar2.has_value()) {
     auto brokenGuitar1Position =
         getCenteredPosition() + bn::fixed_point(-18, -13 + 31);
-    if (!isThrowing)
+    if (brokenGuitar1.has_value() && !isThrowing)
       brokenGuitar1->set_position(brokenGuitar1Position);
 
     brokenGuitar2->set_position(
         brokenGuitar1Position +
         bn::fixed_point(-32 / 2 + 32 + 32 / 2, +13 + -64 / 2 + 16 / 2 - 2));
 
-    if (brokenGuitarShakeAnimationIndex > -1) {
+    if (brokenGuitar1.has_value() && brokenGuitarShakeAnimationIndex > -1) {
       auto scale = Math::SCALE_STEPS[brokenGuitarShakeAnimationIndex];
       if (!isThrowing)
         brokenGuitar1->set_scale(scale);
