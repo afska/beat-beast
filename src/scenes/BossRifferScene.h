@@ -26,6 +26,8 @@ class BossRifferScene : public BossScene {
   bn::fixed_point lastSafePosition;
   bn::fixed_point lastSafeViewportPosition;
   bn::fixed currentPlatformY = -1;
+  bn::fixed currentPlatformLeft = 0;
+  bn::fixed currentPlatformRight = 0;
   int lastTargetedPlatform = -1;
 
   bn::optional<bn::regular_bg_ptr> background3;

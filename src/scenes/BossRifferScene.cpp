@@ -446,6 +446,8 @@ void BossRifferScene::updateSprites() {
     bool isOut = platformFire->update(chartReader->getMsecs());
 
     if (platformFire->didStart() && !horse->isHurt() &&
+        platformFire->getTopLeftPosition().x() > currentPlatformLeft &&
+        platformFire->getTopLeftPosition().x() < currentPlatformRight &&
         platformFire->collidesWith(horse.get(), camera)) {
       sufferDamage(DMG_FIRE_TO_PLAYER);
       return false;
@@ -503,6 +505,8 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
         absHorsePosition.x() + 32 <= platform.right()) {
       auto newY = platform.top() - camera.y() - 64;
       currentPlatformY = newY;
+      currentPlatformLeft = platform.left();
+      currentPlatformRight = platform.right();
 
       if ((absHorsePosition.y() + 64 > platform.top() &&
            absHorsePosition.y() + 64 < platform.top() + 16) ||
