@@ -400,6 +400,8 @@ void BossRifferScene::processChart() {
         enableGunAlert(SpriteProvider::wait());
         horse->showGun = false;
         horse->setFlipX(false);
+        riffer->resetBrokenGuitar2();
+        riffer->headbang();
         phase2Transition = true;
       }
 

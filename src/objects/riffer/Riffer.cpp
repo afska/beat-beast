@@ -55,6 +55,8 @@ constexpr const bn::array<bn::fixed_point, 11> angryHandRAnimation = {
     bn::fixed_point(-10, -10 + -8),  bn::fixed_point(-10, -10 + -8),
     bn::fixed_point(-10, -10 + -6),  bn::fixed_point(-10, -10 + -4),
     bn::fixed_point(-10, -10 + -2)};
+constexpr const bn::array<bn::fixed, 12> headbangYAnimation = {
+    0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 3, 2, 0};
 
 Riffer::Riffer(bn::fixed_point initialPosition)
     : TopLeftGameObject(bn::sprite_items::riffer_riffer.create_sprite(0, 0)),
@@ -108,6 +110,13 @@ void Riffer::bounce() {
   if (brokenGuitar1.has_value()) {
     brokenGuitarShakeAnimationIndex = Math::SCALE_STEPS.size() - 1;
   }
+
+  if (isHeadbangingNow) {
+    headbangAnimationIndex = headbangYAnimation.size() - 1;
+  }
+
+  if (headbangAnimation.has_value())
+    headbangAnimation->update();
 }
 
 void Riffer::swing() {
@@ -137,10 +146,10 @@ void Riffer::breakGuitar() {
 }
 
 void Riffer::headbang() {
-  if (isHurt())
-    return;
-
   setAttackState();
+  isHeadbangingNow = true;
+  handL.set_tiles(bn::sprite_items::riffer_handl.tiles_item(), 1);
+  handR.set_tiles(bn::sprite_items::riffer_handr.tiles_item(), 1);
 }
 
 void Riffer::setAngryHands() {
@@ -242,6 +251,17 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
       angryHandsAnimationIndex = angryHandLAnimation.size() - 1;
   }
 
+  if (isHeadbangingNow) {
+    if (headbangAnimationIndex > -1) {
+      handLOffsetX = 10;
+      handLOffsetY = -24 + headbangYAnimation[headbangAnimationIndex] * 2;
+      handROffsetX = -10;
+      handROffsetY = -30 + headbangYAnimation[headbangAnimationIndex] * 2;
+      if (headbangAnimationIndex > 0)
+        headbangAnimationIndex--;
+    }
+  }
+
   handL.set_position(getCenteredPosition() +
                      bn::fixed_point(13 + handLOffsetX, 5 + handLOffsetY));
   handR.set_position(getCenteredPosition() +
@@ -277,17 +297,20 @@ void Riffer::updateAnimations() {
     hurtAnimation->update();
     if (hurtAnimation->done()) {
       resetAnimations();
-      setIdleState();
+      if (isHeadbangingNow)
+        setAttackState();
+      else
+        setIdleState();
     }
   }
 
-  if (headbangAnimation.has_value()) {
-    headbangAnimation->update();
-    if (headbangAnimation->done()) {
-      resetAnimations();
-      setIdleState();
-    }
-  }
+  // if (headbangAnimation.has_value()) {
+  // headbangAnimation->update();
+  // if (headbangAnimation->done()) {
+  //   resetAnimations();
+  //   setIdleState();
+  // }
+  // }
 }
 
 void Riffer::setIdleState() {
@@ -305,8 +328,8 @@ void Riffer::setHurtState() {
 
 void Riffer::setAttackState() {
   resetAnimations();
-  headbangAnimation = bn::create_sprite_animate_action_once(
-      mainSprite, 15, bn::sprite_items::riffer_riffer.tiles_item(), 2, 2);
+  headbangAnimation = bn::create_sprite_animate_action_forever(
+      mainSprite, 0, bn::sprite_items::riffer_riffer.tiles_item(), 2, 3);
 }
 
 void Riffer::resetAnimations() {

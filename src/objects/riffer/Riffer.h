@@ -24,6 +24,10 @@ class Riffer : public TopLeftGameObject {
     return brokenGuitar1;
   }
   void resetBrokenGuitar1() { brokenGuitar1.reset(); }
+  void resetBrokenGuitar2() {
+    isThrowing = false;
+    brokenGuitar2.reset();
+  }
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {
@@ -56,9 +60,11 @@ class Riffer : public TopLeftGameObject {
   int handRAnimationIndex = -1;
   int angryHandsAnimationIndex = -1;
   int brokenGuitarShakeAnimationIndex = -1;
+  int headbangAnimationIndex = -1;
   bool waitingSwingEnd = false;
   bool hasAngryHands = false;
   bool isThrowing = false;
+  bool isHeadbangingNow = false;
 
   bool isHeadbanging() { return headbangAnimation.has_value(); }
 
