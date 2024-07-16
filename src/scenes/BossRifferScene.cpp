@@ -139,6 +139,16 @@ void BossRifferScene::processInput() {
   if (didFinish)
     return;
 
+  if (phase2) {
+    if (bn::keypad::up_pressed() && selectedGamePlatform < 3) {
+      selectedGamePlatform++;
+      selectGamePlatform(selectedGamePlatform);
+    } else if (bn::keypad::down_pressed() && selectedGamePlatform > 0) {
+      selectedGamePlatform--;
+      selectGamePlatform(selectedGamePlatform);
+    }
+  }
+
   // move horse (left/right)
   if (!phase2Transition && !phase2) {
     bn::fixed speedX;
@@ -202,7 +212,8 @@ void BossRifferScene::processInput() {
 
   // jump
   if (bn::keypad::a_pressed() &&
-      horse->getPosition().y() == lastSafePosition.y() && !phase2) {
+      horse->getPosition().y() == lastSafePosition.y() && !phase2Transition &&
+      !phase2) {
     horse->jump();
     velocityY = -JUMP_FORCE;
   }
@@ -391,7 +402,7 @@ void BossRifferScene::processChart() {
       }
       if (event->getType() == EVENT_TRANSITION_PHASE2) {
         cameraTargetX = 421;
-        cameraTargetY = 6;
+        cameraTargetY = -6;
         bn::fixed frames = chartReader->getBeatDurationMs() * 8 / GBA_FRAME;
         cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
         pixelBlink->blink();
@@ -399,6 +410,8 @@ void BossRifferScene::processChart() {
         horse->getMainSprite().set_scale(1.5);
         enableGunAlert(SpriteProvider::wait());
         horse->showGun = false;
+        horse->canShoot = false;
+        horse->customScale = true;
         horse->setFlipX(false);
         riffer->resetBrokenGuitar2();
         riffer->headbang();
@@ -426,7 +439,10 @@ void BossRifferScene::processChart() {
   }
 }
 
-void BossRifferScene::updateBackground() {}
+void BossRifferScene::updateBackground() {
+  int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
+  bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
+}
 
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
@@ -449,6 +465,12 @@ void BossRifferScene::updateSprites() {
   }
   // if (riffer->collidesWith(horse.get(), camera))
   //   sufferDamage(DMG_RIFFER_TO_PLAYER);
+
+  // Game platforms
+  if (gamePlatformAnimation1.has_value())
+    gamePlatformAnimation1->update();
+  if (gamePlatformAnimation2.has_value())
+    gamePlatformAnimation2->update();
 
   // Attacks
   iterate(bullets, [this](Bullet* bullet) {
@@ -563,13 +585,17 @@ void BossRifferScene::updatePhysics() {
   }
   if (phase2Transition && cameraTargetX == -1 && cameraTargetY == -1) {
     pixelBlink->blink();
-    horse->setPosition({28 - 8, 100 - 8}, false);
     horse->getMainSprite().set_scale(1);
     horse->getMainSprite().set_rotation_angle(0);
     horse->showGun = true;
+    horse->canShoot = true;
+    horse->customScale = false;
     horse->aim({1, 0});
+    horse->setPosition(horse->getPosition(), false);
     disableGunAlert();
     phase2Transition = false;
+    selectGamePlatform(0);
+    selectedGamePlatform = 0;
     phase2 = true;
   }
 
@@ -591,11 +617,13 @@ void BossRifferScene::updatePhysics() {
     velocityY = 0;
   }
 
-  bool landedOnPlatform = snapToPlatform();
-  if (!landedOnPlatform && cameraTargetX != -1 && currentPlatformY != -1) {
-    if (velocityY > 0 && horse->getPosition().y() >= currentPlatformY) {
-      horse->jump();
-      velocityY = -JUMP_FORCE;
+  if (!phase2Transition) {
+    bool landedOnPlatform = snapToPlatform();
+    if (!landedOnPlatform && cameraTargetX != -1 && currentPlatformY != -1) {
+      if (velocityY > 0 && horse->getPosition().y() >= currentPlatformY) {
+        horse->jump();
+        velocityY = -JUMP_FORCE;
+      }
     }
   }
 }
@@ -656,6 +684,70 @@ void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
          bn::to_string<32>(background0.get()->position().y()) + "}");
   BN_LOG("CAM {" + bn::to_string<32>(camera.x()) + ", " +
          bn::to_string<32>(camera.y()) + "}");
+}
+
+void BossRifferScene::selectGamePlatform(int n) {
+  gamePlatformAnimation1.reset();
+  gamePlatformAnimation2.reset();
+  gamePlatforms[0].set_tiles(
+      bn::sprite_items::riffer_gameplatform1.tiles_item(), 0);
+  gamePlatforms[1].set_tiles(
+      bn::sprite_items::riffer_gameplatform2.tiles_item(), 0);
+  gamePlatforms[2].set_tiles(
+      bn::sprite_items::riffer_gameplatform1.tiles_item(), 3);
+  gamePlatforms[3].set_tiles(
+      bn::sprite_items::riffer_gameplatform2.tiles_item(), 3);
+  gamePlatforms[4].set_tiles(
+      bn::sprite_items::riffer_gameplatform1.tiles_item(), 2);
+  gamePlatforms[5].set_tiles(
+      bn::sprite_items::riffer_gameplatform2.tiles_item(), 2);
+  gamePlatforms[6].set_tiles(
+      bn::sprite_items::riffer_gameplatform1.tiles_item(), 1);
+  gamePlatforms[7].set_tiles(
+      bn::sprite_items::riffer_gameplatform2.tiles_item(), 1);
+
+  switch (n) {
+    case 0: {
+      gamePlatformAnimation1 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[0], 2,
+          bn::sprite_items::riffer_gameplatform1.tiles_item(), 0, 4);
+      gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[1], 2,
+          bn::sprite_items::riffer_gameplatform2.tiles_item(), 0, 4);
+      horse->setPosition({20, 96}, false);
+      break;
+    }
+    case 1: {
+      gamePlatformAnimation1 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[6], 2,
+          bn::sprite_items::riffer_gameplatform1.tiles_item(), 1, 5);
+      gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[7], 2,
+          bn::sprite_items::riffer_gameplatform2.tiles_item(), 1, 5);
+      horse->setPosition({20 + 16, 96 - 40}, false);
+      break;
+    }
+    case 2: {
+      gamePlatformAnimation1 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[4], 2,
+          bn::sprite_items::riffer_gameplatform1.tiles_item(), 2, 6);
+      gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[5], 2,
+          bn::sprite_items::riffer_gameplatform2.tiles_item(), 2, 6);
+      horse->setPosition({20 + 16 - 6, 96 - 40 - 41}, false);
+      break;
+    }
+    default: {
+      gamePlatformAnimation1 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[2], 2,
+          bn::sprite_items::riffer_gameplatform1.tiles_item(), 3, 7);
+      gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
+          gamePlatforms[3], 2,
+          bn::sprite_items::riffer_gameplatform2.tiles_item(), 3, 7);
+      horse->setPosition({20 + 16 - 6 - 10, 96 - 40 - 41 - 42}, false);
+      break;
+    }
+  }
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {

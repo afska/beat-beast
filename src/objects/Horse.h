@@ -11,6 +11,7 @@ class Horse : public TopLeftGameObject {
   bool showGun = true;
   bool canShoot = false;
   bool fakeJump = true;
+  bool customScale = false;
 
   Horse(bn::fixed_point _topLeftPosition);
 

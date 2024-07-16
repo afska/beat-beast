@@ -203,7 +203,7 @@ void Horse::updateAnimations() {
     if (hurtAnimation->done())
       setIdleOrRunningState();
 
-    if (hurtFrame < Math::SCALE_STEPS.size()) {
+    if (hurtFrame < Math::SCALE_STEPS.size() && !customScale) {
       bn::fixed scale =
           Math::SCALE_STEPS[Math::SCALE_STEPS.size() - 1 - hurtFrame];
       mainSprite.set_scale(scale);
@@ -267,8 +267,10 @@ void Horse::setHurtState() {
 }
 
 void Horse::resetAnimations() {
-  mainSprite.set_scale(1.0);
-  mainSprite.set_rotation_angle(0.0);
+  if (!customScale) {
+    mainSprite.set_scale(1.0);
+    mainSprite.set_rotation_angle(0.0);
+  }
 
   idleAnimation.reset();
   runningAnimation.reset();

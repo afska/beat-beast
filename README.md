@@ -4,7 +4,7 @@
 
 This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 
-The game was made in less than 3 months, so code quality isn't probably too good 😅
+The game was made in less than 3 months, largely rushed to fit all content within the jam period, so the code quality is probably not too good 😅
 
 ## Install
 

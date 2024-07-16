@@ -31,6 +31,7 @@ class BossRifferScene : public BossScene {
   bn::fixed currentPlatformLeft = 0;
   bn::fixed currentPlatformRight = 0;
   int lastTargetedPlatform = -1;
+  int selectedGamePlatform = 0;
   bool phase2Transition = false;
   bool phase2 = false;
 
@@ -43,6 +44,8 @@ class BossRifferScene : public BossScene {
   bn::vector<bn::unique_ptr<AngrySymbol>, 32> angrySymbols;
   bn::vector<bn::sprite_ptr, 24> lines;
   bn::vector<bn::sprite_ptr, 8> gamePlatforms;
+  bn::optional<bn::sprite_animate_action<2>> gamePlatformAnimation1;
+  bn::optional<bn::sprite_animate_action<2>> gamePlatformAnimation2;
 
   void processInput();
   void processChart();
@@ -52,6 +55,7 @@ class BossRifferScene : public BossScene {
 
   bool snapToPlatform(bool requireYAlignment = true);
   void moveViewport(bn::fixed deltaX, bn::fixed deltaY);
+  void selectGamePlatform(int n);
   void causeDamage(bn::fixed amount);
 
   void addExplosion(bn::fixed_point position) override;
