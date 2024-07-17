@@ -147,11 +147,17 @@ void BossRifferScene::processInput() {
     return;
 
   if (phase2) {
-    if (bn::keypad::up_pressed() && selectedGamePlatform < 3) {
+    if (bn::keypad::up_pressed() && selectedGamePlatform == 3) {
+      selectedGamePlatform = 0;
+      selectGamePlatform(selectedGamePlatform);
+    } else if (bn::keypad::up_pressed() && selectedGamePlatform < 3) {
       selectedGamePlatform++;
       selectGamePlatform(selectedGamePlatform);
     } else if (bn::keypad::down_pressed() && selectedGamePlatform > 0) {
       selectedGamePlatform--;
+      selectGamePlatform(selectedGamePlatform);
+    } else if (bn::keypad::down_pressed() && selectedGamePlatform == 0) {
+      selectedGamePlatform = 3;
       selectGamePlatform(selectedGamePlatform);
     }
   }
@@ -588,7 +594,9 @@ void BossRifferScene::updateSprites() {
     if (isOut) {
       gameNote->explode(camera.position() + horse->getCenteredPosition());
       gameNote->win = false;
-    } else if (hasEnded) {
+    }
+
+    if (hasEnded) {
       if (gameNote->win)
         causeDamage(DMG_NOTE_TO_ENEMY);
       else

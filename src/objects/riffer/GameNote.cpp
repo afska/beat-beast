@@ -41,7 +41,8 @@ bool GameNote::update(int msecs,
     if (scale <= 0)
       scale = 0.1;
     sprite.set_scale(scale);
-    Math::moveSpriteTowards(sprite, returnPoint, RETURN_SPEED, RETURN_SPEED);
+    Math::moveSpriteTowards(sprite, returnPoint, RETURN_SPEED, RETURN_SPEED,
+                            false);
     if (sprite.position() == returnPoint)
       return true;
     return false;
