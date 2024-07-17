@@ -521,6 +521,7 @@ void BossRifferScene::processChart() {
         scrollLimit1 = 0;
         scrollLimit2 = 240;
         phase2 = false;
+        canBounce = true;
         phase3 = true;
       }
       if (event->getType() == EVENT_RIFFER_OFFSCREEN) {
@@ -742,6 +743,7 @@ void BossRifferScene::updatePhysics() {
     selectGamePlatform(0);
     selectedGamePlatform = 0;
     phase2 = true;
+    canBounce = false;
   }
 
   velocityY += GRAVITY;

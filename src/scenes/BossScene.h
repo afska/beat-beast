@@ -62,6 +62,7 @@ class BossScene : public Scene {
   bool didFinish = false;
   unsigned failedShots = 0;
   unsigned successfulShots = 0;
+  bool canBounce = true;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--

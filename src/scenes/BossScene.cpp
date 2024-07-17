@@ -76,7 +76,6 @@ void BossScene::addExplosion(bn::fixed_point position) {
 }
 
 void BossScene::sufferDamage(bn::fixed amount) {
-  return;
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
@@ -163,7 +162,8 @@ void BossScene::processAimInput(bool aim360) {
 void BossScene::updateCommonSprites() {
   // Horse
   if (isNewBeat) {
-    horse->bounce();
+    if (canBounce)
+      horse->bounce();
     lifeBar->bounce();
     comboBar->bounce();
     enemyLifeBar->bounce();
@@ -348,5 +348,3 @@ void BossScene::processMenuOption(int option) {
     }
   }
 }
-
-// TODO: Second game note can be hit from first game platform
