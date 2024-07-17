@@ -21,7 +21,6 @@ class FloatingVinyl : public RhythmicBullet {
   Event* event;
   bn::fixed scale = 0.1;
   bn::sprite_animate_action<5> animation;
-  bool isExploding = false;
   bn::optional<bn::sprite_animate_action<2>> explodingAnimation;
 };
 

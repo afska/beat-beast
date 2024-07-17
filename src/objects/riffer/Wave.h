@@ -22,7 +22,6 @@ class Wave : public RhythmicBullet {
   Event* event;
   bn::fixed scale = 0.1;
   bn::sprite_animate_action<2> animation;
-  bool isExploding = false;
 };
 
 #endif  // WAVE_H

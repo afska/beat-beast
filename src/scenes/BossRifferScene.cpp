@@ -540,7 +540,7 @@ void BossRifferScene::updateSprites() {
           !enemyBullet->didExplode()) {
         addExplosion(((Bullet*)bullet)->getPosition());
         enemyBullet->explode(riffer->getCenteredPosition());
-        collided = true;
+        collided = true;  // TODO: Make it explode also on the Horse
       }
       return false;
     });

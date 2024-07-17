@@ -21,11 +21,7 @@ class Meteorite : public RhythmicBullet {
   Event* event;
   bn::fixed scale = 0.1;
   bn::sprite_animate_action<3> animation;
-  bool isExploding = false;
   bn::optional<bn::sprite_animate_action<2>> explodingAnimation;
 };
 
 #endif  // METEORITE_H
-
-// TODO: bool isExploding = false in lots of places where the class inherits
-// RhythmicBullet
