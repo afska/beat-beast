@@ -222,8 +222,9 @@ void BossRifferScene::processInput() {
       !phase2Transition && !phase2) {
     shoot();
     auto bullet = bn::unique_ptr{
-        new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)};
+        new Bullet(camera.position() + horse->getShootingPoint(),
+                   horse->getShootingDirection(), SpriteProvider::bulletbonus(),
+                   BULLET_BONUS_DMG)};
     bullet->setCamera(camera);
     bullets.push_back(bn::move(bullet));
   }
@@ -876,5 +877,4 @@ void BossRifferScene::addExplosion(bn::fixed_point position) {
   explosions[explosions.size() - 1]->setCamera(camera);
 }
 
-// TODO: YELLOW NOTE DOESN'T BLINK
 // TODO: PHASE2->3 TRANSITION
