@@ -196,7 +196,8 @@ void BossRifferScene::processInput() {
     processAimInput(false);
 
   // shoot
-  if (bn::keypad::b_pressed() && !horse->isBusy() && !phase2Transition) {
+  if (bn::keypad::b_pressed() && (!horse->isBusy() || phase2) &&
+      !phase2Transition) {
     if (chartReader->isInsideTick() && horse->canReallyShoot()) {
       shoot();
       comboBar->setCombo(comboBar->getCombo() + 1);
