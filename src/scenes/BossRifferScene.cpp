@@ -25,7 +25,9 @@
 // Damage to player
 #define DMG_FIRE_TO_PLAYER 1
 #define DMG_RIFFER_TO_PLAYER 1
-#define DMG_POWER_CHORD_TO_PLAYER 1
+
+// Damage to enemy
+#define DMG_NOTE_TO_ENEMY 1
 
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
@@ -47,6 +49,11 @@
 
 #define IS_EVENT_WAVE_PREPARE(TYPE) IS_EVENT(TYPE, 2, 1)
 #define IS_EVENT_WAVE_SEND(TYPE) IS_EVENT(TYPE, 2, 2)
+
+#define IS_EVENT_NOTE_1(TYPE) IS_EVENT(TYPE, 3, 1)
+#define IS_EVENT_NOTE_2(TYPE) IS_EVENT(TYPE, 3, 2)
+#define IS_EVENT_NOTE_3(TYPE) IS_EVENT(TYPE, 3, 3)
+#define IS_EVENT_NOTE_4(TYPE) IS_EVENT(TYPE, 3, 4)
 
 #define EVENT_ADVANCE 1
 #define EVENT_STOP 2
@@ -287,6 +294,48 @@ void BossRifferScene::processChart() {
         });
       }
 
+      // Game notes
+      if (IS_EVENT_NOTE_1(type)) {
+        auto note = bn::unique_ptr{
+            new GameNote(lines[23].position() + bn::fixed_point(8, 0),
+                         bn::fixed_point(-1, 0), event, 4, 5)};
+        riffer->setCenteredPosition(note->getPosition() +
+                                    bn::fixed_point(32, 0));
+        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        note->setCamera(camera);
+        gameNotes.push_back(bn::move(note));
+      }
+      if (IS_EVENT_NOTE_2(type)) {
+        auto note = bn::unique_ptr{
+            new GameNote(lines[17].position() + bn::fixed_point(8, 0),
+                         bn::fixed_point(-1, 0), event, 6, 7)};
+        riffer->setCenteredPosition(note->getPosition() +
+                                    bn::fixed_point(32, 0));
+        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        note->setCamera(camera);
+        gameNotes.push_back(bn::move(note));
+      }
+      if (IS_EVENT_NOTE_3(type)) {
+        auto note = bn::unique_ptr{
+            new GameNote(lines[11].position() + bn::fixed_point(8, 0),
+                         bn::fixed_point(-1, 0), event, 2, 3)};
+        riffer->setCenteredPosition(note->getPosition() +
+                                    bn::fixed_point(32, 0));
+        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        note->setCamera(camera);
+        gameNotes.push_back(bn::move(note));
+      }
+      if (IS_EVENT_NOTE_4(type)) {
+        auto note = bn::unique_ptr{
+            new GameNote(lines[5].position() + bn::fixed_point(8, 0),
+                         bn::fixed_point(-1, 0), event, 0, 1)};
+        riffer->setCenteredPosition(note->getPosition() +
+                                    bn::fixed_point(32, 0));
+        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        note->setCamera(camera);
+        gameNotes.push_back(bn::move(note));
+      }
+
       // Waves
       if (IS_EVENT_WAVE_PREPARE(type)) {
         riffer->swing();
@@ -403,7 +452,7 @@ void BossRifferScene::processChart() {
       if (event->getType() == EVENT_TRANSITION_PHASE2) {
         cameraTargetX = 421;
         cameraTargetY = -6;
-        bn::fixed frames = chartReader->getBeatDurationMs() * 8 / GBA_FRAME;
+        bn::fixed frames = chartReader->getBeatDurationMs() * 6 / GBA_FRAME;
         cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
         pixelBlink->blink();
         horse->setPosition(horse->getPosition(), true);
@@ -478,12 +527,23 @@ void BossRifferScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
 
-    if (bullet->collidesWith(riffer.get())) {
+    if (bullet->collidesWith(riffer.get()) && !phase2) {
       addExplosion(bullet->getPosition());
       causeDamage(bullet->damage);
 
       return true;
     }
+
+    bool collided = false;
+    iterate(gameNotes, [&bullet, &collided, this](GameNote* enemyBullet) {
+      if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet) &&
+          !enemyBullet->didExplode()) {
+        addExplosion(((Bullet*)bullet)->getPosition());
+        enemyBullet->explode(riffer->getCenteredPosition());
+        collided = true;
+      }
+      return false;
+    });
 
     // bool collided = false;
     // iterate(
@@ -498,7 +558,7 @@ void BossRifferScene::updateSprites() {
     //       return false;
     //     });
 
-    return isOut;  // || collided;
+    return isOut || collided;
   });
 
   // Enemy bullets
@@ -514,6 +574,21 @@ void BossRifferScene::updateSprites() {
     }
 
     return isOut;
+  });
+
+  // Game notes
+  iterate(gameNotes, [this](GameNote* gameNote) {
+    bool hasEnded =
+        gameNote->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                         horse->getCenteredPosition());
+    bool isOut = gameNote->getPosition().x() < lines[0].x() - 8;
+
+    if (isOut)
+      sufferDamage(gameNote->damage);
+    else if (hasEnded)
+      causeDamage(DMG_NOTE_TO_ENEMY);
+
+    return hasEnded || isOut;
   });
 
   // Platform fires

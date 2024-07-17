@@ -26,3 +26,6 @@ class Meteorite : public RhythmicBullet {
 };
 
 #endif  // METEORITE_H
+
+// TODO: bool isExploding = false in lots of places where the class inherits
+// RhythmicBullet

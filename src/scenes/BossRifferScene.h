@@ -5,6 +5,7 @@
 
 #include "../objects/Bullet.h"
 #include "../objects/riffer/AngrySymbol.h"
+#include "../objects/riffer/GameNote.h"
 #include "../objects/riffer/PlatformFire.h"
 #include "../objects/riffer/Riffer.h"
 #include "../objects/riffer/Wave.h"
@@ -42,6 +43,7 @@ class BossRifferScene : public BossScene {
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<PlatformFire>, 32> platformFires;
   bn::vector<bn::unique_ptr<AngrySymbol>, 32> angrySymbols;
+  bn::vector<bn::unique_ptr<GameNote>, 32> gameNotes;
   bn::vector<bn::sprite_ptr, 24> lines;
   bn::vector<bn::sprite_ptr, 8> gamePlatforms;
   bn::optional<bn::sprite_animate_action<2>> gamePlatformAnimation1;
