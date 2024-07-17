@@ -6,6 +6,8 @@
 
 class GameNote : public RhythmicBullet {
  public:
+  bool win = false;
+
   GameNote(bn::fixed_point initialPosition,
            bn::fixed_point _direction,
            Event* _event,

@@ -8,7 +8,7 @@
 #define SCALE 1.5
 #define SCALE_IN_SPEED 0.05
 #define SCALE_OUT_SPEED 0.05
-#define RETURN_SPEED 5
+#define RETURN_SPEED 8
 
 GameNote::GameNote(bn::fixed_point initialPosition,
                    bn::fixed_point _direction,

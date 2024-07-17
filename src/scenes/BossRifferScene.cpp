@@ -541,7 +541,8 @@ void BossRifferScene::updateSprites() {
           !enemyBullet->didExplode()) {
         addExplosion(((Bullet*)bullet)->getPosition());
         enemyBullet->explode(riffer->getCenteredPosition());
-        collided = true;  // TODO: Make it explode also on the Horse
+        enemyBullet->win = true;
+        collided = true;
       }
       return false;
     });
@@ -584,12 +585,17 @@ void BossRifferScene::updateSprites() {
                          horse->getCenteredPosition());
     bool isOut = gameNote->getPosition().x() < lines[0].x() - 8;
 
-    if (isOut)
-      sufferDamage(gameNote->damage);
-    else if (hasEnded)
-      causeDamage(DMG_NOTE_TO_ENEMY);
+    if (isOut) {
+      gameNote->explode(camera.position() + horse->getCenteredPosition());
+      gameNote->win = false;
+    } else if (hasEnded) {
+      if (gameNote->win)
+        causeDamage(DMG_NOTE_TO_ENEMY);
+      else
+        sufferDamage(1);
+    }
 
-    return hasEnded || isOut;
+    return hasEnded;
   });
 
   // Platform fires
