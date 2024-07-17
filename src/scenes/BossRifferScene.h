@@ -35,6 +35,7 @@ class BossRifferScene : public BossScene {
   int selectedGamePlatform = 0;
   bool phase2Transition = false;
   bool phase2 = false;
+  bool phase3 = false;
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;

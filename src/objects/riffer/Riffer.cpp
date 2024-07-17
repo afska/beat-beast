@@ -155,6 +155,9 @@ void Riffer::headbang() {
 
 void Riffer::recoverGuitar() {
   guitar = bn::sprite_items::riffer_guitar.create_sprite(0, 0);
+  guitar->set_mosaic_enabled(true);
+  guitar->set_z_order(1);
+  guitar->set_camera(handL.camera());
   setIdleState();
   isHeadbangingNow = false;
   handL.set_tiles(bn::sprite_items::riffer_handl.tiles_item(), 0);
@@ -265,7 +268,7 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
     if (headbangAnimationIndex > -1) {
       handLOffsetX = 10;
       handLOffsetY = -24 + headbangYAnimation[headbangAnimationIndex] * 2;
-      handROffsetX = -10;
+      handROffsetX = -6;
       handROffsetY = -30 + headbangYAnimation[headbangAnimationIndex] * 2;
       if (headbangAnimationIndex > 0)
         headbangAnimationIndex--;

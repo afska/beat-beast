@@ -348,3 +348,5 @@ void BossScene::processMenuOption(int option) {
     }
   }
 }
+
+// TODO: Second game note can be hit from first game platform

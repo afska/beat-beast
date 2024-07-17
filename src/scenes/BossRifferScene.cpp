@@ -36,6 +36,9 @@
 #define IS_EVENT_MOVE_COL2(TYPE) IS_EVENT(TYPE, 0, 2)
 #define IS_EVENT_MOVE_COL3(TYPE) IS_EVENT(TYPE, 0, 3)
 #define IS_EVENT_MOVE_RIGHT(TYPE) IS_EVENT(TYPE, 0, 4)
+#define IS_EVENT_MOVE_BOTTOMRIGHT(TYPE) IS_EVENT(TYPE, 0, 5)
+#define IS_EVENT_MOVE_BOTTOMLEFT(TYPE) IS_EVENT(TYPE, 0, 6)
+#define IS_EVENT_MOVE_LEFT(TYPE) IS_EVENT(TYPE, 0, 7)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
 #define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
@@ -67,7 +70,8 @@
 #define EVENT_GO_PHASE2 11
 #define EVENT_TRANSITION_PHASE2 12
 #define EVENT_TRANSITION_PHASE3 13
-#define EVENT_TRANSITION_PHASE3_2 14
+#define EVENT_RIFFER_OFFSCREEN 14
+#define EVENT_RIFFER_GOBACK 15
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -191,6 +195,9 @@ void BossRifferScene::processInput() {
           moveViewport(camera.x() + speedX, 0);
           horseX = scrollLimit2;
         }
+
+        if (phase3 && horseX <= 15)
+          horseX = 15;
       }
 
       horse->setPosition({horseX, horse->getPosition().y()}, speedX != 0);
@@ -244,23 +251,45 @@ void BossRifferScene::processChart() {
       auto type = event->getType();
 
       // Movement
-      if (IS_EVENT_MOVE_COL1(type)) {
-        riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
-        lastTargetedPlatform = 1;
+      if (phase3) {
+        if (IS_EVENT_MOVE_COL1(type)) {
+          riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
+          lastTargetedPlatform = 1;
+        }
+        if (IS_EVENT_MOVE_COL2(type)) {
+          riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
+          lastTargetedPlatform = 2;
+        }
+        if (IS_EVENT_MOVE_COL3(type)) {
+          riffer->setTargetPosition({936, 2}, chartReader->getBeatDurationMs());
+        }
+        if (IS_EVENT_MOVE_RIGHT(type))
+          riffer->setTargetPosition({312, 41},
+                                    chartReader->getBeatDurationMs());
+        if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
+          riffer->setTargetPosition({312, 41},
+                                    chartReader->getBeatDurationMs());
+        if (IS_EVENT_MOVE_BOTTOMLEFT(type))
+          riffer->setTargetPosition({312, 41},
+                                    chartReader->getBeatDurationMs());
+      } else {
+        if (IS_EVENT_MOVE_COL1(type)) {
+          riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
+          lastTargetedPlatform = 1;
+        }
+        if (IS_EVENT_MOVE_COL2(type)) {
+          riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
+          lastTargetedPlatform = 2;
+        }
+        if (IS_EVENT_MOVE_COL3(type)) {
+          riffer->setTargetPosition({289, 17},
+                                    chartReader->getBeatDurationMs());
+          lastTargetedPlatform = 3;
+        }
+        if (IS_EVENT_MOVE_RIGHT(type))
+          riffer->setTargetPosition({312, 41},
+                                    chartReader->getBeatDurationMs());
       }
-      if (IS_EVENT_MOVE_COL2(type)) {
-        riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
-        lastTargetedPlatform = 2;
-      }
-      if (IS_EVENT_MOVE_COL3(type)) {
-        riffer->setTargetPosition({289, 17}, chartReader->getBeatDurationMs());
-        lastTargetedPlatform = 3;
-      }
-      if (IS_EVENT_MOVE_RIGHT(type))
-        riffer->setTargetPosition({312, 41}, chartReader->getBeatDurationMs());
-      // if (IS_EVENT_MOVE_OFFSCREEN(type))
-      //   wizard->get()->setTargetPosition({200, -70},
-      //                                    chartReader->getBeatDurationMs());
 
       // Platform fires
       if (IS_EVENT_PLATFORM_FIRE_1(type)) {
@@ -485,19 +514,22 @@ void BossRifferScene::processChart() {
         lines.clear();
         gameNotes.clear();
         gamePlatforms.clear();
-        riffer->setTargetPosition({922, 25},
-                                  chartReader->getBeatDurationMs() * 4);
-        horse->setPosition({840, 79}, false);
-        cameraTargetX = 761;
-        cameraTargetY = 0;
-        bn::fixed frames = chartReader->getBeatDurationMs() * 6 / GBA_FRAME;
-        cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
+        riffer->setTargetPosition({922, 25}, 0);
+        moveViewport(761, 0);
+        horse->setPosition({78, 72}, false);
+        horse->setFlipX(false);
         scrollLimit1 = 0;
         scrollLimit2 = 240;
         phase2 = false;
+        phase3 = true;
       }
-      if (event->getType() == EVENT_TRANSITION_PHASE3_2) {
+      if (event->getType() == EVENT_RIFFER_OFFSCREEN) {
+        riffer->setTargetPosition({1100, 25},
+                                  chartReader->getBeatDurationMs() * 2);
+      }
+      if (event->getType() == EVENT_RIFFER_GOBACK) {
         riffer->recoverGuitar();
+        riffer->setTargetPosition({936, 2}, chartReader->getBeatDurationMs());
       }
 
       if (event->getType() == EVENT_SONG_END) {
@@ -579,18 +611,15 @@ void BossRifferScene::updateSprites() {
       return false;
     });
 
-    // bool collided = false;
-    // iterate(
-    //     enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet)
-    //     {
-    //       if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet))
-    //       {
-    //         addExplosion(((Bullet*)bullet)->getPosition());
-    //         enemyBullet->explode({0, 0});
-    //         collided = true;
-    //       }
-    //       return false;
-    //     });
+    iterate(
+        enemyBullets, [&bullet, &collided, this](RhythmicBullet* enemyBullet) {
+          if (enemyBullet->isShootable && bullet->collidesWith(enemyBullet)) {
+            addExplosion(((Bullet*)bullet)->getPosition());
+            enemyBullet->explode({0, 0});
+            collided = true;
+          }
+          return false;
+        });
 
     return isOut || collided;
   });
@@ -876,5 +905,3 @@ void BossRifferScene::addExplosion(bn::fixed_point position) {
   BossScene::addExplosion(position);
   explosions[explosions.size() - 1]->setCamera(camera);
 }
-
-// TODO: PHASE2->3 TRANSITION

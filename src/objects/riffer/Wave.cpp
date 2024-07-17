@@ -26,7 +26,7 @@ Wave::Wave(bn::fixed_point initialPosition,
 
   sprite.set_scale(scale);
   sprite.set_rotation_angle(270);
-  isShootable = true;
+  isShootable = false;
 }
 
 bool Wave::update(int msecs,
