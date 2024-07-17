@@ -28,6 +28,7 @@ class Riffer : public TopLeftGameObject {
     isThrowing = false;
     brokenGuitar2.reset();
   }
+  void recoverGuitar();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
   bn::fixed_point getShootingPoint() {

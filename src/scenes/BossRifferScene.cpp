@@ -66,6 +66,8 @@
 #define EVENT_THROW 9
 #define EVENT_GO_PHASE2 11
 #define EVENT_TRANSITION_PHASE2 12
+#define EVENT_TRANSITION_PHASE3 13
+#define EVENT_PHASE3_RECOVER_GUITAR 14
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -473,6 +475,25 @@ void BossRifferScene::processChart() {
         riffer->headbang();
         phase2Transition = true;
       }
+      if (event->getType() == EVENT_TRANSITION_PHASE3) {
+        pixelBlink->blink();
+        gamePlatformAnimation1.reset();
+        gamePlatformAnimation2.reset();
+        lines.clear();
+        gameNotes.clear();
+        gamePlatforms.clear();
+        riffer->setTargetPosition({922, 25},
+                                  chartReader->getBeatDurationMs() * 4);
+        horse->setPosition({840, 79}, false);
+        cameraTargetX = 761;
+        cameraTargetY = 0;
+        bn::fixed frames = chartReader->getBeatDurationMs() * 6 / GBA_FRAME;
+        cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
+        phase2 = false;
+      }
+      if (event->getType() == EVENT_PHASE3_RECOVER_GUITAR) {
+        riffer->recoverGuitar();
+      }
 
       if (event->getType() == EVENT_SONG_END) {
         didFinish = true;
@@ -763,7 +784,7 @@ bool BossRifferScene::snapToPlatform(bool requireYAlignment) {
 }
 
 void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
-  if (newX < 0)
+  if (newX < 0 || newX > 762)
     return;
 
   background0.get()->set_position({MAP_BASE_X - newX, MAP_BASE_Y});

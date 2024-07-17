@@ -152,6 +152,14 @@ void Riffer::headbang() {
   handR.set_tiles(bn::sprite_items::riffer_handr.tiles_item(), 1);
 }
 
+void Riffer::recoverGuitar() {
+  guitar.set_visible(true);
+  setIdleState();
+  isHeadbangingNow = false;
+  handL.set_tiles(bn::sprite_items::riffer_handl.tiles_item(), 0);
+  handR.set_tiles(bn::sprite_items::riffer_handr.tiles_item(), 0);
+}
+
 void Riffer::setAngryHands() {
   hasAngryHands = true;
   angryHandsAnimationIndex = angryHandLAnimation.size() - 1;
