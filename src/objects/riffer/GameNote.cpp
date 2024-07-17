@@ -4,7 +4,7 @@
 #include "bn_sprite_items_riffer_note1.h"
 
 #define ON_BEAT_SPEED 1.5
-#define OFF_BEAT_SPEED 0.75
+#define OFF_BEAT_SPEED 1
 #define SCALE 1.5
 #define SCALE_IN_SPEED 0.05
 #define SCALE_OUT_SPEED 0.05
@@ -25,7 +25,7 @@ GameNote::GameNote(bn::fixed_point initialPosition,
           2,
           bn::sprite_items::riffer_note1.tiles_item(),
           _tileIndex1,
-          _tileIndex1)) {
+          _tileIndex2)) {
   boundingBox.set_dimensions({10 * SCALE, 32 * SCALE});
   boundingBox.set_position(initialPosition);
 
@@ -71,7 +71,4 @@ bool GameNote::update(int msecs,
 void GameNote::explode(bn::fixed_point nextTarget) {
   isExploding = true;
   returnPoint = nextTarget;
-  animation = bn::create_sprite_animate_action_forever(
-      sprite, 2, bn::sprite_items::riffer_note1.tiles_item(), tileIndex1,
-      tileIndex2);
 }
