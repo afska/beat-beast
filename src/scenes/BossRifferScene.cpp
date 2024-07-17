@@ -67,7 +67,7 @@
 #define EVENT_GO_PHASE2 11
 #define EVENT_TRANSITION_PHASE2 12
 #define EVENT_TRANSITION_PHASE3 13
-#define EVENT_PHASE3_RECOVER_GUITAR 14
+#define EVENT_TRANSITION_PHASE3_2 14
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -221,9 +221,11 @@ void BossRifferScene::processInput() {
   if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy() &&
       !phase2Transition && !phase2) {
     shoot();
-    bullets.push_back(bn::unique_ptr{
+    auto bullet = bn::unique_ptr{
         new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
+                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)};
+    bullet->setCamera(camera);
+    bullets.push_back(bn::move(bullet));
   }
 
   // jump
@@ -489,9 +491,11 @@ void BossRifferScene::processChart() {
         cameraTargetY = 0;
         bn::fixed frames = chartReader->getBeatDurationMs() * 6 / GBA_FRAME;
         cameraTargetSpeed = (cameraTargetX - camera.x()) / frames;
+        scrollLimit1 = 0;
+        scrollLimit2 = 240;
         phase2 = false;
       }
-      if (event->getType() == EVENT_PHASE3_RECOVER_GUITAR) {
+      if (event->getType() == EVENT_TRANSITION_PHASE3_2) {
         riffer->recoverGuitar();
       }
 
@@ -871,3 +875,6 @@ void BossRifferScene::addExplosion(bn::fixed_point position) {
   BossScene::addExplosion(position);
   explosions[explosions.size() - 1]->setCamera(camera);
 }
+
+// TODO: YELLOW NOTE DOESN'T BLINK
+// TODO: PHASE2->3 TRANSITION

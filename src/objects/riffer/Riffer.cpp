@@ -65,8 +65,8 @@ Riffer::Riffer(bn::fixed_point initialPosition)
       handR(bn::sprite_items::riffer_handr.create_sprite(0, 0)) {
   setTopLeftPosition(initialPosition);
 
-  guitar.set_mosaic_enabled(true);
-  guitar.set_z_order(1);
+  guitar->set_mosaic_enabled(true);
+  guitar->set_z_order(1);
 
   handL.set_mosaic_enabled(true);
   handL.set_z_order(0);
@@ -129,16 +129,17 @@ void Riffer::swingEnd() {
 }
 
 void Riffer::breakGuitar() {
-  guitar.set_visible(false);
+  auto camera = guitar->camera();
+  guitar.reset();
 
   brokenGuitar1 = bn::sprite_items::riffer_brokenguitar1.create_sprite(0, 0);
   brokenGuitar2 = bn::sprite_items::riffer_brokenguitar2.create_sprite(0, 0);
 
-  brokenGuitar1->set_camera(guitar.camera());
+  brokenGuitar1->set_camera(camera);
   brokenGuitar1->set_mosaic_enabled(true);
   brokenGuitar1->set_z_order(1);
 
-  brokenGuitar2->set_camera(guitar.camera());
+  brokenGuitar2->set_camera(camera);
   brokenGuitar2->set_mosaic_enabled(true);
   brokenGuitar2->set_z_order(1);
 
@@ -153,7 +154,7 @@ void Riffer::headbang() {
 }
 
 void Riffer::recoverGuitar() {
-  guitar.set_visible(true);
+  guitar = bn::sprite_items::riffer_guitar.create_sprite(0, 0);
   setIdleState();
   isHeadbangingNow = false;
   handL.set_tiles(bn::sprite_items::riffer_handl.tiles_item(), 0);
@@ -198,7 +199,8 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
 }
 
 void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
-  guitar.set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
+  if (guitar.has_value())
+    guitar->set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
 
   if (brokenGuitar2.has_value()) {
     auto brokenGuitar1Position =
@@ -233,10 +235,10 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
     handRAnimationIndex--;
   }
 
-  if (swingAnimationIndex > -1) {
-    guitar.set_rotation_angle(guitarSwingAnimation[swingAnimationIndex]);
-    guitar.set_position(guitar.position() +
-                        guitarPositionSwingAnimation[swingAnimationIndex]);
+  if (swingAnimationIndex > -1 && guitar.has_value()) {
+    guitar->set_rotation_angle(guitarSwingAnimation[swingAnimationIndex]);
+    guitar->set_position(guitar->position() +
+                         guitarPositionSwingAnimation[swingAnimationIndex]);
     handLOffsetX = handLSwingAnimation[swingAnimationIndex].x();
     handLOffsetY = handLSwingAnimation[swingAnimationIndex].y();
     handROffsetX = handRSwingAnimation[swingAnimationIndex].x();

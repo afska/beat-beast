@@ -40,11 +40,11 @@ class Riffer : public TopLeftGameObject {
     mainSprite.set_camera(camera);
     handL.set_camera(camera);
     handR.set_camera(camera);
-    guitar.set_camera(camera);
+    guitar->set_camera(camera);
   }
 
  private:
-  bn::sprite_ptr guitar;
+  bn::optional<bn::sprite_ptr> guitar;
   bn::sprite_ptr handL;
   bn::sprite_ptr handR;
   bn::optional<bn::sprite_ptr> brokenGuitar1;
