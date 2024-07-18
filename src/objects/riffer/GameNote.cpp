@@ -51,11 +51,20 @@ bool GameNote::update(int msecs,
   if (msecs < event->timestamp)
     return false;
 
-  if (scale <= SCALE) {
+  if (scale < SCALE) {
     scale += SCALE_IN_SPEED;
     if (scale > SCALE)
       scale = SCALE;
     sprite.set_scale(scale);
+  } else {
+    if (animationIndex > -1) {
+      auto _scale = Math::SCALE_STEPS[animationIndex];
+      sprite.set_scale(SCALE + (_scale - 1));
+      animationIndex--;
+    }
+    if (!_isInsideBeat && isInsideBeat)
+      animationIndex = Math::SCALE_STEPS.size() - 1;
+    _isInsideBeat = isInsideBeat;
   }
 
   sprite.set_position(sprite.position() +
