@@ -36,6 +36,8 @@ GameNote::GameNote(bn::fixed_point initialPosition,
 bool GameNote::update(int msecs,
                       bool isInsideBeat,
                       bn::fixed_point playerPosition) {
+  animation->update();
+
   if (isExploding) {
     scale -= SCALE_OUT_SPEED;
     if (scale <= 0)
@@ -71,8 +73,6 @@ bool GameNote::update(int msecs,
                       direction *
                           (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));
 
-  animation.update();
-
   boundingBox.set_position(sprite.position());
 
   return false;
@@ -81,7 +81,8 @@ bool GameNote::update(int msecs,
 void GameNote::explode(bn::fixed_point nextTarget) {
   isExploding = true;
   returnPoint = nextTarget;
+  animation.reset();
   animation = bn::create_sprite_animate_action_forever(
-      sprite, 2, bn::sprite_items::riffer_note1.tiles_item(), tileIndex1,
+      sprite, 1, bn::sprite_items::riffer_note1.tiles_item(), tileIndex2,
       tileIndex1);
 }

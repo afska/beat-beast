@@ -27,7 +27,7 @@ class GameNote : public RhythmicBullet {
   Event* event;
   int tileIndex1, tileIndex2;
   bn::fixed scale = 0.1;
-  bn::sprite_animate_action<2> animation;
+  bn::optional<bn::sprite_animate_action<2>> animation;
   bn::fixed_point returnPoint;
   int animationIndex = -1;
   bool _isInsideBeat = false;

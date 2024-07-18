@@ -36,6 +36,7 @@ class BossRifferScene : public BossScene {
   bool phase2Transition = false;
   bool phase2 = false;
   bool phase3 = false;
+  bn::fixed_point horseTargetPosition;
 
   bn::optional<bn::regular_bg_ptr> background3;
   bn::optional<bn::regular_bg_ptr> background0;
@@ -49,6 +50,7 @@ class BossRifferScene : public BossScene {
   bn::vector<bn::sprite_ptr, 8> gamePlatforms;
   bn::optional<bn::sprite_animate_action<2>> gamePlatformAnimation1;
   bn::optional<bn::sprite_animate_action<2>> gamePlatformAnimation2;
+  bn::fixed SPEED = 10;
 
   void processInput();
   void processChart();
@@ -58,7 +60,7 @@ class BossRifferScene : public BossScene {
 
   bool snapToPlatform(bool requireYAlignment = true);
   void moveViewport(bn::fixed deltaX, bn::fixed deltaY);
-  void selectGamePlatform(int n);
+  void selectGamePlatform(int n, bool now = false);
   void causeDamage(bn::fixed amount);
 
   void addExplosion(bn::fixed_point position) override;

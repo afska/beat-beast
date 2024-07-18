@@ -18,7 +18,7 @@
 #include "bn_sprite_items_riffer_line.h"
 #include "bn_sprite_palettes.h"
 
-#define LIFE_BOSS 175
+#define LIFE_BOSS 225
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
 
@@ -164,7 +164,7 @@ void BossRifferScene::processInput() {
   if (phase2) {
     if (bn::keypad::up_pressed() && selectedGamePlatform == 3) {
       selectedGamePlatform = 0;
-      selectGamePlatform(selectedGamePlatform);
+      selectGamePlatform(selectedGamePlatform, true);
     } else if (bn::keypad::up_pressed() && selectedGamePlatform < 3) {
       selectedGamePlatform++;
       selectGamePlatform(selectedGamePlatform);
@@ -173,7 +173,36 @@ void BossRifferScene::processInput() {
       selectGamePlatform(selectedGamePlatform);
     } else if (bn::keypad::down_pressed() && selectedGamePlatform == 0) {
       selectedGamePlatform = 3;
-      selectGamePlatform(selectedGamePlatform);
+      selectGamePlatform(selectedGamePlatform, true);
+    }
+
+    if (horse->getPosition().x() < horseTargetPosition.x()) {
+      horse->setPosition(
+          {horse->getPosition().x() + SPEED, horse->getPosition().y()}, false);
+      if (horse->getPosition().x() > horseTargetPosition.x())
+        horse->setPosition({horseTargetPosition.x(), horse->getPosition().y()},
+                           false);
+    }
+    if (horse->getPosition().x() > horseTargetPosition.x()) {
+      horse->setPosition(
+          {horse->getPosition().x() - SPEED, horse->getPosition().y()}, false);
+      if (horse->getPosition().x() < horseTargetPosition.x())
+        horse->setPosition({horseTargetPosition.x(), horse->getPosition().y()},
+                           false);
+    }
+    if (horse->getPosition().y() < horseTargetPosition.y()) {
+      horse->setPosition(
+          {horse->getPosition().x(), horse->getPosition().y() + SPEED}, false);
+      if (horse->getPosition().y() > horseTargetPosition.y())
+        horse->setPosition({horse->getPosition().x(), horseTargetPosition.y()},
+                           false);
+    }
+    if (horse->getPosition().y() > horseTargetPosition.y()) {
+      horse->setPosition(
+          {horse->getPosition().x(), horse->getPosition().y() - SPEED}, false);
+      if (horse->getPosition().y() < horseTargetPosition.y())
+        horse->setPosition({horse->getPosition().x(), horseTargetPosition.y()},
+                           false);
     }
   }
 
@@ -383,9 +412,12 @@ void BossRifferScene::processChart() {
         auto note = bn::unique_ptr{
             new GameNote(lines[23].position() + bn::fixed_point(8, 0),
                          bn::fixed_point(-1, 0), event, 4, 5)};
+        auto oldPosition = riffer->getTopLeftPosition();
         riffer->setCenteredPosition(note->getPosition() +
                                     bn::fixed_point(32, 0));
-        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        auto target = riffer->getTopLeftPosition();
+        riffer->setTopLeftPosition(oldPosition);
+        riffer->setTargetPosition(target, chartReader->getBeatDurationMs() / 2);
         note->setCamera(camera);
         gameNotes.push_back(bn::move(note));
       }
@@ -393,9 +425,12 @@ void BossRifferScene::processChart() {
         auto note = bn::unique_ptr{
             new GameNote(lines[17].position() + bn::fixed_point(8, 0),
                          bn::fixed_point(-1, 0), event, 6, 7)};
+        auto oldPosition = riffer->getTopLeftPosition();
         riffer->setCenteredPosition(note->getPosition() +
                                     bn::fixed_point(32, 0));
-        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        auto target = riffer->getTopLeftPosition();
+        riffer->setTopLeftPosition(oldPosition);
+        riffer->setTargetPosition(target, chartReader->getBeatDurationMs() / 2);
         note->setCamera(camera);
         gameNotes.push_back(bn::move(note));
       }
@@ -403,9 +438,12 @@ void BossRifferScene::processChart() {
         auto note = bn::unique_ptr{
             new GameNote(lines[11].position() + bn::fixed_point(8, 0),
                          bn::fixed_point(-1, 0), event, 2, 3)};
+        auto oldPosition = riffer->getTopLeftPosition();
         riffer->setCenteredPosition(note->getPosition() +
                                     bn::fixed_point(32, 0));
-        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        auto target = riffer->getTopLeftPosition();
+        riffer->setTopLeftPosition(oldPosition);
+        riffer->setTargetPosition(target, chartReader->getBeatDurationMs() / 2);
         note->setCamera(camera);
         gameNotes.push_back(bn::move(note));
       }
@@ -413,9 +451,12 @@ void BossRifferScene::processChart() {
         auto note = bn::unique_ptr{
             new GameNote(lines[5].position() + bn::fixed_point(8, 0),
                          bn::fixed_point(-1, 0), event, 0, 1)};
+        auto oldPosition = riffer->getTopLeftPosition();
         riffer->setCenteredPosition(note->getPosition() +
                                     bn::fixed_point(32, 0));
-        riffer->setTargetPosition(riffer->getTopLeftPosition(), 0);
+        auto target = riffer->getTopLeftPosition();
+        riffer->setTopLeftPosition(oldPosition);
+        riffer->setTargetPosition(target, chartReader->getBeatDurationMs() / 2);
         note->setCamera(camera);
         gameNotes.push_back(bn::move(note));
       }
@@ -915,7 +956,7 @@ void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
          bn::to_string<32>(camera.y()) + "}");
 }
 
-void BossRifferScene::selectGamePlatform(int n) {
+void BossRifferScene::selectGamePlatform(int n, bool now) {
   gamePlatformAnimation1.reset();
   gamePlatformAnimation2.reset();
   gamePlatforms[0].set_tiles(
@@ -943,7 +984,7 @@ void BossRifferScene::selectGamePlatform(int n) {
       gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
           gamePlatforms[1], 2,
           bn::sprite_items::riffer_gameplatform2.tiles_item(), 0, 4);
-      horse->setPosition({20, 96}, false);
+      horseTargetPosition = {20, 96};
       break;
     }
     case 1: {
@@ -953,7 +994,7 @@ void BossRifferScene::selectGamePlatform(int n) {
       gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
           gamePlatforms[7], 2,
           bn::sprite_items::riffer_gameplatform2.tiles_item(), 1, 5);
-      horse->setPosition({20 + 16, 96 - 40}, false);
+      horseTargetPosition = {20 + 16, 92 - 40};
       break;
     }
     case 2: {
@@ -963,7 +1004,7 @@ void BossRifferScene::selectGamePlatform(int n) {
       gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
           gamePlatforms[5], 2,
           bn::sprite_items::riffer_gameplatform2.tiles_item(), 2, 6);
-      horse->setPosition({20 + 16 - 6, 96 - 40 - 41}, false);
+      horseTargetPosition = {20 + 16 - 6, 92 - 40 - 41};
       break;
     }
     default: {
@@ -973,10 +1014,11 @@ void BossRifferScene::selectGamePlatform(int n) {
       gamePlatformAnimation2 = bn::create_sprite_animate_action_forever(
           gamePlatforms[3], 2,
           bn::sprite_items::riffer_gameplatform2.tiles_item(), 3, 7);
-      horse->setPosition({20 + 16 - 6 - 10, 96 - 40 - 41 - 42}, false);
+      horseTargetPosition = {20 + 16 - 6 - 10, 92 - 40 - 41 - 42};
       break;
     }
   }
+  SPEED = now ? 40 : 10;
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {
