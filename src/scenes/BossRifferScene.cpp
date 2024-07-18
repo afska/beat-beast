@@ -18,9 +18,13 @@
 #include "bn_sprite_items_riffer_line.h"
 #include "bn_sprite_palettes.h"
 
-#define LIFE_BOSS 125
+#define LIFE_BOSS 150
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
+
+// Loop
+#define LOOP_OFFSET_CURSOR -1910336
+// ^^^ for PCM => -1910336
 
 // Damage to player
 #define DMG_FIRE_TO_PLAYER 1
@@ -58,6 +62,10 @@
 #define IS_EVENT_NOTE_3(TYPE) IS_EVENT(TYPE, 3, 3)
 #define IS_EVENT_NOTE_4(TYPE) IS_EVENT(TYPE, 3, 4)
 
+#define IS_EVENT_LOOP_IF_NEEDED(TYPE) IS_EVENT(TYPE, 5, 1)
+#define IS_EVENT_SET_LOOP_MARKER(TYPE) IS_EVENT(TYPE, 6, 1)
+#define IS_EVENT_END_SONG(TYPE) IS_EVENT(TYPE, 6, 2)
+
 #define EVENT_ADVANCE 1
 #define EVENT_STOP 2
 #define EVENT_STOP_WAIT 3
@@ -73,9 +81,6 @@
 #define EVENT_RIFFER_OFFSCREEN 14
 #define EVENT_RIFFER_RECOVERGUITAR 15
 #define EVENT_FIRE_CLEAR_ALL 16
-#define EVENT_SONG_END 99
-
-// #define SFX_POWER_CHORD "minirock.pcm"
 
 #define INITIAL_FADE_ALPHA 0.2
 
@@ -119,7 +124,8 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
   platforms.push_back(bn::top_left_fixed_rect(672, 163, 128, 50));
   platforms.push_back(bn::top_left_fixed_rect(808, 131, 160, 50));
 
-  chartReader->eventsThatNeedAudioLagPrediction = 240 /* 0b11110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction =
+      15728880 /* 0b111100000000000011110000*/;
 
   bn::bg_palettes::set_fade_intensity(1);
   bn::sprite_palettes::set_fade_intensity(1);
@@ -365,7 +371,6 @@ void BossRifferScene::processChart() {
         if (IS_EVENT_PLATFORM_FIRE_START(type)) {
           iterate(platformFires, [&event](PlatformFire* platformFire) {
             platformFire->start(event);
-            // player_sfx_play(SFX_LIGHTNING);
             return false;
           });
         }
@@ -427,6 +432,52 @@ void BossRifferScene::processChart() {
             {0, 1}, event, phase3 ? 1.5 : 1)};
         wave->setCamera(camera);
         enemyBullets.push_back(bn::move(wave));
+      }
+
+      // Loop if needed
+      if (IS_EVENT_LOOP_IF_NEEDED(type)) {
+        if (!didWin) {
+          player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
+          chartReader->restoreLoop();
+          pixelBlink->blink();
+
+          bullets.clear();
+          enemyBullets.clear();
+          platformFires.clear();
+          angrySymbols.clear();
+          gameNotes.clear();
+          lines.clear();
+          gamePlatforms.clear();
+          gamePlatformAnimation1.reset();
+          gamePlatformAnimation2.reset();
+          player_sfx_stop();
+        }
+      }
+
+      // Set loop marker
+      if (IS_EVENT_SET_LOOP_MARKER(type)) {
+        BN_LOG(player_getCursor());
+        chartReader->setLoopMarker(event);
+      }
+
+      // End song
+      if (IS_EVENT_END_SONG(type)) {
+        BN_LOG(player_getCursor());
+        if (didWin) {
+          didFinish = true;
+          disableGunAlert();
+
+          bullets.clear();
+          enemyBullets.clear();
+          platformFires.clear();
+          angrySymbols.clear();
+          gameNotes.clear();
+          lines.clear();
+          gamePlatforms.clear();
+          gamePlatformAnimation1.reset();
+          gamePlatformAnimation2.reset();
+          player_sfx_stop();
+        }
       }
     } else {
       if (event->getType() == EVENT_ADVANCE) {
@@ -572,24 +623,6 @@ void BossRifferScene::processChart() {
         iterate(platformFires, [this](PlatformFire* platformFire) {
           return platformFire->hasReallyStarted(chartReader->getMsecs());
         });
-      }
-
-      if (event->getType() == EVENT_SONG_END) {
-        didFinish = true;
-        disableGunAlert();
-        if (didWin) {
-          // TODO
-        } else {
-          // TODO
-        }
-
-        // miniRocks.clear();
-        // rocks.clear();
-        // bullets.clear();
-        // enemyBullets.clear();
-        // lightnings.clear();
-        // flyingDragons.clear();
-        // portals.clear();
       }
     }
   }
@@ -868,7 +901,7 @@ void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
   background3.get()->set_position({MAP_BASE_X - newX / 2, MAP_BASE_Y});
   camera.set_position(newX, newY);
 
-  BN_LOG("BG0 {" + bn::to_string<32>(background0.get()->position().x()) + ", " +
+  BN_LOG("BG0 {" + bn::to_string<32>(background0.get()->position().x()) + "," +
          bn::to_string<32>(background0.get()->position().y()) + "}");
   BN_LOG("CAM {" + bn::to_string<32>(camera.x()) + ", " +
          bn::to_string<32>(camera.y()) + "}");

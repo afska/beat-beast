@@ -8,17 +8,15 @@
 //  |||||-- floating vinyl (1 = topleft | 2 = top | 3 = topright | 4 = left | 5 = right | 6 = left from top | 7 = right from top)
 //  ||||--- bullet (1 = normal | 2 = slow)
 //  |||---- throw turntable (1 = top | 2 = bottom)
-//  ||----- megaball
-//  |------ set loop marker (1)
-// !50 = test special event
-// !2  = end
+//  ||----- megaball (1) | loop if needed (2)
+//  |------ set loop marker (1) | end song (2)
 
 // Easy
 #NOTEDATA:;
 #DIFFICULTY:Easy;
 #NOTES:
 // 00:00 (intro)
-!50 // (test event)
+00000000
 00000000
 00000000
 00000000
@@ -597,5 +595,5 @@
 00000002
 ,
 // END
-!2
+02200000
 ;

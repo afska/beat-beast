@@ -25,7 +25,7 @@ GameNote::GameNote(bn::fixed_point initialPosition,
           2,
           bn::sprite_items::riffer_note1.tiles_item(),
           _tileIndex1,
-          _tileIndex2)) {
+          _tileIndex1)) {
   boundingBox.set_dimensions({10 * SCALE, 32 * SCALE});
   boundingBox.set_position(initialPosition);
 
@@ -81,4 +81,7 @@ bool GameNote::update(int msecs,
 void GameNote::explode(bn::fixed_point nextTarget) {
   isExploding = true;
   returnPoint = nextTarget;
+  animation = bn::create_sprite_animate_action_forever(
+      sprite, 2, bn::sprite_items::riffer_note1.tiles_item(), tileIndex1,
+      tileIndex1);
 }

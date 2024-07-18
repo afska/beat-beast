@@ -18,9 +18,8 @@
 #define LIFE_BOSS 150
 
 // Loop
-#define LOOP_END_MS 158580
-#define LOOP_OFFSET_CURSOR -2121312
-// ^^^ for PCM => -2121312
+#define LOOP_OFFSET_CURSOR -2121920
+// ^^^ for PCM => -2121920
 // ^^^ for GSM => -218856
 
 // Damage to player
@@ -57,9 +56,9 @@
 
 #define IS_EVENT_BULLET_MEGA(TYPE) IS_EVENT(TYPE, 5, 1)
 
+#define IS_EVENT_LOOP_IF_NEEDED(TYPE) IS_EVENT(TYPE, 5, 2)
 #define IS_EVENT_SET_LOOP_MARKER(TYPE) IS_EVENT(TYPE, 6, 1)
-
-#define EVENT_SONG_END 2
+#define IS_EVENT_END_SONG(TYPE) IS_EVENT(TYPE, 6, 2)
 
 #define SFX_VINYL "vinyl.pcm"
 #define SFX_MEGABALL "megaball.pcm"
@@ -107,17 +106,6 @@ void BossDJScene::updateBossFight() {
   processChart();
   updateBackground();
   updateSprites();
-
-  if (chartReader->getMsecs() >= LOOP_END_MS && !didWin) {
-    BN_LOG(player_getCursor());
-    player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
-    chartReader->restoreLoop();
-    bullets.clear();
-    enemyBullets.clear();
-    vinyls.clear();
-    pixelBlink->blink();
-    player_sfx_stop();
-  }
 }
 
 void BossDJScene::processInput() {
@@ -234,6 +222,7 @@ void BossDJScene::processChart() {
         octopus->getLowerTurntable()->attack();
       }
 
+      // Mega bullet
       if (IS_EVENT_BULLET_MEGA(type)) {
         octopus->megaAttack();
         enemyBullets.push_back(
@@ -241,21 +230,40 @@ void BossDJScene::processChart() {
         addMegaBallSfx();
       }
 
+      // Loop if needed
+      if (IS_EVENT_LOOP_IF_NEEDED(type)) {
+        if (!didWin) {
+          player_setCursor(player_getCursor() + LOOP_OFFSET_CURSOR);
+          chartReader->restoreLoop();
+          bullets.clear();
+          enemyBullets.clear();
+          vinyls.clear();
+          pixelBlink->blink();
+          player_sfx_stop();
+        }
+      }
+
       // Set loop marker
       if (IS_EVENT_SET_LOOP_MARKER(type)) {
+        BN_LOG(player_getCursor());
         chartReader->setLoopMarker(event);
       }
-    } else {
-      if (event->getType() == EVENT_SONG_END) {
-        didFinish = true;
-        octopus->setTargetPosition({0, 130},
-                                   chartReader->getBeatDurationMs() * 8);
-        octopus->spin();
 
-        bullets.clear();
-        enemyBullets.clear();
-        vinyls.clear();
-        player_sfx_stop();
+      // End song
+      if (IS_EVENT_END_SONG(type)) {
+        BN_LOG(player_getCursor());
+
+        if (didWin) {
+          didFinish = true;
+          octopus->setTargetPosition({0, 130},
+                                     chartReader->getBeatDurationMs() * 8);
+          octopus->spin();
+
+          bullets.clear();
+          enemyBullets.clear();
+          vinyls.clear();
+          player_sfx_stop();
+        }
       }
     }
   }
