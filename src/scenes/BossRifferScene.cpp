@@ -18,7 +18,7 @@
 #include "bn_sprite_items_riffer_line.h"
 #include "bn_sprite_palettes.h"
 
-#define LIFE_BOSS 150
+#define LIFE_BOSS 175
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
 
@@ -156,8 +156,10 @@ void BossRifferScene::updateBossFight() {
 }
 
 void BossRifferScene::processInput() {
-  if (didFinish)
+  if (didFinish) {
+    horse->setPosition(horse->getPosition(), false);
     return;
+  }
 
   if (phase2) {
     if (bn::keypad::up_pressed() && selectedGamePlatform == 3) {
@@ -465,7 +467,10 @@ void BossRifferScene::processChart() {
         BN_LOG(player_getCursor());
         if (didWin) {
           didFinish = true;
-          disableGunAlert();
+          riffer->setAngryHands();
+          riffer->setTargetPosition({859, 175},
+                                    chartReader->getBeatDurationMs() * 24);
+          riffer->spin();
 
           bullets.clear();
           enemyBullets.clear();
@@ -635,6 +640,9 @@ void BossRifferScene::updateBackground() {
 
 void BossRifferScene::updateSprites() {
   updateCommonSprites();
+
+  if (riffer->didFinalSpinEnd())
+    setNextScreen(GameState::Screen::START);
 
   // Riffer
   if (isNewBeat)

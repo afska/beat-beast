@@ -42,6 +42,10 @@ class Riffer : public TopLeftGameObject {
     handR.set_camera(camera);
     guitar->set_camera(camera);
   }
+  void spin();
+  bool didFinalSpinEnd() {
+    return isSpinning && mainSprite.position().y() > 120;
+  }
 
  private:
   bn::optional<bn::sprite_ptr> guitar;
@@ -66,6 +70,7 @@ class Riffer : public TopLeftGameObject {
   bool hasAngryHands = false;
   bool isThrowing = false;
   bool isHeadbangingNow = false;
+  bool isSpinning = false;
 
   bool isHeadbanging() { return headbangAnimation.has_value(); }
 

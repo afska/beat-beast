@@ -201,6 +201,10 @@ void Riffer::setTargetPosition(bn::fixed_point newTargetPosition,
            beatDurationFrames;
 }
 
+void Riffer::spin() {
+  isSpinning = true;
+}
+
 void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
   if (guitar.has_value())
     guitar->set_position(getCenteredPosition() + bn::fixed_point(-2, 29));
@@ -304,6 +308,11 @@ void Riffer::updateSubsprites(bn::fixed_point playerPosition) {
 void Riffer::updateAnimations() {
   if (idleAnimation.has_value()) {
     idleAnimation->update();
+  }
+
+  if (isSpinning) {
+    mainSprite.set_rotation_angle(
+        Math::normalizeAngle(mainSprite.rotation_angle() + 5));
   }
 
   if (hurtAnimation.has_value()) {
