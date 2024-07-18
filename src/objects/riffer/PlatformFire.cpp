@@ -5,12 +5,15 @@
 
 PlatformFire::PlatformFire(bn::fixed_point _topLeftPosition,
                            Event* _event,
-                           bn::camera_ptr camera)
+                           bn::camera_ptr camera,
+                           bool _isInfinite,
+                           bool isShort)
     : TopLeftGameObject(bn::sprite_items::riffer_fire.create_sprite(0, 0)),
       sprite2(bn::sprite_items::riffer_fire.create_sprite(0, 0)),
-      event(_event) {
+      event(_event),
+      isInfinite(_isInfinite) {
   setPosition(_topLeftPosition);
-  boundingBox.set_dimensions(bn::fixed_size(64, 8));
+  boundingBox.set_dimensions(bn::fixed_size(isShort ? 50 : 64, 8));
   boundingBox.set_position(bn::fixed_point(mainSprite.position().x() + 16,
                                            mainSprite.position().y() - 8));
 

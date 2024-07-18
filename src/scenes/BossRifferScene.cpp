@@ -72,6 +72,7 @@
 #define EVENT_TRANSITION_PHASE3 13
 #define EVENT_RIFFER_OFFSCREEN 14
 #define EVENT_RIFFER_RECOVERGUITAR 15
+#define EVENT_FIRE_CLEAR_ALL 16
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -196,8 +197,8 @@ void BossRifferScene::processInput() {
           horseX = scrollLimit2;
         }
 
-        if (phase3 && horseX <= 15)
-          horseX = 15;
+        if (phase3 && horseX <= 24)
+          horseX = 24;
       }
 
       horse->setPosition({horseX, horse->getPosition().y()}, speedX != 0);
@@ -295,47 +296,79 @@ void BossRifferScene::processChart() {
       }
 
       // Platform fires
-      if (IS_EVENT_PLATFORM_FIRE_1(type)) {
-        platformFires.push_back(bn::unique_ptr{new PlatformFire(
-            {platforms[1].left() + 14, platforms[1].top() - 16}, event,
-            camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_2(type)) {
-        platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[2].left() + 9, platforms[2].top() - 16},
-                             event, camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_3(type)) {
-        platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({platforms[3].left() + 9, platforms[3].top() - 16},
-                             event, camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
-        platformFires.push_back(bn::unique_ptr{
-            new PlatformFire({8 + platforms[0].left(), platforms[0].top() - 16},
-                             event, camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
-        platformFires.push_back(bn::unique_ptr{new PlatformFire(
-            {8 + platforms[0].left() + 32, platforms[0].top() - 16}, event,
-            camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
-        platformFires.push_back(bn::unique_ptr{new PlatformFire(
-            {8 + platforms[0].left() + 32 + 32, platforms[0].top() - 16}, event,
-            camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
-        platformFires.push_back(bn::unique_ptr{new PlatformFire(
-            {8 + platforms[0].left() + 32 + 32 + 32, platforms[0].top() - 16},
-            event, camera)});
-      }
-      if (IS_EVENT_PLATFORM_FIRE_START(type)) {
-        iterate(platformFires, [&event](PlatformFire* platformFire) {
-          platformFire->start(event);
-          // player_sfx_play(SFX_LIGHTNING);
-          return false;
-        });
+      if (phase3) {
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {-16 + platforms[6].left(), platforms[6].top() - 16}, event,
+              camera, true, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {-16 + platforms[6].left() + 32 + 16, platforms[6].top() - 16},
+              event, camera, true, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
+          platformFires.push_back(bn::unique_ptr{
+              new PlatformFire({-16 + platforms[6].left() + 32 + 16 + 32 + 16,
+                                platforms[6].top() - 16},
+                               event, camera, true, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {-16 + platforms[6].left() + 32 + 16 + 32 + 16 + 32 + 16,
+               platforms[6].top() - 16},
+              event, camera, true, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+          iterate(platformFires, [&event](PlatformFire* platformFire) {
+            platformFire->start(event);
+            // player_sfx_play(SFX_LIGHTNING);
+            return false;
+          });
+        }
+      } else {
+        if (IS_EVENT_PLATFORM_FIRE_1(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {platforms[1].left() + 14, platforms[1].top() - 16}, event,
+              camera)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_2(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {platforms[2].left() + 9, platforms[2].top() - 16}, event,
+              camera)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_3(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {platforms[3].left() + 9, platforms[3].top() - 16}, event,
+              camera)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {8 + platforms[0].left(), platforms[0].top() - 16}, event, camera,
+              true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {8 + platforms[0].left() + 32, platforms[0].top() - 16}, event,
+              camera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {8 + platforms[0].left() + 32 + 32, platforms[0].top() - 16},
+              event, camera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              {8 + platforms[0].left() + 32 + 32 + 32, platforms[0].top() - 16},
+              event, camera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+          iterate(platformFires, [&event](PlatformFire* platformFire) {
+            platformFire->start(event);
+            // player_sfx_play(SFX_LIGHTNING);
+            return false;
+          });
+        }
       }
 
       // Game notes
@@ -408,7 +441,7 @@ void BossRifferScene::processChart() {
       }
       if (event->getType() == EVENT_FIRE_CLEAR) {
         iterate(platformFires, [this](PlatformFire* platformFire) {
-          return platformFire->getTopLeftPosition().x() > platforms[0].right();
+          return !platformFire->getIsInfinite();
         });
       }
       if (event->getType() == EVENT_BREAK_GUITAR) {
@@ -534,6 +567,11 @@ void BossRifferScene::processChart() {
       }
       if (event->getType() == EVENT_RIFFER_RECOVERGUITAR) {
         riffer->recoverGuitar();
+      }
+      if (event->getType() == EVENT_FIRE_CLEAR_ALL) {
+        iterate(platformFires, [this](PlatformFire* platformFire) {
+          return platformFire->hasReallyStarted(chartReader->getMsecs());
+        });
       }
 
       if (event->getType() == EVENT_SONG_END) {
@@ -672,8 +710,7 @@ void BossRifferScene::updateSprites() {
   iterate(platformFires, [this, &startedFires, &lastTimestamp,
                           &msecs](PlatformFire* platformFire) {
     auto event = platformFire->getEvent();
-    if (platformFire->getTopLeftPosition().x() > platforms[0].right() &&
-        msecs >= event->timestamp) {
+    if (!platformFire->getIsInfinite() && msecs >= event->timestamp) {
       startedFires++;
       if (event->timestamp > lastTimestamp)
         lastTimestamp = event->timestamp;
@@ -681,11 +718,11 @@ void BossRifferScene::updateSprites() {
     return false;
   });
   if (startedFires > 1) {
-    iterate(platformFires, [this, &startedFires,
-                            &lastTimestamp](PlatformFire* platformFire) {
-      return platformFire->getTopLeftPosition().x() > platforms[0].right() &&
-             platformFire->getEvent()->timestamp != lastTimestamp;
-    });
+    iterate(platformFires,
+            [this, &startedFires, &lastTimestamp](PlatformFire* platformFire) {
+              return !platformFire->getIsInfinite() &&
+                     platformFire->getEvent()->timestamp != lastTimestamp;
+            });
   }
   iterate(platformFires, [this](PlatformFire* platformFire) {
     bool isOut = platformFire->update(chartReader->getMsecs());
@@ -745,6 +782,7 @@ void BossRifferScene::updatePhysics() {
     phase2Transition = false;
     selectGamePlatform(0);
     selectedGamePlatform = 0;
+    platformFires.clear();
     phase2 = true;
     canBounce = false;
   }
