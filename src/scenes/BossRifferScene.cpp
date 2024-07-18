@@ -71,7 +71,7 @@
 #define EVENT_TRANSITION_PHASE2 12
 #define EVENT_TRANSITION_PHASE3 13
 #define EVENT_RIFFER_OFFSCREEN 14
-#define EVENT_RIFFER_GOBACK 15
+#define EVENT_RIFFER_RECOVERGUITAR 15
 #define EVENT_SONG_END 99
 
 // #define SFX_POWER_CHORD "minirock.pcm"
@@ -253,25 +253,28 @@ void BossRifferScene::processChart() {
       // Movement
       if (phase3) {
         if (IS_EVENT_MOVE_COL1(type)) {
-          riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
+          riffer->setTargetPosition({809, 3}, chartReader->getBeatDurationMs());
           lastTargetedPlatform = 1;
         }
         if (IS_EVENT_MOVE_COL2(type)) {
-          riffer->setTargetPosition({193, 6}, chartReader->getBeatDurationMs());
+          riffer->setTargetPosition({860, 3}, chartReader->getBeatDurationMs());
           lastTargetedPlatform = 2;
         }
         if (IS_EVENT_MOVE_COL3(type)) {
           riffer->setTargetPosition({936, 2}, chartReader->getBeatDurationMs());
         }
-        if (IS_EVENT_MOVE_RIGHT(type))
+        if (IS_EVENT_MOVE_RIGHT(type)) {
+          riffer->setTargetPosition({890, 47},
+                                    chartReader->getBeatDurationMs() * 2);
+        }
+        if (IS_EVENT_MOVE_BOTTOMRIGHT(type)) {
+          riffer->setTargetPosition({915, 71},
+                                    chartReader->getBeatDurationMs() * 2);
+        }
+        if (IS_EVENT_MOVE_BOTTOMLEFT(type)) {
           riffer->setTargetPosition({312, 41},
-                                    chartReader->getBeatDurationMs());
-        if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
-          riffer->setTargetPosition({312, 41},
-                                    chartReader->getBeatDurationMs());
-        if (IS_EVENT_MOVE_BOTTOMLEFT(type))
-          riffer->setTargetPosition({312, 41},
-                                    chartReader->getBeatDurationMs());
+                                    chartReader->getBeatDurationMs() * 2);
+        }
       } else {
         if (IS_EVENT_MOVE_COL1(type)) {
           riffer->setTargetPosition({125, 3}, chartReader->getBeatDurationMs());
@@ -384,10 +387,11 @@ void BossRifferScene::processChart() {
       if (IS_EVENT_WAVE_SEND(type)) {
         riffer->swingEnd();
         auto wave = bn::unique_ptr{new Wave(
-            bn::fixed_point(
-                PLATFORMS_X[lastTargetedPlatform] - 122 /* HACK: no idea why */,
-                riffer->getCenteredPosition().y()),
-            {0, 1}, event)};
+            phase3 ? riffer->getCenteredPosition()
+                   : bn::fixed_point(PLATFORMS_X[lastTargetedPlatform] -
+                                         122 /* HACK: no idea why */,
+                                     riffer->getCenteredPosition().y()),
+            {0, 1}, event, phase3 ? 1.5 : 1)};
         wave->setCamera(camera);
         enemyBullets.push_back(bn::move(wave));
       }
@@ -528,9 +532,8 @@ void BossRifferScene::processChart() {
         riffer->setTargetPosition({1100, 25},
                                   chartReader->getBeatDurationMs() * 2);
       }
-      if (event->getType() == EVENT_RIFFER_GOBACK) {
+      if (event->getType() == EVENT_RIFFER_RECOVERGUITAR) {
         riffer->recoverGuitar();
-        riffer->setTargetPosition({936, 2}, chartReader->getBeatDurationMs());
       }
 
       if (event->getType() == EVENT_SONG_END) {

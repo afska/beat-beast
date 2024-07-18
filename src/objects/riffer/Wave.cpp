@@ -11,10 +11,12 @@
 
 Wave::Wave(bn::fixed_point initialPosition,
            bn::fixed_point _direction,
-           Event* _event)
+           Event* _event,
+           bn::fixed _speedMultiplier)
     : sprite(bn::sprite_items::riffer_wave.create_sprite(initialPosition)),
       direction(_direction),
       event(_event),
+      speedMultiplier(_speedMultiplier),
       animation(bn::create_sprite_animate_action_forever(
           sprite,
           2,
@@ -52,7 +54,8 @@ bool Wave::update(int msecs,
 
   sprite.set_position(sprite.position() +
                       direction *
-                          (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED));
+                          (isInsideBeat ? ON_BEAT_SPEED : OFF_BEAT_SPEED) *
+                          speedMultiplier);
 
   animation.update();
 

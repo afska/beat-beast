@@ -8,7 +8,8 @@ class Wave : public RhythmicBullet {
  public:
   Wave(bn::fixed_point initialPosition,
        bn::fixed_point _direction,
-       Event* _event);
+       Event* _event,
+       bn::fixed _speedMultiplier = 1);
 
   bool update(int msecs,
               bool isInsideBeat,
@@ -20,6 +21,7 @@ class Wave : public RhythmicBullet {
   bn::sprite_ptr sprite;
   bn::fixed_point direction;
   Event* event;
+  bn::fixed speedMultiplier;
   bn::fixed scale = 0.1;
   bn::sprite_animate_action<2> animation;
 };
