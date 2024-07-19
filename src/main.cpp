@@ -30,6 +30,7 @@ bn::optional<bn::unique_ptr<Scene>> scene;
 
 void ISR_VBlank();
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen);
+bool hasMainMusic(GameState::Screen screen);
 void transitionToNextScene();
 
 void update() {
@@ -115,6 +116,13 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
   }
 }
 
+bool hasMainMusic(GameState::Screen screen) {
+  return screen == GameState::Screen::START ||
+         screen == GameState::Screen::SELECTION ||
+         screen == GameState::Screen::STORY ||
+         screen == GameState::Screen::TUTORIAL;
+}
+
 void transitionToNextScene() {
   RUMBLE_stop();
 
@@ -133,14 +141,10 @@ void transitionToNextScene() {
   }
 
   scene.reset();
-  bool keepMusic = nextScreen == GameState::Screen::SELECTION ||
-                   nextScreen == GameState::Screen::STORY ||
-                   nextScreen == GameState::Screen::TUTORIAL ||
-                   (nextScreen == GameState::Screen::START &&
-                    (currentScreen == GameState::Screen::SELECTION ||
-                     currentScreen == GameState::Screen::STORY ||
-                     currentScreen == GameState::Screen::TUTORIAL));
-  if (!keepMusic) {
+  bool keepMusic = hasMainMusic(currentScreen) && hasMainMusic(nextScreen);
+  if (keepMusic) {
+    player_setPause(false);
+  } else {
     player_stop();
     PlaybackState.msecs = 0;
   }

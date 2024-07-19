@@ -340,7 +340,6 @@ void BossScene::processMenuOption(int option) {
       case 1: {  // Quit
         GameState::data.currentLevelResult = GameState::LevelResult::DEATH;
         setNextScreen(GameState::Screen::SELECTION);
-        player_setPause(false);
         break;
       }
       default: {
@@ -357,13 +356,11 @@ void BossScene::processMenuOption(int option) {
     }
     case 1: {  // Restart
       setNextScreen(getScreen());
-      player_stop();
       break;
     }
     case 2: {  // Quit
       GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
       setNextScreen(GameState::Screen::SELECTION);
-      player_stop();
       break;
     }
     default: {

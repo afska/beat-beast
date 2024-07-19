@@ -363,7 +363,8 @@ void SelectionScene::updateDifficultyLevel(bool isUpdate) {
       DIFFICULTY_LEVELS[SaveFile::data.selectedDifficultyLevel],
       accentTextSprites);
 
-  updateStats();
+  if (isUpdate)
+    updateStats();
 
   for (int i = 0; i < levelIcons.size(); i++) {
     levelIcons[i]->setCheckmarkVisible(

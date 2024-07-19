@@ -34,6 +34,11 @@ void TutorialScene::init() {
   horse->aim({-1, 0});
 
   updateDialog();
+
+  if (!PlaybackState.isLooping) {
+    player_playGSM("lazer.gsm");
+    player_setLoop(true);
+  }
 }
 
 void TutorialScene::update() {

@@ -275,7 +275,6 @@ void UIScene::processMenuOption(int option) {
     }
     case 1: {  // Restart
       setNextScreen(getScreen());
-      player_stop();
       break;
     }
     case 2: {  // Quit
@@ -283,7 +282,6 @@ void UIScene::processMenuOption(int option) {
       setNextScreen(SaveFile::didCompleteTutorial()
                         ? GameState::Screen::SELECTION
                         : GameState::Screen::START);
-      player_stop();
       break;
     }
     default: {

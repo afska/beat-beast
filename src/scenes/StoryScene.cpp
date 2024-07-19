@@ -1,5 +1,7 @@
 #include "StoryScene.h"
 
+#include "../player/player.h"
+
 #include "bn_keypad.h"
 
 #define HORSE_Y 34
@@ -15,6 +17,11 @@ void StoryScene::init() {
   horse->aim({-1, 0});
 
   updateDialog();
+
+  if (!PlaybackState.isLooping) {
+    player_playGSM("lazer.gsm");
+    player_setLoop(true);
+  }
 }
 
 void StoryScene::update() {
