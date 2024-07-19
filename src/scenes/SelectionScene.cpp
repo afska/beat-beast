@@ -21,6 +21,7 @@
 #include "bn_sprite_items_selection_previewriffer.h"
 #include "bn_sprite_items_selection_previewtutorial.h"
 #include "bn_sprite_items_selection_previewwizard.h"
+#include "bn_sprite_items_selection_triggers.h"
 
 #define HORSE_X 40
 #define HORSE_Y 90
@@ -143,7 +144,13 @@ constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
     true,  false, false, true,  false, false, false, true,  true, true,  true,
     true,  true,  true,  true,  true,  true,  true};
 
+constexpr const bn::array<const char*, SaveFile::TOTAL_DIFFICULTY_LEVELS>
+    DIFFICULTY_LEVELS = {"Easy", "Normal", "Hard"};
+
 constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
+
+constexpr const bn::fixed HEADER_X = 50;
+constexpr const bn::fixed HEADER_Y = -80 + 11;
 
 constexpr const bn::array<bn::sprite_item, 5> ICONS = {
     bn::sprite_items::selection_icon_horse, bn::sprite_items::selection_icon_dj,
@@ -177,8 +184,10 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   textGeneratorAccent.set_center_alignment();
   textGeneratorAccent.set_z_order(-1);
 
-  textGeneratorAccent.generate(bn::fixed_point(0, -80 + 11), "Hard",
-                               accentTextSprites);
+  lSprite = bn::sprite_items::selection_triggers.create_sprite(
+      {-HEADER_X, HEADER_Y}, 0);
+  rSprite = bn::sprite_items::selection_triggers.create_sprite(
+      {HEADER_X, HEADER_Y}, 2);
 
   levelIcons.push_back(bn::unique_ptr{
       new LevelIcon(bn::sprite_items::selection_icon_horse, {216, 120})});
@@ -209,7 +218,9 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   }
 
   selectedIndex = SaveFile::data.selectedLevel;
+  selectedDifficultyLevel = SaveFile::data.selectedDifficultyLevel;
   updateSelection(false);
+  updateDifficultyLevel(false);
   processLevelResult();
 }
 
@@ -234,6 +245,24 @@ void SelectionScene::update() {
 }
 
 void SelectionScene::processInput() {
+  lSprite->set_tiles(bn::sprite_items::selection_triggers.tiles_item(),
+                     bn::keypad::l_held() ? 1 : 0);
+  rSprite->set_tiles(bn::sprite_items::selection_triggers.tiles_item(),
+                     bn::keypad::r_held() ? 3 : 2);
+
+  if (bn::keypad::r_pressed()) {
+    if (selectedDifficultyLevel < SaveFile::TOTAL_DIFFICULTY_LEVELS - 1) {
+      selectedDifficultyLevel++;
+      updateDifficultyLevel();
+    }
+  }
+  if (bn::keypad::l_pressed()) {
+    if (selectedDifficultyLevel > 0) {
+      selectedDifficultyLevel--;
+      updateDifficultyLevel();
+    }
+  }
+
   if (bn::keypad::up_pressed()) {
     if (selectedIndex < levelIcons.size() - 1) {
       unselect();
@@ -316,6 +345,22 @@ void SelectionScene::unselect() {
   levelIcons[selectedIndex]->setUnselected();
   for (auto& sprite : textSprites[selectedIndex])
     sprite.set_visible(false);
+}
+
+void SelectionScene::updateDifficultyLevel(bool isUpdate) {
+  if (isUpdate) {
+    player_sfx_play(SFX_MOVE);
+    SaveFile::data.selectedDifficultyLevel = selectedDifficultyLevel;
+    SaveFile::save();
+  }
+  pixelBlink->blink();
+
+  accentTextSprites.clear();
+
+  textGeneratorAccent.generate(
+      bn::fixed_point(0, HEADER_Y),
+      DIFFICULTY_LEVELS[SaveFile::data.selectedDifficultyLevel],
+      accentTextSprites);
 }
 
 void SelectionScene::updateSelection(bool isUpdate) {
