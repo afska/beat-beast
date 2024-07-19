@@ -7,7 +7,7 @@
 
 BN_DATA_EWRAM SaveFile::SaveFileData SaveFile::data;
 
-#define MAGIC_NUMBER 13579513
+#define MAGIC_NUMBER 135795135
 
 bool SaveFile::initialize() {
   load();
@@ -21,14 +21,14 @@ bool SaveFile::initialize() {
     data.intensity = 0;
     data.contrast = 0;
     for (int i = 0; i < 3; i++)
-      data._padding1[i] = 0;
+      data._padding1[i] = 0xEE;
 
-    data.selectedDifficultyLevel = 0;
+    data.selectedDifficultyLevel = 1;
     data.selectedLevel = 0;
     data.isInsideFinal = false;
     data.didFinishGame = false;
     for (int i = 0; i < 12; i++)
-      data._padding2[i] = 0;
+      data._padding2[i] = 0xEE;
 
     for (int d = 0; d < TOTAL_DIFFICULTY_LEVELS; d++) {
       for (int l = 0; l < TOTAL_LEVELS; l++) {
@@ -40,6 +40,8 @@ bool SaveFile::initialize() {
         data.progress[d].levels[l].wins = 0;
         data.progress[d].levels[l].deaths = 0;
       }
+      for (int i = 0; i < 3; i++)
+        data.progress[d]._padding[i] = 0xEE;
     }
 
     save();

@@ -10,9 +10,11 @@ class LevelIcon : public TopLeftGameObject {
   void update();
   void setSelected();
   void setUnselected();
+  void setCheckmarkVisible(bool visible) { checkmark.set_visible(visible); }
 
  private:
   bn::sprite_item spriteItem;
+  bn::sprite_ptr checkmark;
   bn::optional<bn::sprite_animate_action<2>> animation;
   int animationIndex = -1;
   bool isSelected = false;

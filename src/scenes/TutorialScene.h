@@ -36,6 +36,7 @@ class TutorialScene : public UIScene {
   bn::vector<bn::sprite_ptr, 64> tmpText;
   bn::vector<bn::unique_ptr<Obstacle>, 32> obstacles;
   bn::vector<bn::unique_ptr<Radio>, 32> radios;
+  bn::fixed_point aimDirection;
 
   unsigned state = 0;
   int count = 0;
@@ -72,6 +73,7 @@ class TutorialScene : public UIScene {
   bool updateCount();
   void updateCountdown();
   void sufferDamage();
+  void win();
 
   template <typename F, typename Type, int MaxSize>
   inline void iterate(bn::vector<Type, MaxSize>& vector, F action) {

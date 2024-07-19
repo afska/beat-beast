@@ -279,7 +279,8 @@ void UIScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Quit
-      setNextScreen(GameState::Screen::START);
+      GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
+      setNextScreen(GameState::Screen::SELECTION);
       player_stop();
       break;
     }

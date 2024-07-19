@@ -5,7 +5,7 @@
 
 namespace SaveFile {
 
-const int TOTAL_LEVELS = 4;
+const int TOTAL_LEVELS = 5;
 const int TOTAL_DIFFICULTY_LEVELS = 3;
 
 struct __attribute__((__packed__)) LevelProgress {
@@ -20,6 +20,7 @@ struct __attribute__((__packed__)) LevelProgress {
 
 struct __attribute__((__packed__)) GameProgress {
   LevelProgress levels[TOTAL_LEVELS];
+  unsigned char _padding[3];
 };
 
 struct __attribute__((__packed__)) SaveFileData {

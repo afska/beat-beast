@@ -20,16 +20,21 @@ class SelectionScene : public Scene {
   bn::vector<bn::unique_ptr<LevelIcon>, 8> levelIcons;
   bn::vector<bn::sprite_ptr, 8> iconSeparators;
   bn::optional<bn::unique_ptr<LevelIcon>> selectedLevel;
+  bn::vector<bn::sprite_ptr, 8> stats;
   int selectedIndex = 0;
   int selectedDifficultyLevel = 0;
 
   bn::array<bn::vector<bn::sprite_ptr, 10>, 5> textSprites;
   bn::vector<bn::sprite_ptr, 10> accentTextSprites;
+  bn::vector<bn::sprite_ptr, 32> statsTextSprites;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
   bn::optional<bn::sprite_ptr> lSprite;
   bn::optional<bn::sprite_ptr> rSprite;
+  bool newRecordHealth = false;
+  bool newRecordDamage = false;
+  bool newRecordSync = false;
 
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
@@ -59,6 +64,7 @@ class SelectionScene : public Scene {
   void unselect();
   void updateDifficultyLevel(bool isUpdate = true);
   void updateSelection(bool isUpdate = true);
+  void updateStats();
   void createPreviewAnimation();
   void prepareStateForLevel();
   void processLevelResult();

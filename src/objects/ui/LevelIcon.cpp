@@ -2,11 +2,18 @@
 
 #include "../../utils/Math.h"
 
+#include "bn_sprite_items_selection_good.h"
+
 LevelIcon::LevelIcon(bn::sprite_item _spriteItem,
                      bn::fixed_point _topLeftPosition)
     : TopLeftGameObject(_spriteItem.create_sprite(0, 0)),
-      spriteItem(_spriteItem) {
+      spriteItem(_spriteItem),
+      checkmark(bn::sprite_items::selection_good.create_sprite(0, 0)) {
   setTopLeftPosition(_topLeftPosition);
+  checkmark.set_position(getCenteredPosition() + bn::fixed_point(4, 8));
+  checkmark.set_visible(false);
+  checkmark.set_z_order(-2);
+  checkmark.set_bg_priority(0);
 
   mainSprite.set_z_order(-1);
   mainSprite.set_bg_priority(0);

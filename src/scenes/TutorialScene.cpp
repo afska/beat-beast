@@ -79,7 +79,6 @@ void TutorialScene::processInput() {
   }
 
   // move aim
-  bn::fixed_point aimDirection = {0, 0};
   if (didUnlockMove) {
     if (bn::keypad::left_held()) {
       aimDirection = {-1, bn::keypad::up_held() ? -1 : 0};
@@ -322,7 +321,7 @@ void TutorialScene::updateDialog() {
       break;
     }
     case 4: {
-      setNextScreen(GameState::Screen::SELECTION);
+      win();
       break;
     }
     case 5: {
@@ -384,7 +383,7 @@ void TutorialScene::updateDialog() {
     }
     case 12: {
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Let's try: Jump |10| times, avoiding");
+      strs.push_back("Jump |10| times, avoiding");
       strs.push_back("getting hit by the obstacles!");
       write(strs);
       state++;
@@ -478,7 +477,7 @@ void TutorialScene::updateDialog() {
     }
     case 27: {
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Shooting increases your |combo bar|.");
+      strs.push_back("Shooting increases my |combo bar|.");
       strs.push_back("When it's full, I unlock |dual shots|!");
       write(strs, true);
 
@@ -487,8 +486,8 @@ void TutorialScene::updateDialog() {
     }
     case 29: {
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Max out your |combo bar|, and");
-      strs.push_back("try the |dual shots|.");
+      strs.push_back("Max out the |combo bar|, and");
+      strs.push_back("try my |dual shots|.");
       write(strs);
       state++;
       break;
@@ -627,7 +626,7 @@ void TutorialScene::updateDialog() {
       break;
     }
     case 51: {
-      setNextScreen(GameState::Screen::START);
+      win();
       break;
     }
     default: {
@@ -729,4 +728,17 @@ void TutorialScene::sufferDamage() {
     comboBar->get()->setCombo(0);
     comboBar->get()->bump();
   }
+}
+
+void TutorialScene::win() {
+  GameState::data.currentLevelProgress.health = 0;
+  GameState::data.currentLevelProgress.damage = 0;
+  GameState::data.currentLevelProgress.sync = 0;
+  GameState::data.currentLevelProgress.didWin = true;
+  GameState::data.currentLevelProgress.wins = 1;
+  GameState::data.currentLevelProgress.deaths = 0;
+
+  GameState::data.currentLevelResult = GameState::LevelResult::WIN;
+
+  setNextScreen(GameState::Screen::SELECTION);
 }

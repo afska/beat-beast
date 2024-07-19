@@ -21,6 +21,7 @@
 #include "bn_sprite_items_selection_previewriffer.h"
 #include "bn_sprite_items_selection_previewtutorial.h"
 #include "bn_sprite_items_selection_previewwizard.h"
+#include "bn_sprite_items_selection_stats.h"
 #include "bn_sprite_items_selection_triggers.h"
 
 #define HORSE_X 40
@@ -219,9 +220,9 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
 
   selectedIndex = SaveFile::data.selectedLevel;
   selectedDifficultyLevel = SaveFile::data.selectedDifficultyLevel;
+  processLevelResult();
   updateSelection(false);
   updateDifficultyLevel(false);
-  processLevelResult();
 }
 
 void SelectionScene::init() {
@@ -361,6 +362,13 @@ void SelectionScene::updateDifficultyLevel(bool isUpdate) {
       bn::fixed_point(0, HEADER_Y),
       DIFFICULTY_LEVELS[SaveFile::data.selectedDifficultyLevel],
       accentTextSprites);
+
+  updateStats();
+
+  for (int i = 0; i < levelIcons.size(); i++) {
+    levelIcons[i]->setCheckmarkVisible(
+        SaveFile::data.progress[selectedDifficultyLevel].levels[i].didWin);
+  }
 }
 
 void SelectionScene::updateSelection(bool isUpdate) {
@@ -382,6 +390,71 @@ void SelectionScene::updateSelection(bool isUpdate) {
 
   preview.get()->set_mosaic_enabled(true);
   selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);
+
+  updateStats();
+}
+
+void SelectionScene::updateStats() {
+  constexpr const bn::fixed X = -120 + 4 + 8;
+
+  stats.clear();
+  statsTextSprites.clear();
+
+  auto progress =
+      SaveFile::data.progress[selectedDifficultyLevel].levels[selectedIndex];
+
+  if (selectedIndex == 0)
+    return;
+
+  textGenerator.set_left_alignment();
+  textGeneratorAccent.set_left_alignment();
+
+  if (progress.wins > 0) {
+    stats.push_back(
+        bn::sprite_items::selection_stats.create_sprite({X, -8 - 16 - 8}, 0));
+    stats.push_back(
+        bn::sprite_items::selection_stats.create_sprite({X, -8 - 8}, 1));
+    stats.push_back(bn::sprite_items::selection_stats.create_sprite({X, 0}, 2));
+    stats.push_back(
+        bn::sprite_items::selection_stats.create_sprite({X, 8 + 1 + 8}, 3));
+    stats.push_back(bn::sprite_items::selection_stats.create_sprite(
+        {X, 8 + 1 + 16 + 8}, 4));
+
+    (newRecordHealth ? textGeneratorAccent : textGenerator)
+        .generate(stats[0].position() + bn::fixed_point(8 + 4, 0),
+                  bn::to_string<32>(progress.health) + "%", statsTextSprites);
+    (newRecordDamage ? textGeneratorAccent : textGenerator)
+        .generate(stats[1].position() + bn::fixed_point(8 + 4, 0),
+                  (progress.damage <= 999 ? bn::to_string<32>(progress.damage)
+                                          : "!!!") +
+                      "%",
+                  statsTextSprites);
+    (newRecordSync ? textGeneratorAccent : textGenerator)
+        .generate(stats[2].position() + bn::fixed_point(8 + 4, 0),
+                  bn::to_string<32>(progress.sync) + "%", statsTextSprites);
+    textGenerator.generate(
+        stats[3].position() + bn::fixed_point(8 + 4, 0),
+        progress.wins <= 999 ? bn::to_string<32>(progress.wins) : "!!!",
+        statsTextSprites);
+    textGenerator.generate(
+        stats[4].position() + bn::fixed_point(8 + 4, 0),
+        progress.deaths <= 999 ? bn::to_string<32>(progress.deaths) : "!!!",
+        statsTextSprites);
+  } else if (progress.deaths > 0) {
+    stats.push_back(bn::sprite_items::selection_stats.create_sprite({X, 0}, 4));
+
+    textGenerator.generate(
+        stats[0].position() + bn::fixed_point(8 + 4, 0),
+        progress.deaths <= 999 ? bn::to_string<32>(progress.deaths) : "!!!",
+        statsTextSprites);
+  }
+
+  newRecordHealth = false;
+  newRecordDamage = false;
+  newRecordSync = false;
+
+  textGenerator.set_center_alignment();
+  textGeneratorAccent.set_center_alignment();
 }
 
 void SelectionScene::createPreviewAnimation() {
@@ -433,15 +506,49 @@ void SelectionScene::processLevelResult() {
         break;
       }
       case GameState::LevelResult::WIN: {
-        SaveFile::data.progress[selectedDifficultyLevel].levels[selectedIndex] =
-            GameState::data.currentLevelProgress;
+        auto oldProgress = SaveFile::data.progress[selectedDifficultyLevel]
+                               .levels[selectedIndex];
+        auto newProgress = GameState::data.currentLevelProgress;
 
-        if (selectedIndex < SaveFile::TOTAL_LEVELS - 1) {
-          // mark lower levels as won too
-          for (int i = selectedDifficultyLevel - 1; i >= 0; i--)
-            SaveFile::data.progress[selectedDifficultyLevel]
-                .levels[selectedIndex]
-                .didWin = true;
+        SaveFile::data.progress[selectedDifficultyLevel]
+            .levels[selectedIndex]
+            .didWin = true;
+
+        if (newProgress.health > oldProgress.health) {
+          SaveFile::data.progress[selectedDifficultyLevel]
+              .levels[selectedIndex]
+              .health = newProgress.health;
+          newRecordHealth = true;
+        }
+        if (newProgress.damage > oldProgress.damage) {
+          SaveFile::data.progress[selectedDifficultyLevel]
+              .levels[selectedIndex]
+              .damage = newProgress.damage;
+          newRecordDamage = true;
+        }
+        if (newProgress.sync > oldProgress.sync) {
+          SaveFile::data.progress[selectedDifficultyLevel]
+              .levels[selectedIndex]
+              .sync = newProgress.sync;
+          newRecordSync = true;
+        }
+        SaveFile::data.progress[selectedDifficultyLevel]
+            .levels[selectedIndex]
+            .wins = newProgress.wins;
+        SaveFile::data.progress[selectedDifficultyLevel]
+            .levels[selectedIndex]
+            .deaths = newProgress.deaths;
+
+        if (selectedIndex > 0) {
+          if (selectedIndex < SaveFile::TOTAL_LEVELS - 1) {
+            // mark lower levels as won too (except final boss)
+            for (int i = selectedDifficultyLevel - 1; i >= 0; i--)
+              SaveFile::data.progress[i].levels[selectedIndex].didWin = true;
+          }
+        } else {
+          // tutorial is marked as won in all difficulty levels
+          for (int i = 0; i < SaveFile::TOTAL_DIFFICULTY_LEVELS; i++)
+            SaveFile::data.progress[i].levels[0].didWin = true;
         }
 
         SaveFile::save();
