@@ -1,7 +1,7 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include "bn_sram.h"
+#include "SaveFile.h"
 
 namespace GameState {
 
@@ -18,8 +18,13 @@ enum Screen {
   RIFFER
 };
 
+enum LevelResult { QUIT, DEATH, WIN };
+
 struct GameStateData {
   Screen currentScreen = Screen::START;
+  bool isPlaying = false;
+  LevelResult currentLevelResult;
+  SaveFile::LevelProgress currentLevelProgress;
 };
 
 extern GameStateData data;

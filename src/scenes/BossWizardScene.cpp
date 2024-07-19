@@ -553,7 +553,7 @@ void BossWizardScene::updateSprites() {
   if (blackHole.has_value()) {
     if (blackHole->get()->didDisappear()) {
       if (didWin)
-        setNextScreen(GameState::Screen::START);
+        win();
       else
         die();
     }

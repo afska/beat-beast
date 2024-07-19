@@ -54,8 +54,10 @@ class SelectionScene : public Scene {
   void updateVideo();
   void updateSprites();
   void unselect();
-  void updateSelection(bool withSound = true);
+  void updateSelection(bool isUpdate = true);
   void createPreviewAnimation();
+  void prepareStateForLevel();
+  void processLevelResult();
 };
 
 #endif  // SELECTION_SCENE_H

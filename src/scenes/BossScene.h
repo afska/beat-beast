@@ -85,6 +85,7 @@ class BossScene : public Scene {
   virtual void addExplosion(bn::fixed_point position);
   void sufferDamage(bn::fixed amount);
   void die();
+  void win();
   void processMovementInput(bn::fixed horseY);
   void processAimInput(bool aim360 = false);
   void updateCommonSprites();

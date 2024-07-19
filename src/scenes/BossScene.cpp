@@ -122,6 +122,21 @@ void BossScene::die() {
   menu->start(options);
 }
 
+void BossScene::win() {
+  GameState::data.currentLevelProgress.health =
+      (lifeBar->getLife() * 100 / lifeBar->getMaxLife()).floor_integer();
+  auto damage = enemyLifeBar->getMaxLife() + enemyLifeBar->getExtraDamage();
+  GameState::data.currentLevelProgress.damage =
+      damage > 999 ? 999 : damage.floor_integer();
+  auto totalShots = successfulShots + failedShots;
+  GameState::data.currentLevelProgress.sync =
+      (bn::fixed(successfulShots) * 100 / totalShots).floor_integer();
+
+  GameState::data.currentLevelResult = GameState::LevelResult::WIN;
+
+  setNextScreen(GameState::Screen::SELECTION);
+}
+
 void BossScene::processMovementInput(bn::fixed horseY) {
   // move horse (left/right)
   bn::fixed speedX;
@@ -318,6 +333,7 @@ void BossScene::processMenuOption(int option) {
         break;
       }
       case 1: {  // Quit
+        GameState::data.currentLevelResult = GameState::LevelResult::DEATH;
         setNextScreen(GameState::Screen::SELECTION);
         player_setPause(false);
         break;
@@ -340,6 +356,7 @@ void BossScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Quit
+      GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
       setNextScreen(GameState::Screen::SELECTION);
       player_stop();
       break;

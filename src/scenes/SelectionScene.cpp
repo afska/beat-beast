@@ -207,7 +207,9 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
     }
   }
 
+  selectedIndex = SaveFile::data.selectedLevel;
   updateSelection(false);
+  processLevelResult();
 }
 
 void SelectionScene::init() {
@@ -252,10 +254,13 @@ void SelectionScene::processInput() {
     if (selectedIndex == 0) {
       setNextScreen(GameState::Screen::TUTORIAL);
     } else if (selectedIndex == 1) {
+      prepareStateForLevel();
       setNextScreen(GameState::Screen::DJ);
     } else if (selectedIndex == 2) {
+      prepareStateForLevel();
       setNextScreen(GameState::Screen::WIZARD);
     } else if (selectedIndex == 3) {
+      prepareStateForLevel();
       setNextScreen(GameState::Screen::RIFFER);
     }
   }
@@ -312,9 +317,12 @@ void SelectionScene::unselect() {
     sprite.set_visible(false);
 }
 
-void SelectionScene::updateSelection(bool withSound) {
-  if (withSound)
+void SelectionScene::updateSelection(bool isUpdate) {
+  if (isUpdate) {
     player_sfx_play(SFX_MOVE);
+    SaveFile::data.selectedLevel = selectedIndex;
+    SaveFile::save();
+  }
   pixelBlink->blink();
 
   selectedLevel.reset();
@@ -360,4 +368,29 @@ void SelectionScene::createPreviewAnimation() {
         139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149);
   }
   preview->set_blending_enabled(true);
+}
+
+void SelectionScene::prepareStateForLevel() {
+  GameState::data.isPlaying = true;
+}
+
+void SelectionScene::processLevelResult() {
+  if (GameState::data.isPlaying) {
+    switch (GameState::data.currentLevelResult) {
+      case GameState::LevelResult::DEATH: {
+        // TODO: increment deaths
+        break;
+      }
+      case GameState::LevelResult::WIN: {
+        // TODO: process GameState::data.currentLevelProgress
+        break;
+      }
+      default: {
+      }
+    }
+
+    SaveFile::save();
+  }
+
+  GameState::data.isPlaying = false;
 }

@@ -288,7 +288,7 @@ void BossDJScene::updateSprites() {
   updateCommonSprites();
 
   if (octopus->didFinalSpinEnd())
-    setNextScreen(GameState::Screen::START);
+    win();
 
   // Octopus
   if (isNewBeat)

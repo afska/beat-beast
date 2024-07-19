@@ -683,7 +683,7 @@ void BossRifferScene::updateSprites() {
   updateCommonSprites();
 
   if (riffer->didFinalSpinEnd())
-    setNextScreen(GameState::Screen::START);
+    win();
 
   // Riffer
   if (isNewBeat)
