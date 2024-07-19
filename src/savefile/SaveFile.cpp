@@ -35,6 +35,8 @@ bool SaveFile::initialize() {
         data.progress[d].levels[l].health = 0;
         data.progress[d].levels[l].damage = 0;
         data.progress[d].levels[l].sync = 0;
+
+        data.progress[d].levels[l].didWin = false;
         data.progress[d].levels[l].wins = 0;
         data.progress[d].levels[l].deaths = 0;
       }

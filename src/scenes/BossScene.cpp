@@ -132,6 +132,9 @@ void BossScene::win() {
   GameState::data.currentLevelProgress.sync =
       (bn::fixed(successfulShots) * 100 / totalShots).floor_integer();
 
+  GameState::data.currentLevelProgress.didWin = true;
+  GameState::data.currentLevelProgress.wins++;
+
   GameState::data.currentLevelResult = GameState::LevelResult::WIN;
 
   setNextScreen(GameState::Screen::SELECTION);

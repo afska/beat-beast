@@ -12,6 +12,8 @@ struct __attribute__((__packed__)) LevelProgress {
   unsigned char health;
   unsigned short damage;
   unsigned char sync;
+
+  bool didWin;
   unsigned short wins;
   unsigned short deaths;
 };

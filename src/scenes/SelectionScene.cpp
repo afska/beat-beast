@@ -418,17 +418,33 @@ void SelectionScene::createPreviewAnimation() {
 
 void SelectionScene::prepareStateForLevel() {
   GameState::data.isPlaying = true;
+  GameState::data.currentLevelProgress =
+      SaveFile::data.progress[selectedDifficultyLevel].levels[selectedIndex];
 }
 
 void SelectionScene::processLevelResult() {
   if (GameState::data.isPlaying) {
     switch (GameState::data.currentLevelResult) {
       case GameState::LevelResult::DEATH: {
-        // TODO: increment deaths
+        SaveFile::data.progress[selectedDifficultyLevel]
+            .levels[selectedIndex]
+            .deaths++;
+        SaveFile::save();
         break;
       }
       case GameState::LevelResult::WIN: {
-        // TODO: process GameState::data.currentLevelProgress
+        SaveFile::data.progress[selectedDifficultyLevel].levels[selectedIndex] =
+            GameState::data.currentLevelProgress;
+
+        if (selectedIndex < SaveFile::TOTAL_LEVELS - 1) {
+          // mark lower levels as won too
+          for (int i = selectedDifficultyLevel - 1; i >= 0; i--)
+            SaveFile::data.progress[selectedDifficultyLevel]
+                .levels[selectedIndex]
+                .didWin = true;
+        }
+
+        SaveFile::save();
         break;
       }
       default: {
