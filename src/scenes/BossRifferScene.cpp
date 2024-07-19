@@ -18,7 +18,7 @@
 #include "bn_sprite_items_riffer_line.h"
 #include "bn_sprite_palettes.h"
 
-#define LIFE_BOSS 225
+#define LIFE_BOSS 175
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
 
@@ -621,7 +621,7 @@ void BossRifferScene::processChart() {
           spr.set_camera(camera);
       }
       if (event->getType() == EVENT_GO_PHASE2) {
-        riffer->setTargetPosition({592, 112},
+        riffer->setTargetPosition({592 + 8, 112},
                                   chartReader->getBeatDurationMs() * 4);
       }
       if (event->getType() == EVENT_TRANSITION_PHASE2) {

@@ -27,7 +27,7 @@ Wave::Wave(bn::fixed_point initialPosition,
   boundingBox.set_position(initialPosition);
 
   sprite.set_scale(scale);
-  sprite.set_rotation_angle(270);
+  sprite.set_rotation_angle(90);
   isShootable = false;
 }
 
