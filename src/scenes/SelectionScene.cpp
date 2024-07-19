@@ -18,6 +18,7 @@
 #include "bn_sprite_items_selection_icon_wizard.h"
 #include "bn_sprite_items_selection_line.h"
 #include "bn_sprite_items_selection_previewdj.h"
+#include "bn_sprite_items_selection_previewriffer.h"
 #include "bn_sprite_items_selection_previewtutorial.h"
 #include "bn_sprite_items_selection_previewwizard.h"
 
@@ -154,7 +155,7 @@ constexpr const bn::array<bn::sprite_item, 5> PREVIEWS = {
     bn::sprite_items::selection_previewtutorial,
     bn::sprite_items::selection_previewdj,
     bn::sprite_items::selection_previewwizard,
-    bn::sprite_items::selection_previewwizard,
+    bn::sprite_items::selection_previewriffer,
     bn::sprite_items::selection_previewwizard};
 
 constexpr const bn::array<const char*, 5> NAMES = {

@@ -49,7 +49,7 @@ sudo apt install -y imagemagick-6.q16
 
 ```bash
 cd importer/
-# [!] first time:  npm install
+# [!] first time: npm install
 node src/importer.js
 # (generates `*.boss` files in `gbfs_files`)
 ```
