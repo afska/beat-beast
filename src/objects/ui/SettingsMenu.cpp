@@ -19,7 +19,7 @@ void SettingsMenu::start(unsigned selectedOption) {
   auto intensityN = bn::to_string<32>(SaveFile::data.intensity);
   auto contrastN = bn::to_string<32>(SaveFile::data.contrast);
 
-  options.push_back(Menu::Option{.text = "Audio sync"});
+  options.push_back(Menu::Option{.text = "Calibrate sync"});
   options.push_back(Menu::Option{.text = "Rumble     <" + rumbleX + ">"});
   options.push_back(Menu::Option{.text = "BG Blink   <" + bgBlinkX + ">"});
   options.push_back(Menu::Option{.text = "Intensity  <" + intensityN + ">"});

@@ -30,7 +30,7 @@ bool BlackHole::update() {
   animation.update();
 
   if (isDisappearing) {
-    auto newScale = sprite.horizontal_scale() - 0.010;
+    auto newScale = sprite.horizontal_scale() - 0.0075;
     if (newScale <= 0) {
       newScale = 0.005;
       sprite.set_visible(false);
