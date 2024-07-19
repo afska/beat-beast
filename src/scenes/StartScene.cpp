@@ -30,7 +30,6 @@ StartScene::StartScene(const GBFS_FILE* _fs)
 void StartScene::init() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Play"});
-  options.push_back(Menu::Option{.text = "Story"});
   options.push_back(Menu::Option{.text = "Settings"});
   // options.push_back(Menu::Option{.text = "Credits"});
   menu->start(options, false);
@@ -90,20 +89,21 @@ void StartScene::updateVideo() {
 void StartScene::processMenuOption(int option) {
   switch (option) {
     case 0: {
-      setNextScreen(GameState::Screen::SELECTION);
+      if (SaveFile::didCompleteTutorial()) {
+        setNextScreen(GameState::Screen::SELECTION);
+      } else {
+        GameState::data.isPlaying = true;
+        setNextScreen(GameState::Screen::STORY);
+      }
       break;
     }
-    case 1: {
-      setNextScreen(GameState::Screen::STORY);
-      break;
-    }
-    case 2: {  // Settings
+    case 1: {  // Settings
       menu->stop();
       menu->clickSound();
       settingsMenu->start();
       break;
     }
-    case 5: {  // Quit
+    case 2: {  // Credits?
       // ???
       break;
     }

@@ -66,6 +66,10 @@ bool SaveFile::isValid() {
   return true;
 }
 
+bool SaveFile::didCompleteTutorial() {
+  return data.progress[1].levels[0].didWin;
+}
+
 void SaveFile::load() {
   bn::sram::read(data);
 }

@@ -167,7 +167,7 @@ constexpr const bn::array<bn::sprite_item, 5> PREVIEWS = {
     bn::sprite_items::selection_previewwizard};
 
 constexpr const bn::array<const char*, 5> NAMES = {
-    "Tutorial", "DJ OctoBass", "Synth Wizard", "Grim Riffer", "???"};
+    "Intro", "DJ OctoBass", "Synth Wizard", "Grim Riffer", "???"};
 
 SelectionScene::SelectionScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::SELECTION, _fs),
@@ -283,7 +283,7 @@ void SelectionScene::processInput() {
   }
   if (bn::keypad::a_pressed()) {
     if (selectedIndex == 0) {
-      setNextScreen(GameState::Screen::TUTORIAL);
+      setNextScreen(GameState::Screen::STORY);
     } else if (selectedIndex == 1) {
       prepareStateForLevel();
       setNextScreen(GameState::Screen::DJ);
