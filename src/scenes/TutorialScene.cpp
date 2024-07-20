@@ -134,23 +134,23 @@ void TutorialScene::processBeats() {
   const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
   msecs = PlaybackState.msecs - SaveFile::data.audioLag + OFFSET;
   int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);
-  int tick = Math::fastDiv(msecs * BPM * 16, PER_MINUTE);
+  int tick = Math::fastDiv(msecs * BPM * 32, PER_MINUTE);
   isNewBeatNow = beat != lastBeat;
   isNewTickNow = tick != lastTick;
   lastBeat = beat;
   lastTick = tick != lastTick;
-  tick = tick % 16;
+  tick = tick % 32;
   bool wasInsideBeat = isInsideBeat;
   bool wasInsideTick = isInsideTick;
   if (isNewTickNow) {
-    if (tick == 5)
+    if (tick == 9)
       isInsideTick = true;
-    else if (tick == 11)
+    else if (tick == 23)
       isInsideTick = false;
-    else if (tick == 13) {
+    else if (tick == 25) {
       isInsideTick = true;
       isInsideBeat = true;
-    } else if (tick == 3) {
+    } else if (tick == 7) {
       isInsideTick = false;
       isInsideBeat = false;
     }
