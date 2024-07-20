@@ -14,7 +14,7 @@ PlatformFire::PlatformFire(bn::fixed_point _topLeftPosition,
       isInfinite(_isInfinite) {
   setPosition(_topLeftPosition);
   boundingBox.set_dimensions(bn::fixed_size(_isInfinite ? 50 : 64, 8));
-  boundingBox.set_position(bn::fixed_point(mainSprite.position().x() + 16,
+  boundingBox.set_position(bn::fixed_point(mainSprite.position().x(),
                                            mainSprite.position().y() - 8));
 
   mainSprite.set_camera(camera);
