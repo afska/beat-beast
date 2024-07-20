@@ -39,10 +39,10 @@ BossScene::BossScene(GameState::Screen _screen,
       gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
-  auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
-  auto chart = SONG_findChartByDifficultyLevel(
-      song,
-      static_cast<DifficultyLevel>(SaveFile::data.selectedDifficultyLevel));
+  auto difficultyLevel =
+      static_cast<DifficultyLevel>(SaveFile::data.selectedDifficultyLevel);
+  auto song = SONG_parse(_fs, fileName + CHART_EXTENSION, difficultyLevel);
+  auto chart = SONG_findChartByDifficultyLevel(song, difficultyLevel);
   chartReader =
       bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
 

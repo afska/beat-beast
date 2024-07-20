@@ -34,7 +34,10 @@ if (!fs.existsSync(OUTPUT_PATH))
 // Import
 async function run() {
   console.log("Importing levels...");
-  for (let levelFile of fs.readdirSync(INPUT_PATH)) {
+
+  const levels = fs.readdirSync(INPUT_PATH).filter((it) => !it.startsWith("_"));
+
+  for (let levelFile of levels) {
     if (!FILE_LEVEL.test(levelFile)) continue;
 
     const name = REMOVE_EXTENSION(levelFile);

@@ -28,7 +28,7 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
 #define DMG_TURNTABLE_TO_PLAYER 1
 
 // Damage to enemy
-#define DMG_MEGABALL_TO_ENEMY 10
+#define DMG_MEGABALL_TO_ENEMY 5
 
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)

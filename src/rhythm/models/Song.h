@@ -19,7 +19,9 @@ typedef struct {
   Chart charts[3];
 } Song;
 
-Song SONG_parse(const GBFS_FILE* fs, bn::string<32> fileName);
+Song SONG_parse(const GBFS_FILE* fs,
+                bn::string<32> fileName,
+                DifficultyLevel difficultyLevel);
 Chart SONG_findChartByDifficultyLevel(Song song,
                                       DifficultyLevel difficultyLevel);
 
