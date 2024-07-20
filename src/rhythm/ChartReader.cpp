@@ -6,6 +6,7 @@
 #include "bn_log.h"
 
 #define BEAT_TIMING_WINDOW_MS 80
+#define BEAT_PREDICTION 3
 #define MINUTE 60000
 
 const bn::array<int, SaveFile::TOTAL_DIFFICULTY_LEVELS> TICK_TIMING_WINDOW_MS =
@@ -76,13 +77,26 @@ void ChartReader::processNextEvents() {
   // Some REGULAR events are processed ahead of time to compensate audio lag.
   // Bosses define which type of events receive this compensation,
   // by setting their masks in `eventsThatNeedAudioLagPrediction`.
+  // The same behavior applies to `eventsThatNeedBeatPrediction`, but in
+  // this case the time ahead is always BEAT_PREDICTION beats.
   // SPECIAL events are always processed at the right time.
 
+  int ahead = (int)beatDurationMs * BEAT_PREDICTION;
+  int predictionTime = eventsThatNeedBeatPrediction == 0 ? audioLag
+                       : audioLag > ahead                ? audioLag
+                                                         : ahead;
+
   processEvents(
-      chart.events, chart.eventCount, eventIndex, msecs + audioLag,
-      [this](Event* event, bool* stop) {
+      chart.events, chart.eventCount, eventIndex, msecs + predictionTime,
+      [this, &ahead](Event* event, bool* stop) {
         if (event->isRegular()) {
-          if ((event->getType() & eventsThatNeedAudioLagPrediction) != 0) {
+          if ((event->getType() & eventsThatNeedAudioLagPrediction) != 0 &&
+              msecs + audioLag >= event->timestamp) {
+            pendingEvents.push_back(event);
+            return true;
+          }
+          if ((event->getType() & eventsThatNeedBeatPrediction) != 0 &&
+              msecs + ahead >= event->timestamp) {
             pendingEvents.push_back(event);
             return true;
           }

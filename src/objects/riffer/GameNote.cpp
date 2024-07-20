@@ -50,9 +50,6 @@ bool GameNote::update(int msecs,
     return false;
   }
 
-  if (msecs < event->timestamp)
-    return false;
-
   if (scale < SCALE) {
     scale += SCALE_IN_SPEED;
     if (scale > SCALE)

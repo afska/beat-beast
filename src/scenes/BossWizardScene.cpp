@@ -120,7 +120,7 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background2.get()->set_mosaic_enabled(true);
   background3.get()->set_blending_enabled(true);
   background3.get()->set_mosaic_enabled(true);
-  chartReader->eventsThatNeedAudioLagPrediction = 4080 /* 0b111111110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 4080 /*0b111111110000*/;
 }
 
 void BossWizardScene::updateBossFight() {
