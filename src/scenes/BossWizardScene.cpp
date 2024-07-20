@@ -820,14 +820,13 @@ void BossWizardScene::goToNextPhase() {
   }
 
   phase++;
-  BN_LOG("PHASE");
-  BN_LOG(phase);
+  // BN_LOG("PHASE");
+  // BN_LOG(phase);
 }
 
 void BossWizardScene::causeDamage(bn::fixed amount) {
   wizard->get()->hurt();
+  enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }
-
-// TODO: REMOVE ALL BN_LOGS

@@ -501,13 +501,13 @@ void BossRifferScene::processChart() {
 
       // Set loop marker
       if (IS_EVENT_SET_LOOP_MARKER(type)) {
-        BN_LOG(player_getCursor());
+        // BN_LOG(player_getCursor());
         chartReader->setLoopMarker(event);
       }
 
       // End song
       if (IS_EVENT_END_SONG(type)) {
-        BN_LOG(player_getCursor());
+        // BN_LOG(player_getCursor());
         if (didWin) {
           didFinish = true;
           riffer->setAngryHands();
@@ -952,10 +952,12 @@ void BossRifferScene::moveViewport(bn::fixed newX, bn::fixed newY) {
   background3.get()->set_position({MAP_BASE_X - newX / 2, MAP_BASE_Y});
   camera.set_position(newX, newY);
 
+  /*
   BN_LOG("BG0 {" + bn::to_string<32>(background0.get()->position().x()) + "," +
          bn::to_string<32>(background0.get()->position().y()) + "}");
   BN_LOG("CAM {" + bn::to_string<32>(camera.x()) + ", " +
          bn::to_string<32>(camera.y()) + "}");
+  */
 }
 
 void BossRifferScene::selectGamePlatform(int n, bool now) {
@@ -1025,6 +1027,7 @@ void BossRifferScene::selectGamePlatform(int n, bool now) {
 
 void BossRifferScene::causeDamage(bn::fixed amount) {
   riffer.get()->hurt();
+  enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }

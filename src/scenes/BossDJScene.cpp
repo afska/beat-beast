@@ -246,13 +246,13 @@ void BossDJScene::processChart() {
 
       // Set loop marker
       if (IS_EVENT_SET_LOOP_MARKER(type)) {
-        BN_LOG(player_getCursor());
+        // BN_LOG(player_getCursor());
         chartReader->setLoopMarker(event);
       }
 
       // End song
       if (IS_EVENT_END_SONG(type)) {
-        BN_LOG(player_getCursor());
+        // BN_LOG(player_getCursor());
 
         if (didWin) {
           didFinish = true;
@@ -394,6 +394,7 @@ void BossDJScene::updateSprites() {
 
 void BossDJScene::causeDamage(bn::fixed amount) {
   octopus->hurt();
+  enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 }

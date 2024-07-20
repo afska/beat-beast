@@ -129,9 +129,8 @@ void BossScene::die() {
 void BossScene::win() {
   GameState::data.currentLevelProgress.health =
       (lifeBar->getLife() * 100 / lifeBar->getMaxLife()).floor_integer();
-  auto damage = enemyLifeBar->getMaxLife() + enemyLifeBar->getExtraDamage();
   auto damagePercentage =
-      (damage * 100 / enemyLifeBar->getMaxLife()).floor_integer();
+      (enemyLifeBar->damage * 100 / enemyLifeBar->getMaxLife()).floor_integer();
   GameState::data.currentLevelProgress.damage =
       damagePercentage > 999 ? 1000 : damagePercentage;
   auto totalShots = successfulShots + failedShots;

@@ -49,10 +49,8 @@ bool LifeBar::setLife(bn::fixed _life) {
     if (!loopingCross.has_value())
       loopingCross = bn::unique_ptr{new LoopingCross(mainSprite.position())};
 
-  if (_life <= 0) {
-    extraDamage += -_life;
+  if (_life <= 0)
     return true;
-  }
   if (realLife > maxLife)
     return false;
 

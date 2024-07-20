@@ -108,5 +108,3 @@ void SettingsMenu::refresh() {
   menu->stop();
   start(selectedOption);
 }
-
-// TODO: DEPENDING ON SCENE, VRAM TILE SECTION IS FULL

@@ -6,6 +6,8 @@
 
 class LifeBar : public TopLeftGameObject {
  public:
+  bn::fixed damage = 0;
+
   LifeBar(bn::fixed_point _topLeftPosition,
           bn::fixed _maxLife,
           bn::sprite_item _icon,
@@ -13,7 +15,6 @@ class LifeBar : public TopLeftGameObject {
 
   bn::fixed getLife() { return life; }
   bn::fixed getMaxLife() { return maxLife; }
-  bn::fixed getExtraDamage() { return extraDamage.floor_integer(); }
   bool setLife(bn::fixed _life);
 
   void update();
@@ -31,7 +32,6 @@ class LifeBar : public TopLeftGameObject {
   bool animationFlag = false;
   bn::fixed_point defaultFillPosition;
   bn::optional<bn::unique_ptr<LoopingCross>> loopingCross;
-  bn::fixed extraDamage = 0;
 
   void updateFill(unsigned drawLife);
 };
