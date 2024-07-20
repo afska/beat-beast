@@ -16,7 +16,7 @@
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    75, 150, 275};
+    75, 150, 200};
 
 // Loop
 #define LOOP_OFFSET_CURSOR -2121920
@@ -28,7 +28,7 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
 #define DMG_TURNTABLE_TO_PLAYER 1
 
 // Damage to enemy
-#define DMG_MEGABALL_TO_ENEMY 5
+#define DMG_MEGABALL_TO_ENEMY 7.5
 
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
