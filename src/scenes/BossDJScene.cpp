@@ -15,7 +15,8 @@
 #include "bn_sprite_items_dj_icon_octopus.h"
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
-#define LIFE_BOSS 150
+const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
+    75, 150, 275};
 
 // Loop
 #define LOOP_OFFSET_CURSOR -2121920
@@ -70,11 +71,11 @@ BossDJScene::BossDJScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::DJ,
                 "dj",
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
-                bn::unique_ptr{
-                    new LifeBar({184, 0},
-                                LIFE_BOSS,
-                                bn::sprite_items::dj_icon_octopus,
-                                bn::sprite_items::dj_lifebar_octopus_fill)},
+                bn::unique_ptr{new LifeBar(
+                    {184, 0},
+                    LIFE_BOSS[SaveFile::data.selectedDifficultyLevel],
+                    bn::sprite_items::dj_icon_octopus,
+                    bn::sprite_items::dj_lifebar_octopus_fill)},
                 _fs),
       background3(bn::regular_bg_items::back_dj_disco_bg3.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,

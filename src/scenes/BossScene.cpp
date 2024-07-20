@@ -10,13 +10,14 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 
-#define LIFE_PLAYER 30
 #define BG_DARK_ALPHA 0.2
 #define SFX_PAUSE "menu_pause.pcm"
 #define SFX_LOSE "stopdj.pcm"
 
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".pcm";
+const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> TOTAL_LIFE = {
+    30, 15, 3};
 
 BossScene::BossScene(GameState::Screen _screen,
                      bn::string<32> _fileName,
@@ -28,10 +29,11 @@ BossScene::BossScene(GameState::Screen _screen,
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       horse(bn::move(_horse)),
-      lifeBar(bn::unique_ptr{new LifeBar({0, 0},
-                                         LIFE_PLAYER,
-                                         SpriteProvider::iconHorse(),
-                                         SpriteProvider::lifebarFill())}),
+      lifeBar(bn::unique_ptr{
+          new LifeBar({0, 0},
+                      TOTAL_LIFE[SaveFile::data.selectedDifficultyLevel],
+                      SpriteProvider::iconHorse(),
+                      SpriteProvider::lifebarFill())}),
       comboBar(bn::unique_ptr{new ComboBar({0, 1})}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),

@@ -23,7 +23,8 @@
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
-#define LIFE_BOSS 125
+const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
+    62, 125, 225};
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1
@@ -93,11 +94,11 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::WIZARD,
                 "wizard",
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_Y})},
-                bn::unique_ptr{
-                    new LifeBar({184, 0},
-                                LIFE_BOSS,
-                                bn::sprite_items::wizard_icon_wizard,
-                                bn::sprite_items::wizard_lifebar_wizard_fill)},
+                bn::unique_ptr{new LifeBar(
+                    {184, 0},
+                    LIFE_BOSS[SaveFile::data.selectedDifficultyLevel],
+                    bn::sprite_items::wizard_icon_wizard,
+                    bn::sprite_items::wizard_lifebar_wizard_fill)},
                 _fs),
       background3(bn::regular_bg_items::back_wizard_mountain_bg3.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
