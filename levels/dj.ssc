@@ -11,9 +11,9 @@
 //  ||----- megaball (1) | loop if needed (2)
 //  |------ set loop marker (1) | end song (2)
 
-// Easy
+// NORMAL
 #NOTEDATA:;
-#DIFFICULTY:Easy;
+#DIFFICULTY:NORMAL;
 #NOTES:
 // 00:00 (intro)
 00000000

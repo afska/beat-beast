@@ -26,9 +26,9 @@
 // !16  = fire clear all
 // !99  = end
 
-// Easy
+// NORMAL
 #NOTEDATA:;
-#DIFFICULTY:Easy;
+#DIFFICULTY:NORMAL;
 #NOTES:
 // 00:00 (intro)
 00000050
