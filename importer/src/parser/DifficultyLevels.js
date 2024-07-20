@@ -1,5 +1,5 @@
 module.exports = {
   EASY: 0,
-  MEDIUM: 1,
+  NORMAL: 1,
   HARD: 2,
 };

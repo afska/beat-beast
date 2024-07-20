@@ -40,7 +40,9 @@ BossScene::BossScene(GameState::Screen _screen,
       pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION);
-  auto chart = SONG_findChartByDifficultyLevel(song, DifficultyLevel::EASY);
+  auto chart = SONG_findChartByDifficultyLevel(
+      song,
+      static_cast<DifficultyLevel>(SaveFile::data.selectedDifficultyLevel));
   chartReader =
       bn::unique_ptr{new ChartReader(SaveFile::data.audioLag, song, chart)};
 
