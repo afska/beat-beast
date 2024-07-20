@@ -246,7 +246,8 @@ void BossScene::printLife(bn::fixed life) {
   textSprites.clear();
   textGenerator.generate({-102, -61},
                          (life < 10 ? "0" : "") + bn::to_string<32>(life) +
-                             "/" + bn::to_string<32>(lifeBar->getMaxLife()),
+                             "/" + (lifeBar->getMaxLife() < 10 ? "0" : "") +
+                             bn::to_string<32>(lifeBar->getMaxLife()),
                          textSprites);
 }
 

@@ -24,7 +24,7 @@
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    62, 125, 225};
+    62, 125, 200};
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1

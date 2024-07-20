@@ -19,7 +19,7 @@
 #include "bn_sprite_palettes.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    85, 175, 300};
+    85, 175, 400};
 #define LIFE_BOSS 175
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
