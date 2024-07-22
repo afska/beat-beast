@@ -146,7 +146,7 @@ constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
     true,  true,  true,  true,  true,  true,  true};
 
 constexpr const bn::array<const char*, SaveFile::TOTAL_DIFFICULTY_LEVELS>
-    DIFFICULTY_LEVELS = {"Easy", "Normal", "Hard"};
+    DIFFICULTY_LEVELS = {"Easy?", "Normal", "Impossible"};
 
 constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
 
