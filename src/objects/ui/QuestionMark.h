@@ -5,12 +5,13 @@
 
 class QuestionMark : public GameObject {
  public:
-  QuestionMark(bn::fixed_point initialPosition);
+  QuestionMark(bn::sprite_item spriteItem, bn::fixed_point initialPosition);
 
   bool update();
   void explode();
   bn::fixed_point getPosition() { return sprite.position(); }
   void setPosition(bn::fixed_point position) { sprite.set_position(position); }
+  bn::sprite_ptr getMainSprite() { return sprite; }
 
  private:
   bn::sprite_ptr sprite;

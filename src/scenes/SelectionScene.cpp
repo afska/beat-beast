@@ -11,6 +11,7 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 
+#include "bn_sprite_items_selection_bigquestion.h"
 #include "bn_sprite_items_selection_icon_dj.h"
 #include "bn_sprite_items_selection_icon_horse.h"
 #include "bn_sprite_items_selection_icon_question.h"
@@ -174,7 +175,9 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
       horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}) {
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
+      bigQuestionMark(bn::unique_ptr{
+          new QuestionMark(bn::sprite_items::selection_bigquestion, {0, 0})}) {
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
@@ -317,10 +320,12 @@ void SelectionScene::updateVideo() {
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
 
+  bool isFinalBossSelected = selectedIndex == SaveFile::TOTAL_LEVELS - 1;
   auto scale = TRIANGLE_SCALE[videoFrame.floor_integer()];
   preview.get()->set_position(TRIANGLE_POSITION[videoFrame.floor_integer()]);
   preview.get()->set_scale(scale);
-  preview.get()->set_visible(TRIANGLE_VISIBLE[videoFrame.floor_integer()]);
+  preview.get()->set_visible(TRIANGLE_VISIBLE[videoFrame.floor_integer()] &&
+                             !isFinalBossSelected);
   bn::blending::set_transparency_alpha(
       scale >= 1.90   ? bn::blending::transparency_alpha() / 2
       : scale >= 0.75 ? 0.75
@@ -333,6 +338,8 @@ void SelectionScene::updateVideo() {
 }
 
 void SelectionScene::updateSprites() {
+  bigQuestionMark->update();
+
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
 
@@ -391,6 +398,10 @@ void SelectionScene::updateSelection(bool isUpdate) {
 
   preview.get()->set_mosaic_enabled(true);
   selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);
+
+  bool isFinalBossSelected = selectedIndex == SaveFile::TOTAL_LEVELS - 1;
+  preview.get()->set_visible(!isFinalBossSelected);
+  bigQuestionMark->getMainSprite().set_visible(isFinalBossSelected);
 
   updateStats();
 }

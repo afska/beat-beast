@@ -4,9 +4,9 @@
 
 #include "bn_sprite_items_ui_icon_tutorial.h"
 
-QuestionMark::QuestionMark(bn::fixed_point initialPosition)
-    : sprite(
-          bn::sprite_items::ui_icon_tutorial.create_sprite(initialPosition)) {
+QuestionMark::QuestionMark(bn::sprite_item spriteItem,
+                           bn::fixed_point initialPosition)
+    : sprite(spriteItem.create_sprite(initialPosition)) {
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
 

@@ -5,6 +5,7 @@
 
 #include "../objects/Horse.h"
 #include "../objects/ui/LevelIcon.h"
+#include "../objects/ui/QuestionMark.h"
 #include "../utils/PixelBlink.h"
 
 class SelectionScene : public Scene {
@@ -30,6 +31,7 @@ class SelectionScene : public Scene {
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<PixelBlink> pixelBlink;
+  bn::unique_ptr<QuestionMark> bigQuestionMark;
   bn::optional<bn::sprite_ptr> lSprite;
   bn::optional<bn::sprite_ptr> rSprite;
   bool newRecordHealth = false;

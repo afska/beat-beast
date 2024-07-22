@@ -8,6 +8,7 @@
 
 #include "bn_keypad.h"
 #include "bn_sprite_items_ui_icon_example_guardian.h"
+#include "bn_sprite_items_ui_icon_tutorial.h"
 #include "bn_sprite_items_ui_lifebar_tutorial_fill.h"
 
 #define BPM 85
@@ -333,6 +334,7 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         questionMark.reset();
         questionMark = bn::unique_ptr{new QuestionMark(
+            bn::sprite_items::ui_icon_tutorial,
             bn::fixed_point{80, horse->getCenteredPosition().y()})};
         player_sfx_play(SFX_OBJECTIVE);
         didUnlockMove = true;
@@ -358,6 +360,7 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         questionMark.reset();
         questionMark = bn::unique_ptr{new QuestionMark(
+            bn::sprite_items::ui_icon_tutorial,
             bn::fixed_point{-80, horse->getCenteredPosition().y() - 30})};
         player_sfx_play(SFX_OBJECTIVE);
         didUnlockJump = true;
@@ -535,8 +538,8 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
-        questionMark =
-            bn::unique_ptr{new QuestionMark(bn::fixed_point{100, -60})};
+        questionMark = bn::unique_ptr{new QuestionMark(
+            bn::sprite_items::ui_icon_tutorial, bn::fixed_point{100, -60})};
         state++;
       }
       break;
@@ -561,8 +564,8 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
-        questionMark =
-            bn::unique_ptr{new QuestionMark(bn::fixed_point{-100, -60})};
+        questionMark = bn::unique_ptr{new QuestionMark(
+            bn::sprite_items::ui_icon_tutorial, bn::fixed_point{-100, -60})};
         state++;
       }
       break;
