@@ -95,6 +95,9 @@ bn::sprite_item SpriteProvider::progress() {
 }
 
 bn::sprite_item SpriteProvider::hitbox() {
+  if (GameState::data.currentScreen == GameState::Screen::SELECTION)
+    return bn::sprite_items::ui_radio;
+
   return bn::sprite_items::hitbox;
 }
 
