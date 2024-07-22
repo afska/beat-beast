@@ -64,10 +64,10 @@ make sprites XCF=dj
 ### Build music
 
 ```bash
-# GSM (music)
+# GSM
 ffmpeg -y -i input.wav -ac 1 -af 'aresample=18157' -strict unofficial -c:a gsm output.gsm
 ffplay -ar 18157 output.gsm
-# PCM (sfx)
+# PCM
 ffmpeg -y -i input.wav -ac 1 -ar 36314 -f s8 output.pcm
 ffplay -ar 36314 -f s8 output.pcm
 # Batch convert:
