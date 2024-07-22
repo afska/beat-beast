@@ -150,7 +150,7 @@ constexpr const bn::array<const char*, SaveFile::TOTAL_DIFFICULTY_LEVELS>
 
 constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
 
-constexpr const bn::fixed HEADER_X = 50;
+constexpr const bn::fixed HEADER_X = 55;
 constexpr const bn::fixed HEADER_Y = -80 + 11;
 
 constexpr const bn::array<bn::sprite_item, 5> ICONS = {
