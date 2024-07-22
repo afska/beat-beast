@@ -696,7 +696,7 @@ void BossRifferScene::updateSprites() {
   auto brokenGuitar1 = riffer->getBrokenGuitar1();
   if (brokenGuitar1.has_value()) {
     auto horseBB = horse->getBoundingBox();
-    if (bn::fixed_rect(brokenGuitar1->position(), bn::fixed_size(8, 8))
+    if (bn::fixed_rect(brokenGuitar1->position(), bn::fixed_size(16, 16))
             .intersects(bn::fixed_rect(camera.x() + horseBB.x(),
                                        camera.y() + horseBB.y(),
                                        horseBB.width(), horseBB.height()))) {
