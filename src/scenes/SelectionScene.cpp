@@ -31,6 +31,7 @@
 #define BEAT_PREDICTION_WINDOW 100
 
 #define SFX_MOVE "menu_move.pcm"
+#define SFX_CLICK "menu_click.pcm"
 
 constexpr const bn::array<bn::fixed_point, 150> TRIANGLE_POSITION = {
     bn::fixed_point(2, -6),   bn::fixed_point(2, -6),
@@ -167,8 +168,9 @@ constexpr const bn::array<bn::sprite_item, 5> PREVIEWS = {
     bn::sprite_items::selection_previewriffer,
     bn::sprite_items::selection_previewwizard};
 
-constexpr const bn::array<const char*, 5> NAMES = {
-    "Intro", "DJ OctoBass", "Synth Wizard", "Grim Riffer", "???"};
+constexpr const bn::array<const char*, 6> NAMES = {
+    "Intro",       "DJ OctoBass", "Synth Wizard",
+    "Grim Riffer", "???",         "Defeat the guardians first!"};
 
 SelectionScene::SelectionScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::SELECTION, _fs),
@@ -178,6 +180,8 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
       pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
       bigQuestionMark(bn::unique_ptr{
           new QuestionMark(bn::sprite_items::selection_bigquestion, {0, 0})}) {
+  bigQuestionMark->getMainSprite().set_mosaic_enabled(true);
+
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
@@ -212,7 +216,7 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   iconSeparators.push_back(bn::sprite_items::selection_line.create_sprite(
       Math::toAbsTopLeft({220, 40}, 8, 8)));
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < NAMES.size(); i++) {
     textGenerator.generate(bn::fixed_point(0, 80 - 13), NAMES[i],
                            textSprites[i]);
     for (auto& sprite : textSprites[i]) {
@@ -296,6 +300,12 @@ void SelectionScene::processInput() {
     } else if (selectedIndex == 3) {
       prepareStateForLevel();
       setNextScreen(GameState::Screen::RIFFER);
+    } else if (selectedIndex == 4) {
+      // TODO: IMPLEMENT
+      pixelBlink->blink();
+      player_sfx_play(SFX_CLICK);
+      hideSelectedText();
+      showSelectedText(5);
     }
   }
 }
@@ -351,8 +361,18 @@ void SelectionScene::updateSprites() {
 
 void SelectionScene::unselect() {
   levelIcons[selectedIndex]->setUnselected();
-  for (auto& sprite : textSprites[selectedIndex])
-    sprite.set_visible(false);
+  hideSelectedText();
+}
+
+void SelectionScene::hideSelectedText() {
+  for (int i = 0; i < NAMES.size(); i++)
+    for (auto& sprite : textSprites[i])
+      sprite.set_visible(false);
+}
+
+void SelectionScene::showSelectedText(int index) {
+  for (auto& sprite : textSprites[index])
+    sprite.set_visible(true);
 }
 
 void SelectionScene::updateDifficultyLevel(bool isUpdate) {
@@ -360,6 +380,9 @@ void SelectionScene::updateDifficultyLevel(bool isUpdate) {
     player_sfx_play(SFX_MOVE);
     SaveFile::data.selectedDifficultyLevel = selectedDifficultyLevel;
     SaveFile::save();
+
+    hideSelectedText();
+    showSelectedText(selectedIndex);
   }
   pixelBlink->blink();
 
@@ -393,8 +416,7 @@ void SelectionScene::updateSelection(bool isUpdate) {
   levelIcons[selectedIndex]->setSelected();
   createPreviewAnimation();
 
-  for (auto& sprite : textSprites[selectedIndex])
-    sprite.set_visible(true);
+  showSelectedText(selectedIndex);
 
   preview.get()->set_mosaic_enabled(true);
   selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);
