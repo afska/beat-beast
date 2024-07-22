@@ -141,6 +141,8 @@ void transitionToNextScene() {
   }
 
   scene.reset();
+  update();
+
   bool keepMusic = hasMainMusic(currentScreen) && hasMainMusic(nextScreen);
   if (keepMusic) {
     player_setPause(false);
