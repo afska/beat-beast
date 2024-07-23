@@ -325,14 +325,6 @@ void Riffer::updateAnimations() {
         setIdleState();
     }
   }
-
-  // if (headbangAnimation.has_value()) {
-  // headbangAnimation->update();
-  // if (headbangAnimation->done()) {
-  //   resetAnimations();
-  //   setIdleState();
-  // }
-  // }
 }
 
 void Riffer::setIdleState() {

@@ -1,11 +1,14 @@
 #include "BossGlitchIntroScene.h"
 
+#include "../assets/SpriteProvider.h"
 #include "../assets/StartVideo.h"
 #include "../player/player.h"
 #include "../utils/Math.h"
 
 #include "bn_keypad.h"
-#include "bn_sprite_items_glitch_icon_riffer.h"  // TODO: REMOVE
+#include "bn_sprite_items_glitch_icon_head1.h"
+#include "bn_sprite_items_glitch_icon_head2.h"
+#include "bn_sprite_items_glitch_icon_head3.h"
 
 #define HORSE_X 40
 #define HORSE_Y 90
@@ -52,8 +55,7 @@ void BossGlitchIntroScene::update() {
     return;
 
   horse->setPosition({HORSE_X, HORSE_Y}, true);
-  if (!pauseVideo)
-    horse->update();
+  horse->update();
 
   if (wantsToContinue) {
     wantsToContinue = false;
@@ -126,9 +128,8 @@ void BossGlitchIntroScene::updateDialog() {
     case 12: {
       player_stop();
       player_sfx_play(SFX_PAUSE);
-      pauseVideo = true;
 
-      setDialogIcon(bn::sprite_items::glitch_icon_riffer);  // TODO: REMOVE
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
 
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Stop fighting.");
@@ -136,6 +137,86 @@ void BossGlitchIntroScene::updateDialog() {
       write(strs, true);
 
       state++;
+      break;
+    }
+    case 14: {
+      setDialogIcon(SpriteProvider::iconHorse());
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("|YOU|!!!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 16: {
+      setDialogIcon(bn::sprite_items::glitch_icon_head2);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Do you want to |destroy| us all?");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 18: {
+      setDialogIcon(SpriteProvider::iconHorse());
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("I don't care about you!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 20: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("I know you created this |world|");
+      strs.push_back("in less than 3 months!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 22: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("So, there must be some sort of |bug|");
+      strs.push_back("that I can use to escape.");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 24: {
+      setDialogIcon(bn::sprite_items::glitch_icon_head3);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("I'm sure there are tons of them.");
+      strs.push_back("But darling...");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 26: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("They are not |bugs|.");
+      strs.push_back("They are...");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 28: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("...|features| ;)");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 30: {
+      setNextScreen(GameState::Screen::GLITCH);
       break;
     }
     default: {
