@@ -29,6 +29,7 @@ class AllyDragon : public GameObject {
   bn::fixed flapForce = 4;
   bn::fixed velocityY = 0;
   bn::fixed scale = 1;
+  bn::fixed gravityScale = 0.75;
   bool isFlapping = false;
   bool _isReady = false;
   bool _stopFalling = false;

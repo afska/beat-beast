@@ -51,7 +51,7 @@ bool AllyDragon::update(Horse* horse) {
 
   if (_isReady) {
     if (!_stopFalling) {
-      velocityY += gravity;
+      velocityY += gravity * gravityScale;
       sprite.set_y(sprite.position().y() + velocityY);
       if (sprite.position().y() >= SCREEN_LIMIT) {
         velocityY = 0;
@@ -79,9 +79,9 @@ bool AllyDragon::update(Horse* horse) {
 }
 
 void AllyDragon::flap() {
-  velocityY = -flapForce;
+  velocityY = -flapForce * gravityScale;
 }
 
 void AllyDragon::megaflap() {
-  velocityY = -7;
+  velocityY = -7 * gravityScale;
 }
