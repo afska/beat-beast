@@ -301,11 +301,15 @@ void SelectionScene::processInput() {
       prepareStateForLevel();
       setNextScreen(GameState::Screen::RIFFER);
     } else if (selectedIndex == 4) {
-      // TODO: IMPLEMENT
-      pixelBlink->blink();
-      player_sfx_play(SFX_CLICK);
-      hideSelectedText();
-      showSelectedText(5);
+      if (SaveFile::hasUnlockedFinal(selectedDifficultyLevel)) {
+        prepareStateForLevel();
+        setNextScreen(GameState::Screen::GLITCH_INTRO);
+      } else {
+        pixelBlink->blink();
+        player_sfx_play(SFX_CLICK);
+        hideSelectedText();
+        showSelectedText(5);
+      }
     }
   }
 }

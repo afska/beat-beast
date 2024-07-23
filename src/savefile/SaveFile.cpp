@@ -70,6 +70,13 @@ bool SaveFile::didCompleteTutorial() {
   return data.progress[1].levels[0].didWin;
 }
 
+bool SaveFile::hasUnlockedFinal(int difficultyLevel) {
+  for (int i = 0; i < TOTAL_DIFFICULTY_LEVELS - 1; i++)
+    if (!data.progress[difficultyLevel].levels[i].didWin)
+      return false;
+  return true;
+}
+
 void SaveFile::load() {
   bn::sram::read(data);
 }

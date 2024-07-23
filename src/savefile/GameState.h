@@ -15,7 +15,10 @@ enum Screen {
   TUTORIAL,
   DJ,
   WIZARD,
-  RIFFER
+  RIFFER,
+  GLITCH_INTRO,
+  GLITCH,
+  GLITCH_OUTRO
 };
 
 enum LevelResult { QUIT, DEATH, WIN };

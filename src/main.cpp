@@ -2,6 +2,7 @@
 #include "player/player_sfx.h"
 #include "savefile/SaveFile.h"
 #include "scenes/BossDJScene.h"
+#include "scenes/BossGlitchIntroScene.h"
 #include "scenes/BossRifferScene.h"
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
@@ -109,6 +110,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new BossWizardScene(fs)};
     case GameState::Screen::RIFFER:
       return bn::unique_ptr{(Scene*)new BossRifferScene(fs)};
+    case GameState::Screen::GLITCH_INTRO:
+      return bn::unique_ptr{(Scene*)new BossGlitchIntroScene(fs)};
     default: {
       BN_ERROR("Next screen not found?");
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
@@ -120,7 +123,8 @@ bool hasMainMusic(GameState::Screen screen) {
   return screen == GameState::Screen::START ||
          screen == GameState::Screen::SELECTION ||
          screen == GameState::Screen::STORY ||
-         screen == GameState::Screen::TUTORIAL;
+         screen == GameState::Screen::TUTORIAL ||
+         screen == GameState::Screen::GLITCH_INTRO;
 }
 
 void transitionToNextScene() {

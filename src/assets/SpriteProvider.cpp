@@ -40,6 +40,11 @@
 #include "bn_sprite_items_riffer_lifebar.h"
 #include "bn_sprite_items_riffer_lifebar_fill.h"
 
+#include "bn_sprite_items_glitch_3dhorse1.h"
+#include "bn_sprite_items_glitch_icon_horse.h"
+#include "bn_sprite_items_glitch_lifebar.h"
+#include "bn_sprite_items_glitch_lifebar_fill.h"
+
 bn::sprite_item unknownScreen() {
   BN_ASSERT(false, "Sprites not found for screen: " +
                        bn::to_string<32>(GameState::data.currentScreen));
@@ -115,6 +120,10 @@ bn::sprite_item SpriteProvider::horse() {
       return bn::sprite_items::wizard_horse;
     case GameState::Screen::RIFFER:
       return bn::sprite_items::riffer_horse;
+    case GameState::Screen::GLITCH_INTRO:
+    case GameState::Screen::GLITCH:
+    case GameState::Screen::GLITCH_OUTRO:
+      return bn::sprite_items::glitch_3dhorse1;
     default:
       return bn::sprite_items::ui_horse;
   }
@@ -128,6 +137,10 @@ bn::sprite_item SpriteProvider::iconHorse() {
       return bn::sprite_items::wizard_icon_horse;
     case GameState::Screen::RIFFER:
       return bn::sprite_items::riffer_icon_horse;
+    case GameState::Screen::GLITCH_INTRO:
+    case GameState::Screen::GLITCH:
+    case GameState::Screen::GLITCH_OUTRO:
+      return bn::sprite_items::glitch_icon_horse;
     default:
       return bn::sprite_items::ui_icon_horse;
   }
@@ -141,6 +154,10 @@ bn::sprite_item SpriteProvider::lifebar() {
       return bn::sprite_items::wizard_lifebar;
     case GameState::Screen::RIFFER:
       return bn::sprite_items::riffer_lifebar;
+    case GameState::Screen::GLITCH_INTRO:
+    case GameState::Screen::GLITCH:
+    case GameState::Screen::GLITCH_OUTRO:
+      return bn::sprite_items::glitch_lifebar;
     default:
       return bn::sprite_items::ui_lifebar;
   }
@@ -154,6 +171,10 @@ bn::sprite_item SpriteProvider::lifebarFill() {
       return bn::sprite_items::wizard_lifebar_fill;
     case GameState::Screen::RIFFER:
       return bn::sprite_items::riffer_lifebar_fill;
+    case GameState::Screen::GLITCH_INTRO:
+    case GameState::Screen::GLITCH:
+    case GameState::Screen::GLITCH_OUTRO:
+      return bn::sprite_items::glitch_lifebar_fill;
     default:
       return bn::sprite_items::ui_lifebar_fill;
   }

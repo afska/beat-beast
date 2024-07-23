@@ -37,11 +37,13 @@ class UIScene : public Scene {
   bool wantsToContinue = false;
   unsigned characterIndex = 0;
   bool characterWait = false;
-  bool pauseVideo = false;
-
-  unsigned videoFrame = 0;
-  int extraSpeed = 0;
   bn::unique_ptr<Menu> menu;
+  bool pauseVideo = false;
+  bn::fixed videoFrame = 0;
+  bn::fixed extraSpeed = 0;
+  bn::sprite_item dialogIcon;
+
+  virtual void updateVideo();
 
   bool finishedWriting() {
     if (hasFinishedWriting) {
@@ -64,13 +66,13 @@ class UIScene : public Scene {
            bool withSound = true);
   void closeMenu(bool withSound = true);
   void closeText();
+  void setDialogIcon(bn::sprite_item);
 
  private:
   bool hasFinishedWriting = false;
   bool isPaused = false;
 
   void setUpBlending();
-  void updateVideo();
   void startWriting();
   void stopWriting();
   void autoWrite();

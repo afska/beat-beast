@@ -50,6 +50,7 @@ extern SaveFileData data;
 bool initialize();
 bool isValid();
 bool didCompleteTutorial();
+bool hasUnlockedFinal(int difficultyLevel);
 void load();
 void save();
 void wipe();

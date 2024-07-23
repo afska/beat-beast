@@ -36,7 +36,8 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       menuTextGenerator(common_fixed_8x16_sprite_font),
       menuTextGeneratorAccent(common_fixed_8x16_sprite_font_accent),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
-      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
+      menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
+      dialogIcon(SpriteProvider::iconHorse()) {
   textGenerator.set_one_sprite_per_character(true);
   textGeneratorAccent.set_one_sprite_per_character(true);
   textGenerator.set_z_order(-2);
@@ -134,6 +135,10 @@ void UIScene::closeText() {
   textSprites.clear();
 }
 
+void UIScene::setDialogIcon(bn::sprite_item spriteItem) {
+  dialogIcon = spriteItem;
+}
+
 void UIScene::setUpBlending() {
   bn::blending::set_transparency_alpha(0.5);
 }
@@ -143,11 +148,11 @@ void UIScene::updateVideo() {
     return;
 
   background.reset();
-  background = UIVideo::getFrame(videoFrame)
+  background = UIVideo::getFrame(videoFrame.floor_integer())
                    .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                               (256 - Math::SCREEN_HEIGHT) / 2);
   background.get()->set_blending_enabled(false);
-  extraSpeed = bn::max(extraSpeed - 1, 0);
+  extraSpeed = bn::max(extraSpeed - 1, bn::fixed(0));
   videoFrame += 1 + extraSpeed / 2;
   if (videoFrame >= 10)
     videoFrame = 0;
@@ -167,8 +172,8 @@ void UIScene::startWriting() {
   talkbox2->set_blending_enabled(true);
   talkbox3->set_blending_enabled(true);
   talkbox4->set_blending_enabled(true);
-  icon = SpriteProvider::iconHorse().create_sprite(
-      Math::toAbsTopLeft({4, OFFSET_Y + 98}, 16, 16));
+  icon =
+      dialogIcon.create_sprite(Math::toAbsTopLeft({4, OFFSET_Y + 98}, 16, 16));
 }
 
 void UIScene::stopWriting() {
