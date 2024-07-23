@@ -4,6 +4,7 @@
 #include "UIScene.h"
 
 #include "../objects/Horse.h"
+#include "../objects/glitch/Cerberus.h"
 
 class BossGlitchIntroScene : public UIScene {
  public:
@@ -17,11 +18,14 @@ class BossGlitchIntroScene : public UIScene {
   unsigned state = 0;
   int lastBeat = 0;
   int countdown = 0;
+  bn::optional<bn::unique_ptr<Cerberus>> cerberus;
 
   void updateDialog();
 
  protected:
   void updateVideo() override;
+
+  bool canSkipAutoWrite() override { return countdown == 0; }  // TODO: FIX
 };
 
 #endif  // BOSS_GLITCH_INTRO_SCENE_H

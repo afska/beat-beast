@@ -130,6 +130,8 @@ void BossGlitchIntroScene::updateDialog() {
       player_sfx_play(SFX_PAUSE);
 
       setDialogIcon(bn::sprite_items::glitch_icon_head1);
+      cerberus = bn::unique_ptr{new Cerberus({120 - 64, 0})};
+      pixelBlink->blink();
 
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Stop fighting.");
@@ -142,6 +144,7 @@ void BossGlitchIntroScene::updateDialog() {
     case 14: {
       setDialogIcon(SpriteProvider::iconHorse());
 
+      cerberus->get()->disableMosaic();
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("|YOU|!!!");
       write(strs, true);
