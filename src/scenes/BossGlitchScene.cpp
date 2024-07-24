@@ -50,15 +50,13 @@ void BossGlitchScene::updateBossFight() {
 void BossGlitchScene::processInput() {
   horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
 
-  if (!horse->isJumping()) {
-    if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
-      channel++;
-      updateHorseChannel();
-    }
-    if (bn::keypad::left_pressed() && channel > 0) {
-      channel--;
-      updateHorseChannel();
-    }
+  if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
+    channel++;
+    updateHorseChannel();
+  }
+  if (bn::keypad::left_pressed() && channel > 0) {
+    channel--;
+    updateHorseChannel();
   }
 
   if (bn::keypad::a_pressed())
@@ -114,6 +112,8 @@ void BossGlitchScene::updateBackground() {
     extraSpeed = 10;
 
   videoBackground.reset();
+  horizontalHBE.reset();
+
   videoBackground = StartVideo::getFrame(videoFrame.floor_integer())
                         .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                                    (256 - Math::SCREEN_HEIGHT) / 2);
@@ -125,6 +125,15 @@ void BossGlitchScene::updateBackground() {
 
   int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
   bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
+
+  if (chartReader->isInsideBeat()) {
+    horizontalHBE = bn::regular_bg_position_hbe_ptr::create_horizontal(
+        videoBackground.value(), horizontalDeltas);
+    for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
+      horizontalDeltas[index] = random.get_fixed(-3, 3);
+    }
+    horizontalHBE->reload_deltas_ref();
+  }
 }
 
 void BossGlitchScene::updateSprites() {

@@ -22,6 +22,8 @@ class BossGlitchScene : public BossScene {
   bn::fixed videoFrame = 0;
   bn::fixed extraSpeed = 0;
   int channel = 0;
+  bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
+  bn::optional<bn::regular_bg_position_hbe_ptr> horizontalHBE;
 
   void processInput();
   void processChart();
