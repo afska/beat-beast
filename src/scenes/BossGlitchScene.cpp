@@ -80,8 +80,9 @@ void BossGlitchScene::processInput() {
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    glitchType = 4;  // TODO: REMOVE
+    glitchType = 6;  // TODO: REMOVE
     glitchFrames = 18;
+    halfAnimatedFlag = 2;
     frozenVideoFrame = videoFrame;
     actualVideoFrame = videoFrame;
   }
@@ -135,17 +136,21 @@ void BossGlitchScene::updateBackground() {
   if (isNewBeat)
     extraSpeed = 10;
 
-  videoBackground.reset();
-  horizontalHBE.reset();
-
-  videoBackground = StartVideo::getFrame(videoFrame.floor_integer())
-                        .create_bg((256 - Math::SCREEN_WIDTH) / 2,
-                                   (256 - Math::SCREEN_HEIGHT) / 2 + offsetY);
-  videoBackground.get()->set_blending_enabled(true);
+  auto currentVideoFrame = videoFrame.floor_integer();
   extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
   videoFrame += (1 + extraSpeed / 2) / 2;
   if (videoFrame >= 150)
     videoFrame = 0;
+  if (pauseVideo)
+    return;
+
+  videoBackground.reset();
+  horizontalHBE.reset();
+
+  videoBackground = StartVideo::getFrame(currentVideoFrame)
+                        .create_bg((256 - Math::SCREEN_WIDTH) / 2,
+                                   (256 - Math::SCREEN_HEIGHT) / 2 + offsetY);
+  videoBackground.get()->set_blending_enabled(true);
 
   int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
   bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
@@ -214,12 +219,13 @@ void BossGlitchScene::updateGlitches() {
       // [init]: frozenVideoFrame = videoFrame;
       // [init]: actualVideoFrame = videoFrame;
       if (halfAnimatedFlag >= 2) {
+        videoFrame = frozenVideoFrame;
+      } else {
         actualVideoFrame = actualVideoFrame + 1;
         if (actualVideoFrame >= 150)
           actualVideoFrame = 0;
         videoFrame = actualVideoFrame;
-      } else
-        videoFrame = frozenVideoFrame;
+      }
       if (isLastFrame)
         videoFrame = actualVideoFrame;
 
@@ -237,6 +243,20 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 6: {
+      // stutter + speedup
+      if (halfAnimatedFlag >= 2) {
+        pauseVideo = true;
+        extraSpeed = 20;
+      } else
+        pauseVideo = false;
+
+      if (isLastFrame) {
+        pauseVideo = false;
+        extraSpeed = 0;
+      }
+      break;
+    }
+    case 7: {
       break;
     }
     default: {
