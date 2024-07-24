@@ -25,7 +25,7 @@ class BossGlitchIntroScene : public UIScene {
  protected:
   void updateVideo() override;
 
-  bool canSkipAutoWrite() override { return countdown == 0; }  // TODO: FIX
+  bool canSkipAutoWrite() override { return countdown == 0; }
 };
 
 #endif  // BOSS_GLITCH_INTRO_SCENE_H

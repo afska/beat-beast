@@ -131,6 +131,7 @@ void UIScene::closeMenu(bool withSound) {
 
 void UIScene::closeText() {
   hasFinishedWriting = false;
+  hasMoreMessages = false;
   stopWriting();
   textSprites.clear();
 }
