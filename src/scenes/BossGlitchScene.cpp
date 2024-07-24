@@ -7,10 +7,13 @@
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
+#include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
+#include "bn_log.h"
 #include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
+#include "bn_sprites_mosaic.h"
 
 const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
 
@@ -80,7 +83,7 @@ void BossGlitchScene::processInput() {
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    glitchType = 6;  // TODO: REMOVE
+    glitchType = 8;  // TODO: REMOVE
     glitchFrames = 18;
     halfAnimatedFlag = 2;
     frozenVideoFrame = videoFrame;
@@ -151,6 +154,7 @@ void BossGlitchScene::updateBackground() {
                         .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                                    (256 - Math::SCREEN_HEIGHT) / 2 + offsetY);
   videoBackground.get()->set_blending_enabled(true);
+  videoBackground.get()->set_mosaic_enabled(mosaicVideo);
 
   int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
   bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
@@ -257,6 +261,27 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 7: {
+      // pixelate horse
+      bn::bgs_mosaic::set_stretch(random.get_fixed(0, 1));
+      bn::sprites_mosaic::set_stretch(random.get_fixed(0, 1));
+      if (isLastFrame) {
+        bn::bgs_mosaic::set_stretch(0);
+        bn::sprites_mosaic::set_stretch(0);
+      }
+      break;
+    }
+    case 8: {
+      // pixelate everything
+      mosaicVideo = true;
+      if (halfAnimatedFlag >= 2) {
+        bn::bgs_mosaic::set_stretch(random.get_fixed(0, 1));
+        bn::sprites_mosaic::set_stretch(random.get_fixed(0, 1));
+      }
+      if (isLastFrame) {
+        bn::bgs_mosaic::set_stretch(0);
+        bn::sprites_mosaic::set_stretch(0);
+        mosaicVideo = false;
+      }
       break;
     }
     default: {

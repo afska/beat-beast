@@ -1,7 +1,6 @@
 #include "PixelBlink.h"
 
 #include "bn_bgs_mosaic.h"
-#include "bn_log.h"
 #include "bn_sprites_mosaic.h"
 
 PixelBlink::PixelBlink(bn::fixed _targetValue) {
