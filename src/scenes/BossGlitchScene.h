@@ -29,6 +29,8 @@ class BossGlitchScene : public BossScene {
   int glitchFrames = 0;
   bool animatedFlag = false;
   int halfAnimatedFlag = 0;
+  int sixteenthAnimatedFlag = 0;
+  bn::fixed offsetY = 0;
 
   void processInput();
   void processChart();

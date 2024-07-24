@@ -51,12 +51,13 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
 void BossGlitchScene::updateBossFight() {
   animatedFlag = !animatedFlag;
   halfAnimatedFlag = (halfAnimatedFlag + 1) % 4;
+  sixteenthAnimatedFlag = (sixteenthAnimatedFlag + 1) % 6;
 
   processInput();
   processChart();
+  updateGlitches();
   updateBackground();
   updateSprites();
-  updateGlitches();
 }
 
 void BossGlitchScene::processInput() {
@@ -137,7 +138,7 @@ void BossGlitchScene::updateBackground() {
 
   videoBackground = StartVideo::getFrame(videoFrame.floor_integer())
                         .create_bg((256 - Math::SCREEN_WIDTH) / 2,
-                                   (256 - Math::SCREEN_HEIGHT) / 2);
+                                   (256 - Math::SCREEN_HEIGHT) / 2 + offsetY);
   videoBackground.get()->set_blending_enabled(true);
   extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
   videoFrame += (1 + extraSpeed / 2) / 2;
@@ -197,7 +198,13 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 3: {
-      // TODO: IMPLEMENT
+      if (halfAnimatedFlag >= 2)
+        offsetY = random.get_fixed(-60, 60);
+      if (isLastFrame)
+        offsetY = 0;
+      break;
+    }
+    case 4: {
       break;
     }
     default: {
