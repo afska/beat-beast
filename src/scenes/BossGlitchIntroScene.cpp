@@ -57,6 +57,10 @@ void BossGlitchIntroScene::update() {
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
 
+  if (cerberus.has_value()) {
+    cerberus->get()->update();
+  }
+
   if (wantsToContinue) {
     wantsToContinue = false;
     state++;

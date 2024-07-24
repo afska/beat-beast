@@ -7,7 +7,7 @@ class Cerberus : public TopLeftGameObject {
  public:
   Cerberus(bn::fixed_point initialPosition);
 
-  bool update(bn::fixed_point playerPosition, bool isInsideBeat);
+  bool update();
   void bounce();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);
@@ -23,13 +23,14 @@ class Cerberus : public TopLeftGameObject {
 
  private:
   bn::sprite_ptr secondarySprite;
+  bn::sprite_animate_action<3> mainAnimation;
+  bn::sprite_animate_action<3> secondaryAnimation;
+
   bn::fixed_point targetPosition;
   bn::fixed speedX = 1;
   bn::fixed speedY = 1;
 
-  void updateSubsprites(bn::fixed_point playerPosition);
-
-  // TODO: ANIMATIONS
+  void updateSubsprites();
 };
 
 #endif  // CERBERUS_H
