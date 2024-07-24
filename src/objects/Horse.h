@@ -51,6 +51,7 @@ class Horse : public TopLeftGameObject {
   void disappearInto(bn::fixed_point _disappearPosition) {
     disappearPosition = _disappearPosition;
   }
+  void setIdleOrRunningState();
 
  private:
   bn::sprite_ptr gunSprite;
@@ -74,7 +75,6 @@ class Horse : public TopLeftGameObject {
   void updateAngle();
 
   void updateAnimations();
-  void setIdleOrRunningState();
   void setIdleState();
   void setRunningState();
   void setJumpingState();

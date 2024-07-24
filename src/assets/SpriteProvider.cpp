@@ -41,9 +41,12 @@
 #include "bn_sprite_items_riffer_lifebar_fill.h"
 
 #include "bn_sprite_items_glitch_3dhorse1.h"
+#include "bn_sprite_items_glitch_3dhorse2.h"
 #include "bn_sprite_items_glitch_icon_horse.h"
 #include "bn_sprite_items_glitch_lifebar.h"
 #include "bn_sprite_items_glitch_lifebar_fill.h"
+
+int _3D_CHANNEL = 0;
 
 bn::sprite_item unknownScreen() {
   BN_ASSERT(false, "Sprites not found for screen: " +
@@ -123,7 +126,10 @@ bn::sprite_item SpriteProvider::horse() {
     case GameState::Screen::GLITCH_INTRO:
     case GameState::Screen::GLITCH:
     case GameState::Screen::GLITCH_OUTRO:
-      return bn::sprite_items::glitch_3dhorse1;
+      if (_3D_CHANNEL == 0 || _3D_CHANNEL == 3)
+        return bn::sprite_items::glitch_3dhorse1;
+      else
+        return bn::sprite_items::glitch_3dhorse2;
     default:
       return bn::sprite_items::ui_horse;
   }

@@ -1,3 +1,4 @@
+#include "assets/SpriteProvider.h"
 #include "player/player.h"
 #include "player/player_sfx.h"
 #include "savefile/SaveFile.h"
@@ -96,6 +97,7 @@ BN_CODE_IWRAM void ISR_VBlank() {
 }
 
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
+  _3D_CHANNEL = 0;
   auto continuationScreen = GameState::data.currentScreen;
   GameState::data.currentScreen = nextScreen;
 

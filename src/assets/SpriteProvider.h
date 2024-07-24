@@ -3,6 +3,8 @@
 
 #include "bn_sprite_item.h"
 
+extern int _3D_CHANNEL;
+
 namespace SpriteProvider {
 
 bn::sprite_item gun();

@@ -12,7 +12,9 @@
 #include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
-#define HORSE_X 40
+const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
+
+#define HORSE_X CHANNEL_X[0]
 #define HORSE_Y 90
 
 // Events
@@ -32,6 +34,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
+  horse->getMainSprite().set_mosaic_enabled(true);
   updateBackground();
 
   chartReader->eventsThatNeedAudioLagPrediction = 0 /*0b0*/;
@@ -45,7 +48,21 @@ void BossGlitchScene::updateBossFight() {
 }
 
 void BossGlitchScene::processInput() {
-  horse->setPosition({HORSE_X, HORSE_Y}, true);
+  horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+
+  if (!horse->isJumping()) {
+    if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
+      channel++;
+      updateHorseChannel();
+    }
+    if (bn::keypad::left_pressed() && channel > 0) {
+      channel--;
+      updateHorseChannel();
+    }
+  }
+
+  if (bn::keypad::a_pressed())
+    horse->jump();
 
   return;
 
@@ -100,7 +117,6 @@ void BossGlitchScene::updateBackground() {
   videoBackground = StartVideo::getFrame(videoFrame.floor_integer())
                         .create_bg((256 - Math::SCREEN_WIDTH) / 2,
                                    (256 - Math::SCREEN_HEIGHT) / 2);
-  videoBackground.get()->set_mosaic_enabled(true);
   videoBackground.get()->set_blending_enabled(true);
   extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
   videoFrame += (1 + extraSpeed / 2) / 2;
@@ -113,6 +129,14 @@ void BossGlitchScene::updateBackground() {
 
 void BossGlitchScene::updateSprites() {
   updateCommonSprites();
+}
+
+void BossGlitchScene::updateHorseChannel() {
+  _3D_CHANNEL = channel;
+  horse->setPosition({CHANNEL_X[channel], horse->getPosition().y()}, true);
+  horse->setIdleOrRunningState();
+  horse->setFlipX(channel >= 2);
+  pixelBlink->blink();
 }
 
 void BossGlitchScene::causeDamage(bn::fixed amount) {

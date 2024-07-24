@@ -21,11 +21,14 @@ class BossGlitchScene : public BossScene {
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::fixed videoFrame = 0;
   bn::fixed extraSpeed = 0;
+  int channel = 0;
 
   void processInput();
   void processChart();
   void updateBackground();
   void updateSprites();
+
+  void updateHorseChannel();
 
   void causeDamage(bn::fixed amount);
 };
