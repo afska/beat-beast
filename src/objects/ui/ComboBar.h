@@ -9,6 +9,7 @@ class ComboBar : public TopLeftGameObject {
            unsigned _maxCombo = 15,
            unsigned _divisor = 1);
 
+  void relocate(bn::fixed_point _topLeftPosition);
   unsigned getCombo() { return combo; }
   void setCombo(unsigned _combo);
   bool isMaxedOut() { return combo == maxCombo; }

@@ -94,9 +94,9 @@ class BossScene : public Scene {
   void reportFailedShot();
   void enableGunAlert(bn::sprite_item sprite);
   void disableGunAlert();
+  void printLife(bn::fixed life);
 
  private:
-  void printLife(bn::fixed life);
   void updateChartReader();
 
   bool processPauseInput();

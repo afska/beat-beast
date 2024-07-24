@@ -79,7 +79,7 @@ void BossGlitchScene::processInput() {
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    glitchType = 1;  // TODO: REMOVE
+    glitchType = 3;  // TODO: REMOVE
     glitchFrames = 18;
   }
 
@@ -178,6 +178,26 @@ void BossGlitchScene::updateGlitches() {
         ghostHorse->get()->getMainSprite().set_visible(halfAnimatedFlag >= 2 &&
                                                        !isLastFrame);
       }
+      break;
+    }
+    case 2: {
+      if (halfAnimatedFlag >= 2) {
+        auto newPosition = bn::fixed_point(random.get_fixed(0, 200), 0);
+        lifeBar->relocate(newPosition);
+        comboBar->relocate(newPosition);
+        for (auto& spr : textSprites) {
+          spr.set_position({random.get_fixed(0, 200), spr.y()});
+        }
+      }
+      if (isLastFrame) {
+        lifeBar->relocate({0, 0});
+        comboBar->relocate({0, 0});
+        printLife(lifeBar->getLife());
+      }
+      break;
+    }
+    case 3: {
+      // TODO: IMPLEMENT
       break;
     }
     default: {

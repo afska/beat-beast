@@ -25,13 +25,7 @@ LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
       maxLife(_maxLife),
       icon(_icon.create_sprite(0, 0)),
       fill(_fill.create_sprite(0, 0)) {
-  icon.set_position(
-      Math::toAbsTopLeft(_topLeftPosition + MARGIN_BORDER, 16, 16));
-
-  setTopLeftPosition(_topLeftPosition + MARGIN_BORDER +
-                     bn::fixed_point(16 + MARGIN_ITEMS, 0));
-  defaultFillPosition = getCenteredPosition();
-  fill.set_position(defaultFillPosition);
+  relocate(_topLeftPosition);
   setLife(_maxLife);
 
   icon.set_z_order(-1);
@@ -40,6 +34,16 @@ LifeBar::LifeBar(bn::fixed_point _topLeftPosition,
   icon.set_bg_priority(0);
   mainSprite.set_bg_priority(0);
   fill.set_bg_priority(0);
+}
+
+void LifeBar::relocate(bn::fixed_point _topLeftPosition) {
+  icon.set_position(
+      Math::toAbsTopLeft(_topLeftPosition + MARGIN_BORDER, 16, 16));
+
+  setTopLeftPosition(_topLeftPosition + MARGIN_BORDER +
+                     bn::fixed_point(16 + MARGIN_ITEMS, 0));
+  defaultFillPosition = getCenteredPosition();
+  fill.set_position(defaultFillPosition);
 }
 
 bool LifeBar::setLife(bn::fixed _life) {

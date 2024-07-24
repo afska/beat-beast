@@ -13,6 +13,7 @@ class LifeBar : public TopLeftGameObject {
           bn::sprite_item _icon,
           bn::sprite_item _fill);
 
+  void relocate(bn::fixed_point _topLeftPosition);
   bn::fixed getLife() { return life; }
   bn::fixed getMaxLife() { return maxLife; }
   bool setLife(bn::fixed _life);

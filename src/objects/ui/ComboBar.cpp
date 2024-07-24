@@ -15,12 +15,16 @@ ComboBar::ComboBar(bn::fixed_point _topLeftPosition,
     : TopLeftGameObject(SpriteProvider::combobar().create_sprite(0, 0)),
       maxCombo(_maxCombo),
       divisor(_divisor) {
-  setTopLeftPosition(_topLeftPosition + MARGIN_BORDER +
-                     bn::fixed_point(16 + MARGIN_ITEMS, 0));
+  relocate(_topLeftPosition);
   setCombo(0);
 
   mainSprite.set_z_order(-1);
   mainSprite.set_bg_priority(0);
+}
+
+void ComboBar::relocate(bn::fixed_point _topLeftPosition) {
+  setTopLeftPosition(_topLeftPosition + MARGIN_BORDER +
+                     bn::fixed_point(16 + MARGIN_ITEMS, 0));
 }
 
 void ComboBar::setCombo(unsigned _combo) {
