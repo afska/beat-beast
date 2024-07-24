@@ -145,6 +145,13 @@ void BossGlitchScene::updateHorseChannel() {
   horse->setPosition({CHANNEL_X[channel], horse->getPosition().y()}, true);
   horse->setIdleOrRunningState();
   horse->setFlipX(channel >= 2);
+  if (channel == 1 || channel == 2) {
+    horse->customScale = true;
+    horse->getMainSprite().set_scale(1.2);
+  } else {
+    horse->customScale = false;
+    horse->getMainSprite().set_scale(1);
+  }
   pixelBlink->blink();
 }
 
