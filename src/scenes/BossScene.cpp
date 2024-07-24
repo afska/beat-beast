@@ -37,7 +37,7 @@ BossScene::BossScene(GameState::Screen _screen,
       comboBar(bn::unique_ptr{new ComboBar({0, 1})}),
       enemyLifeBar(bn::move(_enemyLifeBar)),
       gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
-      pixelBlink(bn::unique_ptr{new PixelBlink(0.3)}),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.5)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
   auto difficultyLevel =
       static_cast<DifficultyLevel>(SaveFile::data.selectedDifficultyLevel);

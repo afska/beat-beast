@@ -22,7 +22,7 @@ bool PixelBlink::update() {
   if (isBlinking) {
     step += 0.1;
     if (step >= targetValue) {
-      step = 1;
+      step = targetValue;
       isBlinking = false;
       hasEnded = true;
     }

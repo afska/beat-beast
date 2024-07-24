@@ -177,7 +177,7 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
       horse(bn::unique_ptr{new Horse({0, 0})}),
       textGenerator(common_fixed_8x16_sprite_font),
       textGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.5)}),
       bigQuestionMark(bn::unique_ptr{
           new QuestionMark(bn::sprite_items::selection_bigquestion, {0, 0})}) {
   bigQuestionMark->getMainSprite().set_mosaic_enabled(true);

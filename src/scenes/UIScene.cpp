@@ -35,7 +35,7 @@ UIScene::UIScene(GameState::Screen _screen, const GBFS_FILE* _fs)
       textGeneratorAccent(common_variable_8x16_sprite_font_accent),
       menuTextGenerator(common_fixed_8x16_sprite_font),
       menuTextGeneratorAccent(common_fixed_8x16_sprite_font_accent),
-      pixelBlink(bn::unique_ptr{new PixelBlink(0.1)}),
+      pixelBlink(bn::unique_ptr{new PixelBlink(0.5)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
       dialogIcon(SpriteProvider::iconHorse()) {
   textGenerator.set_one_sprite_per_character(true);
