@@ -78,12 +78,18 @@ void BossGlitchScene::processInput() {
     updateHorseChannel();
   }
 
+  if (bn::keypad::r_pressed()) {
+    selectedGlitch = (selectedGlitch + 1) % 8;
+  }
+  if (bn::keypad::l_pressed()) {
+    selectedGlitch = ((selectedGlitch - 1) % 8 + 8) % 8;
+  }
   if (bn::keypad::a_pressed()) {
     horse->jump();
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    glitchType = 8;  // TODO: REMOVE
+    glitchType = 1 + selectedGlitch;  // TODO: REMOVE
     glitchFrames = 18;
     halfAnimatedFlag = 2;
     frozenVideoFrame = videoFrame;
@@ -183,6 +189,8 @@ void BossGlitchScene::updateGlitches() {
 
   glitchFrames--;
   bool isLastFrame = glitchFrames == 0;
+
+  // TODO: Unify cleanup
 
   switch (glitchType) {
     case 1: {

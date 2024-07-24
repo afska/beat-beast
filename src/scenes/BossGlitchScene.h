@@ -35,6 +35,7 @@ class BossGlitchScene : public BossScene {
   bn::fixed actualVideoFrame = 0;
   bool pauseVideo = false;
   bool mosaicVideo = false;
+  int selectedGlitch = 0;
 
   void processInput();
   void processChart();
