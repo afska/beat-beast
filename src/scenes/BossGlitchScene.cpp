@@ -38,17 +38,32 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   updateBackground();
 
   chartReader->eventsThatNeedAudioLagPrediction = 0 /*0b0*/;
+
+  ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
+  ghostHorse->get()->showGun = false;
+  ghostHorse->get()->setPosition({HORSE_X, HORSE_Y}, true);
+  ghostHorse->get()->getMainSprite().set_mosaic_enabled(true);
+  ghostHorse->get()->getMainSprite().set_visible(false);
+
+  updateHorseChannel();
 }
 
 void BossGlitchScene::updateBossFight() {
+  animatedFlag = !animatedFlag;
+  halfAnimatedFlag = (halfAnimatedFlag + 1) % 4;
+
   processInput();
   processChart();
   updateBackground();
   updateSprites();
+  updateGlitches();
 }
 
 void BossGlitchScene::processInput() {
   horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+  if (ghostHorse.has_value())
+    ghostHorse->get()->setPosition(
+        {ghostHorse->get()->getPosition().x(), HORSE_Y}, true);
 
   if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
     channel++;
@@ -59,8 +74,14 @@ void BossGlitchScene::processInput() {
     updateHorseChannel();
   }
 
-  if (bn::keypad::a_pressed())
+  if (bn::keypad::a_pressed()) {
     horse->jump();
+    if (ghostHorse.has_value()) {
+      ghostHorse->get()->jump();
+    }
+    glitchType = 1;  // TODO: REMOVE
+    glitchFrames = 18;
+  }
 
   return;
 
@@ -138,6 +159,30 @@ void BossGlitchScene::updateBackground() {
 
 void BossGlitchScene::updateSprites() {
   updateCommonSprites();
+
+  if (ghostHorse.has_value()) {
+    ghostHorse->get()->update();
+  }
+}
+
+void BossGlitchScene::updateGlitches() {
+  if (glitchFrames == 0)
+    return;
+
+  glitchFrames--;
+  bool isLastFrame = glitchFrames == 0;
+
+  switch (glitchType) {
+    case 1: {
+      if (ghostHorse.has_value()) {
+        ghostHorse->get()->getMainSprite().set_visible(halfAnimatedFlag >= 2 &&
+                                                       !isLastFrame);
+      }
+      break;
+    }
+    default: {
+    }
+  }
 }
 
 void BossGlitchScene::updateHorseChannel() {
@@ -153,6 +198,23 @@ void BossGlitchScene::updateHorseChannel() {
     horse->getMainSprite().set_scale(1);
   }
   pixelBlink->blink();
+
+  if (ghostHorse.has_value()) {
+    auto mirroredChannel = CHANNEL_X.size() - 1 - channel;
+
+    ghostHorse->get()->setPosition(
+        {CHANNEL_X[mirroredChannel], ghostHorse->get()->getPosition().y()},
+        true);
+    ghostHorse->get()->setIdleOrRunningState();
+    ghostHorse->get()->setFlipX(mirroredChannel >= 2);
+    if (mirroredChannel == 1 || mirroredChannel == 2) {
+      ghostHorse->get()->customScale = true;
+      ghostHorse->get()->getMainSprite().set_scale(1.2);
+    } else {
+      ghostHorse->get()->customScale = false;
+      ghostHorse->get()->getMainSprite().set_scale(1);
+    }
+  }
 }
 
 void BossGlitchScene::causeDamage(bn::fixed amount) {
