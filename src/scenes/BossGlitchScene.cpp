@@ -7,12 +7,14 @@
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
 
+#include "bn_bg_palettes.h"
 #include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_log.h"
 #include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
+#include "bn_sprite_palettes.h"
 #include "bn_sprites_mosaic.h"
 
 const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
@@ -78,11 +80,13 @@ void BossGlitchScene::processInput() {
     updateHorseChannel();
   }
 
+  const int totalGlitches = 10;
   if (bn::keypad::r_pressed()) {
-    selectedGlitch = (selectedGlitch + 1) % 8;
+    selectedGlitch = (selectedGlitch + 1) % totalGlitches;
   }
   if (bn::keypad::l_pressed()) {
-    selectedGlitch = ((selectedGlitch - 1) % 8 + 8) % 8;
+    selectedGlitch =
+        ((selectedGlitch - 1) % totalGlitches + totalGlitches) % totalGlitches;
   }
   if (bn::keypad::a_pressed()) {
     horse->jump();
@@ -290,6 +294,19 @@ void BossGlitchScene::updateGlitches() {
         bn::sprites_mosaic::set_stretch(0);
         mosaicVideo = false;
       }
+      break;
+    }
+    case 9: {
+      // invert sprite colors
+      invertColors = halfAnimatedFlag >= 2 && !isLastFrame;
+      bn::sprite_palettes::set_inverted(invertColors);
+      break;
+    }
+    case 10: {
+      // random hue shift
+      hueShift =
+          halfAnimatedFlag >= 2 && !isLastFrame ? random.get_fixed(0, 1) : 0;
+      bn::bg_palettes::set_hue_shift_intensity(hueShift);
       break;
     }
     default: {
