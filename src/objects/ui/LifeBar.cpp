@@ -90,6 +90,12 @@ void LifeBar::bounce() {
   animationWait = ANIMATION_WAIT_TIME;
 }
 
+void LifeBar::hide() {
+  mainSprite.set_visible(false);
+  icon.set_visible(false);
+  fill.set_visible(false);
+}
+
 void LifeBar::updateFill(unsigned drawLife) {
   if (drawLife == 0)
     return;

@@ -133,8 +133,9 @@ void BossGlitchIntroScene::updateDialog() {
       player_stop();
       player_sfx_play(SFX_PAUSE);
 
-      setDialogIcon(bn::sprite_items::glitch_icon_head1);
       cerberus = bn::unique_ptr{new Cerberus({120 - 64, 0})};
+      cerberus->get()->getHead1()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
       pixelBlink->blink();
 
       bn::vector<bn::string<64>, 2> strs;
@@ -146,6 +147,7 @@ void BossGlitchIntroScene::updateDialog() {
       break;
     }
     case 14: {
+      cerberus->get()->blinkAll();
       setDialogIcon(SpriteProvider::iconHorse());
 
       cerberus->get()->disableMosaic();
@@ -157,6 +159,7 @@ void BossGlitchIntroScene::updateDialog() {
       break;
     }
     case 16: {
+      cerberus->get()->getHead2()->talk();
       setDialogIcon(bn::sprite_items::glitch_icon_head2);
 
       bn::vector<bn::string<64>, 2> strs;
@@ -167,6 +170,7 @@ void BossGlitchIntroScene::updateDialog() {
       break;
     }
     case 18: {
+      cerberus->get()->blinkAll();
       setDialogIcon(SpriteProvider::iconHorse());
 
       bn::vector<bn::string<64>, 2> strs;
@@ -195,6 +199,7 @@ void BossGlitchIntroScene::updateDialog() {
       break;
     }
     case 24: {
+      cerberus->get()->getHead3()->talk();
       setDialogIcon(bn::sprite_items::glitch_icon_head3);
 
       bn::vector<bn::string<64>, 2> strs;

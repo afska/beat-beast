@@ -3,6 +3,7 @@
 #include "savefile/SaveFile.h"
 #include "scenes/BossDJScene.h"
 #include "scenes/BossGlitchIntroScene.h"
+#include "scenes/BossGlitchScene.h"
 #include "scenes/BossRifferScene.h"
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
@@ -60,6 +61,13 @@ int main() {
   auto initialScreen = SaveFile::data.didCalibrate
                            ? GameState::Screen::START
                            : GameState::Screen::CALIBRATION;
+
+  // TODO: REMOVE!!!
+  GameState::data.isPlaying = true;
+  GameState::data.currentLevelProgress = SaveFile::data.progress[1].levels[4];
+  initialScreen = GameState::Screen::GLITCH;
+  // TODO: REMOVE!!!
+
   GameState::data.currentScreen = initialScreen;
   scene = setNextScene(GameState::Screen::CONTROLS);
   scene->get()->init();
@@ -112,6 +120,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new BossRifferScene(fs)};
     case GameState::Screen::GLITCH_INTRO:
       return bn::unique_ptr{(Scene*)new BossGlitchIntroScene(fs)};
+    case GameState::Screen::GLITCH:
+      return bn::unique_ptr{(Scene*)new BossGlitchScene(fs)};
     default: {
       BN_ERROR("Next screen not found?");
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
