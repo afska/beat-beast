@@ -31,6 +31,8 @@ class BossGlitchScene : public BossScene {
   int halfAnimatedFlag = 0;
   int sixteenthAnimatedFlag = 0;
   bn::fixed offsetY = 0;
+  bn::fixed frozenVideoFrame = 0;
+  bn::fixed actualVideoFrame = 0;
 
   void processInput();
   void processChart();

@@ -80,8 +80,10 @@ void BossGlitchScene::processInput() {
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    glitchType = 3;  // TODO: REMOVE
+    glitchType = 4;  // TODO: REMOVE
     glitchFrames = 18;
+    frozenVideoFrame = videoFrame;
+    actualVideoFrame = videoFrame;
   }
 
   return;
@@ -175,6 +177,7 @@ void BossGlitchScene::updateGlitches() {
 
   switch (glitchType) {
     case 1: {
+      // ghost horse
       if (ghostHorse.has_value()) {
         ghostHorse->get()->getMainSprite().set_visible(halfAnimatedFlag >= 2 &&
                                                        !isLastFrame);
@@ -182,6 +185,7 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 2: {
+      // life bar warp
       if (halfAnimatedFlag >= 2) {
         auto newPosition = bn::fixed_point(random.get_fixed(0, 200), 0);
         lifeBar->relocate(newPosition);
@@ -198,6 +202,7 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 3: {
+      // BG Y-scroll
       if (halfAnimatedFlag >= 2)
         offsetY = random.get_fixed(-60, 60);
       if (isLastFrame)
@@ -205,6 +210,33 @@ void BossGlitchScene::updateGlitches() {
       break;
     }
     case 4: {
+      // frozen video frame + continue
+      // [init]: frozenVideoFrame = videoFrame;
+      // [init]: actualVideoFrame = videoFrame;
+      if (halfAnimatedFlag >= 2) {
+        actualVideoFrame = actualVideoFrame + 1;
+        if (actualVideoFrame >= 150)
+          actualVideoFrame = 0;
+        videoFrame = actualVideoFrame;
+      } else
+        videoFrame = frozenVideoFrame;
+      if (isLastFrame)
+        videoFrame = actualVideoFrame;
+
+      break;
+    }
+    case 5: {
+      // frozen video frame + random
+      // [init]: frozenVideoFrame = videoFrame;
+      if (halfAnimatedFlag >= 2)
+        videoFrame = random.get_int(0, 150);
+      else
+        videoFrame = frozenVideoFrame;
+      if (isLastFrame)
+        videoFrame = frozenVideoFrame;
+      break;
+    }
+    case 6: {
       break;
     }
     default: {
