@@ -7,8 +7,10 @@ class Attack3d : public GameObject {
  public:
   bn::fixed damage = 1;
   bool isShootable = false;
-  bool jumpzone = false;
+  bool hitZone = false;
   int channel = 0;
+  bool dualChannel = false;
+  bool canBeJumped = false;
 
   virtual bool update(int msecs,
                       bool isInsideBeat,

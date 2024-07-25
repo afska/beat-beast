@@ -5,6 +5,7 @@
 
 #include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Cerberus.h"
+#include "../objects/glitch/MegaBall3d.h"
 #include "../objects/glitch/Vinyl3d.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 

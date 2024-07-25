@@ -2,7 +2,8 @@
 
 #include "../../assets/SpriteProvider.h"
 
-Bullet3d::Bullet3d(bn::fixed_point _initialPosition,
+Bullet3d::Bullet3d(int _channel,
+                   bn::fixed_point _initialPosition,
                    bn::fixed_point _direction,
                    bn::sprite_item _bullet,
                    bn::fixed dmg,
@@ -16,6 +17,7 @@ Bullet3d::Bullet3d(bn::fixed_point _initialPosition,
                                                          1)),
       direction(_direction),
       zSpeed(_zSpeed) {
+  channel = _channel;
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(_initialPosition);
 

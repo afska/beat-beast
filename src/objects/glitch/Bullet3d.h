@@ -7,7 +7,10 @@
 
 class Bullet3d : public RhythmicBullet {
  public:
-  Bullet3d(bn::fixed_point _initialPosition,
+  int channel = 0;
+
+  Bullet3d(int _channel,
+           bn::fixed_point _initialPosition,
            bn::fixed_point _direction,
            bn::sprite_item _bullet,
            bn::fixed dmg = 1,

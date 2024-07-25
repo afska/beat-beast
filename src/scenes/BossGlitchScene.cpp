@@ -43,6 +43,9 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_VINYL_7(TYPE) IS_EVENT(TYPE, 0, 7)
 #define IS_EVENT_VINYL_8(TYPE) IS_EVENT(TYPE, 0, 8)
 
+#define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 6, 5)
+#define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 6, 6)
+
 #define SFX_VINYL "vinyl.pcm"
 
 BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
@@ -64,7 +67,8 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   horse->getGunSprite().set_z_order(1);
   updateBackground();
 
-  chartReader->eventsThatNeedAudioLagPrediction = 15 /*0b00001111*/;
+  chartReader->eventsThatNeedAudioLagPrediction =
+      15 /*0b0000000000000000000000001111*/;
 
   ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
   ghostHorse->get()->showGun = false;
@@ -300,6 +304,18 @@ void BossGlitchScene::processChart() {
                         1.6, BEAT_DURATION_FRAMES, event)});
         playSfx(SFX_VINYL);
       }
+
+      // Megaballs
+      if (IS_EVENT_MEGABALL_L(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new MegaBall3d(0, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 4, event)});
+      }
+      if (IS_EVENT_MEGABALL_R(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new MegaBall3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 4, event)});
+      }
     } else {
     }
   }
@@ -359,7 +375,12 @@ void BossGlitchScene::updateSprites() {
     bool isOut =
         attack->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
-    if (attack->jumpzone && attack->channel == channel && !horse->isJumping()) {
+    if (attack->hitZone &&
+        (attack->channel == channel ||
+         (attack->dualChannel && ((attack->channel ^ channel) == 1)))) {
+      if ((attack->canBeJumped && horse->isJumping()) || attack->didExplode())
+        return isOut;
+
       sufferDamage(1);
       return true;
     }

@@ -9,8 +9,8 @@ class Vinyl3d : public Attack3d {
   Vinyl3d(int _channel,
           bn::fixed_point _initialPosition,
           bn::fixed_point _targetPosition,
-          bn::fixed _jumpZoneStart,
-          bn::fixed _jumpZoneEnd,
+          bn::fixed _hitZoneStart,
+          bn::fixed _hitZoneEnd,
           bn::fixed _frames,
           Event* _event);
 
@@ -22,7 +22,7 @@ class Vinyl3d : public Attack3d {
  private:
   bn::sprite_ptr sprite;
   bn::fixed_point targetPosition;
-  bn::fixed jumpZoneStart, jumpZoneEnd;
+  bn::fixed hitZoneStart, hitZoneEnd;
   bn::fixed frames;
   Event* event;
   bn::fixed speedX, speedY, speedZ;
