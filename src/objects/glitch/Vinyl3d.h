@@ -11,6 +11,7 @@ class Vinyl3d : public Attack3d {
           bn::fixed_point _targetPosition,
           bn::fixed _jumpZoneStart,
           bn::fixed _jumpZoneEnd,
+          bn::fixed _frames,
           Event* _event);
 
   bool update(int msecs,
@@ -22,6 +23,7 @@ class Vinyl3d : public Attack3d {
   bn::sprite_ptr sprite;
   bn::fixed_point targetPosition;
   bn::fixed jumpZoneStart, jumpZoneEnd;
+  bn::fixed frames;
   Event* event;
   bn::fixed speedX, speedY, speedZ;
   bn::sprite_animate_action<5> animation;

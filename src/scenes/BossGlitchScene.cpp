@@ -26,6 +26,8 @@ constexpr const bn::array<bn::fixed_point, 4> SHOOTING_DIRECTIONS = {
     bn::fixed_point(-0.2, -0.25), bn::fixed_point(-0.5, -0.25)};
 constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
 
+const bn::fixed BEAT_DURATION_FRAMES = 23;
+
 #define HORSE_X CHANNEL_X[0]
 #define HORSE_Y 90
 
@@ -230,7 +232,7 @@ void BossGlitchScene::processChart() {
       if (IS_EVENT_VINYL_1(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
-                        1.5, 1.6, event)});
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
         playSfx(SFX_VINYL);
       }
     } else {

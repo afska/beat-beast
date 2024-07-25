@@ -10,11 +10,13 @@ Vinyl3d::Vinyl3d(int _channel,
                  bn::fixed_point _targetPosition,
                  bn::fixed _jumpZoneStart,
                  bn::fixed _jumpZoneEnd,
+                 bn::fixed _frames,
                  Event* _event)
     : sprite(bn::sprite_items::glitch_vinyl.create_sprite(_initialPosition)),
       targetPosition(_targetPosition),
       jumpZoneStart(_jumpZoneStart),
       jumpZoneEnd(_jumpZoneEnd),
+      frames(_frames),
       event(_event),
       animation(bn::create_sprite_animate_action_forever(
           sprite,
@@ -30,10 +32,9 @@ Vinyl3d::Vinyl3d(int _channel,
   boundingBox.set_dimensions(sprite.dimensions() * 0.01);
   boundingBox.set_position({0, 0});
 
-  const bn::fixed beatDurationFrames = 23;
-  speedX = (targetPosition.x() - sprite.position().x()) / beatDurationFrames;
-  speedY = (targetPosition.y() - sprite.position().y()) / beatDurationFrames;
-  speedZ = 1 / beatDurationFrames;
+  speedX = (targetPosition.x() - sprite.position().x()) / frames;
+  speedY = (targetPosition.y() - sprite.position().y()) / frames;
+  speedZ = 1 / frames;
 
   sprite.set_scale(0.001);
   isShootable = true;
