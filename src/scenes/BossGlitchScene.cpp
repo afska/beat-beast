@@ -14,6 +14,11 @@
 #include "bn_log.h"
 #include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
+#include "bn_sprite_items_glitch_lightning1.h"
+#include "bn_sprite_items_glitch_lightning11.h"
+#include "bn_sprite_items_glitch_lightning2.h"
+#include "bn_sprite_items_glitch_lightning22.h"
+#include "bn_sprite_items_glitch_lightning3.h"
 #include "bn_sprite_palettes.h"
 #include "bn_sprites_mosaic.h"
 
@@ -46,7 +51,14 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 6, 5)
 #define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 6, 6)
 
+#define IS_EVENT_LIGHTNING_PREPARE_1(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_LIGHTNING_PREPARE_2(TYPE) IS_EVENT(TYPE, 1, 2)
+#define IS_EVENT_LIGHTNING_PREPARE_3(TYPE) IS_EVENT(TYPE, 1, 3)
+#define IS_EVENT_LIGHTNING_PREPARE_4(TYPE) IS_EVENT(TYPE, 1, 4)
+#define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 1, 9)
+
 #define SFX_VINYL "vinyl.pcm"
+#define SFX_LIGHTNING "lightning.pcm"
 
 BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::GLITCH,
@@ -317,6 +329,48 @@ void BossGlitchScene::processChart() {
             new MegaBall3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
                            1.75, 1.85, BEAT_DURATION_FRAMES * 4, event)});
       }
+
+      // Lightnings
+      if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
+        // TODO: FIX POSITIONS AND Horse's BoundingBox
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {30, 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {56, 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {82, 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {108, 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_START(type)) {
+        iterate(lightnings, [&event](Lightning* lightning) {
+          lightning->start(event);
+          player_sfx_play(SFX_LIGHTNING);
+          return false;
+        });
+      }
     } else {
     }
   }
@@ -397,6 +451,27 @@ void BossGlitchScene::updateSprites() {
 
       sufferDamage(1);
       return true;
+    }
+
+    return isOut;
+  });
+
+  // Lightnings
+  iterate(lightnings, [](Lightning* lightning) {
+    if (lightning->needsToStart())
+      lightning->start1();
+    return false;
+  });
+  iterate(lightnings, [this](Lightning* lightning) {
+    if (lightning->needsToStart())
+      lightning->start2();
+    bool isOut = lightning->update(chartReader->getMsecs());
+
+    if (lightning->didStart() && !lightning->causedDamage &&
+        lightning->collidesWith(horse.get())) {
+      sufferDamage(1);
+      lightning->causedDamage = true;
+      return false;
     }
 
     return isOut;
