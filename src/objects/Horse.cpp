@@ -110,7 +110,9 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
     newPosition.set_x(Math::SCREEN_WIDTH - mainSpriteDimensions.width() -
                       SCREEN_LIMIT_X);
 
-  int gunOffsetX = mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0;
+  bn::fixed gunTotalOffsetX =
+      gunOffsetX + (mainSprite.horizontal_flip() ? GUN_FLIPPED_OFFSET_X : 0);
+  bn::fixed gunTotalOffsetY = gunOffsetY;
   int bounceOffsetX =
       Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
@@ -118,10 +120,10 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   setTopLeftPosition(newPosition);
   mainSprite.set_y(getCenteredPosition().y() + bounceOffsetY);
 
-  gunSprite.set_position(
-      Math::toAbsTopLeftX(newPosition.x(), 32) + gunOffsetX + GUN_OFFSET[0] +
-          bounceOffsetX,
-      Math::toAbsTopLeftY(newPosition.y(), 16) + GUN_OFFSET[1] + bounceOffsetY);
+  gunSprite.set_position(Math::toAbsTopLeftX(newPosition.x(), 32) +
+                             gunTotalOffsetX + GUN_OFFSET[0] + bounceOffsetX,
+                         Math::toAbsTopLeftY(newPosition.y(), 16) +
+                             gunTotalOffsetY + GUN_OFFSET[1] + bounceOffsetY);
 
   gunSprite.set_position(Math::rotateFromCustomPivot(
       gunSprite.position(), {GUN_PIVOT_OFFSET[0], GUN_PIVOT_OFFSET[1]},

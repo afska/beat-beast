@@ -12,6 +12,8 @@ class Horse : public TopLeftGameObject {
   bool canShoot = false;
   bool fakeJump = true;
   bool customScale = false;
+  bn::fixed gunOffsetX = 0;
+  bn::fixed gunOffsetY = 0;
 
   Horse(bn::fixed_point _topLeftPosition);
 
@@ -52,6 +54,9 @@ class Horse : public TopLeftGameObject {
     disappearPosition = _disappearPosition;
   }
   void setIdleOrRunningState();
+  bn::sprite_ptr getGunSprite() { return gunSprite; }
+  void setTargetAngle(bn::fixed _targetAngle) { targetAngle = _targetAngle; }
+  bn::fixed getTargetAngle() { return targetAngle; }
 
  private:
   bn::sprite_ptr gunSprite;

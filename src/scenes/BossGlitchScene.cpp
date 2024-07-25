@@ -36,7 +36,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
                 _fs) {
   enemyLifeBar->hide();
 
-  horse->showGun = false;
+  // horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   horse->getMainSprite().set_mosaic_enabled(true);
@@ -66,10 +66,64 @@ void BossGlitchScene::updateBossFight() {
 }
 
 void BossGlitchScene::processInput() {
+  /*
+  if (bn::keypad::right_pressed()) {
+    horse->getGunSprite().set_horizontal_shear(
+        horse->getGunSprite().horizontal_shear() + 0.05);
+  }
+  if (bn::keypad::left_pressed()) {
+    horse->getGunSprite().set_horizontal_shear(
+        horse->getGunSprite().horizontal_shear() - 0.05);
+  }
+  if (bn::keypad::right_pressed()) {
+    horse->getGunSprite().set_horizontal_shear(
+        horse->getGunSprite().horizontal_shear() + 0.05);
+  }
+  if (bn::keypad::up_pressed()) {
+    horse->getGunSprite().set_vertical_shear(
+        horse->getGunSprite().vertical_shear() + 0.05);
+  }
+  if (bn::keypad::down_pressed()) {
+    horse->getGunSprite().set_vertical_shear(
+        horse->getGunSprite().vertical_shear() - 0.05);
+  }
+  if (bn::keypad::l_pressed()) {
+    horse->gunOffsetX -= 1;
+  }
+  if (bn::keypad::r_pressed()) {
+    horse->gunOffsetX += 1;
+  }
+  if (bn::keypad::a_pressed()) {
+    horse->gunOffsetY += 1;
+  }
+  if (bn::keypad::b_pressed()) {
+    horse->gunOffsetY -= 1;
+  }
+  if (bn::keypad::select_pressed()) {
+    channel--;
+    updateHorseChannel();
+  }
+  if (bn::keypad::start_pressed()) {
+    channel++;
+    updateHorseChannel();
+  }
+  BN_LOG("---");
+  BN_LOG("shearX:");
+  BN_LOG(horse->getGunSprite().horizontal_shear());
+  BN_LOG("shearY:");
+  BN_LOG(horse->getGunSprite().vertical_shear());
+  BN_LOG("offsetX:");
+  BN_LOG(horse->gunOffsetX);
+  BN_LOG("offsetY");
+  BN_LOG(horse->gunOffsetY);
+  */
+
   horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
   if (ghostHorse.has_value())
     ghostHorse->get()->setPosition(
         {ghostHorse->get()->getPosition().x(), HORSE_Y}, true);
+
+  // ---
 
   if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
     channel++;
@@ -326,6 +380,44 @@ void BossGlitchScene::updateHorseChannel() {
     horse->customScale = false;
     horse->getMainSprite().set_scale(1);
   }
+
+  switch (channel) {
+    case 0: {
+      horse->getGunSprite().set_horizontal_flip(false);
+      horse->getGunSprite().set_horizontal_shear(-0.49389);
+      horse->getGunSprite().set_vertical_shear(0.74682);
+      horse->gunOffsetX = -3;
+      horse->gunOffsetY = -23;
+      break;
+    }
+    case 1: {
+      horse->getGunSprite().set_horizontal_flip(false);
+      horse->getGunSprite().set_horizontal_shear(-0.64306);
+      horse->getGunSprite().set_vertical_shear(1.24462);
+      horse->gunOffsetX = -7;
+      horse->gunOffsetY = -26;
+      break;
+    }
+    case 2: {
+      horse->getGunSprite().set_horizontal_flip(true);
+      horse->getGunSprite().set_horizontal_shear(-0.79223);
+      horse->getGunSprite().set_vertical_shear(-1.29516);
+      horse->gunOffsetX = -16;
+      horse->gunOffsetY = -26;
+      break;
+    }
+    case 3: {
+      horse->getGunSprite().set_horizontal_flip(true);
+      horse->getGunSprite().set_horizontal_shear(-0.59301);
+      horse->getGunSprite().set_vertical_shear(-0.84692);
+      horse->gunOffsetX = -21;
+      horse->gunOffsetY = -23;
+      break;
+    }
+    default: {
+    }
+  }
+
   pixelBlink->blink();
 
   if (ghostHorse.has_value()) {
