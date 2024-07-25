@@ -14,6 +14,7 @@
 #include "bn_log.h"
 #include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
+#include "bn_sprite_items_glitch_fire.h"
 #include "bn_sprite_items_glitch_lightning1.h"
 #include "bn_sprite_items_glitch_lightning11.h"
 #include "bn_sprite_items_glitch_lightning2.h"
@@ -31,6 +32,8 @@ constexpr const bn::array<bn::fixed_point, 4> SHOOTING_DIRECTIONS = {
     bn::fixed_point(-0.2, -0.25), bn::fixed_point(-0.5, -0.25)};
 constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
 constexpr const bn::array<bn::fixed, 4> LIGHTNING_X = {61, 90, 144, 167};
+constexpr const bn::array<bn::fixed, 4> PLATFORM_FIRE_X = {42, 74, 132, 160};
+constexpr const bn::fixed PLATFORM_FIRE_Y = 129;
 
 const bn::fixed BEAT_DURATION_FRAMES = 23;
 
@@ -57,6 +60,13 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_LIGHTNING_PREPARE_3(TYPE) IS_EVENT(TYPE, 1, 3)
 #define IS_EVENT_LIGHTNING_PREPARE_4(TYPE) IS_EVENT(TYPE, 1, 4)
 #define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 1, 9)
+
+// (lightning and platform fire share their type)
+#define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_PLATFORM_FIRE_2(TYPE) IS_EVENT(TYPE, 1, 2)
+#define IS_EVENT_PLATFORM_FIRE_3(TYPE) IS_EVENT(TYPE, 1, 3)
+#define IS_EVENT_PLATFORM_FIRE_4(TYPE) IS_EVENT(TYPE, 1, 4)
+#define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
 #define SFX_VINYL "vinyl.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
@@ -331,45 +341,81 @@ void BossGlitchScene::processChart() {
                            1.75, 1.85, BEAT_DURATION_FRAMES * 4, event)});
       }
 
-      // Lightnings
-      if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning(
-            bn::sprite_items::glitch_lightning1,
-            bn::sprite_items::glitch_lightning11,
-            bn::sprite_items::glitch_lightning2,
-            bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[0], 0}, event)});
-      }
-      if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning(
-            bn::sprite_items::glitch_lightning1,
-            bn::sprite_items::glitch_lightning11,
-            bn::sprite_items::glitch_lightning2,
-            bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[1], 0}, event)});
-      }
-      if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning(
-            bn::sprite_items::glitch_lightning1,
-            bn::sprite_items::glitch_lightning11,
-            bn::sprite_items::glitch_lightning2,
-            bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[2], 0}, event)});
-      }
-      if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning(
-            bn::sprite_items::glitch_lightning1,
-            bn::sprite_items::glitch_lightning11,
-            bn::sprite_items::glitch_lightning2,
-            bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[3], 0}, event)});
-      }
-      if (IS_EVENT_LIGHTNING_START(type)) {
-        iterate(lightnings, [&event](Lightning* lightning) {
-          lightning->start(event);
-          player_sfx_play(SFX_LIGHTNING);
-          return false;
-        });
+      if (fireMode) {
+        // Platform fires
+        bn::optional<bn::camera_ptr> noCamera;
+        if (IS_EVENT_PLATFORM_FIRE_1(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::glitch_fire,
+              {PLATFORM_FIRE_X[0], PLATFORM_FIRE_Y}, event, noCamera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_2(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::glitch_fire,
+              {PLATFORM_FIRE_X[1], PLATFORM_FIRE_Y}, event, noCamera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_3(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::glitch_fire,
+              {PLATFORM_FIRE_X[2], PLATFORM_FIRE_Y}, event, noCamera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_4(type)) {
+          platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::glitch_fire,
+              {PLATFORM_FIRE_X[3], PLATFORM_FIRE_Y}, event, noCamera, true)});
+        }
+        if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+          iterate(platformFires, [&event](PlatformFire* platformFire) {
+            platformFire->start(event);
+            // player_sfx_play(SFX_LIGHTNING);
+            return false;
+          });
+        }
+      } else {
+        // Lightnings
+        if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
+          lightnings.push_back(
+              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
+                                           bn::sprite_items::glitch_lightning11,
+                                           bn::sprite_items::glitch_lightning2,
+                                           bn::sprite_items::glitch_lightning22,
+                                           bn::sprite_items::glitch_lightning3,
+                                           {LIGHTNING_X[0], 0}, event)});
+        }
+        if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
+          lightnings.push_back(
+              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
+                                           bn::sprite_items::glitch_lightning11,
+                                           bn::sprite_items::glitch_lightning2,
+                                           bn::sprite_items::glitch_lightning22,
+                                           bn::sprite_items::glitch_lightning3,
+                                           {LIGHTNING_X[1], 0}, event)});
+        }
+        if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
+          lightnings.push_back(
+              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
+                                           bn::sprite_items::glitch_lightning11,
+                                           bn::sprite_items::glitch_lightning2,
+                                           bn::sprite_items::glitch_lightning22,
+                                           bn::sprite_items::glitch_lightning3,
+                                           {LIGHTNING_X[2], 0}, event)});
+        }
+        if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
+          lightnings.push_back(
+              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
+                                           bn::sprite_items::glitch_lightning11,
+                                           bn::sprite_items::glitch_lightning2,
+                                           bn::sprite_items::glitch_lightning22,
+                                           bn::sprite_items::glitch_lightning3,
+                                           {LIGHTNING_X[3], 0}, event)});
+        }
+        if (IS_EVENT_LIGHTNING_START(type)) {
+          iterate(lightnings, [&event](Lightning* lightning) {
+            lightning->start(event);
+            player_sfx_play(SFX_LIGHTNING);
+            return false;
+          });
+        }
       }
     } else {
     }
@@ -471,6 +517,19 @@ void BossGlitchScene::updateSprites() {
         lightning->getTopLeftPosition().x() == LIGHTNING_X[channel]) {
       sufferDamage(1);
       lightning->causedDamage = true;
+      return false;
+    }
+
+    return isOut;
+  });
+
+  // Platform fires
+  iterate(platformFires, [this](PlatformFire* platformFire) {
+    bool isOut = platformFire->update(chartReader->getMsecs());
+
+    if (platformFire->didStart() && !horse->isHurt() &&
+        platformFire->getTopLeftPosition().x() == PLATFORM_FIRE_X[channel]) {
+      sufferDamage(1);
       return false;
     }
 

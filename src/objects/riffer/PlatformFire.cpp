@@ -1,15 +1,15 @@
 #include "PlatformFire.h"
 
 #include "../../utils/Math.h"
-#include "bn_sprite_items_riffer_fire.h"
 
-PlatformFire::PlatformFire(bn::fixed_point _topLeftPosition,
+PlatformFire::PlatformFire(bn::sprite_item _spriteItem,
+                           bn::fixed_point _topLeftPosition,
                            Event* _event,
-                           bn::camera_ptr camera,
-                           bool _isInfinite,
-                           bool isShort)
-    : TopLeftGameObject(bn::sprite_items::riffer_fire.create_sprite(0, 0)),
-      sprite2(bn::sprite_items::riffer_fire.create_sprite(0, 0)),
+                           bn::optional<bn::camera_ptr> camera,
+                           bool _isInfinite)
+    : TopLeftGameObject(_spriteItem.create_sprite(0, 0)),
+      spriteItem(_spriteItem),
+      sprite2(_spriteItem.create_sprite(0, 0)),
       event(_event),
       isInfinite(_isInfinite) {
   setPosition(_topLeftPosition);
@@ -19,8 +19,10 @@ PlatformFire::PlatformFire(bn::fixed_point _topLeftPosition,
                           8 /* -8 because of Horse's bounding box */,
                       mainSprite.position().y() - 8));
 
-  mainSprite.set_camera(camera);
-  sprite2.set_camera(camera);
+  if (camera.has_value()) {
+    mainSprite.set_camera(camera.value());
+    sprite2.set_camera(camera.value());
+  }
 
   mainSprite.set_visible(false);
   sprite2.set_visible(false);
@@ -43,18 +45,18 @@ bool PlatformFire::update(int msecs) {
     mainSprite.set_visible(true);
     sprite2.set_visible(true);
     animation1 = bn::create_sprite_animate_action_forever(
-        mainSprite, 2, bn::sprite_items::riffer_fire.tiles_item(), 0, 1);
+        mainSprite, 2, spriteItem.tiles_item(), 0, 1);
     animation2 = bn::create_sprite_animate_action_forever(
-        sprite2, 2, bn::sprite_items::riffer_fire.tiles_item(), 0, 1);
+        sprite2, 2, spriteItem.tiles_item(), 0, 1);
   }
 
   if (!didStartAnimation && hasReallyStarted(msecs)) {
     animation1.reset();
     animation2.reset();
     animation1 = bn::create_sprite_animate_action_forever(
-        mainSprite, 2, bn::sprite_items::riffer_fire.tiles_item(), 2, 3);
+        mainSprite, 2, spriteItem.tiles_item(), 2, 3);
     animation2 = bn::create_sprite_animate_action_forever(
-        sprite2, 2, bn::sprite_items::riffer_fire.tiles_item(), 2, 3);
+        sprite2, 2, spriteItem.tiles_item(), 2, 3);
     didStartAnimation = true;
   }
 

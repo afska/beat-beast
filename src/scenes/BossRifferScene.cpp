@@ -11,6 +11,7 @@
 #include "bn_keypad.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg0.h"
 #include "bn_regular_bg_items_back_riffer_wasteland_bg3.h"
+#include "bn_sprite_items_riffer_fire.h"
 #include "bn_sprite_items_riffer_gameplatform1.h"
 #include "bn_sprite_items_riffer_gameplatform2.h"
 #include "bn_sprite_items_riffer_icon_riffer.h"
@@ -339,25 +340,29 @@ void BossRifferScene::processChart() {
       if (phase3) {
         if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {-16 + platforms[6].left(), platforms[6].top() - 16}, event,
-              camera, true, true)});
+              camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {-16 + platforms[6].left() + 32 + 16, platforms[6].top() - 16},
-              event, camera, true, true)});
+              event, camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
           platformFires.push_back(bn::unique_ptr{
-              new PlatformFire({-16 + platforms[6].left() + 32 + 16 + 32 + 16,
+              new PlatformFire(bn::sprite_items::riffer_fire,
+                               {-16 + platforms[6].left() + 32 + 16 + 32 + 16,
                                 platforms[6].top() - 16},
-                               event, camera, true, true)});
+                               event, camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {-16 + platforms[6].left() + 32 + 16 + 32 + 16 + 32 + 16,
                platforms[6].top() - 16},
-              event, camera, true, true)});
+              event, camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_START(type)) {
           iterate(platformFires, [&event](PlatformFire* platformFire) {
@@ -369,36 +374,43 @@ void BossRifferScene::processChart() {
       } else {
         if (IS_EVENT_PLATFORM_FIRE_1(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {platforms[1].left() + 14, platforms[1].top() - 16}, event,
               camera)});
         }
         if (IS_EVENT_PLATFORM_FIRE_2(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {platforms[2].left() + 9, platforms[2].top() - 16}, event,
               camera)});
         }
         if (IS_EVENT_PLATFORM_FIRE_3(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {platforms[3].left() + 9, platforms[3].top() - 16}, event,
               camera)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_1(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {8 + platforms[0].left(), platforms[0].top() - 16}, event, camera,
               true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_2(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {8 + platforms[0].left() + 32, platforms[0].top() - 16}, event,
               camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_3(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {8 + platforms[0].left() + 32 + 32, platforms[0].top() - 16},
               event, camera, true)});
         }
         if (IS_EVENT_PLATFORM_FIRE_INTRO_4(type)) {
           platformFires.push_back(bn::unique_ptr{new PlatformFire(
+              bn::sprite_items::riffer_fire,
               {8 + platforms[0].left() + 32 + 32 + 32, platforms[0].top() - 16},
               event, camera, true)});
         }

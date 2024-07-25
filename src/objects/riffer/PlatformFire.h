@@ -7,11 +7,11 @@
 
 class PlatformFire : public TopLeftGameObject {
  public:
-  PlatformFire(bn::fixed_point _topLeftPosition,
+  PlatformFire(bn::sprite_item _spriteItem,
+               bn::fixed_point _topLeftPosition,
                Event* _event,
-               bn::camera_ptr camera,
-               bool _isInfinite = false,
-               bool isShort = false);
+               bn::optional<bn::camera_ptr> camera,
+               bool _isInfinite = false);
 
   void start(Event* event);
   bool didStart() { return didStartAnimation; }
@@ -24,6 +24,7 @@ class PlatformFire : public TopLeftGameObject {
   }
 
  private:
+  bn::sprite_item spriteItem;
   bn::sprite_ptr sprite2;
   bn::optional<bn::sprite_animate_action<2>> animation1;
   bn::optional<bn::sprite_animate_action<2>> animation2;
