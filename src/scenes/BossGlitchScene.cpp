@@ -30,6 +30,7 @@ constexpr const bn::array<bn::fixed_point, 4> SHOOTING_DIRECTIONS = {
     bn::fixed_point(0.75, -0.25), bn::fixed_point(0.35, -0.25),
     bn::fixed_point(-0.2, -0.25), bn::fixed_point(-0.5, -0.25)};
 constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
+constexpr const bn::array<bn::fixed, 4> LIGHTNING_X = {61, 90, 144, 167};
 
 const bn::fixed BEAT_DURATION_FRAMES = 23;
 
@@ -332,13 +333,12 @@ void BossGlitchScene::processChart() {
 
       // Lightnings
       if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
-        // TODO: FIX POSITIONS AND Horse's BoundingBox
         lightnings.push_back(bn::unique_ptr{new Lightning(
             bn::sprite_items::glitch_lightning1,
             bn::sprite_items::glitch_lightning11,
             bn::sprite_items::glitch_lightning2,
             bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {30, 0}, event)});
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[0], 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
         lightnings.push_back(bn::unique_ptr{new Lightning(
@@ -346,7 +346,7 @@ void BossGlitchScene::processChart() {
             bn::sprite_items::glitch_lightning11,
             bn::sprite_items::glitch_lightning2,
             bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {56, 0}, event)});
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[1], 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
         lightnings.push_back(bn::unique_ptr{new Lightning(
@@ -354,7 +354,7 @@ void BossGlitchScene::processChart() {
             bn::sprite_items::glitch_lightning11,
             bn::sprite_items::glitch_lightning2,
             bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {82, 0}, event)});
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[2], 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
         lightnings.push_back(bn::unique_ptr{new Lightning(
@@ -362,7 +362,7 @@ void BossGlitchScene::processChart() {
             bn::sprite_items::glitch_lightning11,
             bn::sprite_items::glitch_lightning2,
             bn::sprite_items::glitch_lightning22,
-            bn::sprite_items::glitch_lightning3, {108, 0}, event)});
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[3], 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
         iterate(lightnings, [&event](Lightning* lightning) {
@@ -468,7 +468,7 @@ void BossGlitchScene::updateSprites() {
     bool isOut = lightning->update(chartReader->getMsecs());
 
     if (lightning->didStart() && !lightning->causedDamage &&
-        lightning->collidesWith(horse.get())) {
+        lightning->getTopLeftPosition().x() == LIGHTNING_X[channel]) {
       sufferDamage(1);
       lightning->causedDamage = true;
       return false;
