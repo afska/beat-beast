@@ -6,6 +6,7 @@
 #include "../objects/glitch/BlackHole3d.h"
 #include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Cerberus.h"
+#include "../objects/glitch/GameNote3d.h"
 #include "../objects/glitch/MegaBall3d.h"
 #include "../objects/glitch/Vinyl3d.h"
 #include "../objects/riffer/PlatformFire.h"

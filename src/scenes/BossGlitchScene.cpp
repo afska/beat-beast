@@ -68,6 +68,11 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_PLATFORM_FIRE_4(TYPE) IS_EVENT(TYPE, 1, 4)
 #define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
+#define IS_EVENT_NOTE_1(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_NOTE_2(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_NOTE_3(TYPE) IS_EVENT(TYPE, 2, 3)
+#define IS_EVENT_NOTE_4(TYPE) IS_EVENT(TYPE, 2, 4)
+
 #define IS_EVENT_BLACK_HOLE_L(TYPE) IS_EVENT(TYPE, 2, 5)
 #define IS_EVENT_BLACK_HOLE_R(TYPE) IS_EVENT(TYPE, 2, 6)
 
@@ -432,6 +437,28 @@ void BossGlitchScene::processChart() {
             new BlackHole3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
                             1.5, 1.6, BEAT_DURATION_FRAMES * 4, event)});
       }
+
+      // Notes
+      if (IS_EVENT_NOTE_1(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new GameNote3d(0, bn::fixed_point(0, 0), bn::fixed_point(-30, 16),
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_NOTE_2(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new GameNote3d(1, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_NOTE_3(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new GameNote3d(2, bn::fixed_point(0, 0), bn::fixed_point(16, 16),
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_NOTE_4(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new GameNote3d(3, bn::fixed_point(0, 0), bn::fixed_point(30, 16),
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
+      }
     } else {
     }
   }
@@ -487,7 +514,7 @@ void BossGlitchScene::updateSprites() {
     iterate(enemyBullets, [&bullet, &collided, this](Attack3d* attack) {
       if (attack->isShootable &&
           (attack->channel == channel ||
-           (attack->dualChannel && ((attack->channel ^ channel) == 1))) &&
+           (/*attack->dualChannel && */ ((attack->channel ^ channel) == 1))) &&
           bullet->collidesWith(attack)) {
         addExplosion(bullet->getPosition());
         attack->explode({0, 0});
