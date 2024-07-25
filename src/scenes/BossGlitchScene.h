@@ -5,6 +5,7 @@
 
 #include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Cerberus.h"
+#include "../objects/glitch/Vinyl3d.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
 class BossGlitchScene : public BossScene {
@@ -19,7 +20,7 @@ class BossGlitchScene : public BossScene {
   bn::optional<bn::unique_ptr<Horse>> ghostHorse;
   bn::optional<Cerberus> cerberus;
   bn::vector<bn::unique_ptr<Bullet3d>, 64> bullets;
-  bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
+  bn::vector<bn::unique_ptr<Attack3d>, 32> enemyBullets;
   bn::fixed videoFrame = 0;
   bn::fixed extraSpeed = 0;
   int channel = 0;

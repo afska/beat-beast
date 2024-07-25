@@ -32,6 +32,10 @@ constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
+#define IS_EVENT_VINYL_1(TYPE) IS_EVENT(TYPE, 1, 1)
+
+#define SFX_VINYL "vinyl.pcm"
+
 BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::GLITCH,
                 "glitch",
@@ -47,9 +51,11 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   horse->getMainSprite().set_mosaic_enabled(true);
+  horse->getMainSprite().set_z_order(1);
+  horse->getGunSprite().set_z_order(1);
   updateBackground();
 
-  chartReader->eventsThatNeedAudioLagPrediction = 0 /*0b0*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 240 /*0b11110000*/;
 
   ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
   ghostHorse->get()->showGun = false;
@@ -218,7 +224,15 @@ void BossGlitchScene::processInput() {
 void BossGlitchScene::processChart() {
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
-      // auto type = event->getType();
+      auto type = event->getType();
+
+      // Vinyls
+      if (IS_EVENT_VINYL_1(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
+                        1.5, 1.6, event)});
+        playSfx(SFX_VINYL);
+      }
     } else {
     }
   }
@@ -245,8 +259,7 @@ void BossGlitchScene::updateBackground() {
   videoBackground.get()->set_blending_enabled(true);
   videoBackground.get()->set_mosaic_enabled(mosaicVideo);
 
-  int blinkFrame = SaveFile::data.bgBlink ? horse->getBounceFrame() : 0;
-  bn::blending::set_fade_alpha(Math::BOUNCE_BLENDING_STEPS[blinkFrame]);
+  bn::blending::set_fade_alpha(0);
 
   if (chartReader->isInsideBeat()) {
     horizontalHBE = bn::regular_bg_position_hbe_ptr::create_horizontal(
@@ -270,6 +283,19 @@ void BossGlitchScene::updateSprites() {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
+
+    return isOut;
+  });
+
+  // Enemy bullets
+  iterate(enemyBullets, [this](Attack3d* attack) {
+    bool isOut =
+        attack->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
+    if (attack->jumpzone && attack->channel == channel && !horse->isJumping()) {
+      sufferDamage(1);
+      return true;
+    }
 
     return isOut;
   });
