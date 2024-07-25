@@ -68,6 +68,9 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_PLATFORM_FIRE_4(TYPE) IS_EVENT(TYPE, 1, 4)
 #define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
+#define IS_EVENT_BLACK_HOLE_L(TYPE) IS_EVENT(TYPE, 2, 5)
+#define IS_EVENT_BLACK_HOLE_R(TYPE) IS_EVENT(TYPE, 2, 6)
+
 #define SFX_VINYL "vinyl.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
 
@@ -416,6 +419,18 @@ void BossGlitchScene::processChart() {
             return false;
           });
         }
+      }
+
+      // Black holes
+      if (IS_EVENT_BLACK_HOLE_L(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new BlackHole3d(0, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
+                            1.5, 1.6, BEAT_DURATION_FRAMES * 4, event)});
+      }
+      if (IS_EVENT_BLACK_HOLE_R(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new BlackHole3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
+                            1.5, 1.6, BEAT_DURATION_FRAMES * 4, event)});
       }
     } else {
     }
