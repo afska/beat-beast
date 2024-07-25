@@ -19,11 +19,11 @@
 
 constexpr const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
 constexpr const bn::array<bn::fixed_point, 4> SHOOTING_POINTS = {
-    bn::fixed_point(-3, -6), bn::fixed_point(-6, -6), bn::fixed_point(-16, -6),
-    bn::fixed_point(-17, -6)};
+    bn::fixed_point(-3, -6), bn::fixed_point(-6, -6), bn::fixed_point(-13, -6),
+    bn::fixed_point(-14, -4)};
 constexpr const bn::array<bn::fixed_point, 4> SHOOTING_DIRECTIONS = {
-    bn::fixed_point(0.5, -0.25), bn::fixed_point(0.25, -0.25),
-    bn::fixed_point(-0.25, -0.25), bn::fixed_point(-0.5, -0.25)};
+    bn::fixed_point(0.75, -0.25), bn::fixed_point(0.35, -0.25),
+    bn::fixed_point(-0.2, -0.25), bn::fixed_point(-0.5, -0.25)};
 constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
 
 #define HORSE_X CHANNEL_X[0]
@@ -43,7 +43,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
                 _fs) {
   enemyLifeBar->hide();
 
-  // horse->showGun = false;
+  horse->bounceGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   horse->getMainSprite().set_mosaic_enabled(true);
@@ -73,8 +73,7 @@ void BossGlitchScene::updateBossFight() {
 }
 
 void BossGlitchScene::processInput() {
-  /*
-  if (bn::keypad::right_pressed()) {
+  /*if (bn::keypad::right_pressed()) {
     horse->getGunSprite().set_horizontal_shear(
         horse->getGunSprite().horizontal_shear() + 0.05);
   }
@@ -122,14 +121,14 @@ void BossGlitchScene::processInput() {
   BN_LOG("offsetX:");
   BN_LOG(horse->gunOffsetX);
   BN_LOG("offsetY");
-  BN_LOG(horse->gunOffsetY);
-  */
+  BN_LOG(horse->gunOffsetY);*/
 
   horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
   if (ghostHorse.has_value())
     ghostHorse->get()->setPosition(
         {ghostHorse->get()->getPosition().x(), HORSE_Y}, true);
 
+  // return;
   // ---
 
   if (bn::keypad::right_pressed() && channel < CHANNEL_X.size() - 1) {
@@ -421,6 +420,8 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getGunSprite().set_horizontal_flip(false);
       horse->getGunSprite().set_horizontal_shear(-0.49389);
       horse->getGunSprite().set_vertical_shear(0.74682);
+      horse->getMainSprite().set_vertical_shear(0);
+      horse->getMainSprite().set_horizontal_shear(0);
       horse->gunOffsetX = -3;
       horse->gunOffsetY = -23;
       break;
@@ -429,24 +430,30 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getGunSprite().set_horizontal_flip(false);
       horse->getGunSprite().set_horizontal_shear(-0.64306);
       horse->getGunSprite().set_vertical_shear(1.24462);
+      horse->getMainSprite().set_vertical_shear(0);
+      horse->getMainSprite().set_horizontal_shear(0);
       horse->gunOffsetX = -7;
       horse->gunOffsetY = -26;
       break;
     }
     case 2: {
       horse->getGunSprite().set_horizontal_flip(true);
-      horse->getGunSprite().set_horizontal_shear(-0.79223);
-      horse->getGunSprite().set_vertical_shear(-1.29516);
-      horse->gunOffsetX = -16;
-      horse->gunOffsetY = -26;
+      horse->getGunSprite().set_horizontal_shear(-0.94580);
+      horse->getGunSprite().set_vertical_shear(-1.59326);
+      horse->getMainSprite().set_vertical_shear(-0.09960);
+      horse->getMainSprite().set_horizontal_shear(-0.39843);
+      horse->gunOffsetX = -10;
+      horse->gunOffsetY = -24;
       break;
     }
     case 3: {
       horse->getGunSprite().set_horizontal_flip(true);
-      horse->getGunSprite().set_horizontal_shear(-0.59301);
-      horse->getGunSprite().set_vertical_shear(-0.84692);
-      horse->gunOffsetX = -21;
-      horse->gunOffsetY = -23;
+      horse->getGunSprite().set_horizontal_shear(-0.89160);
+      horse->getGunSprite().set_vertical_shear(-0.94628);
+      horse->getMainSprite().set_vertical_shear(0.09985);
+      horse->getMainSprite().set_horizontal_shear(-0.19897);
+      horse->gunOffsetX = -17;
+      horse->gunOffsetY = -21;
       break;
     }
     default: {

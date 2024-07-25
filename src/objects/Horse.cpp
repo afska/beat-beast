@@ -115,6 +115,8 @@ void Horse::setPosition(bn::fixed_point newPosition, bool isNowMoving) {
   bn::fixed gunTotalOffsetY = gunOffsetY;
   int bounceOffsetX =
       Math::BOUNCE_STEPS[bounceFrame] * (mainSprite.horizontal_flip() ? -1 : 1);
+  if (!bounceGun)
+    bounceOffsetX = 0;
   int bounceOffsetY = -Math::BOUNCE_STEPS[bounceFrame];
 
   setTopLeftPosition(newPosition);
