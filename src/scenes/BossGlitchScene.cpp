@@ -59,7 +59,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
                 _fs) {
   enemyLifeBar->hide();
 
-  horse->bounceGun = false;
+  canBounce = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   horse->getMainSprite().set_mosaic_enabled(true);
@@ -165,7 +165,7 @@ void BossGlitchScene::processInput() {
       comboBar->setCombo(comboBar->getCombo() + 1);
       shoot();
       bullets.push_back(bn::unique_ptr{
-          new Bullet3d(getShootingPoint(), getShootingDirection(),
+          new Bullet3d(channel, getShootingPoint(), getShootingDirection(),
                        SpriteProvider::bullet(), 1, getZSpeed())});
     } else {
       reportFailedShot();
@@ -174,7 +174,7 @@ void BossGlitchScene::processInput() {
   if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
     bullets.push_back(bn::unique_ptr{new Bullet3d(
-        getShootingPoint(), getShootingDirection(),
+        channel, getShootingPoint(), getShootingDirection(),
         SpriteProvider::bulletbonus(), BULLET_3D_BONUS_DMG, getZSpeed())});
   }
 
@@ -367,7 +367,20 @@ void BossGlitchScene::updateSprites() {
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
 
-    return isOut;
+    bool collided = false;
+    iterate(enemyBullets, [&bullet, &collided, this](Attack3d* attack) {
+      if (attack->isShootable &&
+          (attack->channel == channel ||
+           (attack->dualChannel && ((attack->channel ^ channel) == 1))) &&
+          bullet->collidesWith(attack)) {
+        addExplosion(bullet->getPosition());
+        attack->explode({0, 0});
+        collided = true;
+      }
+      return false;
+    });
+
+    return isOut || collided;
   });
 
   // Enemy bullets
