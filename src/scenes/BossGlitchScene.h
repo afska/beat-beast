@@ -3,7 +3,7 @@
 
 #include "BossScene.h"
 
-#include "../objects/Bullet.h"
+#include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Cerberus.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 
@@ -18,7 +18,7 @@ class BossGlitchScene : public BossScene {
   bn::optional<bn::regular_bg_ptr> videoBackground;
   bn::optional<bn::unique_ptr<Horse>> ghostHorse;
   bn::optional<Cerberus> cerberus;
-  bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
+  bn::vector<bn::unique_ptr<Bullet3d>, 64> bullets;
   bn::vector<bn::unique_ptr<RhythmicBullet>, 32> enemyBullets;
   bn::fixed videoFrame = 0;
   bn::fixed extraSpeed = 0;
@@ -47,6 +47,8 @@ class BossGlitchScene : public BossScene {
 
   void updateHorseChannel();
   bn::fixed_point getShootingPoint();
+  bn::fixed_point getShootingDirection();
+  bn::fixed getZSpeed();
 
   void causeDamage(bn::fixed amount);
 };

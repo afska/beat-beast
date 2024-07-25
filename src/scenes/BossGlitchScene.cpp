@@ -17,7 +17,14 @@
 #include "bn_sprite_palettes.h"
 #include "bn_sprites_mosaic.h"
 
-const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
+constexpr const bn::array<bn::fixed, 4> CHANNEL_X = {40, 64, 112, 136};
+constexpr const bn::array<bn::fixed_point, 4> SHOOTING_POINTS = {
+    bn::fixed_point(-3, -6), bn::fixed_point(-6, -6), bn::fixed_point(-16, -6),
+    bn::fixed_point(-17, -6)};
+constexpr const bn::array<bn::fixed_point, 4> SHOOTING_DIRECTIONS = {
+    bn::fixed_point(0.5, -0.25), bn::fixed_point(0.25, -0.25),
+    bn::fixed_point(-0.25, -0.25), bn::fixed_point(-0.5, -0.25)};
+constexpr const bn::array<bn::fixed, 4> Z_SPEEDS = {0.025, 0.025, 0.025, 0.025};
 
 #define HORSE_X CHANNEL_X[0]
 #define HORSE_Y 90
@@ -139,18 +146,18 @@ void BossGlitchScene::processInput() {
     if (chartReader->isInsideTick() && horse->canReallyShoot()) {
       comboBar->setCombo(comboBar->getCombo() + 1);
       shoot();
-      bullets.push_back(bn::unique_ptr{new Bullet(getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      bullets.push_back(bn::unique_ptr{
+          new Bullet3d(getShootingPoint(), getShootingDirection(),
+                       SpriteProvider::bullet(), 1, getZSpeed())});
     } else {
       reportFailedShot();
     }
   }
   if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
-    bullets.push_back(bn::unique_ptr{
-        new Bullet(getShootingPoint(), horse->getShootingDirection(),
-                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
+    bullets.push_back(bn::unique_ptr{new Bullet3d(
+        getShootingPoint(), getShootingDirection(),
+        SpriteProvider::bulletbonus(), BULLET_3D_BONUS_DMG, getZSpeed())});
   }
 
   const int totalGlitches = 10;
@@ -260,7 +267,7 @@ void BossGlitchScene::updateSprites() {
   }
 
   // Attacks
-  iterate(bullets, [this](Bullet* bullet) {
+  iterate(bullets, [this](Bullet3d* bullet) {
     bool isOut =
         bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
                        horse->getCenteredPosition());
@@ -467,23 +474,15 @@ void BossGlitchScene::updateHorseChannel() {
 }
 
 bn::fixed_point BossGlitchScene::getShootingPoint() {
-  switch (channel) {
-    case 0: {
-      return horse->getShootingPoint() + bn::fixed_point(-3, -6);
-    }
-    case 1: {
-      return horse->getShootingPoint() + bn::fixed_point(-6, -6);
-    }
-    case 2: {
-      return horse->getShootingPoint() + bn::fixed_point(-16, -6);
-    }
-    case 3: {
-      return horse->getShootingPoint() + bn::fixed_point(-17, -6);
-    }
-    default: {
-      return {0, 0};
-    }
-  }
+  return horse->getShootingPoint() + SHOOTING_POINTS[channel];
+}
+
+bn::fixed_point BossGlitchScene::getShootingDirection() {
+  return SHOOTING_DIRECTIONS[channel];
+}
+
+bn::fixed BossGlitchScene::getZSpeed() {
+  return Z_SPEEDS[channel];
 }
 
 void BossGlitchScene::causeDamage(bn::fixed amount) {

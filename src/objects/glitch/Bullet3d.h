@@ -3,8 +3,6 @@
 
 #include "../RhythmicBullet.h"
 
-#define BULLET_3D_OFF_BEAT_SPEED 1.5
-#define BULLET_3D_ON_BEAT_SPEED 2.5
 #define BULLET_3D_BONUS_DMG 0.25
 
 class Bullet3d : public RhythmicBullet {
@@ -13,9 +11,7 @@ class Bullet3d : public RhythmicBullet {
            bn::fixed_point _direction,
            bn::sprite_item _bullet,
            bn::fixed dmg = 1,
-           bn::fixed scale = 1,
-           bn::fixed _offBeatSpeed = BULLET_3D_OFF_BEAT_SPEED,
-           bn::fixed _onBeatSpeed = BULLET_3D_ON_BEAT_SPEED);
+           bn::fixed _zSpeed = 0.025);
 
   bn::fixed_point getPosition() { return sprite.position(); }
   bool update(int msecs,
@@ -28,8 +24,7 @@ class Bullet3d : public RhythmicBullet {
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<2> animation;
   bn::fixed_point direction;
-  bn::fixed offBeatSpeed;
-  bn::fixed onBeatSpeed;
+  bn::fixed zSpeed;
 };
 
 #endif  // BULLET_3D_H
