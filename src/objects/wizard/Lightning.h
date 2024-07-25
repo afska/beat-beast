@@ -8,7 +8,13 @@
 class Lightning : public TopLeftGameObject {
  public:
   bool causedDamage = false;
-  Lightning(bn::fixed_point _topLeftPosition, Event* _event);
+  Lightning(bn::sprite_item _spriteItem1,
+  bn::sprite_item _spriteItem2,
+  bn::sprite_item _spriteItem3,
+  bn::sprite_item _spriteItem4,
+  bn::sprite_item _spriteItem5,
+            bn::fixed_point _topLeftPosition,
+            Event* _event);
 
   void start(Event* event);
   bool needsToStart() { return hasPendingStartAnimation; }
@@ -19,6 +25,11 @@ class Lightning : public TopLeftGameObject {
   void start2();
 
  private:
+  bn::sprite_item spriteItem1;
+  bn::sprite_item spriteItem2;
+  bn::sprite_item spriteItem3;
+  bn::sprite_item spriteItem4;
+  bn::sprite_item spriteItem5;
   bn::sprite_ptr sprite2;
   bn::sprite_ptr sprite3;
   bn::sprite_ptr sprite4;

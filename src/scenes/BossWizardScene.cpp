@@ -22,6 +22,11 @@
 #include "bn_sprite_items_wizard_horse_run_noshadow.h"
 #include "bn_sprite_items_wizard_icon_wizard.h"
 #include "bn_sprite_items_wizard_lifebar_wizard_fill.h"
+#include "bn_sprite_items_wizard_lightning1.h"
+#include "bn_sprite_items_wizard_lightning11.h"
+#include "bn_sprite_items_wizard_lightning2.h"
+#include "bn_sprite_items_wizard_lightning22.h"
+#include "bn_sprite_items_wizard_lightning3.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
     62, 125, 162};
@@ -276,22 +281,52 @@ void BossWizardScene::processChart() {
 
       // Lightnings
       if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({30, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {30, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({56, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {56, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({82, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {82, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({108, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {108, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_5(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({134, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {134, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_PREPARE_6(type)) {
-        lightnings.push_back(bn::unique_ptr{new Lightning({160, 0}, event)});
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::wizard_lightning1,
+            bn::sprite_items::wizard_lightning11,
+            bn::sprite_items::wizard_lightning2,
+            bn::sprite_items::wizard_lightning22,
+            bn::sprite_items::wizard_lightning3, {160, 0}, event)});
       }
       if (IS_EVENT_LIGHTNING_START(type)) {
         iterate(lightnings, [&event](Lightning* lightning) {
