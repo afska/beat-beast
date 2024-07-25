@@ -238,7 +238,8 @@ bool UIScene::processPauseInput() {
     return true;
   }
 
-  if (bn::keypad::start_pressed() && !isPaused && !menu->hasStarted()) {
+  if (bn::keypad::start_pressed() && !isPaused && !menu->hasStarted() &&
+      canPause()) {
     pause();
     return true;
   }
