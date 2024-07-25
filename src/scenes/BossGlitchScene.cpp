@@ -134,6 +134,25 @@ void BossGlitchScene::processInput() {
     updateHorseChannel();
   }
 
+  // shoot
+  if (bn::keypad::b_pressed() && !horse->isBusy()) {
+    if (chartReader->isInsideTick() && horse->canReallyShoot()) {
+      comboBar->setCombo(comboBar->getCombo() + 1);
+      shoot();
+      bullets.push_back(bn::unique_ptr{new Bullet(getShootingPoint(),
+                                                  horse->getShootingDirection(),
+                                                  SpriteProvider::bullet())});
+    } else {
+      reportFailedShot();
+    }
+  }
+  if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
+    shoot();
+    bullets.push_back(bn::unique_ptr{
+        new Bullet(getShootingPoint(), horse->getShootingDirection(),
+                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
+  }
+
   const int totalGlitches = 10;
   if (bn::keypad::r_pressed()) {
     selectedGlitch = (selectedGlitch + 1) % totalGlitches;
@@ -239,6 +258,15 @@ void BossGlitchScene::updateSprites() {
   if (ghostHorse.has_value()) {
     ghostHorse->get()->update();
   }
+
+  // Attacks
+  iterate(bullets, [this](Bullet* bullet) {
+    bool isOut =
+        bullet->update(chartReader->getMsecs(), chartReader->isInsideBeat(),
+                       horse->getCenteredPosition());
+
+    return isOut;
+  });
 }
 
 void BossGlitchScene::updateGlitches() {
@@ -434,6 +462,26 @@ void BossGlitchScene::updateHorseChannel() {
     } else {
       ghostHorse->get()->customScale = false;
       ghostHorse->get()->getMainSprite().set_scale(1);
+    }
+  }
+}
+
+bn::fixed_point BossGlitchScene::getShootingPoint() {
+  switch (channel) {
+    case 0: {
+      return horse->getShootingPoint() + bn::fixed_point(-3, -6);
+    }
+    case 1: {
+      return horse->getShootingPoint() + bn::fixed_point(-6, -6);
+    }
+    case 2: {
+      return horse->getShootingPoint() + bn::fixed_point(-16, -6);
+    }
+    case 3: {
+      return horse->getShootingPoint() + bn::fixed_point(-17, -6);
+    }
+    default: {
+      return {0, 0};
     }
   }
 }

@@ -46,6 +46,7 @@ class BossGlitchScene : public BossScene {
   void updateGlitches();
 
   void updateHorseChannel();
+  bn::fixed_point getShootingPoint();
 
   void causeDamage(bn::fixed amount);
 };
