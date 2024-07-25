@@ -27,7 +27,7 @@ Vinyl3d::Vinyl3d(int _channel,
           2,
           1,
           0)) {
-  channel = channel;
+  channel = _channel;
 
   boundingBox.set_dimensions(sprite.dimensions() * 0.01);
   boundingBox.set_position({0, 0});

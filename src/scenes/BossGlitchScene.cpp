@@ -34,7 +34,14 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
 
-#define IS_EVENT_VINYL_1(TYPE) IS_EVENT(TYPE, 1, 1)
+#define IS_EVENT_VINYL_1(TYPE) IS_EVENT(TYPE, 0, 1)
+#define IS_EVENT_VINYL_2(TYPE) IS_EVENT(TYPE, 0, 2)
+#define IS_EVENT_VINYL_3(TYPE) IS_EVENT(TYPE, 0, 3)
+#define IS_EVENT_VINYL_4(TYPE) IS_EVENT(TYPE, 0, 4)
+#define IS_EVENT_VINYL_5(TYPE) IS_EVENT(TYPE, 0, 5)
+#define IS_EVENT_VINYL_6(TYPE) IS_EVENT(TYPE, 0, 6)
+#define IS_EVENT_VINYL_7(TYPE) IS_EVENT(TYPE, 0, 7)
+#define IS_EVENT_VINYL_8(TYPE) IS_EVENT(TYPE, 0, 8)
 
 #define SFX_VINYL "vinyl.pcm"
 
@@ -57,7 +64,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   horse->getGunSprite().set_z_order(1);
   updateBackground();
 
-  chartReader->eventsThatNeedAudioLagPrediction = 240 /*0b11110000*/;
+  chartReader->eventsThatNeedAudioLagPrediction = 15 /*0b00001111*/;
 
   ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
   ghostHorse->get()->showGun = false;
@@ -167,6 +174,7 @@ void BossGlitchScene::processInput() {
         SpriteProvider::bulletbonus(), BULLET_3D_BONUS_DMG, getZSpeed())});
   }
 
+  /*
   const int totalGlitches = 10;
   if (bn::keypad::r_pressed()) {
     selectedGlitch = (selectedGlitch + 1) % totalGlitches;
@@ -175,16 +183,19 @@ void BossGlitchScene::processInput() {
     selectedGlitch =
         ((selectedGlitch - 1) % totalGlitches + totalGlitches) % totalGlitches;
   }
+  */
   if (bn::keypad::a_pressed()) {
     horse->jump();
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
+    /*
     glitchType = 1 + selectedGlitch;  // TODO: REMOVE
     glitchFrames = 18;
     halfAnimatedFlag = 2;
     frozenVideoFrame = videoFrame;
     actualVideoFrame = videoFrame;
+    */
   }
 
   return;
@@ -233,6 +244,60 @@ void BossGlitchScene::processChart() {
         enemyBullets.push_back(bn::unique_ptr{
             new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
                         1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_2(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(1, bn::fixed_point(0, 15), bn::fixed_point(-16, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_3(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(2, bn::fixed_point(0, 15), bn::fixed_point(16, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_4(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(3, bn::fixed_point(0, 15), bn::fixed_point(30, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_5(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(3, bn::fixed_point(0, 15), bn::fixed_point(30, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_6(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(1, bn::fixed_point(0, 15), bn::fixed_point(-16, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(2, bn::fixed_point(0, 15), bn::fixed_point(16, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_7(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(2, bn::fixed_point(0, 15), bn::fixed_point(16, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
+        playSfx(SFX_VINYL);
+      }
+      if (IS_EVENT_VINYL_8(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(1, bn::fixed_point(0, 15), bn::fixed_point(-16, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+        enemyBullets.push_back(bn::unique_ptr{
+            new Vinyl3d(3, bn::fixed_point(0, 15), bn::fixed_point(30, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
         playSfx(SFX_VINYL);
       }
     } else {
