@@ -63,6 +63,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
   horse->getMainSprite().set_mosaic_enabled(true);
+  horse->getGunSprite().set_mosaic_enabled(true);
   horse->getMainSprite().set_z_order(1);
   horse->getGunSprite().set_z_order(1);
   updateBackground();
