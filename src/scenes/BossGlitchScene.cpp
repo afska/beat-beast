@@ -79,13 +79,13 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_FIREBALL_3(TYPE) IS_EVENT(TYPE, 4, 3)
 #define IS_EVENT_FIREBALL_4(TYPE) IS_EVENT(TYPE, 4, 4)
 
-#define HAS_EVENT_GLITCH(TYPE) HAS_EVENT(TYPE, 6)
-#define GET_EVENT_GLITCH(TYPE) GET_EVENT(TYPE, 6)
-#define IS_EVENT_GLITCH_10(TYPE) IS_EVENT(TYPE, 7, 1)
-#define IS_EVENT_GLITCH_11(TYPE) IS_EVENT(TYPE, 7, 2)
+#define HAS_EVENT_GLITCH(TYPE) HAS_EVENT(TYPE, 5)
+#define GET_EVENT_GLITCH(TYPE) GET_EVENT(TYPE, 5)
+#define IS_EVENT_GLITCH_10(TYPE) IS_EVENT(TYPE, 6, 1)
+#define IS_EVENT_GLITCH_11(TYPE) IS_EVENT(TYPE, 6, 2)
 
-#define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 7, 8)
-#define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 7, 9)
+#define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 6, 8)
+#define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 6, 9)
 
 #define EVENT_CLEAR_FIRE 1
 #define EVENT_RESET_HUE_SHIFT 2
@@ -506,6 +506,7 @@ void BossGlitchScene::processChart() {
       } else if (event->getType() == EVENT_RESET_HUE_SHIFT) {
         hueShift = 0;
         permanentHueShift = false;
+        bn::bg_palettes::set_hue_shift_intensity(hueShift);
       } else if (event->getType() == EVENT_END) {
         // TODO
       }
@@ -750,8 +751,12 @@ void BossGlitchScene::updateGlitches() {
     }
     case 11: {
       // permanent hue shift
-      hueShift = random.get_fixed(0, 1);
-      permanentHueShift = true;
+      if (oneTimeFlag) {
+        hueShift = random.get_fixed(0, 1);
+        permanentHueShift = true;
+        bn::bg_palettes::set_hue_shift_intensity(hueShift);
+        oneTimeFlag = false;
+      }
       break;
     }
     default: {
@@ -861,6 +866,7 @@ void BossGlitchScene::startGlitch(int type) {
   glitchType = type;
   glitchFrames = 18;
   halfAnimatedFlag = 2;
+  oneTimeFlag = true;
   frozenVideoFrame = videoFrame;
   actualVideoFrame = videoFrame;
 }

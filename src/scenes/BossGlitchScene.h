@@ -39,6 +39,7 @@ class BossGlitchScene : public BossScene {
   bool animatedFlag = false;
   int halfAnimatedFlag = 0;
   int sixteenthAnimatedFlag = 0;
+  bool oneTimeFlag = false;
   bn::fixed offsetY = 0;
   bn::fixed frozenVideoFrame = 0;
   bn::fixed actualVideoFrame = 0;
