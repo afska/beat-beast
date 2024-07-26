@@ -129,7 +129,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   updateHorseChannel();
 }
 
-void BossGlitchScene::updateBossFight() {
+BN_CODE_IWRAM void BossGlitchScene::updateBossFight() {
   animatedFlag = !animatedFlag;
   halfAnimatedFlag = (halfAnimatedFlag + 1) % 4;
   sixteenthAnimatedFlag = (sixteenthAnimatedFlag + 1) % 6;
@@ -486,22 +486,22 @@ void BossGlitchScene::processChart() {
       if (IS_EVENT_FIREBALL_1(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall3d(0, bn::fixed_point(0, 0), bn::fixed_point(-30, 16),
-                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
       }
       if (IS_EVENT_FIREBALL_2(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall3d(1, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
-                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
       }
       if (IS_EVENT_FIREBALL_3(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall3d(2, bn::fixed_point(0, 0), bn::fixed_point(16, 16),
-                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
       }
       if (IS_EVENT_FIREBALL_4(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new FireBall3d(3, bn::fixed_point(0, 0), bn::fixed_point(30, 16),
-                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+                           1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
       }
 
       // Glitches
@@ -776,6 +776,7 @@ void BossGlitchScene::updateGlitches() {
       // random hue shift
       hueShift =
           halfAnimatedFlag >= 2 && !isLastFrame ? random.get_fixed(0, 1) : 0;
+      permanentHueShift = false;
       bn::bg_palettes::set_hue_shift_intensity(hueShift);
       break;
     }
@@ -902,6 +903,7 @@ void BossGlitchScene::startGlitch(int type) {
 }
 
 void BossGlitchScene::cleanupGlitch() {
+  // TODO: FIX PERFORMANCE; TEST ON HARDWARE
   ghostHorse->get()->getMainSprite().set_visible(false);
   lifeBar->relocate({0, 0});
   comboBar->relocate({0, 0});
