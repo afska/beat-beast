@@ -6,6 +6,7 @@
 #include "../objects/glitch/BlackHole3d.h"
 #include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Cerberus.h"
+#include "../objects/glitch/FireBall3d.h"
 #include "../objects/glitch/GameNote3d.h"
 #include "../objects/glitch/MegaBall3d.h"
 #include "../objects/glitch/Vinyl3d.h"
@@ -23,11 +24,11 @@ class BossGlitchScene : public BossScene {
   bn::optional<bn::regular_bg_ptr> errBackground;
   bn::optional<bn::regular_bg_ptr> videoBackground;
   bn::optional<bn::unique_ptr<Horse>> ghostHorse;
-  bn::optional<Cerberus> cerberus;
   bn::vector<bn::unique_ptr<Bullet3d>, 64> bullets;
   bn::vector<bn::unique_ptr<Attack3d>, 32> enemyBullets;
   bn::vector<bn::unique_ptr<Lightning>, 32> lightnings;
   bn::vector<bn::unique_ptr<PlatformFire>, 32> platformFires;
+  bn::optional<bn::unique_ptr<Cerberus>> cerberus;
   bn::fixed videoFrame = 0;
   bn::fixed extraSpeed = 0;
   int channel = 0;
@@ -46,7 +47,6 @@ class BossGlitchScene : public BossScene {
   bool invertColors = false;
   bn::fixed hueShift = 0;
   int selectedGlitch = 0;
-  bool fireMode = true;
 
   void processInput();
   void processChart();

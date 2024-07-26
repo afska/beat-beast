@@ -61,20 +61,24 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_LIGHTNING_PREPARE_4(TYPE) IS_EVENT(TYPE, 1, 4)
 #define IS_EVENT_LIGHTNING_START(TYPE) IS_EVENT(TYPE, 1, 9)
 
-// (lightning and platform fire share their type)
-#define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
-#define IS_EVENT_PLATFORM_FIRE_2(TYPE) IS_EVENT(TYPE, 1, 2)
-#define IS_EVENT_PLATFORM_FIRE_3(TYPE) IS_EVENT(TYPE, 1, 3)
-#define IS_EVENT_PLATFORM_FIRE_4(TYPE) IS_EVENT(TYPE, 1, 4)
-#define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 1, 9)
+#define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 2, 1)
+#define IS_EVENT_PLATFORM_FIRE_2(TYPE) IS_EVENT(TYPE, 2, 2)
+#define IS_EVENT_PLATFORM_FIRE_3(TYPE) IS_EVENT(TYPE, 2, 3)
+#define IS_EVENT_PLATFORM_FIRE_4(TYPE) IS_EVENT(TYPE, 2, 4)
+#define IS_EVENT_PLATFORM_FIRE_START(TYPE) IS_EVENT(TYPE, 2, 9)
 
-#define IS_EVENT_NOTE_1(TYPE) IS_EVENT(TYPE, 2, 1)
-#define IS_EVENT_NOTE_2(TYPE) IS_EVENT(TYPE, 2, 2)
-#define IS_EVENT_NOTE_3(TYPE) IS_EVENT(TYPE, 2, 3)
-#define IS_EVENT_NOTE_4(TYPE) IS_EVENT(TYPE, 2, 4)
+#define IS_EVENT_NOTE_1(TYPE) IS_EVENT(TYPE, 3, 1)
+#define IS_EVENT_NOTE_2(TYPE) IS_EVENT(TYPE, 3, 2)
+#define IS_EVENT_NOTE_3(TYPE) IS_EVENT(TYPE, 3, 3)
+#define IS_EVENT_NOTE_4(TYPE) IS_EVENT(TYPE, 3, 4)
 
-#define IS_EVENT_BLACK_HOLE_L(TYPE) IS_EVENT(TYPE, 2, 5)
-#define IS_EVENT_BLACK_HOLE_R(TYPE) IS_EVENT(TYPE, 2, 6)
+#define IS_EVENT_BLACK_HOLE_L(TYPE) IS_EVENT(TYPE, 3, 5)
+#define IS_EVENT_BLACK_HOLE_R(TYPE) IS_EVENT(TYPE, 3, 6)
+
+#define IS_EVENT_FIREBALL_1(TYPE) IS_EVENT(TYPE, 4, 1)
+#define IS_EVENT_FIREBALL_2(TYPE) IS_EVENT(TYPE, 4, 2)
+#define IS_EVENT_FIREBALL_3(TYPE) IS_EVENT(TYPE, 4, 3)
+#define IS_EVENT_FIREBALL_4(TYPE) IS_EVENT(TYPE, 4, 4)
 
 #define SFX_VINYL "vinyl.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
@@ -349,81 +353,75 @@ void BossGlitchScene::processChart() {
                            1.75, 1.85, BEAT_DURATION_FRAMES * 4, event)});
       }
 
-      if (fireMode) {
-        // Platform fires
-        bn::optional<bn::camera_ptr> noCamera;
-        if (IS_EVENT_PLATFORM_FIRE_1(type)) {
-          platformFires.push_back(bn::unique_ptr{new PlatformFire(
-              bn::sprite_items::glitch_fire,
-              {PLATFORM_FIRE_X[0], PLATFORM_FIRE_Y}, event, noCamera, true)});
-        }
-        if (IS_EVENT_PLATFORM_FIRE_2(type)) {
-          platformFires.push_back(bn::unique_ptr{new PlatformFire(
-              bn::sprite_items::glitch_fire,
-              {PLATFORM_FIRE_X[1], PLATFORM_FIRE_Y}, event, noCamera, true)});
-        }
-        if (IS_EVENT_PLATFORM_FIRE_3(type)) {
-          platformFires.push_back(bn::unique_ptr{new PlatformFire(
-              bn::sprite_items::glitch_fire,
-              {PLATFORM_FIRE_X[2], PLATFORM_FIRE_Y}, event, noCamera, true)});
-        }
-        if (IS_EVENT_PLATFORM_FIRE_4(type)) {
-          platformFires.push_back(bn::unique_ptr{new PlatformFire(
-              bn::sprite_items::glitch_fire,
-              {PLATFORM_FIRE_X[3], PLATFORM_FIRE_Y}, event, noCamera, true)});
-        }
-        if (IS_EVENT_PLATFORM_FIRE_START(type)) {
-          iterate(platformFires, [&event](PlatformFire* platformFire) {
-            platformFire->start(event);
-            // player_sfx_play(SFX_LIGHTNING);
-            return false;
-          });
-        }
-      } else {
-        // Lightnings
-        if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
-          lightnings.push_back(
-              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
-                                           bn::sprite_items::glitch_lightning11,
-                                           bn::sprite_items::glitch_lightning2,
-                                           bn::sprite_items::glitch_lightning22,
-                                           bn::sprite_items::glitch_lightning3,
-                                           {LIGHTNING_X[0], 0}, event)});
-        }
-        if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
-          lightnings.push_back(
-              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
-                                           bn::sprite_items::glitch_lightning11,
-                                           bn::sprite_items::glitch_lightning2,
-                                           bn::sprite_items::glitch_lightning22,
-                                           bn::sprite_items::glitch_lightning3,
-                                           {LIGHTNING_X[1], 0}, event)});
-        }
-        if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
-          lightnings.push_back(
-              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
-                                           bn::sprite_items::glitch_lightning11,
-                                           bn::sprite_items::glitch_lightning2,
-                                           bn::sprite_items::glitch_lightning22,
-                                           bn::sprite_items::glitch_lightning3,
-                                           {LIGHTNING_X[2], 0}, event)});
-        }
-        if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
-          lightnings.push_back(
-              bn::unique_ptr{new Lightning(bn::sprite_items::glitch_lightning1,
-                                           bn::sprite_items::glitch_lightning11,
-                                           bn::sprite_items::glitch_lightning2,
-                                           bn::sprite_items::glitch_lightning22,
-                                           bn::sprite_items::glitch_lightning3,
-                                           {LIGHTNING_X[3], 0}, event)});
-        }
-        if (IS_EVENT_LIGHTNING_START(type)) {
-          iterate(lightnings, [&event](Lightning* lightning) {
-            lightning->start(event);
-            player_sfx_play(SFX_LIGHTNING);
-            return false;
-          });
-        }
+      // Platform fires
+      bn::optional<bn::camera_ptr> noCamera;
+      if (IS_EVENT_PLATFORM_FIRE_1(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            bn::sprite_items::glitch_fire,
+            {PLATFORM_FIRE_X[0], PLATFORM_FIRE_Y}, event, noCamera, true)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_2(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            bn::sprite_items::glitch_fire,
+            {PLATFORM_FIRE_X[1], PLATFORM_FIRE_Y}, event, noCamera, true)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_3(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            bn::sprite_items::glitch_fire,
+            {PLATFORM_FIRE_X[2], PLATFORM_FIRE_Y}, event, noCamera, true)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_4(type)) {
+        platformFires.push_back(bn::unique_ptr{new PlatformFire(
+            bn::sprite_items::glitch_fire,
+            {PLATFORM_FIRE_X[3], PLATFORM_FIRE_Y}, event, noCamera, true)});
+      }
+      if (IS_EVENT_PLATFORM_FIRE_START(type)) {
+        iterate(platformFires, [&event](PlatformFire* platformFire) {
+          platformFire->start(event);
+          // player_sfx_play(SFX_LIGHTNING);
+          return false;
+        });
+      }
+
+      // Lightnings
+      if (IS_EVENT_LIGHTNING_PREPARE_1(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[0], 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_2(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[1], 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_3(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[2], 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_PREPARE_4(type)) {
+        lightnings.push_back(bn::unique_ptr{new Lightning(
+            bn::sprite_items::glitch_lightning1,
+            bn::sprite_items::glitch_lightning11,
+            bn::sprite_items::glitch_lightning2,
+            bn::sprite_items::glitch_lightning22,
+            bn::sprite_items::glitch_lightning3, {LIGHTNING_X[3], 0}, event)});
+      }
+      if (IS_EVENT_LIGHTNING_START(type)) {
+        iterate(lightnings, [&event](Lightning* lightning) {
+          lightning->start(event);
+          player_sfx_play(SFX_LIGHTNING);
+          return false;
+        });
       }
 
       // Black holes
@@ -458,6 +456,28 @@ void BossGlitchScene::processChart() {
         enemyBullets.push_back(bn::unique_ptr{
             new GameNote3d(3, bn::fixed_point(0, 0), bn::fixed_point(30, 16),
                            1.5, 1.6, BEAT_DURATION_FRAMES * 2, event)});
+      }
+
+      // Fire balls
+      if (IS_EVENT_FIREBALL_1(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new FireBall3d(0, bn::fixed_point(0, 0), bn::fixed_point(-30, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_FIREBALL_2(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new FireBall3d(1, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_FIREBALL_3(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new FireBall3d(2, bn::fixed_point(0, 0), bn::fixed_point(16, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
+      }
+      if (IS_EVENT_FIREBALL_4(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new FireBall3d(3, bn::fixed_point(0, 0), bn::fixed_point(30, 16),
+                           1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
       }
     } else {
     }
