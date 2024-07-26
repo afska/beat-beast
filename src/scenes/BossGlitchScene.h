@@ -47,6 +47,8 @@ class BossGlitchScene : public BossScene {
   bool pauseVideo = false;
   bool mosaicVideo = false;
   bool invertColors = false;
+  bool reverse = false;
+  bn::fixed reverseSpeed = 0;
   bn::fixed hueShift = 0;
   int selectedGlitch = 0;
   bool permanentHueShift = false;

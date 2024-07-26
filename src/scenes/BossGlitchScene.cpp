@@ -89,6 +89,9 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 
 #define EVENT_CLEAR_FIRE 1
 #define EVENT_RESET_HUE_SHIFT 2
+#define EVENT_REVERSE 3
+#define EVENT_REVERSE_STOP 4
+#define EVENT_REVERSE_AND_CLEAR_ATTACKS 5
 #define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
@@ -115,7 +118,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   updateBackground();
 
   chartReader->eventsThatNeedAudioLagPrediction =
-      15 /*0b0000000000000000000000001111*/;
+      255 /*0b0000000000000000000011111111*/;
 
   ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
   ghostHorse->get()->showGun = false;
@@ -449,12 +452,12 @@ void BossGlitchScene::processChart() {
       if (IS_EVENT_BLACK_HOLE_L(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new BlackHole3d(0, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
-                            1.5, 1.6, BEAT_DURATION_FRAMES * 4, event)});
+                            1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
       }
       if (IS_EVENT_BLACK_HOLE_R(type)) {
         enemyBullets.push_back(bn::unique_ptr{
             new BlackHole3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
-                            1.5, 1.6, BEAT_DURATION_FRAMES * 4, event)});
+                            1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
       }
 
       // Notes
@@ -517,6 +520,16 @@ void BossGlitchScene::processChart() {
         hueShift = 0;
         permanentHueShift = false;
         bn::bg_palettes::set_hue_shift_intensity(hueShift);
+      } else if (event->getType() == EVENT_REVERSE) {
+        reverse = true;
+        reverseSpeed = 0;
+      } else if (event->getType() == EVENT_REVERSE_STOP) {
+        reverse = false;
+      } else if (event->getType() == EVENT_REVERSE_AND_CLEAR_ATTACKS) {
+        pixelBlink->blink();
+        enemyBullets.clear();
+        reverse = true;
+        reverseSpeed = 0;
       } else if (event->getType() == EVENT_END) {
         // TODO
       }
@@ -529,10 +542,17 @@ void BossGlitchScene::updateBackground() {
     extraSpeed = 10;
 
   auto currentVideoFrame = videoFrame.floor_integer();
-  extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
-  videoFrame += (1 + extraSpeed / 2) / 2;
-  if (videoFrame >= 150)
-    videoFrame = 0;
+  if (reverse) {
+    videoFrame -= reverseSpeed;
+    reverseSpeed += 0.05;
+    if (videoFrame < 0)
+      videoFrame = 149;
+  } else {
+    extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
+    videoFrame += (1 + extraSpeed / 2) / 2;
+    if (videoFrame >= 150)
+      videoFrame = 0;
+  }
   if (pauseVideo)
     return;
 
@@ -572,7 +592,7 @@ void BossGlitchScene::updateSprites() {
 
     bool collided = false;
     iterate(enemyBullets, [&bullet, &collided, this](Attack3d* attack) {
-      if (attack->isShootable &&
+      if (!attack->didExplode() && attack->isShootable &&
           (attack->channel == channel ||
            (/*attack->dualChannel && */ ((attack->channel ^ channel) == 1))) &&
           bullet->collidesWith(attack)) {
@@ -894,3 +914,5 @@ void BossGlitchScene::cleanupGlitch() {
   bn::sprite_palettes::set_inverted(false);
   bn::bg_palettes::set_hue_shift_intensity(hueShift);
 }
+
+// TODO: BUG DISABLE MOSAIC ON PAUSE
