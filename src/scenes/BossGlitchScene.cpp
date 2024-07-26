@@ -189,7 +189,17 @@ void BossGlitchScene::processInput() {
   BN_LOG("offsetY");
   BN_LOG(horse->gunOffsetY);*/
 
-  horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+  if (horse->getPosition().x() < horseTargetPosition.x()) {
+    horse->setPosition({horse->getPosition().x() + SPEED, HORSE_Y}, true);
+    if (horse->getPosition().x() > horseTargetPosition.x())
+      horse->setPosition({horseTargetPosition.x(), HORSE_Y}, true);
+  } else if (horse->getPosition().x() > horseTargetPosition.x()) {
+    horse->setPosition({horse->getPosition().x() - SPEED, HORSE_Y}, true);
+    if (horse->getPosition().x() < horseTargetPosition.x())
+      horse->setPosition({horseTargetPosition.x(), HORSE_Y}, true);
+  } else
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, true);
+
   if (ghostHorse.has_value())
     ghostHorse->get()->setPosition(
         {ghostHorse->get()->getPosition().x(), HORSE_Y}, true);
@@ -766,7 +776,7 @@ void BossGlitchScene::updateGlitches() {
 
 void BossGlitchScene::updateHorseChannel() {
   _3D_CHANNEL = channel;
-  horse->setPosition({CHANNEL_X[channel], horse->getPosition().y()}, true);
+  horseTargetPosition = {CHANNEL_X[channel], horse->getPosition().y()};
   horse->setIdleOrRunningState();
   horse->setFlipX(channel >= 2);
   if (channel == 1 || channel == 2) {
@@ -822,7 +832,7 @@ void BossGlitchScene::updateHorseChannel() {
     }
   }
 
-  pixelBlink->blink();
+  // pixelBlink->blink();
 
   if (ghostHorse.has_value()) {
     auto mirroredChannel = CHANNEL_X.size() - 1 - channel;

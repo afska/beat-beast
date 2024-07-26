@@ -34,6 +34,7 @@ class BossGlitchScene : public BossScene {
   int channel = 0;
   bn::array<bn::fixed, bn::display::height()> horizontalDeltas;
   bn::optional<bn::regular_bg_position_hbe_ptr> horizontalHBE;
+  bn::fixed_point horseTargetPosition;
   int glitchType = -1;
   int glitchFrames = 0;
   bool animatedFlag = false;
@@ -49,6 +50,7 @@ class BossGlitchScene : public BossScene {
   bn::fixed hueShift = 0;
   int selectedGlitch = 0;
   bool permanentHueShift = false;
+  bn::fixed SPEED = 10;
 
   void processInput();
   void processChart();
