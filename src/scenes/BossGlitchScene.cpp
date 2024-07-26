@@ -351,14 +351,14 @@ void BossGlitchScene::processChart() {
             new Vinyl3d(0, bn::fixed_point(0, 15), bn::fixed_point(-30, 34),
                         1.5, 1.6, BEAT_DURATION_FRAMES, event)});
         enemyBullets.push_back(bn::unique_ptr{
-            new Vinyl3d(2, bn::fixed_point(0, 15), bn::fixed_point(16, 34), 1.5,
-                        1.6, BEAT_DURATION_FRAMES, event)});
+            new Vinyl3d(1, bn::fixed_point(0, 15), bn::fixed_point(-16, 34),
+                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
         playSfx(SFX_VINYL);
       }
       if (IS_EVENT_VINYL_8(type)) {
         enemyBullets.push_back(bn::unique_ptr{
-            new Vinyl3d(1, bn::fixed_point(0, 15), bn::fixed_point(-16, 34),
-                        1.5, 1.6, BEAT_DURATION_FRAMES, event)});
+            new Vinyl3d(2, bn::fixed_point(0, 15), bn::fixed_point(16, 34), 1.5,
+                        1.6, BEAT_DURATION_FRAMES, event)});
         enemyBullets.push_back(bn::unique_ptr{
             new Vinyl3d(3, bn::fixed_point(0, 15), bn::fixed_point(30, 34), 1.5,
                         1.6, BEAT_DURATION_FRAMES, event)});

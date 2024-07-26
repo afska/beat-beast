@@ -3,7 +3,7 @@
 #TICKCOUNT:2;
 
 // 0^000000
-//  ^^^^^^^ vinyl (1~4 | 5=1&4 | 6=2&3 | 7=1&3 | 8=2&4)
+//  ^^^^^^^ vinyl (1~4 | 5=1&4 | 6=2&3 | 7=1&2 | 8=3&4)
 //  ||||||- lightning (1~4 preprare | 9 = start)
 //  |||||-- fire (1~4 prepare | 9 = start)
 //  ||||--- note (1~4 | 5 and 6 = black hole)
