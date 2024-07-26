@@ -450,14 +450,14 @@ void BossGlitchScene::processChart() {
 
       // Black holes
       if (IS_EVENT_BLACK_HOLE_L(type)) {
-        enemyBullets.push_back(bn::unique_ptr{
-            new BlackHole3d(0, bn::fixed_point(0, 0), bn::fixed_point(-16, 16),
-                            1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
+        enemyBullets.push_back(bn::unique_ptr{new BlackHole3d(
+            0, bn::fixed_point(0, 0), bn::fixed_point(-16 - 24, 16), 1.5, 1.6,
+            BEAT_DURATION_FRAMES * 3, event)});
       }
       if (IS_EVENT_BLACK_HOLE_R(type)) {
-        enemyBullets.push_back(bn::unique_ptr{
-            new BlackHole3d(2, bn::fixed_point(0, 0), bn::fixed_point(32, 16),
-                            1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
+        enemyBullets.push_back(bn::unique_ptr{new BlackHole3d(
+            2, bn::fixed_point(0, 0), bn::fixed_point(32 + 24, 16), 1.5, 1.6,
+            BEAT_DURATION_FRAMES * 3, event)});
       }
 
       // Notes
