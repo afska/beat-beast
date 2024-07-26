@@ -42,6 +42,8 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 
 // Events
 #define IS_EVENT(TYPE, COL, N) (((TYPE >> ((COL) * 4)) & 0xf) == N)
+#define HAS_EVENT(TYPE, COL) (((TYPE >> ((COL) * 4)) & 0xf) > 0)
+#define GET_EVENT(TYPE, COL) (((TYPE >> ((COL) * 4)) & 0xf))
 
 #define IS_EVENT_VINYL_1(TYPE) IS_EVENT(TYPE, 0, 1)
 #define IS_EVENT_VINYL_2(TYPE) IS_EVENT(TYPE, 0, 2)
@@ -51,9 +53,6 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_VINYL_6(TYPE) IS_EVENT(TYPE, 0, 6)
 #define IS_EVENT_VINYL_7(TYPE) IS_EVENT(TYPE, 0, 7)
 #define IS_EVENT_VINYL_8(TYPE) IS_EVENT(TYPE, 0, 8)
-
-#define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 6, 5)
-#define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 6, 6)
 
 #define IS_EVENT_LIGHTNING_PREPARE_1(TYPE) IS_EVENT(TYPE, 1, 1)
 #define IS_EVENT_LIGHTNING_PREPARE_2(TYPE) IS_EVENT(TYPE, 1, 2)
@@ -79,6 +78,18 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_FIREBALL_2(TYPE) IS_EVENT(TYPE, 4, 2)
 #define IS_EVENT_FIREBALL_3(TYPE) IS_EVENT(TYPE, 4, 3)
 #define IS_EVENT_FIREBALL_4(TYPE) IS_EVENT(TYPE, 4, 4)
+
+#define HAS_EVENT_GLITCH(TYPE) HAS_EVENT(TYPE, 6)
+#define GET_EVENT_GLITCH(TYPE) GET_EVENT(TYPE, 6)
+#define IS_EVENT_GLITCH_10(TYPE) IS_EVENT(TYPE, 7, 1)
+#define IS_EVENT_GLITCH_11(TYPE) IS_EVENT(TYPE, 7, 2)
+
+#define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 7, 8)
+#define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 7, 9)
+
+#define EVENT_CLEAR_FIRE 1
+#define EVENT_RESET_HUE_SHIFT 2
+#define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
 #define SFX_LIGHTNING "lightning.pcm"
@@ -479,7 +490,25 @@ void BossGlitchScene::processChart() {
             new FireBall3d(3, bn::fixed_point(0, 0), bn::fixed_point(30, 16),
                            1.75, 1.85, BEAT_DURATION_FRAMES * 2, event)});
       }
+
+      // Glitches
+      if (HAS_EVENT_GLITCH(type)) {
+        auto glitch = GET_EVENT_GLITCH(type);
+        startGlitch(glitch);
+      }
+      if (IS_EVENT_GLITCH_10(type))
+        startGlitch(10);
+      if (IS_EVENT_GLITCH_11(type))
+        startGlitch(11);
     } else {
+      if (event->getType() == EVENT_CLEAR_FIRE) {
+        platformFires.clear();
+      } else if (event->getType() == EVENT_RESET_HUE_SHIFT) {
+        hueShift = 0;
+        permanentHueShift = false;
+      } else if (event->getType() == EVENT_END) {
+        // TODO
+      }
     }
   }
 }
@@ -606,8 +635,6 @@ void BossGlitchScene::updateGlitches() {
   glitchFrames--;
   bool isLastFrame = glitchFrames == 0;
 
-  // TODO: Unify cleanup
-
   switch (glitchType) {
     case 1: {
       // ghost horse
@@ -721,6 +748,12 @@ void BossGlitchScene::updateGlitches() {
       bn::bg_palettes::set_hue_shift_intensity(hueShift);
       break;
     }
+    case 11: {
+      // permanent hue shift
+      hueShift = random.get_fixed(0, 1);
+      permanentHueShift = true;
+      break;
+    }
     default: {
     }
   }
@@ -817,8 +850,31 @@ bn::fixed BossGlitchScene::getZSpeed() {
 }
 
 void BossGlitchScene::causeDamage(bn::fixed amount) {
-  // octopus->hurt();
   enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
+}
+
+void BossGlitchScene::startGlitch(int type) {
+  cleanupGlitch();
+
+  glitchType = type;
+  glitchFrames = 18;
+  halfAnimatedFlag = 2;
+  frozenVideoFrame = videoFrame;
+  actualVideoFrame = videoFrame;
+}
+
+void BossGlitchScene::cleanupGlitch() {
+  ghostHorse->get()->getMainSprite().set_visible(false);
+  lifeBar->relocate({0, 0});
+  comboBar->relocate({0, 0});
+  printLife(lifeBar->getLife());
+  offsetY = 0;
+  pauseVideo = false;
+  bn::bgs_mosaic::set_stretch(0);
+  bn::sprites_mosaic::set_stretch(0);
+  mosaicVideo = false;
+  bn::sprite_palettes::set_inverted(false);
+  bn::bg_palettes::set_hue_shift_intensity(hueShift);
 }

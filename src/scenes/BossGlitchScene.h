@@ -47,6 +47,7 @@ class BossGlitchScene : public BossScene {
   bool invertColors = false;
   bn::fixed hueShift = 0;
   int selectedGlitch = 0;
+  bool permanentHueShift = false;
 
   void processInput();
   void processChart();
@@ -60,6 +61,8 @@ class BossGlitchScene : public BossScene {
   bn::fixed getZSpeed();
 
   void causeDamage(bn::fixed amount);
+  void startGlitch(int type);
+  void cleanupGlitch();
 };
 
 #endif  // BOSS_GLITCH_SCENE_H

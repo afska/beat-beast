@@ -3,15 +3,29 @@
 #TICKCOUNT:2;
 
 // 0^000000
-//  ^ ^^^^^ vinyl (1~4 | 5=1&4 | 6=2&3 | 7=1&3 | 8=2&4)
-//  | ||||- lightning (1~4 preprare | 9 = start)
-//  | |||-- fire (1~4 prepare | 9 = start)
-//  | ||--- note (1~4 | 5 and 6 = black hole)
-//  | |---- fireball (1~4)
-//  |
-//  |------ megaball (5~6)
+//  ^^^^^^^ vinyl (1~4 | 5=1&4 | 6=2&3 | 7=1&3 | 8=2&4)
+//  ||||||- lightning (1~4 preprare | 9 = start)
+//  |||||-- fire (1~4 prepare | 9 = start)
+//  ||||--- note (1~4 | 5 and 6 = black hole)
+//  |||---- fireball (1~4)
+//  ||----- glitch (1~9)
+//  |------ glitch (1~2) | megaball (8~9)
 // !1  = clear fire
+// !2  = reset hue shift
 // !99  = end
+
+// glitch list:
+// 1 = ghost horse
+// 2 = life bar warp
+// 3 = BG Y-scroll
+// 4 = frozen video frame + continue
+// 5 = frozen video frame + random
+// 6 = stutter + speedup
+// 7 = pixelate horse
+// 8 = pixelate everything
+// 9 = invert sprite colors
+// 10 = random hue shift
+// 11 = permanent random hue shift
 
 // NORMAL
 #NOTEDATA:;
