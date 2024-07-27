@@ -202,6 +202,19 @@ inline void moveNumberTowards(bn::fixed& current,
   }
 }
 
+inline void moveNumberTo(bn::fixed& current, bn::fixed target, bn::fixed step) {
+  if (current < target) {
+    current += step;
+    if (current > target)
+      current = target;
+  }
+  if (current > target) {
+    current += -step;
+    if (current < target)
+      current = target;
+  }
+}
+
 inline bn::fixed getBeatBasedXPositionForObject(int targetX,
                                                 int targetWidth,
                                                 bn::fixed directionX,

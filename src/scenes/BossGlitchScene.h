@@ -21,7 +21,7 @@ class BossGlitchScene : public BossScene {
   void updateBossFight() override;
 
  private:
-  bn::optional<bn::regular_bg_ptr> errBackground;
+  bn::optional<bn::affine_bg_ptr> errBackground;
   bn::optional<bn::regular_bg_ptr> videoBackground;
   bn::optional<bn::unique_ptr<Horse>> ghostHorse;
   bn::vector<bn::unique_ptr<Bullet3d>, 64> bullets;
@@ -53,6 +53,14 @@ class BossGlitchScene : public BossScene {
   int selectedGlitch = 0;
   bool permanentHueShift = false;
   bn::fixed SPEED = 10;
+  bn::fixed errScale = 1;
+  bn::fixed errShearX = 0;
+  bn::fixed errShearY = 0;
+  bn::fixed errRotation = 0;
+  bn::fixed errTargetScale = 1;
+  bn::fixed errTargetShearX = 0;
+  bn::fixed errTargetShearY = 0;
+  bn::fixed errTargetRotation = 0;
 
   void processInput();
   void processChart();

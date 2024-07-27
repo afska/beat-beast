@@ -16,6 +16,11 @@
 // !4  = reverse stop
 // !5  = reverse and clear attacks
 // !6  = bait
+// !7  = transition1
+// !8  = transition2
+// !9  = transition3
+// !10 = transition4
+// !11 = modem
 // !99  = end
 
 // glitch list:
@@ -579,8 +584,12 @@
 00000000
 00000000
 00000000
+!7
+!8
+!9
+!10
 ,
-00000000
+!11
 00000000
 00000000
 00000000

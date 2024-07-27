@@ -6,7 +6,9 @@
 #include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+#include "../utils/Rumble.h"
 
+#include "bn_affine_bg_items_bait.h"
 #include "bn_bg_palettes.h"
 #include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
@@ -92,6 +94,12 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define EVENT_REVERSE 3
 #define EVENT_REVERSE_STOP 4
 #define EVENT_REVERSE_AND_CLEAR_ATTACKS 5
+#define EVENT_BAIT 6
+#define EVENT_TRANSITION1 7
+#define EVENT_TRANSITION2 8
+#define EVENT_TRANSITION3 9
+#define EVENT_TRANSITION4 10
+#define EVENT_MODEM 11
 #define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
@@ -138,10 +146,15 @@ BN_CODE_IWRAM void BossGlitchScene::updateBossFight() {
   processChart();
   updateGlitches();
   updateBackground();
+  if (blocked)
+    return;
   updateSprites();
 }
 
 void BossGlitchScene::processInput() {
+  if (blocked)
+    return;
+
   /*if (bn::keypad::right_pressed()) {
     horse->getGunSprite().set_horizontal_shear(
         horse->getGunSprite().horizontal_shear() + 0.05);
@@ -530,6 +543,45 @@ void BossGlitchScene::processChart() {
         enemyBullets.clear();
         reverse = true;
         reverseSpeed = 0;
+      } else if (event->getType() == EVENT_BAIT) {
+        enemyBullets.clear();
+        lightnings.clear();
+        platformFires.clear();
+        hueShift = 0;
+        cleanupGlitch();
+
+        blocked = true;
+        RUMBLE_start();
+        videoBackground.reset();
+        horizontalHBE.reset();
+        errBackground = bn::affine_bg_items::bait.create_bg(
+            (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
+        bn::sprites::set_visible(false);
+      } else if (event->getType() == EVENT_TRANSITION1) {
+        errScale = 1.8;
+        errShearX = 1.4;
+        errShearY = 0.5;
+        errRotation = 40;
+      } else if (event->getType() == EVENT_TRANSITION2) {
+        errScale = 1.3;
+        errShearX = 1.4;
+        errShearY = 0.5;
+        errRotation = -20;
+      } else if (event->getType() == EVENT_TRANSITION3) {
+        errScale = 0.7;
+        errShearX = 0.3;
+        errShearY = 1.3;
+        errRotation = 160;
+      } else if (event->getType() == EVENT_TRANSITION4) {
+        errScale = 2;
+        errShearX = 0;
+        errShearY = 0;
+        errRotation = 0;
+      } else if (event->getType() == EVENT_MODEM) {
+        blocked = false;
+        RUMBLE_stop();
+        errBackground.reset();
+        bn::sprites::set_visible(true);
       } else if (event->getType() == EVENT_END) {
         // TODO
       }
@@ -538,6 +590,19 @@ void BossGlitchScene::processChart() {
 }
 
 void BossGlitchScene::updateBackground() {
+  if (errBackground.has_value()) {
+    Math::moveNumberTo(errScale, errTargetScale, 0.05);
+    Math::moveNumberTo(errShearX, errTargetShearX, 0.05);
+    Math::moveNumberTo(errShearY, errTargetShearY, 0.05);
+    Math::moveNumberTo(errRotation, errTargetRotation, 5);
+
+    errBackground->set_scale(errScale);
+    errBackground->set_horizontal_shear(errShearX);
+    errBackground->set_vertical_shear(errShearY);
+    errBackground->set_rotation_angle(Math::normalizeAngle(errRotation));
+    return;
+  }
+
   if (isNewBeat)
     extraSpeed = 10;
 
@@ -903,7 +968,6 @@ void BossGlitchScene::startGlitch(int type) {
 }
 
 void BossGlitchScene::cleanupGlitch() {
-  // TODO: FIX PERFORMANCE; TEST ON HARDWARE
   ghostHorse->get()->getMainSprite().set_visible(false);
   lifeBar->relocate({0, 0});
   comboBar->relocate({0, 0});

@@ -60,10 +60,11 @@ void BossScene::init() {
 }
 
 void BossScene::update() {
-  pixelBlink->update();
-
-  if (processPauseInput())
-    return;
+  if (!blocked) {
+    pixelBlink->update();
+    if (processPauseInput())
+      return;
+  }
 
   updateChartReader();
   updateBossFight();
@@ -80,7 +81,7 @@ void BossScene::addExplosion(bn::fixed_point position) {
 }
 
 void BossScene::sufferDamage(bn::fixed amount) {
-  // return;  // TODO: REMOVE
+  return;  // TODO: REMOVE
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
@@ -271,7 +272,7 @@ void BossScene::updateChartReader() {
   if (isNewTick)
     horse->canShoot = true;
 
-  if (SaveFile::data.rumble) {
+  if (SaveFile::data.rumble && !blocked) {
     if (isNewBeat) {
       RUMBLE_start();
     } else if (wasInsideBeat && !chartReader->isInsideBeat()) {
