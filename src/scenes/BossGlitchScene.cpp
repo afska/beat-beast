@@ -75,6 +75,8 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 
 #define IS_EVENT_BLACK_HOLE_L(TYPE) IS_EVENT(TYPE, 3, 5)
 #define IS_EVENT_BLACK_HOLE_R(TYPE) IS_EVENT(TYPE, 3, 6)
+#define IS_EVENT_MODEM_L(TYPE) IS_EVENT(TYPE, 3, 7)
+#define IS_EVENT_MODEM_R(TYPE) IS_EVENT(TYPE, 3, 8)
 
 #define IS_EVENT_FIREBALL_1(TYPE) IS_EVENT(TYPE, 4, 1)
 #define IS_EVENT_FIREBALL_2(TYPE) IS_EVENT(TYPE, 4, 2)
@@ -86,6 +88,7 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define IS_EVENT_GLITCH_10(TYPE) IS_EVENT(TYPE, 6, 1)
 #define IS_EVENT_GLITCH_11(TYPE) IS_EVENT(TYPE, 6, 2)
 
+#define IS_EVENT_CONTINUE(TYPE) IS_EVENT(TYPE, 6, 7)
 #define IS_EVENT_MEGABALL_L(TYPE) IS_EVENT(TYPE, 6, 8)
 #define IS_EVENT_MEGABALL_R(TYPE) IS_EVENT(TYPE, 6, 9)
 
@@ -99,7 +102,6 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define EVENT_TRANSITION2 8
 #define EVENT_TRANSITION3 9
 #define EVENT_TRANSITION4 10
-#define EVENT_MODEM 11
 #define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
@@ -378,6 +380,14 @@ void BossGlitchScene::processChart() {
         playSfx(SFX_VINYL);
       }
 
+      // Continue
+      if (IS_EVENT_CONTINUE(type)) {
+        blocked = false;
+        RUMBLE_stop();
+        errBackground.reset();
+        bn::sprites::set_visible(true);
+      }
+
       // Megaballs
       if (IS_EVENT_MEGABALL_L(type)) {
         enemyBullets.push_back(bn::unique_ptr{
@@ -471,6 +481,18 @@ void BossGlitchScene::processChart() {
         enemyBullets.push_back(bn::unique_ptr{new BlackHole3d(
             2, bn::fixed_point(0, 0), bn::fixed_point(32 + 24, 16), 1.5, 1.6,
             BEAT_DURATION_FRAMES * 3, event)});
+      }
+
+      // Modems
+      if (IS_EVENT_MODEM_L(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Modem3d(0, bn::fixed_point(0, 0), bn::fixed_point(-16 - 24, 16),
+                        1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
+      }
+      if (IS_EVENT_MODEM_R(type)) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Modem3d(2, bn::fixed_point(0, 0), bn::fixed_point(32 + 24, 16),
+                        1.5, 1.6, BEAT_DURATION_FRAMES * 3, event)});
       }
 
       // Notes
@@ -577,11 +599,6 @@ void BossGlitchScene::processChart() {
         errTargetShearX = 0;
         errTargetShearY = 0;
         errTargetRotation = 0;
-      } else if (event->getType() == EVENT_MODEM) {
-        blocked = false;
-        RUMBLE_stop();
-        errBackground.reset();
-        bn::sprites::set_visible(true);
       } else if (event->getType() == EVENT_END) {
         // TODO
       }

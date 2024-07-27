@@ -9,6 +9,7 @@
 #include "../objects/glitch/FireBall3d.h"
 #include "../objects/glitch/GameNote3d.h"
 #include "../objects/glitch/MegaBall3d.h"
+#include "../objects/glitch/Modem3d.h"
 #include "../objects/glitch/Vinyl3d.h"
 #include "../objects/riffer/PlatformFire.h"
 #include "../objects/wizard/Lightning.h"
