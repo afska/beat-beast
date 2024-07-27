@@ -558,25 +558,25 @@ void BossGlitchScene::processChart() {
             (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
         bn::sprites::set_visible(false);
       } else if (event->getType() == EVENT_TRANSITION1) {
-        errScale = 1.8;
-        errShearX = 1.4;
-        errShearY = 0.5;
-        errRotation = 40;
+        errTargetScale = 1.8;
+        errTargetShearX = 1.4;
+        errTargetShearY = 0.5;
+        errTargetRotation = 40;
       } else if (event->getType() == EVENT_TRANSITION2) {
-        errScale = 1.3;
-        errShearX = 1.4;
-        errShearY = 0.5;
-        errRotation = -20;
+        errTargetScale = 1.3;
+        errTargetShearX = 1.4;
+        errTargetShearY = 0.5;
+        errTargetRotation = -20;
       } else if (event->getType() == EVENT_TRANSITION3) {
-        errScale = 0.7;
-        errShearX = 0.3;
-        errShearY = 1.3;
-        errRotation = 160;
+        errTargetScale = 0.7;
+        errTargetShearX = 0.3;
+        errTargetShearY = 1.3;
+        errTargetRotation = 160;
       } else if (event->getType() == EVENT_TRANSITION4) {
-        errScale = 2;
-        errShearX = 0;
-        errShearY = 0;
-        errRotation = 0;
+        errTargetScale = 2;
+        errTargetShearX = 0;
+        errTargetShearY = 0;
+        errTargetRotation = 0;
       } else if (event->getType() == EVENT_MODEM) {
         blocked = false;
         RUMBLE_stop();

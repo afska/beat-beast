@@ -9,7 +9,6 @@
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
 #include "scenes/ControlsScene.h"
-#include "scenes/DevPlaygroundScene.h"
 #include "scenes/SelectionScene.h"
 #include "scenes/StartScene.h"
 #include "scenes/StoryScene.h"
