@@ -1,6 +1,6 @@
 # BeatBeast
 
-...by _Afska_ & _AngryMuffin_ & _Synthenia_.
+...by _Afska_ & _Lu_ & _Synthenia_.
 
 This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 

@@ -5,6 +5,7 @@
 
 #include "../objects/glitch/BlackHole3d.h"
 #include "../objects/glitch/Bullet3d.h"
+#include "../objects/glitch/Butano3d.h"
 #include "../objects/glitch/Cerberus.h"
 #include "../objects/glitch/FireBall3d.h"
 #include "../objects/glitch/GameNote3d.h"

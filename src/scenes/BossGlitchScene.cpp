@@ -102,6 +102,7 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define EVENT_TRANSITION2 8
 #define EVENT_TRANSITION3 9
 #define EVENT_TRANSITION4 10
+#define EVENT_BUTANO 11
 #define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
@@ -599,8 +600,13 @@ void BossGlitchScene::processChart() {
         errTargetShearX = 0;
         errTargetShearY = 0;
         errTargetRotation = 0;
+      } else if (event->getType() == EVENT_BUTANO) {
+        enemyBullets.push_back(bn::unique_ptr{
+            new Butano3d(0, bn::fixed_point(0, 0), bn::fixed_point(0, 0),
+                         BEAT_DURATION_FRAMES * 32, event)});
       } else if (event->getType() == EVENT_END) {
-        // TODO
+        didFinish = true;
+        win();
       }
     }
   }
