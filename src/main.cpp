@@ -73,13 +73,6 @@ int main() {
   scene = setNextScene(GameState::Screen::CONTROLS);
   scene->get()->init();
 
-  auto intensity = bn::fixed(SaveFile::data.intensity) / 10;
-  auto contrast = bn::fixed(SaveFile::data.contrast) / 10;
-  bn::bg_palettes::set_intensity(intensity);
-  bn::sprite_palettes::set_intensity(intensity);
-  bn::bg_palettes::set_contrast(contrast);
-  bn::sprite_palettes::set_contrast(contrast);
-
   while (true) {
     scene->get()->update();
 
@@ -97,6 +90,17 @@ BN_CODE_IWRAM void ISR_VBlank() {
 }
 
 bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
+  auto intensity = bn::fixed(SaveFile::data.intensity) / 10;
+  auto contrast = bn::fixed(SaveFile::data.contrast) / 10;
+  bn::bg_palettes::set_intensity(
+      nextScreen == GameState::Screen::GLITCH ? 0 : intensity);
+  bn::sprite_palettes::set_intensity(
+      nextScreen == GameState::Screen::GLITCH ? 0 : intensity);
+  bn::bg_palettes::set_contrast(
+      nextScreen == GameState::Screen::GLITCH ? 0 : contrast);
+  bn::sprite_palettes::set_contrast(
+      nextScreen == GameState::Screen::GLITCH ? 0 : contrast);
+
   _3D_CHANNEL = 0;
   auto continuationScreen = GameState::data.currentScreen;
   GameState::data.currentScreen = nextScreen;

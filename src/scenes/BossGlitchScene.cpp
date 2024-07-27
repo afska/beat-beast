@@ -926,3 +926,4 @@ void BossGlitchScene::resetTextPosition() {
 }
 
 // TODO: BUG DISABLE MOSAIC ON PAUSE
+// TODO: PROPERLY CLEANUP ON QUIT
