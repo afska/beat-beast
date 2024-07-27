@@ -36,7 +36,7 @@ void PlatformFire::start(Event* _startEvent) {
   startEvent = _startEvent;
 }
 
-bool PlatformFire::update(int msecs) {
+BN_CODE_IWRAM bool PlatformFire::update(int msecs) {
   if (msecs < event->timestamp) {
     mainSprite.set_visible(false);
     sprite2.set_visible(false);

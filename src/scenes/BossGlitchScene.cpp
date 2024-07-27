@@ -682,13 +682,13 @@ void BossGlitchScene::updateGlitches() {
         lifeBar->relocate(newPosition);
         comboBar->relocate(newPosition);
         for (auto& spr : textSprites) {
-          spr.set_position({random.get_fixed(0, 200), spr.y()});
+          spr.set_x(random.get_fixed(0, 200));
         }
       }
       if (isLastFrame) {
         lifeBar->relocate({0, 0});
         comboBar->relocate({0, 0});
-        printLife(lifeBar->getLife());
+        resetTextPosition();
       }
       break;
     }
@@ -907,7 +907,7 @@ void BossGlitchScene::cleanupGlitch() {
   ghostHorse->get()->getMainSprite().set_visible(false);
   lifeBar->relocate({0, 0});
   comboBar->relocate({0, 0});
-  printLife(lifeBar->getLife());
+  resetTextPosition();
   offsetY = 0;
   pauseVideo = false;
   bn::bgs_mosaic::set_stretch(0);
@@ -915,6 +915,14 @@ void BossGlitchScene::cleanupGlitch() {
   mosaicVideo = false;
   bn::sprite_palettes::set_inverted(false);
   bn::bg_palettes::set_hue_shift_intensity(hueShift);
+}
+
+void BossGlitchScene::resetTextPosition() {
+  if (textSprites.size() == 2) {
+    // TODO: CHECK IMPOSSIBLE MODE
+    textSprites[0].set_x(-86);
+    textSprites[1].set_x(-54);
+  }
 }
 
 // TODO: BUG DISABLE MOSAIC ON PAUSE

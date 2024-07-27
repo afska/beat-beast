@@ -68,6 +68,7 @@ class BossGlitchScene : public BossScene {
   void causeDamage(bn::fixed amount);
   void startGlitch(int type);
   void cleanupGlitch();
+  void resetTextPosition();
 };
 
 #endif  // BOSS_GLITCH_SCENE_H

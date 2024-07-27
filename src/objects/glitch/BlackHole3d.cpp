@@ -46,9 +46,9 @@ BlackHole3d::BlackHole3d(int _channel,
   sprite.set_horizontal_shear(channel <= 1 ? -0.35 : 0.35);
 }
 
-bool BlackHole3d::update(int msecs,
-                         bool isInsideBeat,
-                         bn::fixed_point playerPosition) {
+BN_CODE_IWRAM bool BlackHole3d::update(int msecs,
+                                       bool isInsideBeat,
+                                       bn::fixed_point playerPosition) {
   if (isExploding) {
     auto newScale = sprite.horizontal_scale() - SCALE_OUT_SPEED;
     if (newScale <= 0)

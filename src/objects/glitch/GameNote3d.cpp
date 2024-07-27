@@ -39,9 +39,9 @@ GameNote3d::GameNote3d(int _channel,
   isShootable = true;
 }
 
-bool GameNote3d::update(int msecs,
-                        bool isInsideBeat,
-                        bn::fixed_point playerPosition) {
+BN_CODE_IWRAM bool GameNote3d::update(int msecs,
+                                      bool isInsideBeat,
+                                      bn::fixed_point playerPosition) {
   if (isExploding) {
     auto newScale = sprite.horizontal_scale() - SCALE_OUT_SPEED;
     if (newScale <= 0)

@@ -26,9 +26,9 @@ Bullet3d::Bullet3d(int _channel,
   damage = dmg;
 }
 
-bool Bullet3d::update(int msecs,
-                      bool isInsideBeat,
-                      bn::fixed_point playerPosition) {
+BN_CODE_IWRAM bool Bullet3d::update(int msecs,
+                                    bool isInsideBeat,
+                                    bn::fixed_point playerPosition) {
   if (sprite.horizontal_scale() > 0.01) {
     auto newScale = sprite.horizontal_scale() - zSpeed;
     if (newScale <= 0)
