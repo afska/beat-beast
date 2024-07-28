@@ -37,7 +37,8 @@ constexpr const bn::array<bn::fixed, 4> LIGHTNING_X = {61, 90, 144, 167};
 constexpr const bn::array<bn::fixed, 4> PLATFORM_FIRE_X = {42, 74, 132, 160};
 constexpr const bn::fixed PLATFORM_FIRE_Y = 129;
 
-const bn::fixed BEAT_DURATION_FRAMES = 23;
+const bn::fixed BEAT_DURATION_FRAMES = 23;  // HACK: Why hardcoding it?
+// chartReader->getBeatDurationMs() / GBA_FRAME
 
 #define HORSE_X CHANNEL_X[0]
 #define HORSE_Y 90
@@ -975,6 +976,18 @@ void BossGlitchScene::resetTextPosition() {
     textSprites[0].set_x(-86);
     textSprites[1].set_x(-54);
   }
+}
+
+void BossGlitchScene::die() {
+  auto chann = _3D_CHANNEL;
+
+  _3D_CHANNEL = 0;
+  deadHorseYOffset = 8;
+
+  BossScene::die();
+
+  deadHorseYOffset = 0;
+  _3D_CHANNEL = chann;
 }
 
 // TODO: BUG DISABLE MOSAIC ON PAUSE

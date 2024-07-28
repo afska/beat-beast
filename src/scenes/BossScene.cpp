@@ -86,7 +86,6 @@ void BossScene::addExplosion(bn::fixed_point position) {
 }
 
 void BossScene::sufferDamage(bn::fixed amount) {
-  return;  // TODO: REMOVE
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
@@ -114,7 +113,8 @@ void BossScene::die() {
   RUMBLE_stop();
   pixelBlink->blink();
 
-  deadHorse = SpriteProvider::horse().create_sprite(2, -53, 13);
+  deadHorse =
+      SpriteProvider::horse().create_sprite(2, -53 + deadHorseYOffset, 13);
   deadHorse->set_z_order(-2);
   deadHorse->set_bg_priority(0);
 

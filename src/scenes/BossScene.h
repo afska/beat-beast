@@ -65,6 +65,7 @@ class BossScene : public Scene {
   bool canBounce = true;
   bool blocked = false;
   bn::fixed_point crossOffset = {0, 0};
+  bn::fixed deadHorseYOffset = 0;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
@@ -86,7 +87,7 @@ class BossScene : public Scene {
   void playSfx(bn::string<32> sfxFileName, bool loop = false);
   virtual void addExplosion(bn::fixed_point position);
   void sufferDamage(bn::fixed amount);
-  void die();
+  virtual void die();
   void win();
   void processMovementInput(bn::fixed horseY);
   void processAimInput(bool aim360 = false);
