@@ -847,7 +847,8 @@ void BossGlitchScene::updateGlitches() {
 void BossGlitchScene::updateHorseChannel() {
   _3D_CHANNEL = channel;
   horseTargetPosition = {CHANNEL_X[channel], horse->getPosition().y()};
-  horse->setIdleOrRunningState();
+  if (!horse->isBusy())
+    horse->setIdleOrRunningState();
   horse->setFlipX(channel >= 2);
   if (channel == 1 || channel == 2) {
     horse->customScale = true;
