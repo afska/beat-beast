@@ -27,7 +27,7 @@ constexpr const bn::array<bn::fixed, 10> BOUNCE_BLENDING_STEPS = {
     0.2, 0.15, 0.1, 0.075, 0.05, 0.025, 0, 0.05, 0.1, 0.15};
 constexpr const bn::array<bn::fixed, 16> SCALE_STEPS = {
     1.0,   1.05, 1.1,   1.15, 1.2,   1.25, 1.225, 1.2,
-    1.175, 1.15, 1.125, 1.1,  1.075, 1.05, 1.15,  1.025};
+    1.175, 1.15, 1.125, 1.1,  1.075, 1.05, 1.025, 1.0225};
 constexpr const bn::array<bn::fixed, 14> SCALE_OUT_ANIMATION = {
     0.1, 0.3, 0.5, 0.7, 1.0, 1.3, 1.45, 1.3, 1.15, 0.9, 0.7, 0.5, 0.3, 0.1};
 constexpr bn::fixed ANGLE_MATRIX[3][3] = {{135, 90, 45},
