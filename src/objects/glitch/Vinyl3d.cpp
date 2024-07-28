@@ -40,9 +40,9 @@ Vinyl3d::Vinyl3d(int _channel,
   canBeJumped = true;
 }
 
-BN_CODE_IWRAM bool Vinyl3d::update(int msecs,
-                                   bool isInsideBeat,
-                                   bn::fixed_point playerPosition) {
+bool Vinyl3d::update(int msecs,
+                     bool isInsideBeat,
+                     bn::fixed_point playerPosition) {
   if (isExploding) {
     auto newScale = sprite.horizontal_scale() - SCALE_OUT_SPEED;
     if (newScale <= 0)

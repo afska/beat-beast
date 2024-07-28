@@ -54,9 +54,9 @@ MegaBall3d::MegaBall3d(int _channel,
   isShootable = true;
 }
 
-BN_CODE_IWRAM bool MegaBall3d::update(int msecs,
-                                      bool isInsideBeat,
-                                      bn::fixed_point playerPosition) {
+bool MegaBall3d::update(int msecs,
+                        bool isInsideBeat,
+                        bn::fixed_point playerPosition) {
   if (isExploding) {
     auto newScale = sprite.horizontal_scale() - SCALE_OUT_SPEED;
     if (newScale <= 0)

@@ -30,9 +30,9 @@ Butano3d::Butano3d(int _channel,
   isShootable = true;
 }
 
-BN_CODE_IWRAM bool Butano3d::update(int msecs,
-                                    bool isInsideBeat,
-                                    bn::fixed_point playerPosition) {
+bool Butano3d::update(int msecs,
+                      bool isInsideBeat,
+                      bn::fixed_point playerPosition) {
   if (isExploding) {
     auto newScale = sprite.horizontal_scale() - SCALE_OUT_SPEED;
     if (newScale <= 0)

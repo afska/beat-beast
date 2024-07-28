@@ -142,7 +142,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
   updateHorseChannel();
 }
 
-BN_CODE_IWRAM void BossGlitchScene::updateBossFight() {
+void BossGlitchScene::updateBossFight() {
   animatedFlag = !animatedFlag;
   halfAnimatedFlag = (halfAnimatedFlag + 1) % 4;
   sixteenthAnimatedFlag = (sixteenthAnimatedFlag + 1) % 6;
