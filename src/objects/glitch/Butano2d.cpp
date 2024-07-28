@@ -52,7 +52,7 @@ void Butano2d::hurt() {
   if (targetScale > 1.75)
     setExplodingState();
   if (targetScale > 2)
-    targetScale == 2;
+    targetScale = 2;
 }
 
 void Butano2d::explode() {

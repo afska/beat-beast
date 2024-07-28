@@ -6,9 +6,11 @@
 #include "../utils/Math.h"
 
 #include "bn_keypad.h"
+#include "bn_sprite_items_glitch_icon_butano.h"
 #include "bn_sprite_items_glitch_icon_head1.h"
 #include "bn_sprite_items_glitch_icon_head2.h"
 #include "bn_sprite_items_glitch_icon_head3.h"
+#include "bn_sprite_items_glitch_lifebar_butano_fill.h"
 
 #define HORSE_Y 34
 #define BPM 85
@@ -17,14 +19,13 @@
 #define SFX_PAUSE "menu_pause.pcm"
 
 BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
-    : UIScene(GameState::Screen::GLITCH_INTRO, _fs),
+    : UIScene(GameState::Screen::GLITCH_OUTRO, _fs),
       horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
-      butano2d(bn::unique_ptr{new Butano2d({80, -30})}) {
+      butano2d(bn::unique_ptr{new Butano2d({80, -24})}) {
   horse->update();
 }
 
 void BossGlitchOutroScene::init() {
-  skipScreen = GameState::Screen::GLITCH;
   UIScene::init();
 
   cerberus = bn::unique_ptr{new Cerberus({60 - 64, 0})};
@@ -76,6 +77,7 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 2: {
+      closeText();
       cerberus->get()->blinkAll();
       cerberus->get()->getHead2()->talk();
       setDialogIcon(bn::sprite_items::glitch_icon_head2);
@@ -83,7 +85,7 @@ void BossGlitchOutroScene::updateDialog() {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Go ahead, destroy it if you want.");
       strs.push_back("But |I wouldn't recommend| doing so.");
-      write(strs, true);
+      write(strs);
 
       state++;
       break;
@@ -97,6 +99,24 @@ void BossGlitchOutroScene::updateDialog() {
 
         state++;
       }
+      break;
+    }
+    case 4: {
+      if (menu->hasConfirmedOption()) {
+        auto selection = menu->receiveConfirmedOption();
+        closeMenu();
+
+        if (selection == 0) {
+          enemyLifeBar = bn::unique_ptr{
+              new LifeBar({184, 0}, 10, bn::sprite_items::glitch_icon_butano,
+                          bn::sprite_items::glitch_lifebar_butano_fill)};
+          state++;
+        } else
+          state = 10;
+      }
+      break;
+    }
+    case 5: {
       break;
     }
     // case 2: {

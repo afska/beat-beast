@@ -6,6 +6,7 @@
 #include "../objects/Horse.h"
 #include "../objects/glitch/Butano2d.h"
 #include "../objects/glitch/Cerberus.h"
+#include "../objects/ui/LifeBar.h"
 
 class BossGlitchOutroScene : public UIScene {
  public:
@@ -20,6 +21,7 @@ class BossGlitchOutroScene : public UIScene {
   int lastBeat = 0;
   bn::optional<bn::unique_ptr<Cerberus>> cerberus;
   bn::unique_ptr<Butano2d> butano2d;
+  bn::optional<bn::unique_ptr<LifeBar>> enemyLifeBar;
 
   void updateDialog();
 
