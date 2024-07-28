@@ -995,4 +995,5 @@ BossGlitchScene::~BossGlitchScene() {
   bn::sprites_mosaic::set_stretch(0);
   bn::sprite_palettes::set_inverted(false);
   bn::bg_palettes::set_hue_shift_intensity(0);
+  _3D_CHANNEL = 0;
 }
