@@ -140,8 +140,7 @@ void BossGlitchIntroScene::updateDialog() {
       pixelBlink->blink();
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Stop fighting.");
-      strs.push_back("You won't get out.");
+      strs.push_back("You still don't get it, huh?");
       write(strs, true);
 
       state++;
@@ -164,6 +163,7 @@ void BossGlitchIntroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_head2);
 
       bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("What are you doing?");
       strs.push_back("Do you want to |destroy| us all?");
       write(strs, true);
 
@@ -175,7 +175,8 @@ void BossGlitchIntroScene::updateDialog() {
       setDialogIcon(SpriteProvider::iconHorse());
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("I don't care about you!");
+      strs.push_back("I don't care!");
+      strs.push_back("I |WILL| get out!");
       write(strs, true);
 
       state++;

@@ -18,14 +18,16 @@
 
 BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::GLITCH_INTRO, _fs),
-      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}) {
-  horse->showGun = false;
+      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
+      butano2d(bn::unique_ptr{new Butano2d({80, -30})}) {
   horse->update();
 }
 
 void BossGlitchOutroScene::init() {
   skipScreen = GameState::Screen::GLITCH;
   UIScene::init();
+
+  cerberus = bn::unique_ptr{new Cerberus({60 - 64, 0})};
 
   updateDialog();
 
@@ -40,7 +42,7 @@ void BossGlitchOutroScene::update() {
   int audioLag = SaveFile::data.audioLag;  // (0 on real hardware)
   int msecs = PlaybackState.msecs - audioLag + BEAT_PREDICTION_WINDOW;
   int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);
-  bool isNewBeat = beat != lastBeat;
+  // bool isNewBeat = beat != lastBeat;
   lastBeat = beat;
 
   if (UIScene::updateUI())
@@ -48,6 +50,7 @@ void BossGlitchOutroScene::update() {
 
   if (cerberus.has_value()) {
     cerberus->get()->update();
+    butano2d->update();
   }
 
   if (wantsToContinue) {
@@ -61,12 +64,39 @@ void BossGlitchOutroScene::update() {
 void BossGlitchOutroScene::updateDialog() {
   switch (state) {
     case 0: {
+      cerberus->get()->getHead1()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
+
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("WOAH!");
-      strs.push_back("This should be the |exit|.");
+      strs.push_back("OK, you win!");
+      strs.push_back("This is the |core| of our world.");
       write(strs, true);
 
-      // state++;
+      state++;
+      break;
+    }
+    case 2: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead2()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head2);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Go ahead, destroy it if you want.");
+      strs.push_back("But |I wouldn't recommend| doing so.");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 3: {
+      if (finishedWriting()) {
+        bn::vector<Menu::Option, 10> options;
+        options.push_back(Menu::Option{.text = "Destroy the Core"});
+        options.push_back(Menu::Option{.text = "Talk to the Devs"});
+        ask(options, 2);
+
+        state++;
+      }
       break;
     }
     // case 2: {

@@ -42,6 +42,7 @@
 
 #include "bn_sprite_items_glitch_3dhorse1.h"
 #include "bn_sprite_items_glitch_3dhorse2.h"
+#include "bn_sprite_items_glitch_horse.h"
 #include "bn_sprite_items_glitch_icon_horse.h"
 #include "bn_sprite_items_glitch_lifebar.h"
 #include "bn_sprite_items_glitch_lifebar_fill.h"
@@ -125,11 +126,12 @@ bn::sprite_item SpriteProvider::horse() {
       return bn::sprite_items::riffer_horse;
     case GameState::Screen::GLITCH_INTRO:
     case GameState::Screen::GLITCH:
-    case GameState::Screen::GLITCH_OUTRO:
       if (_3D_CHANNEL == 0 || _3D_CHANNEL == 3)
         return bn::sprite_items::glitch_3dhorse1;
       else
         return bn::sprite_items::glitch_3dhorse2;
+    case GameState::Screen::GLITCH_OUTRO:
+      return bn::sprite_items::glitch_horse;
     default:
       return bn::sprite_items::ui_horse;
   }

@@ -4,6 +4,7 @@
 #include "UIScene.h"
 
 #include "../objects/Horse.h"
+#include "../objects/glitch/Butano2d.h"
 #include "../objects/glitch/Cerberus.h"
 
 class BossGlitchOutroScene : public UIScene {
@@ -18,6 +19,7 @@ class BossGlitchOutroScene : public UIScene {
   unsigned state = 0;
   int lastBeat = 0;
   bn::optional<bn::unique_ptr<Cerberus>> cerberus;
+  bn::unique_ptr<Butano2d> butano2d;
 
   void updateDialog();
 

@@ -41,8 +41,8 @@ bool Butano3d::update(int msecs,
     return false;
   }
 
-  if (msecs < event->timestamp)
-    return false;
+  // if (msecs < event->timestamp)
+  //   return false;
 
   if (sprite.horizontal_scale() < 1.75) {
     auto newScale = sprite.horizontal_scale() + speedZ;
