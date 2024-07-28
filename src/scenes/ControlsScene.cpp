@@ -38,14 +38,23 @@ void ControlsScene::updateDialog() {
   switch (state) {
     case 0: {
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Real horses use a |GBA|, or maybe a");
-      strs.push_back("|gamepad|, but never a keyboard.");
+      strs.push_back("Real horses use a |GBA|, or maybe");
+      strs.push_back("a |gamepad|, but never a keyboard.");
       write(strs, true);
 
       state++;
       break;
     }
     case 2: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("This game features |flashing lights|");
+      strs.push_back("and colors. Please use with caution.");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 4: {
       setNextScreen(nextScreen);
       break;
     }
