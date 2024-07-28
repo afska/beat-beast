@@ -81,7 +81,7 @@ static bool is_pcm = false;
             pending_bytes < BUFFER_SIZE ? pending_bytes : BUFFER_SIZE; \
         for (u32 i = 0; i < bytes_to_read / 4; i++)                    \
           ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i];              \
-        src_pos += BUFFER_SIZE;                                        \
+        src_pos += bytes_to_read;                                      \
         if (src_pos >= src_len) {                                      \
           ON_STOP;                                                     \
         }                                                              \
