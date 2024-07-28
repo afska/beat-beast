@@ -22,6 +22,11 @@ void ControlsScene::init() {
 }
 
 void ControlsScene::update() {
+  if (bn::keypad::start_pressed()) {
+    setNextScreen(nextScreen);
+    return;
+  }
+
   if (UIScene::updateUI())
     return;
 
