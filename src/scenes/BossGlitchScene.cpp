@@ -339,7 +339,6 @@ void BossGlitchScene::processChart() {
       // Continue
       if (IS_EVENT_CONTINUE(type)) {
         blocked = false;
-        RUMBLE_stop();
         errBackground.reset();
         bn::sprites::set_visible(true);
       }
@@ -536,6 +535,7 @@ void BossGlitchScene::processChart() {
             (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
         bn::sprites::set_visible(false);
       } else if (event->getType() == EVENT_TRANSITION1) {
+        RUMBLE_stop();
         errTargetScale = 1.8;
         errTargetShearX = 1.4;
         errTargetShearY = 0.5;
@@ -558,7 +558,7 @@ void BossGlitchScene::processChart() {
       } else if (event->getType() == EVENT_BUTANO) {
         enemyBullets.push_back(bn::unique_ptr{
             new Butano3d(0, bn::fixed_point(8, 0), bn::fixed_point(0, 0),
-                         BEAT_DURATION_FRAMES * 32, event)});
+                         BEAT_DURATION_FRAMES * 40, event)});
         moveSpeed = 10;
         slowdown = true;
       } else if (event->getType() == EVENT_ALMOST_END) {
