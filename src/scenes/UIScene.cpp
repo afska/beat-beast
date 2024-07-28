@@ -260,6 +260,8 @@ void UIScene::pause() {
 void UIScene::showPauseMenu() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Continue"});
+  if (skipScreen != GameState::Screen::NO)
+    options.push_back(Menu::Option{.text = "Skip"});
   options.push_back(Menu::Option{.text = "Restart"});
   options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options, true, false, 1.25, 1.5, 1.25);
@@ -275,6 +277,33 @@ void UIScene::unpause() {
 }
 
 void UIScene::processMenuOption(int option) {
+  if (skipScreen != GameState::Screen::NO) {
+    switch (option) {
+      case 0: {  // Continue
+        unpause();
+        break;
+      }
+      case 1: {  // Skip
+        setNextScreen(skipScreen);
+        break;
+      }
+      case 2: {  // Restart
+        setNextScreen(getScreen());
+        break;
+      }
+      case 3: {  // Quit
+        GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
+        setNextScreen(SaveFile::didCompleteTutorial()
+                          ? GameState::Screen::SELECTION
+                          : GameState::Screen::START);
+        break;
+      }
+      default: {
+      }
+    }
+    return;
+  }
+
   switch (option) {
     case 0: {  // Continue
       unpause();

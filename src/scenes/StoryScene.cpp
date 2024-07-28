@@ -11,6 +11,7 @@ StoryScene::StoryScene(const GBFS_FILE* _fs)
       horse(bn::unique_ptr{new Horse({88, HORSE_Y})}) {}
 
 void StoryScene::init() {
+  skipScreen = GameState::Screen::TUTORIAL;
   UIScene::init();
 
   horse->setFlipX(true);

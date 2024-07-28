@@ -32,6 +32,7 @@ class UIScene : public Scene {
   bn::optional<bn::sprite_ptr> icon;
   bn::optional<bn::sprite_ptr> continueIcon;
   bn::vector<bn::string<64>, 2> textLines;
+  GameState::Screen skipScreen = GameState::Screen::NO;
   bool isWriting = false;
   bool hasMoreMessages = false;
   bool wantsToContinue = false;

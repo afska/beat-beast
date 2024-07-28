@@ -28,6 +28,7 @@ BossGlitchIntroScene::BossGlitchIntroScene(const GBFS_FILE* _fs)
 }
 
 void BossGlitchIntroScene::init() {
+  skipScreen = GameState::Screen::GLITCH;
   UIScene::init();
 
   updateDialog();
