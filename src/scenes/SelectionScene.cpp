@@ -168,9 +168,10 @@ constexpr const bn::array<bn::sprite_item, 5> PREVIEWS = {
     bn::sprite_items::selection_previewriffer,
     bn::sprite_items::selection_previewwizard};
 
-constexpr const bn::array<const char*, 6> NAMES = {
+constexpr const bn::array<const char*, 7> NAMES = {
     "Intro",       "DJ OctoBass", "Synth Wizard",
-    "Grim Riffer", "???",         "Defeat the guardians first!"};
+    "Grim Riffer", "???",         "Defeat the guardians first!",
+    "...escape?"};
 
 SelectionScene::SelectionScene(const GBFS_FILE* _fs)
     : Scene(GameState::Screen::SELECTION, _fs),
@@ -374,6 +375,13 @@ void SelectionScene::hideSelectedText() {
       sprite.set_visible(false);
 }
 
+void SelectionScene::updateSelectedText() {
+  showSelectedText(selectedIndex == 4 &&
+                           SaveFile::hasUnlockedFinal(selectedDifficultyLevel)
+                       ? 6
+                       : selectedIndex);
+}
+
 void SelectionScene::showSelectedText(int index) {
   for (auto& sprite : textSprites[index])
     sprite.set_visible(true);
@@ -386,7 +394,7 @@ void SelectionScene::updateDifficultyLevel(bool isUpdate) {
     SaveFile::save();
 
     hideSelectedText();
-    showSelectedText(selectedIndex);
+    updateSelectedText();
   }
   pixelBlink->blink();
 
@@ -420,7 +428,7 @@ void SelectionScene::updateSelection(bool isUpdate) {
   levelIcons[selectedIndex]->setSelected();
   createPreviewAnimation();
 
-  showSelectedText(selectedIndex);
+  updateSelectedText();
 
   preview.get()->set_mosaic_enabled(true);
   selectedLevel->get()->getMainSprite().set_mosaic_enabled(true);

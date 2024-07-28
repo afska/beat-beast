@@ -25,7 +25,7 @@ class SelectionScene : public Scene {
   int selectedIndex = 0;
   int selectedDifficultyLevel = 0;
 
-  bn::array<bn::vector<bn::sprite_ptr, 10>, 6> textSprites;
+  bn::array<bn::vector<bn::sprite_ptr, 10>, 7> textSprites;
   bn::vector<bn::sprite_ptr, 10> accentTextSprites;
   bn::vector<bn::sprite_ptr, 32> statsTextSprites;
   bn::sprite_text_generator textGenerator;
@@ -65,6 +65,7 @@ class SelectionScene : public Scene {
   void updateSprites();
   void unselect();
   void hideSelectedText();
+  void updateSelectedText();
   void showSelectedText(int index);
   void updateDifficultyLevel(bool isUpdate = true);
   void updateSelection(bool isUpdate = true);
