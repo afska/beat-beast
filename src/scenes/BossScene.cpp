@@ -138,17 +138,15 @@ void BossScene::die() {
 
 void BossScene::win() {
   GameState::data.currentLevelProgress.health =
-      ((lifeBar->getLife() / lifeBar->getMaxLife()) * 100).floor_integer();
-  auto damagePercentage =
-      ((enemyLifeBar->damage / enemyLifeBar->getMaxLife()) * 100)
-          .floor_integer();
+      lifeBar->getLife().floor_integer() * 100 /
+      lifeBar->getMaxLife().floor_integer();
+  int damagePercentage = enemyLifeBar->damage.floor_integer() * 100 /
+                         enemyLifeBar->getMaxLife().floor_integer();
   GameState::data.currentLevelProgress.damage =
       damagePercentage > 999 ? 1000 : damagePercentage;
-  auto totalShots = successfulShots + failedShots;
+  int totalShots = successfulShots + failedShots;
   GameState::data.currentLevelProgress.sync =
-      totalShots > 0
-          ? ((bn::fixed(successfulShots) / totalShots) * 100).floor_integer()
-          : 0;
+      totalShots > 0 ? successfulShots * 100 / totalShots : 0;
 
   GameState::data.currentLevelProgress.didWin = true;
   GameState::data.currentLevelProgress.wins++;
