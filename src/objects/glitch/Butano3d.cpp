@@ -17,6 +17,7 @@ Butano3d::Butano3d(int _channel,
       event(_event) {
   channel = _channel;
   dualChannel = false;
+  omniChannel = true;
 
   boundingBox.set_dimensions(sprite.dimensions() * 0.01);
   boundingBox.set_position({0, 0});
@@ -26,7 +27,7 @@ Butano3d::Butano3d(int _channel,
   speedZ = 1.75 / frames;
 
   sprite.set_scale(0.001);
-  isShootable = false;
+  isShootable = true;
 }
 
 BN_CODE_IWRAM bool Butano3d::update(int msecs,
@@ -52,6 +53,12 @@ BN_CODE_IWRAM bool Butano3d::update(int msecs,
 
   sprite.set_position(sprite.position() + bn::fixed_point(speedX, speedY));
 
+  if (hurtAnimation.has_value()) {
+    hurtAnimation->update();
+    if (hurtAnimation->done())
+      hurtAnimation.reset();
+  }
+
   boundingBox.set_position(sprite.position());
   boundingBox.set_dimensions(
       bn::fixed_size(sprite.dimensions().width() * sprite.horizontal_scale(),
@@ -62,5 +69,15 @@ BN_CODE_IWRAM bool Butano3d::update(int msecs,
 }
 
 void Butano3d::explode(bn::fixed_point nextTarget) {
-  isExploding = true;
+  hurt();
+}
+
+void Butano3d::hurt() {
+  hurtAnimation = bn::create_sprite_animate_action_once(
+      sprite, 2, bn::sprite_items::glitch_butano.tiles_item(), 1, 0, 1, 0, 1, 0,
+      1, 0);
+  auto newScale = sprite.horizontal_scale() + 0.025;
+  if (newScale > 2)
+    newScale = 2;
+  sprite.set_scale(newScale);
 }

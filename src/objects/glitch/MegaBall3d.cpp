@@ -50,6 +50,7 @@ MegaBall3d::MegaBall3d(int _channel,
 
   sprite.set_scale(0.001);
   sprite2.set_scale(0.001);
+  sprite2.set_z_order(1);
   isShootable = true;
 }
 

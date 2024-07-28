@@ -10,6 +10,7 @@ class Attack3d : public GameObject {
   bool hitZone = false;
   int channel = 0;
   bool dualChannel = false;
+  bool omniChannel = false;
   bool canBeJumped = false;
 
   virtual bool update(int msecs,

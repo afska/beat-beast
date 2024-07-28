@@ -16,6 +16,7 @@ class Butano3d : public Attack3d {
               bool isInsideBeat,
               bn::fixed_point playerPosition) override;
   void explode(bn::fixed_point nextTarget) override;
+  void hurt();
 
  private:
   bn::sprite_ptr sprite;
@@ -23,6 +24,7 @@ class Butano3d : public Attack3d {
   bn::fixed frames;
   Event* event;
   bn::fixed speedX, speedY, speedZ;
+  bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
 };
 
 #endif  // BUTANO_3D_H

@@ -642,7 +642,7 @@ void BossGlitchScene::updateSprites() {
     bool collided = false;
     iterate(enemyBullets, [&bullet, &collided, this](Attack3d* attack) {
       if (!attack->didExplode() && attack->isShootable &&
-          (attack->channel == channel ||
+          (attack->omniChannel || attack->channel == channel ||
            (/*attack->dualChannel && */ ((attack->channel ^ channel) == 1))) &&
           bullet->collidesWith(attack)) {
         addExplosion(bullet->getPosition());

@@ -43,6 +43,7 @@ MegaBall::MegaBall(bn::fixed_point _initialPosition, Event* _event)
 
   sprite1.set_visible(false);
   sprite2.set_visible(false);
+  sprite2.set_z_order(1);
 }
 
 bool MegaBall::update(int msecs,
