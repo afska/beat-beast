@@ -63,6 +63,8 @@ class BossGlitchScene : public BossScene {
   bn::fixed errTargetShearX = 0;
   bn::fixed errTargetShearY = 0;
   bn::fixed errTargetRotation = 0;
+  bn::fixed moveSpeed = 1;
+  bool slowdown = false;
 
   void processInput();
   void processChart();

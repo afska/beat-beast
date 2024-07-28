@@ -604,6 +604,8 @@ void BossGlitchScene::processChart() {
         enemyBullets.push_back(bn::unique_ptr{
             new Butano3d(0, bn::fixed_point(0, 0), bn::fixed_point(0, 0),
                          BEAT_DURATION_FRAMES * 32, event)});
+        moveSpeed = 10;
+        slowdown = true;
       } else if (event->getType() == EVENT_END) {
         didFinish = true;
         win();
@@ -626,7 +628,11 @@ void BossGlitchScene::updateBackground() {
     return;
   }
 
-  if (isNewBeat)
+  if (slowdown) {
+    moveSpeed = moveSpeed - 0.0125;
+    if (moveSpeed < 0)
+      moveSpeed = 0;
+  } else if (isNewBeat)
     extraSpeed = 10;
 
   auto currentVideoFrame = videoFrame.floor_integer();
@@ -637,7 +643,7 @@ void BossGlitchScene::updateBackground() {
       videoFrame = 149;
   } else {
     extraSpeed = (bn::max(extraSpeed - 1, bn::fixed(0)));
-    videoFrame += (1 + extraSpeed / 2) / 2;
+    videoFrame += (moveSpeed + extraSpeed / 2) / 2;
     if (videoFrame >= 150)
       videoFrame = 0;
   }
@@ -655,7 +661,7 @@ void BossGlitchScene::updateBackground() {
 
   bn::blending::set_fade_alpha(0);
 
-  if (chartReader->isInsideBeat()) {
+  if (chartReader->isInsideBeat() && !slowdown) {
     horizontalHBE = bn::regular_bg_position_hbe_ptr::create_horizontal(
         videoBackground.value(), horizontalDeltas);
     for (int index = 0, limit = bn::display::height(); index < limit; ++index) {

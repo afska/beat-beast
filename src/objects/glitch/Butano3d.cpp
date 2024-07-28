@@ -23,7 +23,7 @@ Butano3d::Butano3d(int _channel,
 
   speedX = (targetPosition.x() - sprite.position().x()) / frames;
   speedY = (targetPosition.y() - sprite.position().y()) / frames;
-  speedZ = 2 / frames;
+  speedZ = 1.75 / frames;
 
   sprite.set_scale(0.001);
   isShootable = false;
@@ -43,10 +43,10 @@ BN_CODE_IWRAM bool Butano3d::update(int msecs,
   if (msecs < event->timestamp)
     return false;
 
-  if (sprite.horizontal_scale() < 2) {
+  if (sprite.horizontal_scale() < 1.75) {
     auto newScale = sprite.horizontal_scale() + speedZ;
-    if (newScale >= 2)
-      newScale = 2;
+    if (newScale >= 1.75)
+      newScale = 1.75;
     sprite.set_scale(newScale);
   }
 

@@ -313,7 +313,6 @@ CODE_ROM void player_setRate(int newRate) {
 CODE_ROM void player_stop() {
   stop();
 
-  is_pcm = false;
   PlaybackState.msecs = 0;
   PlaybackState.hasFinished = false;
   PlaybackState.isLooping = false;

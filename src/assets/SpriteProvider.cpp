@@ -56,8 +56,8 @@ bn::sprite_item unknownScreen() {
 
 bn::sprite_item SpriteProvider::gun() {
   if (GameState::data.currentScreen == GameState::Screen::SELECTION)
-    return bn::sprite_items::ui_radio;  // HACK to avoid loading Horse's gun
-                                        // sprite, dropping 16 palette colors
+    return bn::sprite_items::ui_radio;  // HACK: avoid loading Horse's gun
+                                        // sprite and losing 16 palette colors
 
   return bn::sprite_items::gun;
 }

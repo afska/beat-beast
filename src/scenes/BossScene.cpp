@@ -60,6 +60,11 @@ void BossScene::init() {
 }
 
 void BossScene::update() {
+  if (PlaybackState.hasFinished) {
+    // HACK: if the song has finished, simulate playback until the chart ends
+    player_setCursor(player_getCursor() + 608);
+  }
+
   if (!blocked) {
     pixelBlink->update();
     if (processPauseInput())
@@ -81,6 +86,7 @@ void BossScene::addExplosion(bn::fixed_point position) {
 }
 
 void BossScene::sufferDamage(bn::fixed amount) {
+  return;  // TODO: REMOVE
   if (horse->isHurt())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
@@ -137,7 +143,9 @@ void BossScene::win() {
       damagePercentage > 999 ? 1000 : damagePercentage;
   auto totalShots = successfulShots + failedShots;
   GameState::data.currentLevelProgress.sync =
-      ((bn::fixed(successfulShots) / totalShots) * 100).floor_integer();
+      totalShots > 0
+          ? ((bn::fixed(successfulShots) / totalShots) * 100).floor_integer()
+          : 0;
 
   GameState::data.currentLevelProgress.didWin = true;
   GameState::data.currentLevelProgress.wins++;
