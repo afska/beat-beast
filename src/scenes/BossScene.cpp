@@ -7,8 +7,11 @@
 
 #include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
+
+#include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
+#include "bn_sprites_mosaic.h"
 
 #define BG_DARK_ALPHA 0.2
 #define SFX_PAUSE "menu_pause.pcm"
@@ -316,6 +319,8 @@ bool BossScene::processPauseInput() {
 void BossScene::pause() {
   isPaused = true;
 
+  bn::bgs_mosaic::set_stretch(0);
+  bn::sprites_mosaic::set_stretch(0);
   playerSfxState = player_sfx_getState();
   player_setPause(true);
   player_sfx_play(SFX_PAUSE);

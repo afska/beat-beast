@@ -82,6 +82,8 @@ class BossGlitchScene : public BossScene {
   void cleanupGlitch();
   void resetTextPosition();
 
+  ~BossGlitchScene();
+
  protected:
   void die() override;
 };

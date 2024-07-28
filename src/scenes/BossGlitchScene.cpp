@@ -963,16 +963,15 @@ void BossGlitchScene::cleanupGlitch() {
   resetTextPosition();
   offsetY = 0;
   pauseVideo = false;
+  mosaicVideo = false;
   bn::bgs_mosaic::set_stretch(0);
   bn::sprites_mosaic::set_stretch(0);
-  mosaicVideo = false;
   bn::sprite_palettes::set_inverted(false);
   bn::bg_palettes::set_hue_shift_intensity(hueShift);
 }
 
 void BossGlitchScene::resetTextPosition() {
   if (textSprites.size() == 2) {
-    // TODO: CHECK IMPOSSIBLE MODE
     textSprites[0].set_x(-86);
     textSprites[1].set_x(-54);
   }
@@ -990,5 +989,9 @@ void BossGlitchScene::die() {
   _3D_CHANNEL = chann;
 }
 
-// TODO: BUG DISABLE MOSAIC ON PAUSE
-// TODO: PROPERLY CLEANUP ON QUIT
+BossGlitchScene::~BossGlitchScene() {
+  bn::bgs_mosaic::set_stretch(0);
+  bn::sprites_mosaic::set_stretch(0);
+  bn::sprite_palettes::set_inverted(false);
+  bn::bg_palettes::set_hue_shift_intensity(0);
+}

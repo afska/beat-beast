@@ -62,12 +62,6 @@ int main() {
                            ? GameState::Screen::START
                            : GameState::Screen::CALIBRATION;
 
-  // TODO: REMOVE!!!
-  GameState::data.isPlaying = true;
-  GameState::data.currentLevelProgress = SaveFile::data.progress[1].levels[4];
-  initialScreen = GameState::Screen::GLITCH;
-  // TODO: REMOVE!!!
-
   GameState::data.currentScreen = initialScreen;
   scene = setNextScene(GameState::Screen::CONTROLS);
   scene->get()->init();
