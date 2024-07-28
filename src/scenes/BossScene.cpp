@@ -236,7 +236,7 @@ void BossScene::reportFailedShot() {
   horse->canShoot = false;
 
   cross.reset();
-  cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
+  cross = bn::unique_ptr{new Cross(horse->getCenteredPosition() + crossOffset)};
   if (horse->failShoot() && !gunAlert.has_value())
     gunReload->show();
   comboBar->setCombo(0);

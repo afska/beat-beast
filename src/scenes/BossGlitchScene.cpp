@@ -866,6 +866,7 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getMainSprite().set_horizontal_shear(0);
       horse->gunOffsetX = -3;
       horse->gunOffsetY = -23;
+      crossOffset = {0, 0};
       break;
     }
     case 1: {
@@ -876,6 +877,7 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getMainSprite().set_horizontal_shear(0);
       horse->gunOffsetX = -7;
       horse->gunOffsetY = -26;
+      crossOffset = {0, 0};
       break;
     }
     case 2: {
@@ -886,6 +888,7 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getMainSprite().set_horizontal_shear(-0.39843);
       horse->gunOffsetX = -10;
       horse->gunOffsetY = -24;
+      crossOffset = {8, 4};
       break;
     }
     case 3: {
@@ -896,6 +899,7 @@ void BossGlitchScene::updateHorseChannel() {
       horse->getMainSprite().set_horizontal_shear(-0.19897);
       horse->gunOffsetX = -17;
       horse->gunOffsetY = -21;
+      crossOffset = {4, 0};
       break;
     }
     default: {

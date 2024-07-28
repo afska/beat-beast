@@ -64,6 +64,7 @@ class BossScene : public Scene {
   unsigned successfulShots = 0;
   bool canBounce = true;
   bool blocked = false;
+  bn::fixed_point crossOffset = {0, 0};
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
