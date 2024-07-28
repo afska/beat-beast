@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define DATA_EWRAM __attribute__((section(".ewram")))
-#define MAX_EVENTS 3000  // TODO: check max events and adjust
+#define MAX_EVENTS 3000
 
 typedef struct {
   Event events[MAX_EVENTS];

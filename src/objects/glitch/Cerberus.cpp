@@ -60,9 +60,7 @@ bool Cerberus::update() {
   return false;
 }
 
-void Cerberus::bounce() {
-  // TODO: BOUNCE HEADS
-}
+void Cerberus::bounce() {}
 
 void Cerberus::setTargetPosition(bn::fixed_point newTargetPosition,
                                  unsigned beatDurationMs) {

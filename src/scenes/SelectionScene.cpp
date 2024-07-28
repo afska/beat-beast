@@ -469,12 +469,17 @@ void SelectionScene::updateStats() {
     (newRecordHealth ? textGeneratorAccent : textGenerator)
         .generate(stats[0].position() + bn::fixed_point(8 + 4, 0),
                   bn::to_string<32>(progress.health) + "%", statsTextSprites);
-    (newRecordDamage ? textGeneratorAccent : textGenerator)
-        .generate(stats[1].position() + bn::fixed_point(8 + 4, 0),
-                  (progress.damage <= 999 ? bn::to_string<32>(progress.damage)
-                                          : "!!!") +
-                      "%",
-                  statsTextSprites);
+    if (selectedIndex == 4) {
+      textGenerator.generate(stats[1].position() + bn::fixed_point(8 + 4, 0),
+                             "---", statsTextSprites);
+    } else {
+      (newRecordDamage ? textGeneratorAccent : textGenerator)
+          .generate(stats[1].position() + bn::fixed_point(8 + 4, 0),
+                    (progress.damage <= 999 ? bn::to_string<32>(progress.damage)
+                                            : "!!!") +
+                        "%",
+                    statsTextSprites);
+    }
     (newRecordSync ? textGeneratorAccent : textGenerator)
         .generate(stats[2].position() + bn::fixed_point(8 + 4, 0),
                   bn::to_string<32>(progress.sync) + "%", statsTextSprites);

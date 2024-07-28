@@ -14,7 +14,6 @@
 #include "bn_blending.h"
 #include "bn_keypad.h"
 #include "bn_log.h"
-#include "bn_sprite_items_dj_icon_octopus.h"  // TODO: REMOVE
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 #include "bn_sprite_items_glitch_fire.h"
 #include "bn_sprite_items_glitch_lightning1.h"
