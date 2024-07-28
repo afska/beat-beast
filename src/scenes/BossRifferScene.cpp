@@ -128,7 +128,7 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
   platforms.push_back(bn::top_left_fixed_rect(808, 131, 160, 50));
 
   chartReader->eventsThatNeedAudioLagPrediction =
-      15728880 /*0b111100000000000011110000*/;
+      15728880 /*0b111100000000000000000000*/;
   chartReader->eventsThatNeedBeatPrediction = 61440 /*0b1111000000000000*/;
 
   bn::bg_palettes::set_fade_intensity(1);
