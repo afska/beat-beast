@@ -103,6 +103,7 @@ const bn::fixed BEAT_DURATION_FRAMES = 23;
 #define EVENT_TRANSITION3 9
 #define EVENT_TRANSITION4 10
 #define EVENT_BUTANO 11
+#define EVENT_ALMOST_END 98
 #define EVENT_END 99
 
 #define SFX_VINYL "vinyl.pcm"
@@ -157,6 +158,11 @@ BN_CODE_IWRAM void BossGlitchScene::updateBossFight() {
 void BossGlitchScene::processInput() {
   if (blocked)
     return;
+
+  if (didFinish) {
+    horse->setPosition({horse->getPosition().x(), HORSE_Y}, false);
+    return;
+  }
 
   /*if (bn::keypad::right_pressed()) {
     horse->getGunSprite().set_horizontal_shear(
@@ -254,64 +260,12 @@ void BossGlitchScene::processInput() {
         SpriteProvider::bulletbonus(), BULLET_3D_BONUS_DMG, getZSpeed())});
   }
 
-  /*
-  const int totalGlitches = 10;
-  if (bn::keypad::r_pressed()) {
-    selectedGlitch = (selectedGlitch + 1) % totalGlitches;
-  }
-  if (bn::keypad::l_pressed()) {
-    selectedGlitch =
-        ((selectedGlitch - 1) % totalGlitches + totalGlitches) % totalGlitches;
-  }
-  */
   if (bn::keypad::a_pressed()) {
     horse->jump();
     if (ghostHorse.has_value()) {
       ghostHorse->get()->jump();
     }
-    /*
-    glitchType = 1 + selectedGlitch;  // TODO: REMOVE
-    glitchFrames = 18;
-    halfAnimatedFlag = 2;
-    frozenVideoFrame = videoFrame;
-    actualVideoFrame = videoFrame;
-    */
   }
-
-  return;
-
-  /*
-  if (didFinish) {
-    horse->setPosition({horse->getPosition().x(), HORSE_Y}, false);
-    return;
-  }
-
-  processMovementInput(HORSE_Y);
-  processAimInput();
-
-  // shoot
-  if (bn::keypad::b_pressed() && !horse->isBusy()) {
-    if (chartReader->isInsideTick() && horse->canReallyShoot()) {
-      comboBar->setCombo(comboBar->getCombo() + 1);
-      shoot();
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
-    } else {
-      reportFailedShot();
-    }
-  }
-  if (comboBar->isMaxedOut() && bn::keypad::b_released() && !horse->isBusy()) {
-    shoot();
-    bullets.push_back(bn::unique_ptr{
-        new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
-  }
-
-  // jump
-  if (bn::keypad::a_pressed())
-    horse->jump();
-  */
 }
 
 void BossGlitchScene::processChart() {
@@ -602,12 +556,13 @@ void BossGlitchScene::processChart() {
         errTargetRotation = 0;
       } else if (event->getType() == EVENT_BUTANO) {
         enemyBullets.push_back(bn::unique_ptr{
-            new Butano3d(0, bn::fixed_point(0, 0), bn::fixed_point(0, 0),
+            new Butano3d(0, bn::fixed_point(8, 0), bn::fixed_point(0, 0),
                          BEAT_DURATION_FRAMES * 32, event)});
         moveSpeed = 10;
         slowdown = true;
-      } else if (event->getType() == EVENT_END) {
+      } else if (event->getType() == EVENT_ALMOST_END) {
         didFinish = true;
+      } else if (event->getType() == EVENT_END) {
         win();
       }
     }
