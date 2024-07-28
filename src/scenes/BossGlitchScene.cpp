@@ -564,6 +564,7 @@ void BossGlitchScene::processChart() {
         didFinish = true;
       } else if (event->getType() == EVENT_END) {
         win();
+        setNextScreen(GameState::Screen::GLITCH_OUTRO);
       }
     }
   }

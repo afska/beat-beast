@@ -746,7 +746,7 @@ void TutorialScene::win() {
   GameState::data.currentLevelProgress.wins = 1;
   GameState::data.currentLevelProgress.deaths = 0;
 
-  GameState::data.currentLevelResult = GameState::LevelResult::WIN;
+  GameState::saveWin();
 
   setNextScreen(GameState::Screen::SELECTION);
 }

@@ -21,14 +21,19 @@ enum Screen {
   GLITCH_OUTRO
 };
 
-enum LevelResult { QUIT, DEATH, WIN };
-
 struct GameStateData {
   Screen currentScreen = Screen::START;
   bool isPlaying = false;
-  LevelResult currentLevelResult;
   SaveFile::LevelProgress currentLevelProgress;
+
+  bool newRecordHealth = false;
+  bool newRecordDamage = false;
+  bool newRecordSync = false;
 };
+
+void saveWin();
+
+void saveDeath();
 
 extern GameStateData data;
 

@@ -134,6 +134,8 @@ void BossScene::die() {
   options.push_back(Menu::Option{.text = "Retry"});
   options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options);
+
+  GameState::saveDeath();
 }
 
 void BossScene::win() {
@@ -151,8 +153,7 @@ void BossScene::win() {
   GameState::data.currentLevelProgress.didWin = true;
   GameState::data.currentLevelProgress.wins++;
 
-  GameState::data.currentLevelResult = GameState::LevelResult::WIN;
-
+  GameState::saveWin();
   setNextScreen(GameState::Screen::SELECTION);
 }
 
@@ -355,7 +356,6 @@ void BossScene::processMenuOption(int option) {
         break;
       }
       case 1: {  // Quit
-        GameState::data.currentLevelResult = GameState::LevelResult::DEATH;
         setNextScreen(GameState::Screen::SELECTION);
         break;
       }
@@ -376,7 +376,6 @@ void BossScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Quit
-      GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
       setNextScreen(GameState::Screen::SELECTION);
       break;
     }

@@ -292,7 +292,6 @@ void UIScene::processMenuOption(int option) {
         break;
       }
       case 3: {  // Quit
-        GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
         setNextScreen(SaveFile::didCompleteTutorial()
                           ? GameState::Screen::SELECTION
                           : GameState::Screen::START);
@@ -314,7 +313,6 @@ void UIScene::processMenuOption(int option) {
       break;
     }
     case 2: {  // Quit
-      GameState::data.currentLevelResult = GameState::LevelResult::QUIT;
       setNextScreen(SaveFile::didCompleteTutorial()
                         ? GameState::Screen::SELECTION
                         : GameState::Screen::START);
