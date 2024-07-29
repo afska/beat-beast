@@ -12,9 +12,11 @@ class CreditsScene : public Scene {
 
  private:
   bn::optional<bn::regular_bg_ptr> background;
-  bn::vector<bn::vector<bn::sprite_ptr, 64>, 32> textSprites;
+  bn::vector<bn::vector<bn::sprite_ptr, 64>, 64> textLines;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
+  int wait = 30;
+  int index = -1;
 };
 
 #endif  // CREDITS_SCENE_H

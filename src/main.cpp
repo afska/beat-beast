@@ -63,8 +63,9 @@ int main() {
   auto initialScreen = SaveFile::data.didCalibrate
                            ? GameState::Screen::START
                            : GameState::Screen::CALIBRATION;
-  // if (SaveFile::data.isInsideFinal)
-  //   initialScreen = GameState::Screen::GLITCH_OUTRO;
+  player_playGSM("bonus.gsm");
+  if (SaveFile::data.isInsideFinal)
+    initialScreen = GameState::Screen::CREDITS;
 
   GameState::data.currentScreen = initialScreen;
   scene = setNextScene(GameState::Screen::CONTROLS);
