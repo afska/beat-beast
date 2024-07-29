@@ -71,9 +71,10 @@ bool SaveFile::didCompleteTutorial() {
 }
 
 bool SaveFile::hasUnlockedFinal(int difficultyLevel) {
-  for (int i = 0; i < TOTAL_DIFFICULTY_LEVELS - 1; i++)
+  for (int i = 0; i < TOTAL_LEVELS - 1; i++) {
     if (!data.progress[difficultyLevel].levels[i].didWin)
       return false;
+  }
   return true;
 }
 
