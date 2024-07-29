@@ -18,7 +18,8 @@ enum Screen {
   RIFFER,
   GLITCH_INTRO,
   GLITCH,
-  GLITCH_OUTRO
+  GLITCH_OUTRO,
+  CREDITS
 };
 
 struct GameStateData {

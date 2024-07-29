@@ -31,7 +31,6 @@ void StartScene::init() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Play"});
   options.push_back(Menu::Option{.text = "Settings"});
-  // options.push_back(Menu::Option{.text = "Credits"});
   menu->start(options, false);
 
   if (!PlaybackState.isLooping) {
@@ -101,10 +100,6 @@ void StartScene::processMenuOption(int option) {
       menu->stop();
       menu->clickSound();
       settingsMenu->start();
-      break;
-    }
-    case 2: {  // Credits?
-      // ???
       break;
     }
     default: {

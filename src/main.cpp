@@ -9,6 +9,7 @@
 #include "scenes/BossWizardScene.h"
 #include "scenes/CalibrationScene.h"
 #include "scenes/ControlsScene.h"
+#include "scenes/CreditsScene.h"
 #include "scenes/PleaseRestartTheGame.h"
 #include "scenes/SelectionScene.h"
 #include "scenes/StartScene.h"
@@ -126,6 +127,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       return bn::unique_ptr{(Scene*)new BossGlitchScene(fs)};
     case GameState::Screen::GLITCH_OUTRO:
       return bn::unique_ptr{(Scene*)new BossGlitchOutroScene(fs)};
+    case GameState::Screen::CREDITS:
+      return bn::unique_ptr{(Scene*)new CreditsScene(fs)};
     default: {
       BN_ERROR("Next screen not found?");
       return bn::unique_ptr{(Scene*)new StartScene(fs)};
@@ -162,7 +165,8 @@ void transitionToNextScene() {
   scene.reset();
   update();
 
-  bool keepMusic = hasMainMusic(currentScreen) && hasMainMusic(nextScreen);
+  bool keepMusic = (hasMainMusic(currentScreen) && hasMainMusic(nextScreen)) ||
+                   nextScreen == GameState::Screen::CREDITS;
   if (keepMusic) {
     player_setPause(false);
   } else {

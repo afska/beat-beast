@@ -148,14 +148,6 @@ void BossGlitchOutroScene::processBeats() {
 
   if (isNewTick)
     horse->canShoot = true;
-
-  if (SaveFile::data.rumble) {
-    if (isNewBeat) {
-      RUMBLE_start();
-    } else if (wasInsideBeat && !isInsideBeat) {
-      RUMBLE_stop();
-    }
-  }
 }
 
 void BossGlitchOutroScene::updateSprites() {
@@ -567,11 +559,11 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 51: {
-      if (PlaybackState.msecs >= 4050) {
+      if ((int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag) {
         SaveFile::data.didFinishGame = true;
         SaveFile::data.isInsideFinal = false;
 
-        BN_LOG("CREDITS!");
+        setNextScreen(GameState::Screen::CREDITS);
         state++;
       }
       break;
