@@ -27,9 +27,10 @@ sudo dkp-pacman -S gba-dev
 git clone https://github.com/Hazematman/butano
 git clone https://github.com/afska/synthbattle
 cd synthbattle/
-make -j12 # 12 = number of cores
+make -j$(nproc)
 # (this will generate a synthbattle.out.gba ROM file)
 
+# --- optional ---
 # to update boss scripts:
 make rebuild # the `rebuild` target builds the levels && the code
 # (requires extra development tools, like node)

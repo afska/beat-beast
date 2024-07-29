@@ -95,4 +95,4 @@ sprites:
 	rm -rf graphics/sprites/output graphics/sprites/export_layers.scm
 
 rebuild: import
-	make -j12
+	make -j$(nproc)
