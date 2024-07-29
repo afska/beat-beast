@@ -531,7 +531,7 @@ void BossGlitchScene::processChart() {
         blocked = true;
         RUMBLE_start();
         videoBackground.reset();
-        horizontalHBE.reset();
+        // horizontalHBE.reset();
         errBackground = bn::affine_bg_items::bait.create_bg(
             (256 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);
         bn::sprites::set_visible(false);
@@ -611,7 +611,7 @@ void BossGlitchScene::updateBackground() {
     return;
 
   videoBackground.reset();
-  horizontalHBE.reset();
+  // horizontalHBE.reset();
 
   videoBackground = StartVideo::getFrame(currentVideoFrame)
                         .create_bg((256 - Math::SCREEN_WIDTH) / 2,
@@ -621,14 +621,15 @@ void BossGlitchScene::updateBackground() {
 
   bn::blending::set_fade_alpha(0);
 
-  if (chartReader->isInsideBeat() && !slowdown) {
-    horizontalHBE = bn::regular_bg_position_hbe_ptr::create_horizontal(
-        videoBackground.value(), horizontalDeltas);
-    for (int index = 0, limit = bn::display::height(); index < limit; ++index) {
-      horizontalDeltas[index] = random.get_fixed(-3, 3);
-    }
-    horizontalHBE->reload_deltas_ref();
-  }
+  // if (chartReader->isInsideBeat() && !slowdown) {
+  //   horizontalHBE = bn::regular_bg_position_hbe_ptr::create_horizontal(
+  //       videoBackground.value(), horizontalDeltas);
+  //   for (int index = 0, limit = bn::display::height(); index < limit;
+  //   ++index) {
+  //     horizontalDeltas[index] = random.get_fixed(-3, 3);
+  //   }
+  //   horizontalHBE->reload_deltas_ref();
+  // }
 }
 
 void BossGlitchScene::updateSprites() {
