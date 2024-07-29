@@ -28,6 +28,7 @@ BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
 
 void BossGlitchOutroScene::init() {
   canQuit = false;
+  pauseVideo = true;
   UIScene::init();
 
   cerberus = bn::unique_ptr{new Cerberus({60 - 64, 0})};
@@ -149,6 +150,12 @@ void BossGlitchOutroScene::updateSprites() {
       enemyLifeBar->get()->bounce();
   }
   horse->update();
+  if (cross.has_value()) {
+    if (cross->get()->update())
+      cross.reset();
+  }
+  if (enemyLifeBar.has_value())
+    enemyLifeBar->get()->update();
 
   // Enemies
   if (cerberus.has_value()) {
@@ -219,9 +226,10 @@ void BossGlitchOutroScene::updateDialog() {
         closeMenu();
 
         if (selection == 0) {
+          cerberus->get()->blinkAll();
           didUnlockShooting = true;
           enemyLifeBar = bn::unique_ptr{
-              new LifeBar({184, 0}, 10, bn::sprite_items::glitch_icon_butano,
+              new LifeBar({184, 0}, 30, bn::sprite_items::glitch_icon_butano,
                           bn::sprite_items::glitch_lifebar_butano_fill)};
           state++;
         } else
@@ -398,6 +406,5 @@ void BossGlitchOutroScene::reportFailedShot() {
 
   cross.reset();
   cross = bn::unique_ptr{new Cross(horse->getCenteredPosition())};
-  if (horse->failShoot())
-    gunReload->show();
+  horse->failShoot();
 }

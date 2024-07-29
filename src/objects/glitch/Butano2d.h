@@ -17,13 +17,12 @@ class Butano2d : public GameObject {
  private:
   bn::sprite_ptr sprite;
   int animationIndex = -1;
-  bool isAppearing = true;
   bool isExploding = false;
   bool isDestroying = false;
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<8>> hurtAnimation;
   bn::optional<bn::sprite_animate_action<2>> explodeAnimation;
-  bn::fixed targetScale = 1;
+  bn::fixed extraScale = 0;
 
   void updateAnimations();
   void setIdleState();

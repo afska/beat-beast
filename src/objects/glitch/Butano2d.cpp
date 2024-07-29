@@ -15,16 +15,6 @@ Butano2d::Butano2d(bn::fixed_point initialPosition)
 bool Butano2d::update() {
   updateAnimations();
 
-  if (isAppearing) {
-    auto scale = sprite.horizontal_scale() + 0.1;
-    if (scale > targetScale) {
-      scale = targetScale;
-      isAppearing = false;
-    }
-    sprite.set_scale(scale);
-    return false;
-  }
-
   if (isDestroying) {
     sprite.set_scale(sprite.horizontal_scale() - 0.1);
     return sprite.horizontal_scale() <= 0.25;
@@ -36,27 +26,30 @@ bool Butano2d::update() {
     return false;
   }
 
-  if (animationIndex > -1) {
-    auto scale = Math::SCALE_STEPS[animationIndex];
-    sprite.set_scale(scale);
-    animationIndex--;
-  } else
-    animationIndex = Math::SCALE_STEPS.size() - 1;
+  if (extraScale > 0.75) {
+    sprite.set_scale(1 + extraScale);
+  } else {
+    if (animationIndex > -1) {
+      auto scale = Math::SCALE_STEPS[animationIndex] + extraScale;
+      if (scale > 2)
+        scale = 2;
+      sprite.set_scale(scale);
+      animationIndex--;
+    } else
+      animationIndex = Math::SCALE_STEPS.size() - 1;
+  }
 
   return false;
 }
 
 void Butano2d::hurt() {
   setHurtState();
-  targetScale += 0.05;
-  if (targetScale > 1.75)
+  extraScale += 0.05;
+  if (extraScale > 0.75)
     setExplodingState();
-  if (targetScale > 2)
-    targetScale = 2;
 }
 
 void Butano2d::explode() {
-  isAppearing = false;
   sprite.set_scale(1);
 
   isExploding = true;
@@ -76,7 +69,7 @@ void Butano2d::updateAnimations() {
   }
 
   if (explodeAnimation.has_value()) {
-    hurtAnimation->update();
+    explodeAnimation->update();
   }
 }
 

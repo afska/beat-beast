@@ -39,7 +39,6 @@ class BossGlitchOutroScene : public UIScene {
   bn::optional<bn::unique_ptr<LifeBar>> enemyLifeBar;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
-  bn::unique_ptr<GunReload> gunReload;
 
   void processInput();
   void processBeats();
