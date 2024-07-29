@@ -10,7 +10,7 @@
 #define MINUTE 60000
 
 const bn::array<int, SaveFile::TOTAL_DIFFICULTY_LEVELS> TICK_TIMING_WINDOW_MS =
-    {100, 66, 66};
+    {100, 80, 66};
 
 ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
     : song(_song), chart(_chart), audioLag(_audioLag) {
