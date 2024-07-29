@@ -549,7 +549,7 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 49: {
-      if ((int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag)
+      if ((int)PlaybackState.msecs >= FINAL_SONG_LOOP)
         player_setCursor(0);
       break;
     }
@@ -559,8 +559,8 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 51: {
-      if ((int)PlaybackState.msecs >=
-          FINAL_SONG_LOOP - SaveFile::data.audioLag) {
+      if ((int)PlaybackState.msecs - SaveFile::data.audioLag >=
+          FINAL_SONG_LOOP) {
         SaveFile::data.didFinishGame = true;
         SaveFile::data.isInsideFinal = false;
         SaveFile::save();
