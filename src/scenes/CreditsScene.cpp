@@ -5,7 +5,7 @@
 #include "../player/player.h"
 #include "../utils/Math.h"
 #include "bn_blending.h"
-#include "bn_log.h"
+#include "bn_keypad.h"
 
 #include "bn_regular_bg_items_back_final.h"
 
@@ -207,7 +207,7 @@ void CreditsScene::update() {
     wait = WAIT;
   }
 
-  if (PlaybackState.hasFinished)
+  if (PlaybackState.hasFinished || bn::keypad::start_pressed())
     setNextScreen(GameState::Screen::START);
 }
 

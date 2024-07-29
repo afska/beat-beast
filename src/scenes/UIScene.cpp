@@ -14,7 +14,6 @@
 #include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
 #include "bn_keypad.h"
-#include "bn_log.h"
 #include "bn_sprite_items_ui_chat.h"
 #include "bn_sprite_items_ui_talkbox1.h"
 #include "bn_sprite_items_ui_talkbox23.h"
