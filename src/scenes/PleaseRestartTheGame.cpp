@@ -4,6 +4,7 @@
 #include "../assets/StartVideo.h"
 #include "../player/player.h"
 #include "../utils/Math.h"
+#include "../utils/Rumble.h"
 
 #include "bn_keypad.h"
 #include "bn_sprite_items_glitch_icon_butano.h"
@@ -147,6 +148,14 @@ void BossGlitchOutroScene::processBeats() {
 
   if (isNewTick)
     horse->canShoot = true;
+
+  if (SaveFile::data.rumble) {
+    if (isNewBeat) {
+      RUMBLE_start();
+    } else if (wasInsideBeat && !isInsideBeat) {
+      RUMBLE_stop();
+    }
+  }
 }
 
 void BossGlitchOutroScene::updateSprites() {
@@ -559,6 +568,9 @@ void BossGlitchOutroScene::updateDialog() {
     }
     case 51: {
       if (PlaybackState.msecs >= 4050) {
+        SaveFile::data.didFinishGame = true;
+        SaveFile::data.isInsideFinal = false;
+
         BN_LOG("CREDITS!");
         state++;
       }

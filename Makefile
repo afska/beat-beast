@@ -64,7 +64,7 @@ USERLDFLAGS 	:= -Wl,--print-memory-usage
 USERLIBDIRS 	:= $(DEVKITPRO)/libgba
 USERLIBS    	:= -lgba
 DEFAULTLIBS 	:= true
-STACKTRACE		:=
+STACKTRACE		:= 
 USERBUILD   	:=  
 EXTTOOL     	:=  
 
