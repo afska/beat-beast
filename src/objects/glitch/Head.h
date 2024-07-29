@@ -22,6 +22,8 @@ class Head : public GameObject {
   void setTargetScale(bn::fixed newTargetScale) {
     targetScale = newTargetScale;
   }
+  void freeze() { setFreezeState(); }
+  void hide() { sprite.set_visible(false); }
 
  private:
   bn::sprite_item spriteItem;
@@ -30,6 +32,7 @@ class Head : public GameObject {
   bn::optional<bn::sprite_animate_action<2>> idleAnimation;
   bn::optional<bn::sprite_animate_action<3>> blinkAnimation;
   bn::optional<bn::sprite_animate_action<2>> talkAnimation;
+  bn::optional<bn::sprite_animate_action<2>> freezeAnimation;
   int blinkWait = 0;
   bn::fixed targetScale = 1;
 
@@ -39,6 +42,7 @@ class Head : public GameObject {
   void setIdleState();
   void setBlinkState();
   void setTalkState();
+  void setFreezeState();
   void resetAnimations();
 };
 

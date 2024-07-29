@@ -24,6 +24,8 @@ class BossGlitchOutroScene : public UIScene {
   unsigned state = 0;
 
   bool didUnlockShooting = false;
+  int countdown = 0;
+  bool bounce = true;
 
   int msecs = 0;
   int lastBeat = 0;

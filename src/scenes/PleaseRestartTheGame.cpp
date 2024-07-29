@@ -20,6 +20,8 @@
 #define OFFSET 32
 #define BEAT_PREDICTION_WINDOW 100
 
+#define SFX_WAITWHAT "rock.pcm"
+#define SFX_GO "minirock.pcm"
 #define SFX_PAUSE "menu_pause.pcm"
 #define SFX_OBJECTIVE "ui_objective.pcm"
 
@@ -149,7 +151,7 @@ void BossGlitchOutroScene::processBeats() {
 
 void BossGlitchOutroScene::updateSprites() {
   // Horse
-  if (isNewBeat) {
+  if (isNewBeat && bounce) {
     horse->bounce();
     if (enemyLifeBar.has_value())
       enemyLifeBar->get()->bounce();
@@ -450,15 +452,116 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 36: {
+      closeText();
       cerberus->get()->blinkAll();
       setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Alright. If things get boring, I'll");
       strs.push_back("consider again |destroying the world|.");
+      write(strs);
+
+      state++;
+      break;
+    }
+    case 37: {
+      if (finishedWriting()) {
+        player_stop();
+        player_sfx_play(SFX_WAITWHAT);
+        cerberus->get()->getHead1()->freeze();
+        cerberus->get()->getHead2()->freeze();
+        cerberus->get()->getHead3()->freeze();
+        countdown = 30 * 4;
+        state++;
+      }
+      break;
+    }
+    case 38: {
+      countdown--;
+      if (countdown == 0) {
+        player_sfx_play(SFX_GO);
+        cerberus->get()->getHead1()->hide();
+        countdown = 30;
+        state++;
+      }
+      break;
+    }
+    case 39: {
+      countdown--;
+      if (countdown == 0) {
+        player_sfx_play(SFX_GO);
+        cerberus->get()->getHead2()->hide();
+        countdown = 30;
+        state++;
+      }
+      break;
+    }
+    case 40: {
+      countdown--;
+      if (countdown == 0) {
+        player_sfx_play(SFX_GO);
+        cerberus->get()->getHead3()->hide();
+        countdown = 30;
+        state++;
+      }
+      break;
+    }
+    case 41: {
+      countdown--;
+      if (countdown == 0)
+        state++;
+      break;
+    }
+    case 42: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("...");
       write(strs, true);
 
       state++;
+      break;
+    }
+    case 44: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("...guys?");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 46: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Whoa! They really left.");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 48: {
+      bn::vector<bn::string<64>, 2> strs;
+      player_playGSM("bonus.gsm");
+      pauseVideo = false;
+      bounce = false;
+      strs.push_back("I guess I'm in charge now!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 49: {
+      if ((int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag)
+        player_setCursor(0);
+      break;
+    }
+    case 50: {
+      closeText();
+      state++;
+      break;
+    }
+    case 51: {
+      if (PlaybackState.msecs >= 4050) {
+        BN_LOG("CREDITS!");
+        state++;
+      }
       break;
     }
     default: {

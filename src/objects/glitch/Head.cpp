@@ -64,6 +64,10 @@ void Head::updateAnimations() {
   if (talkAnimation.has_value()) {
     talkAnimation->update();
   }
+
+  if (freezeAnimation.has_value()) {
+    freezeAnimation->update();
+  }
 }
 
 void Head::setIdleState() {
@@ -82,6 +86,12 @@ void Head::setTalkState() {
   resetAnimations();
   talkAnimation = bn::create_sprite_animate_action_forever(
       sprite, 10, spriteItem.tiles_item(), 0, 1);
+}
+
+void Head::setFreezeState() {
+  resetAnimations();
+  freezeAnimation = bn::create_sprite_animate_action_forever(
+      sprite, 10, spriteItem.tiles_item(), 1, 1);
 }
 
 void Head::resetAnimations() {
