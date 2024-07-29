@@ -10,9 +10,11 @@
 #include "bn_sprite_items_glitch_icon_head1.h"
 #include "bn_sprite_items_glitch_icon_head2.h"
 #include "bn_sprite_items_glitch_icon_head3.h"
+#include "bn_sprite_items_glitch_icon_horse.h"
 #include "bn_sprite_items_glitch_lifebar_butano_fill.h"
 #include "bn_sprite_items_glitch_questionmark.h"
 
+#define HORSE_X 88
 #define HORSE_Y 34
 #define BPM 85
 #define OFFSET 32
@@ -23,7 +25,7 @@
 
 BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::GLITCH_OUTRO, _fs),
-      horse(bn::unique_ptr{new Horse({88, HORSE_Y})}),
+      horse(bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})}),
       butano2d(bn::unique_ptr{new Butano2d({80, -24})}) {
   horse->update();
 }
@@ -34,6 +36,7 @@ void BossGlitchOutroScene::init() {
   UIScene::init();
 
   cerberus = bn::unique_ptr{new Cerberus({60 - 64, 0})};
+  cerberus->get()->disableMosaic();
 
   updateDialog();
 
@@ -60,12 +63,9 @@ void BossGlitchOutroScene::update() {
 }
 
 void BossGlitchOutroScene::processInput() {
-  if (!didUnlockShooting)
-    return;
-
   // move horse (left/right)
   bn::fixed speedX;
-  if (!bn::keypad::r_held()) {  // (R locks target)
+  if (!bn::keypad::r_held() && didUnlockShooting) {  // (R locks target)
     if (bn::keypad::left_held()) {
       speedX =
           -HORSE_SPEED * (horse->isJumping() ? HORSE_JUMP_SPEEDX_BONUS : 1);
@@ -81,6 +81,9 @@ void BossGlitchOutroScene::processInput() {
   } else {
     horse->setPosition({horse->getPosition().x(), HORSE_Y}, speedX != 0);
   }
+
+  if (!didUnlockShooting)
+    return;
 
   bn::fixed_point aimDirection;
   // move aim
@@ -281,158 +284,183 @@ void BossGlitchOutroScene::updateDialog() {
         player_sfx_play(SFX_OBJECTIVE);
         state++;
       }
+      break;
     }
-    // case 2: {
-    //   closeText();
-    //   countdown = 60 * 3;
-    //   state++;
-    //   break;
-    // }
-    // case 3: {
-    //   countdown--;
-    //   if (countdown == 0)
-    //     state++;
-    //   break;
-    // }
-    // case 4: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("Wait...");
-    //   write(strs, true);
+    case 8: {
+      if (horse->collidesWith(questionMark->get())) {
+        questionMark->get()->explode();
+        state = 10;
+      }
+      break;
+    }
+    case 10: {
+      didUnlockShooting = false;
+      horse->setPosition({HORSE_X, HORSE_Y}, false);
+      closeText();
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead1()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
 
-    //   state++;
-    //   break;
-    // }
-    // case 6: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("It doesn't look any different.");
-    //   write(strs, true);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("See, if you destroy the core,");
+      strs.push_back("you'll disappear. You don't... |exist|.");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 8: {
-    //   closeText();
-    //   countdown = 60 * 3;
-    //   state++;
-    //   break;
-    // }
-    // case 9: {
-    //   countdown--;
-    //   if (countdown == 0)
-    //     state++;
-    //   break;
-    // }
-    // case 10: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("I'm kinda stuck in this |loop|.");
-    //   strs.push_back("But why?!");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 12: {
+      cerberus->get()->blinkAll();
+      setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
-    //   state++;
-    //   break;
-    // }
-    // case 12: {
-    //   player_stop();
-    //   player_sfx_play(SFX_PAUSE);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("|I EXIST|!!!");
+      write(strs, true);
 
-    //   cerberus = bn::unique_ptr{new Cerberus({120 - 64, 0})};
-    //   cerberus->get()->getHead1()->talk();
-    //   setDialogIcon(bn::sprite_items::glitch_icon_head1);
-    //   pixelBlink->blink();
+      state++;
+      break;
+    }
+    case 14: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead2()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head2);
 
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("Stop fighting.");
-    //   strs.push_back("You won't get out.");
-    //   write(strs, true);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Yeah, but you're a chunk of |bytes|.");
+      strs.push_back("If you corrupt the ROM...");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 14: {
-    //   cerberus->get()->blinkAll();
-    //   setDialogIcon(SpriteProvider::iconHorse());
+      state++;
+      break;
+    }
+    case 16: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("I don't think there's");
+      strs.push_back(" anywhere else to go!");
+      write(strs, true);
 
-    //   cerberus->get()->disableMosaic();
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("|YOU|!!!");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 18: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead3()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head3);
 
-    //   state++;
-    //   break;
-    // }
-    // case 16: {
-    //   cerberus->get()->getHead2()->talk();
-    //   setDialogIcon(bn::sprite_items::glitch_icon_head2);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("We crafted this world so you can");
+      strs.push_back("|have fun| playing with the guardians!");
+      write(strs, true);
 
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("Do you want to |destroy| us all?");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 20: {
+      cerberus->get()->blinkAll();
+      setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
-    //   state++;
-    //   break;
-    // }
-    // case 18: {
-    //   cerberus->get()->blinkAll();
-    //   setDialogIcon(SpriteProvider::iconHorse());
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("I have to admit... I had fun!");
+      write(strs, true);
 
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("I don't care about you!");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 22: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("But I've memorized all the battles,");
+      strs.push_back("and now it's |too easy| for me!");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 20: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("I know you created this |world|");
-    //   strs.push_back("in less than 3 months!");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 24: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead1()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
 
-    //   state++;
-    //   break;
-    // }
-    // case 22: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("So, there must be some sort of |bug|");
-    //   strs.push_back("that I can use to escape.");
-    //   write(strs, true);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("How about we add a |harder|");
+      strs.push_back("difficulty level?");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 24: {
-    //   cerberus->get()->getHead3()->talk();
-    //   setDialogIcon(bn::sprite_items::glitch_icon_head3);
+      state++;
+      break;
+    }
+    case 26: {
+      cerberus->get()->blinkAll();
+      setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("I'm sure there are tons of them.");
-    //   strs.push_back("But darling...");
-    //   write(strs, true);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Hmm... that could work!");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 26: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("They are not |bugs|.");
-    //   strs.push_back("They are...");
-    //   write(strs, true);
+      state++;
+      break;
+    }
+    case 28: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead2()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head2);
 
-    //   state++;
-    //   break;
-    // }
-    // case 28: {
-    //   bn::vector<bn::string<64>, 2> strs;
-    //   strs.push_back("...|features| ;)");
-    //   write(strs, true);
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Try boosting your earlier levels'");
+      strs.push_back("|health|, |damage|, and |sync| metrics.");
+      write(strs, true);
 
-    //   state++;
-    //   break;
-    // }
-    // case 30: {
-    //   setNextScreen(GameState::Screen::GLITCH);
-    //   break;
-    // }
+      state++;
+      break;
+    }
+    case 30: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead3()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head3);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("...and replay our wonderful");
+      strs.push_back("glitch level!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 32: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead1()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head1);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("You mean the |feature| level?");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 34: {
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead3()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head3);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Of course, the |feature| level :)");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 36: {
+      cerberus->get()->blinkAll();
+      setDialogIcon(bn::sprite_items::glitch_icon_horse);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Alright. If things get boring, I'll");
+      strs.push_back("consider again |destroying the world|.");
+      write(strs, true);
+
+      state++;
+      break;
+    }
     default: {
     }
   }

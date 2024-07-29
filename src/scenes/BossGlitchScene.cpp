@@ -146,6 +146,9 @@ void BossGlitchScene::updateBossFight() {
   halfAnimatedFlag = (halfAnimatedFlag + 1) % 4;
   sixteenthAnimatedFlag = (sixteenthAnimatedFlag + 1) % 6;
 
+  if (blocked && isNewBeatNow)
+    BN_LOG("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+
   processInput();
   processChart();
   updateGlitches();
