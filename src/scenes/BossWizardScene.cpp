@@ -860,6 +860,9 @@ void BossWizardScene::goToNextPhase() {
 }
 
 void BossWizardScene::causeDamage(bn::fixed amount) {
+  if (didFinish)
+    return;
+
   wizard->get()->hurt();
   enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))

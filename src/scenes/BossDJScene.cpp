@@ -393,6 +393,9 @@ void BossDJScene::updateSprites() {
 }
 
 void BossDJScene::causeDamage(bn::fixed amount) {
+  if (didFinish)
+    return;
+
   octopus->hurt();
   enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))

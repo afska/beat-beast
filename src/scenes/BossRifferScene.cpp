@@ -1039,6 +1039,9 @@ void BossRifferScene::selectGamePlatform(int n, bool now) {
 }
 
 void BossRifferScene::causeDamage(bn::fixed amount) {
+  if (didFinish)
+    return;
+
   riffer.get()->hurt();
   enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
