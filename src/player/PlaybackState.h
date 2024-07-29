@@ -1,6 +1,8 @@
 #ifndef PLAYBACK_STATE_H
 #define PLAYBACK_STATE_H
 
+#define FINAL_SONG_LOOP 3842
+
 typedef struct {
   unsigned int msecs;
   bool hasFinished;

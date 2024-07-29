@@ -92,7 +92,8 @@ void StartScene::update() {
 
   updateVideo();
 
-  if (credits && (int)PlaybackState.msecs >= 3842 - SaveFile::data.audioLag) {
+  if (credits &&
+      (int)PlaybackState.msecs >= FINAL_SONG_LOOP - SaveFile::data.audioLag) {
     setNextScreen(GameState::Screen::CREDITS);
   }
 }
