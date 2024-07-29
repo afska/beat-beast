@@ -180,7 +180,7 @@ void transitionToNextScene() {
 
   scene = setNextScene(nextScreen);
   scene->get()->init();
-  bn::core::update();
+  update();
 
   if (nextScreen != GameState::Screen::RIFFER) {
     for (int i = 0; i < 10; i++) {

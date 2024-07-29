@@ -14,8 +14,9 @@
 
 const bn::array<bn::string_view, 256> textItems = {
     "|Beat Beast|",
+    "(created for |GBA JAM 2024|)",
+    "",
     "github.com/afska/beat-beast",
-    "(created for |GBA JAM 2024|)"
     "",
     "",
     "Code by |Afska|",
