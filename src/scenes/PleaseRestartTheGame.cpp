@@ -1,4 +1,4 @@
-#include "BossGlitchOutroScene.h"
+#include "PleaseRestartTheGame.h"
 
 #include "../assets/SpriteProvider.h"
 #include "../assets/StartVideo.h"
@@ -185,7 +185,12 @@ void BossGlitchOutroScene::updateSprites() {
       if (enemyLifeBar->get()->setLife(enemyLifeBar->get()->getLife() - 1)) {
         player_stop();
         player_sfx_stop();
-        BN_ERROR("UY");
+        BN_ERROR(
+            "You destroyed the game engine.\r\n"
+            "This world doesn't exist anymore.\r\n"
+            "And thus, YOU don't exist anymore.\r\n"
+            "\r\n"
+            "Really, what did you expect? :')");
       }
     }
 
