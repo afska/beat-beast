@@ -559,7 +559,7 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 51: {
-      if ((int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag) {
+      if ((int)PlaybackState.msecs >= 3842 - SaveFile::data.audioLag) {
         SaveFile::data.didFinishGame = true;
         SaveFile::data.isInsideFinal = false;
         SaveFile::save();

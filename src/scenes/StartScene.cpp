@@ -92,7 +92,7 @@ void StartScene::update() {
 
   updateVideo();
 
-  if (credits && (int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag) {
+  if (credits && (int)PlaybackState.msecs >= 3842 - SaveFile::data.audioLag) {
     setNextScreen(GameState::Screen::CREDITS);
   }
 }
