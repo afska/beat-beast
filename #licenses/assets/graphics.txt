@@ -83,7 +83,10 @@ wizard_minifireball.bmp
 wizard_miniportal.bmp
 wizard_portal.bmp
 wizard_wizard.bmp
-start_logo.bmp
+start_logo1.bmp
+start_logo2.bmp
+start_logo3.bmp
+start_logo4.bmp
 -----------------------------
 
 by Lu

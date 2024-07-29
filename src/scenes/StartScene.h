@@ -22,6 +22,10 @@ class StartScene : public Scene {
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<Menu> menu;
   bn::unique_ptr<SettingsMenu> settingsMenu;
+  bn::sprite_ptr logo1;
+  bn::sprite_ptr logo2;
+  bn::sprite_ptr logo3;
+  bn::sprite_ptr logo4;
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
   bn::fixed extraSpeed = 0;
