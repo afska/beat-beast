@@ -1,0 +1,51 @@
+Licenses for each *.pcm/*.gsm SFX file in the gbfs_files/ directory.
+
+------------------
+calibrate_test.gsm
+lightning.pcm
+megaball.pcm
+vinyl.pcm
+------------------
+
+by Synthenia
+
+CC BY-NC 4.0
+
+-------------
+calibrate.gsm
+-------------
+
+by Afska
+
+CC0
+
+-----------------
+menu_click.pcm
+menu_move.pcm
+menu_pause.pcm
+menu_question.pcm
+ui_objective.pcm
+ui_success.pcm
+-----------------
+
+by ColorAlpha
+
+LICENSE:
+
+1. You can use the sounds for commercial and non-commercial projects.
+2. If you use the sounds for a commercial project consider donate something.
+3. Give credit to the asset pack in any case,  even if you edit the sounds.
+
+https://coloralpha.itch.io/50-menu-interface-sfx
+
+------------
+minirock.pcm
+rock.pcm
+------------
+
+by themightyglider
+
+CC0
+
+https://opengameart.org/content/breaking-rock
+https://opengameart.org/content/moving-boulder
