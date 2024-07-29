@@ -1,0 +1,329 @@
+Licenses for each *.bmp file in the graphics/ directory.
+
+-----------------------------
+back_final.bmp
+bullet.bmp
+bulletbonus.bmp
+dj_alt_vinyl.bmp
+dj_bad_big_bullet.bmp
+dj_bad_bullet.bmp
+dj_horse.bmp
+dj_icon_horse.bmp
+dj_icon_octopus.bmp
+dj_octopus.bmp
+dj_tentacle.bmp
+dj_turntable.bmp
+glitch_3dhorse1.bmp
+glitch_3dhorse2.bmp
+glitch_bigbullet.bmp
+glitch_blackhole.bmp
+glitch_cerberus1.bmp
+glitch_cerberus2.bmp
+glitch_fire.bmp
+glitch_head1.bmp
+glitch_head2.bmp
+glitch_head3.bmp
+glitch_horse.bmp
+glitch_icon_head1.bmp
+glitch_icon_head2.bmp
+glitch_icon_head3.bmp
+glitch_icon_horse.bmp
+glitch_lightning1.bmp
+glitch_lightning2.bmp
+glitch_lightning3.bmp
+glitch_lightning11.bmp
+glitch_lightning22.bmp
+glitch_minifireball.bmp
+glitch_note.bmp
+glitch_vinyl.bmp
+gun.bmp
+gunreload.bmp
+riffer_brokenguitar1.bmp
+riffer_brokenguitar2.bmp
+riffer_fire.bmp
+riffer_guitar.bmp
+riffer_handl.bmp
+riffer_handr.bmp
+riffer_horse.bmp
+riffer_icon_horse.bmp
+riffer_icon_riffer.bmp
+riffer_note1.bmp
+riffer_riffer.bmp
+riffer_riffer.bmp
+selection_3dhorse.bmp
+selection_icon_dj.bmp
+selection_icon_horse.bmp
+selection_icon_riffer.bmp
+selection_icon_wizard.bmp
+selection_previewdj.bmp
+selection_previewriffer.bmp
+selection_previewtutorial.bmp
+selection_previewwizard.bmp
+start_3dhorse.bmp
+ui_horse.bmp
+ui_icon_example_guardian.bmp
+ui_icon_horse.bmp
+ui_meteorite.bmp
+ui_sample_boss.bmp
+wizard_blackhole.bmp
+wizard_dragon.bmp
+wizard_dragon_alt.bmp
+wizard_dragonegg.bmp
+wizard_horse.bmp
+wizard_horse_run_noshadow.bmp
+wizard_icon_horse.bmp
+wizard_icon_wizard.bmp
+wizard_lightning1.bmp
+wizard_lightning2.bmp
+wizard_lightning3.bmp
+wizard_lightning11.bmp
+wizard_lightning22.bmp
+wizard_meteorite.bmp
+wizard_minifireball.bmp
+wizard_miniportal.bmp
+wizard_portal.bmp
+wizard_wizard.bmp
+start_logo.bmp
+-----------------------------
+
+by Lu
+
+CC BY-NC 4.0
+
+---------------------------
+autofire.bmp
+bait.bmp
+combobar.bmp
+dj_lifebar.bmp
+dj_lifebar_fill.bmp
+dj_lifebar_octopus_fill.bmp
+explosion.bmp
+glitch_lifebar.bmp
+glitch_lifebar_butano_fill.bmp
+glitch_lifebar_fill.bmp
+hitbox.bmp
+menu.bmp
+progress.bmp
+riffer_lifebar.bmp
+riffer_lifebar_fill.bmp
+riffer_lifebar_riffer_fill.bmp
+riffer_line.bmp
+selection_line.bmp
+selection_triggers.bmp
+ui_lifebar.bmp
+ui_lifebar_fill.bmp
+ui_lifebar_tutorial_fill.bmp
+ui_talkbox1.bmp
+ui_talkbox4.bmp
+ui_talkbox23.bmp
+wait.bmp
+wizard_lifebar.bmp
+wizard_lifebar_fill.bmp
+wizard_lifebar_wizard_fill.bmp
+---------------------------
+
+by Afska
+
+CC0
+
+---------------------
+back_dj_disco_bg0.bmp
+back_dj_disco_bg1.bmp
+back_dj_disco_bg3.bmp
+---------------------
+
+by BQR
+
+CC BY 4.0
+
+https://the-bqr.itch.io/cloudsnight
+
+-----------------------------
+back_riffer_wasteland_bg0.bmp
+back_riffer_wasteland_bg3.bmp
+riffer_gameplatform1.bmp
+riffer_gameplatform2.bmp
+-----------------------------
+
+by Luis Zuno (@ansimuz)
+
+LICENSE:
+You may use these assets in personal or commercial projects. You can modify these assets to suit your needs. You can re-distribute the file.
+Credit no required but appreciated it.
+
+Links
+Twitter @ansimuz
+Support my work at Patreon https://www.patreon.com/ansimuz
+Buy my stuff https://ansimuz.itch.io/
+Get more Free Assetslike these at: http://www.ansimuz.com
+
+https://ansimuz.itch.io/gothicvania-junk-wasteland-environment
+
+-------------------------
+back_wizard_caves_bg0.bmp
+back_wizard_caves_bg1.bmp
+back_wizard_caves_bg2.bmp
+back_wizard_caves_bg3.bmp
+back_wizard_mountain_bg0.bmp
+back_wizard_mountain_bg1.bmp
+back_wizard_mountain_bg2.bmp
+back_wizard_mountain_bg3.bmp
+-------------------------
+
+by Admurin
+
+LICENSE:
+You CAN modify these items to your needs
+
+You CAN use these items in personal and commercial projects
+
+You  CANNOT sell these assets modified or not
+
+You are NOT allowed to turn any of my assets to an NFT
+
+Paid assets are only to be used after purchasing the pack
+
+Credit not necessary but appreciated, if you do you can link to my ITCH profile
+
+https://admurin.itch.io/
+https://admurin.itch.io/parallax-backgrounds-caves
+https://admurin.itch.io/parallax-backgrounds-snowy-mountains
+
+---------------------------------
+back_wizard_mountainlava1_bg0.bmp
+back_wizard_mountainlava2_bg0.bmp
+back_wizard_mountainlava3_bg0.bmp
+---------------------------------
+
+- Contains part of back_wizard_mountain_bg0.bmp by Admurin (see previous license)
+- Lava tiles by Lu, licensed under CC BY-NC 4.0
+- Lava rock by Jordan Irwin (AntumDeluge), licensed under CC-BY 4.0
+  https://opengameart.org/content/lava-rock
+
+------------------------------------
+common_fixed_8x16_font.bmp
+common_fixed_8x16_font_accent.bmp
+common_variable_8x16_font.bmp
+common_variable_8x16_font_accent.bmp
+------------------------------------
+
+by Sparklin Labs by Pixel-boy: https://twitter.com/2pblog1
+
+CC0
+
+Their creation is funded by your support on Patreon (http://patreon.com/SparklinLabs) and through donations (http://sparklinlabs.itch.io/superpowers) Thanks!
+
+Attribution/Licensing:
+  Creative Commons Zero: http://creativecommons.org/publicdomain/zero/1.0/
+  Attribution is not required but appreciated. Placing a link to http://superpowers-html5.com/ somewhere would be awesome :)
+
+-------------------------
+cross.bmp
+glitch_angrysymbols.bmp
+glitch_questionmark.bmp
+riffer_angrysymbols.bmp
+selection_bigquestion.bmp
+selection_good.bmp
+selection_icon_question.bmp
+ui_bad.bmp
+ui_chat.bmp
+ui_good.bmp
+ui_icon_tutorial.bmp
+-------------------------
+
+by Disven
+
+CC BY 4.0
+
+https://disven.itch.io/pixel-icons-and-game-controller-2
+
+------------
+dj_spark.bmp
+------------
+
+by rubberduck
+
+CC0
+
+https://opengameart.org/content/5x-special-effects-2d
+
+---------------
+dj_vinyl.bmp
+ui_obstacle.bmp
+ui_radio.bmp
+---------------
+
+by knekko
+
+CC0
+
+https://opengameart.org/content/retro-items
+
+----------------------
+glitch_butano.bmp
+glitch_icon_butano.bmp
+----------------------
+
+By Sun Ladder
+
+Licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license
+
+https://commons.wikimedia.org/wiki/File:ButaneGasCylinder_WhiteBack.jpg
+
+----------------
+glitch_modem.bmp
+----------------
+
+by Vectorportal.com
+
+CC BY 4.0
+
+https://vectorportal.com/vector/router/35188
+
+------------------------------------------
+output_00001.bmp to output_00150.bmp
+output_ui_00001.bmp to output_ui_00010.bmp
+------------------------------------------
+
+by RoyaltyFreeTube
+
+CC BY 4.0
+
+https://www.youtube.com/watch?v=1eHwlmn_Mps
+https://www.youtube.com/watch?v=pvomDfQmhWQ
+
+-------------------
+selection_stats.bmp
+-------------------
+
+- Health icon by Streamline, licensed under CC BY 4.0
+  https://iconduck.com/icons/176198/health-medical-heart-rate-health-beauty-information-data-beat-pulse-monitor-heart-rate-info
+- Damage icon by Agata Kuczmińska, licensed under CC BY 4.0
+  https://iconduck.com/icons/169453/laser-gun
+- Sync icon by JoyPixels, licensed under CC BY 4.0
+  https://iconduck.com/emojis/18056/musical-note
+- Wins icon by Benzatine Infotech, licensed under CC BY 4.0
+  https://iconduck.com/icons/190973/medal-gold-winner-2
+- Deaths icon by Streamline, licensed under CC BY 4.0
+  https://iconduck.com/icons/255864/edit-skull-1
+
+-------------------
+wizard_fireball.bmp
+-------------------
+
+by Umplix
+
+CC0
+
+https://opengameart.org/content/fireball-spritesheet
+
+-------------------
+wizard_minirock.bmp
+wizard_rock.bmp
+-------------------
+
+by ludicarts
+
+CC BY 3.0
+
+https://ludicarts.itch.io/volcano-free-platform-tileset
