@@ -1,3 +1,7 @@
+by ColorAlpha
+
+LICENSE:
+
 1. You can use the sounds for commercial and non-commercial projects.
 2. If you use the sounds for a commercial project consider donate something.
 3. Give credit to the asset pack in any case,  even if you edit the sounds.

@@ -31,7 +31,6 @@ ui_success.pcm
 by ColorAlpha
 
 LICENSE:
-
 1. You can use the sounds for commercial and non-commercial projects.
 2. If you use the sounds for a commercial project consider donate something.
 3. Give credit to the asset pack in any case,  even if you edit the sounds.
@@ -49,3 +48,13 @@ CC0
 
 https://opengameart.org/content/breaking-rock
 https://opengameart.org/content/moving-boulder
+
+----------
+stopdj.pcm
+----------
+
+by Played N Faved
+
+CC BY 3.0
+
+https://www.youtube.com/watch?v=S-RgRxCQdvM
