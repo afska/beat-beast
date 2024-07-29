@@ -261,8 +261,13 @@ void SelectionScene::processInput() {
 
   if (bn::keypad::r_pressed()) {
     if (selectedDifficultyLevel < SaveFile::TOTAL_DIFFICULTY_LEVELS - 1) {
-      selectedDifficultyLevel++;
-      updateDifficultyLevel();
+      bool forbidden =
+          selectedDifficultyLevel == SaveFile::TOTAL_DIFFICULTY_LEVELS - 2 &&
+          !SaveFile::data.didFinishGame;
+      if (!forbidden) {
+        selectedDifficultyLevel++;
+        updateDifficultyLevel();
+      }
     }
   }
   if (bn::keypad::l_pressed()) {

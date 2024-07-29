@@ -562,6 +562,7 @@ void BossGlitchOutroScene::updateDialog() {
       if ((int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag) {
         SaveFile::data.didFinishGame = true;
         SaveFile::data.isInsideFinal = false;
+        SaveFile::save();
 
         setNextScreen(GameState::Screen::CREDITS);
         state++;
