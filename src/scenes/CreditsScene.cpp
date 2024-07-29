@@ -5,6 +5,7 @@
 #include "../player/player.h"
 #include "../utils/Math.h"
 #include "bn_blending.h"
+#include "bn_log.h"
 
 #include "bn_regular_bg_items_back_final.h"
 
@@ -21,8 +22,19 @@ const bn::array<bn::string_view, 256> textItems = {
     "Music by |Synthenia|",
     "",
     "",
+    "Special thanks to:",
+    "|Hazematman|",
+    "for help with audio & collisions",
+    "|Phreack|",
+    "for testing & uniting the team",
+    "",
+    "",
     "Made with |Butano|:",
     "github.com/GValiente/butano",
+    "",
+    "",
+    "Check out the |#licenses| folder",
+    "for more details!"
     "",
     "",
     "---|THIRD PARTY LIBRARIES|---"
@@ -75,7 +87,86 @@ const bn::array<bn::string_view, 256> textItems = {
     "Built with",
     "|devkitARM|",
     "devkitpro.org",
-};
+    "",
+    "",
+    "---|THIRD PARTY GRAPHICS|---",
+    "",
+    "",
+    "Start and UI backgrounds",
+    "by |RoyaltyFreeTube|",
+    "youtube.com/@Royaltyfreetube",
+    "",
+    "",
+    "DJ background",
+    "by |BQR|",
+    "the-bqr.itch.io",
+    "",
+    "",
+    "Wizard background",
+    "by |Admurin|",
+    "admurin.itch.io",
+    "",
+    "",
+    "Riffer background",
+    "by |Luis Zuno (@ansimuz)|",
+    "ansimuz.itch.io",
+    "",
+    "",
+    "Fonts",
+    "by |Sparklin Labs by Pixel-boy|",
+    "twitter.com/2pblog1",
+    "",
+    "",
+    "UI symbols",
+    "by |Disven|",
+    "disven.itch.io",
+    "",
+    "",
+    "Stat icons",
+    "by |Streamline|, |Agata Kuczminska|,",
+    "|JoyPixels| and |Benzatine Infotech|",
+    "iconduck.com",
+    "",
+    "",
+    "Retro sprites",
+    "by |knekko|",
+    "",
+    "",
+    "Spark effect",
+    "by |rubberduck|",
+    "",
+    "",
+    "Fireball sprite",
+    "by |Umplix|",
+    "",
+    ""
+    "Rock sprites",
+    "by |ludicarts|",
+    "",
+    "",
+    "Butano logo",
+    "by |Sun Ladder|",
+    "",
+    "",
+    "Modem",
+    "by |Vectorportal.com|",
+    "",
+    "",
+    "---|THIRD PARTY SFX|---",
+    "",
+    "",
+    "UI sounds",
+    "by |ColorAlpha|",
+    "coloralpha.itch.io",
+    "",
+    "",
+    "Rock sounds",
+    "by |themightyglider|",
+    "",
+    "",
+    "DJ stop sound",
+    "by |Played N Faved|",
+    "youtube.com/@playednfaved"};
 
 #define SEPARATOR '|'
 
@@ -95,7 +186,7 @@ CreditsScene::CreditsScene(const GBFS_FILE* _fs)
       textGenerator(common_variable_8x16_sprite_font),
       textGeneratorAccent(common_variable_8x16_sprite_font_accent) {
   background->set_blending_enabled(true);
-  bn::blending::set_fade_alpha(0.75);
+  bn::blending::set_fade_alpha(0);
 }
 
 void CreditsScene::init() {
@@ -103,6 +194,10 @@ void CreditsScene::init() {
 }
 
 void CreditsScene::update() {
+  if (bn::blending::fade_alpha() < 0.75) {
+    bn::blending::set_fade_alpha(bn::blending::fade_alpha() + 0.005);
+  }
+
   scrollLines();
 
   if (wait > 0)
@@ -158,6 +253,9 @@ void CreditsScene::addLine() {
       accent = !accent;
     }
   }
+
+  if (line.size() == 0)
+    return;
 
   textLines.push_back(bn::move(sprites));
 }

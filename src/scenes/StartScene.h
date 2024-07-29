@@ -29,6 +29,7 @@ class StartScene : public Scene {
   bn::fixed videoFrame = 0;
   int lastBeat = 0;
   bn::fixed extraSpeed = 0;
+  bool credits = false;
 
   void updateVideo();
   void processMenuOption(int option);

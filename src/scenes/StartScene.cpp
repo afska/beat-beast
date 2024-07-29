@@ -47,6 +47,8 @@ void StartScene::init() {
   bn::vector<Menu::Option, 10> options;
   options.push_back(Menu::Option{.text = "Play"});
   options.push_back(Menu::Option{.text = "Settings"});
+  if (SaveFile::data.didFinishGame)
+    options.push_back(Menu::Option{.text = "Credits"});
   menu->start(options, false);
 
   if (!PlaybackState.isLooping) {
@@ -59,18 +61,20 @@ void StartScene::update() {
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
 
-  menu->update();
-  settingsMenu->update();
-  if (menu->hasConfirmedOption()) {
-    auto confirmedOption = menu->receiveConfirmedOption();
-    processMenuOption(confirmedOption);
-  }
-  if (settingsMenu->getNextScreen() != GameState::Screen::NO)
-    setNextScreen(settingsMenu->getNextScreen());
-  if (settingsMenu->isClosing()) {
-    menu->clickSound();
-    settingsMenu->stop();
-    init();
+  if (!credits) {
+    menu->update();
+    settingsMenu->update();
+    if (menu->hasConfirmedOption()) {
+      auto confirmedOption = menu->receiveConfirmedOption();
+      processMenuOption(confirmedOption);
+    }
+    if (settingsMenu->getNextScreen() != GameState::Screen::NO)
+      setNextScreen(settingsMenu->getNextScreen());
+    if (settingsMenu->isClosing()) {
+      menu->clickSound();
+      settingsMenu->stop();
+      init();
+    }
   }
 
   const int PER_MINUTE = 71583;            // (1/60000) * 0xffffffff
@@ -79,14 +83,18 @@ void StartScene::update() {
   int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);
   bool isNewBeat = beat != lastBeat;
   lastBeat = beat;
-  if (isNewBeat)
+  if (isNewBeat && !credits)
     extraSpeed = 10;
 
-  if (isNewBeat) {
+  if (isNewBeat && !credits) {
     horse->jump();
   }
 
   updateVideo();
+
+  if (credits && (int)PlaybackState.msecs >= 4050 - SaveFile::data.audioLag) {
+    setNextScreen(GameState::Screen::CREDITS);
+  }
 }
 
 void StartScene::updateVideo() {
@@ -123,6 +131,11 @@ void StartScene::processMenuOption(int option) {
       menu->stop();
       menu->clickSound();
       settingsMenu->start();
+      break;
+    }
+    case 2: {  // Credits
+      player_playGSM("bonus.gsm");
+      credits = true;
       break;
     }
     default: {
