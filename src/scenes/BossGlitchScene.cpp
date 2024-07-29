@@ -564,6 +564,8 @@ void BossGlitchScene::processChart() {
         didFinish = true;
       } else if (event->getType() == EVENT_END) {
         win();
+        SaveFile::data.isInsideFinal = true;
+        SaveFile::save();
         setNextScreen(GameState::Screen::GLITCH_OUTRO);
       }
     }

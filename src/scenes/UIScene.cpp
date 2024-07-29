@@ -263,7 +263,8 @@ void UIScene::showPauseMenu() {
   if (skipScreen != GameState::Screen::NO)
     options.push_back(Menu::Option{.text = "Skip"});
   options.push_back(Menu::Option{.text = "Restart"});
-  options.push_back(Menu::Option{.text = "Quit"});
+  if (canQuit)
+    options.push_back(Menu::Option{.text = "Quit"});
   menu->start(options, true, false, 1.25, 1.5, 1.25);
 }
 
