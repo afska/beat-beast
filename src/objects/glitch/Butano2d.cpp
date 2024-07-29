@@ -9,7 +9,7 @@ Butano2d::Butano2d(bn::fixed_point initialPosition)
   boundingBox.set_dimensions(sprite.dimensions());
   boundingBox.set_position(initialPosition);
 
-  sprite.set_scale(0.1);
+  sprite.set_scale(1);
 }
 
 bool Butano2d::update() {
@@ -26,27 +26,28 @@ bool Butano2d::update() {
     return false;
   }
 
-  if (extraScale > 0.75) {
-    sprite.set_scale(1 + extraScale);
-  } else {
-    if (animationIndex > -1) {
-      auto scale = Math::SCALE_STEPS[animationIndex] + extraScale;
-      if (scale > 2)
-        scale = 2;
-      sprite.set_scale(scale);
-      animationIndex--;
-    } else
-      animationIndex = Math::SCALE_STEPS.size() - 1;
-  }
+  if (animationIndex > -1) {
+    auto scale = 1 + extraScale - (Math::SCALE_STEPS[animationIndex] - 1);
+    if (scale <= 0)
+      scale = 0.05;
+    if (scale > 2)
+      scale = 2;
+    sprite.set_scale(scale);
+    animationIndex--;
+  } else
+    animationIndex = Math::SCALE_STEPS.size() - 1;
 
   return false;
 }
 
-void Butano2d::hurt() {
+bool Butano2d::hurt() {
   setHurtState();
   extraScale += 0.05;
-  if (extraScale > 0.75)
+  if (extraScale > 0.75) {
     setExplodingState();
+    return true;
+  }
+  return false;
 }
 
 void Butano2d::explode() {

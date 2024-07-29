@@ -9,7 +9,7 @@ class Butano2d : public GameObject {
 
   bool update();
   void explode();
-  void hurt();
+  bool hurt();
   bool hasBeenHit() { return isExploding; }
   bn::fixed_point getPosition() { return sprite.position(); }
   void setPosition(bn::fixed_point position) { sprite.set_position(position); }

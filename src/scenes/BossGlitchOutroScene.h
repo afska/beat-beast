@@ -10,6 +10,7 @@
 #include "../objects/ui/Cross.h"
 #include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
+#include "../objects/ui/QuestionMark.h"
 
 class BossGlitchOutroScene : public UIScene {
  public:
@@ -39,6 +40,7 @@ class BossGlitchOutroScene : public UIScene {
   bn::optional<bn::unique_ptr<LifeBar>> enemyLifeBar;
   bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
+  bn::optional<bn::unique_ptr<QuestionMark>> questionMark;
 
   void processInput();
   void processBeats();

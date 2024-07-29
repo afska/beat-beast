@@ -11,6 +11,7 @@
 #include "bn_sprite_items_glitch_icon_head2.h"
 #include "bn_sprite_items_glitch_icon_head3.h"
 #include "bn_sprite_items_glitch_lifebar_butano_fill.h"
+#include "bn_sprite_items_glitch_questionmark.h"
 
 #define HORSE_Y 34
 #define BPM 85
@@ -18,6 +19,7 @@
 #define BEAT_PREDICTION_WINDOW 100
 
 #define SFX_PAUSE "menu_pause.pcm"
+#define SFX_OBJECTIVE "ui_objective.pcm"
 
 BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::GLITCH_OUTRO, _fs),
@@ -157,6 +159,11 @@ void BossGlitchOutroScene::updateSprites() {
   if (enemyLifeBar.has_value())
     enemyLifeBar->get()->update();
 
+  if (questionMark.has_value()) {
+    if (questionMark->get()->update())
+      questionMark.reset();
+  }
+
   // Enemies
   if (cerberus.has_value()) {
     cerberus->get()->update();
@@ -171,8 +178,13 @@ void BossGlitchOutroScene::updateSprites() {
 
     if (!butano2d->hasBeenHit() && bullet->collidesWith(butano2d.get())) {
       collided = true;
-      butano2d->hurt();
+      if (butano2d->hurt()) {
+        if (state == 5)
+          state++;
+      }
       if (enemyLifeBar->get()->setLife(enemyLifeBar->get()->getLife() - 1)) {
+        player_stop();
+        player_sfx_stop();
         BN_ERROR("UY");
       }
     }
@@ -226,6 +238,7 @@ void BossGlitchOutroScene::updateDialog() {
         closeMenu();
 
         if (selection == 0) {
+          player_sfx_play(SFX_OBJECTIVE);
           cerberus->get()->blinkAll();
           didUnlockShooting = true;
           enemyLifeBar = bn::unique_ptr{
@@ -239,6 +252,30 @@ void BossGlitchOutroScene::updateDialog() {
     }
     case 5: {
       break;
+    }
+    case 6: {
+      closeText();
+      cerberus->get()->blinkAll();
+      cerberus->get()->getHead3()->talk();
+      setDialogIcon(bn::sprite_items::glitch_icon_head3);
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Wait! You can still |talk with us|.");
+      strs.push_back("Please come here!");
+      write(strs);
+
+      state++;
+      break;
+    }
+    case 7: {
+      if (finishedWriting()) {
+        questionMark.reset();
+        questionMark = bn::unique_ptr{new QuestionMark(
+            bn::sprite_items::glitch_questionmark,
+            bn::fixed_point{-93, horse->getCenteredPosition().y() - 30})};
+        player_sfx_play(SFX_OBJECTIVE);
+        state++;
+      }
     }
     // case 2: {
     //   closeText();
