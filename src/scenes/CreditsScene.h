@@ -15,8 +15,11 @@ class CreditsScene : public Scene {
   bn::vector<bn::vector<bn::sprite_ptr, 64>, 64> textLines;
   bn::sprite_text_generator textGenerator;
   bn::sprite_text_generator textGeneratorAccent;
-  int wait = 30;
+  int wait = 0;
   int index = -1;
+
+  void scrollLines();
+  void addLine();
 };
 
 #endif  // CREDITS_SCENE_H
