@@ -209,10 +209,11 @@ void BossDJScene::processChart() {
                        bn::sprite_items::dj_bad_bullet, 1, 1, 1, 2)});
       }
       if (IS_EVENT_BULLET_SLOW(type)) {
+        // lol, the "slow" bullets are faster now
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
-                       bn::sprite_items::dj_bad_bullet, 1, 1, 1, 2)});
+                       bn::sprite_items::dj_bad_bullet, 1, 1, 2, 3)});
       }
 
       // Turntable throw
