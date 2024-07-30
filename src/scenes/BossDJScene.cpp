@@ -50,7 +50,7 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
 #define IS_EVENT_FLOATING_VINYL_RIGHT_FROM_TOP(TYPE) IS_EVENT(TYPE, 2, 7)
 
 #define IS_EVENT_BULLET(TYPE) IS_EVENT(TYPE, 3, 1)
-#define IS_EVENT_BULLET_SLOW(TYPE) IS_EVENT(TYPE, 3, 2)
+#define IS_EVENT_BULLET_FAST(TYPE) IS_EVENT(TYPE, 3, 2)
 
 #define IS_EVENT_TURNTABLE_THROW_TOP(TYPE) IS_EVENT(TYPE, 4, 1)
 #define IS_EVENT_TURNTABLE_THROW_BOTTOM(TYPE) IS_EVENT(TYPE, 4, 2)
@@ -208,8 +208,7 @@ void BossDJScene::processChart() {
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 1.5),
                        bn::sprite_items::dj_bad_bullet, 1, 1, 1, 2)});
       }
-      if (IS_EVENT_BULLET_SLOW(type)) {
-        // lol, the "slow" bullets are faster now
+      if (IS_EVENT_BULLET_FAST(type)) {
         octopus->attack();
         enemyBullets.push_back(bn::unique_ptr{
             new Bullet(octopus->getShootingPoint(), bn::fixed_point(0, 0.5),
