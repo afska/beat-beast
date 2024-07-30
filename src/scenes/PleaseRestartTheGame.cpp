@@ -539,7 +539,8 @@ void BossGlitchOutroScene::updateDialog() {
     }
     case 48: {
       bn::vector<bn::string<64>, 2> strs;
-      player_playGSM("bonus.gsm");
+      player_playGSM("calibrate_test.gsm");
+      player_setLoop(true);
       pauseVideo = false;
       bounce = false;
       strs.push_back("I guess I'm in charge now!");
@@ -549,16 +550,18 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 49: {
-      if ((int)PlaybackState.msecs >= FINAL_SONG_LOOP)
-        player_setCursor(0);
       break;
     }
     case 50: {
       closeText();
+      player_setLoop(false);
       state++;
       break;
     }
     case 51: {
+      if (PlaybackState.hasFinished)
+        player_playGSM("bonus.gsm");
+
       if ((int)PlaybackState.msecs - SaveFile::data.audioLag >=
           FINAL_SONG_LOOP) {
         SaveFile::data.didFinishGame = true;
