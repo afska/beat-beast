@@ -458,8 +458,8 @@ void BossGlitchOutroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Alright. If things get boring, I'll");
-      strs.push_back("consider again |destroying the world|.");
+      strs.push_back("Great. If things get boring, I'll once");
+      strs.push_back("again consider |destroying the world|.");
       write(strs);
 
       state++;
