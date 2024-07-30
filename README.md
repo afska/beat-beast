@@ -5,7 +5,7 @@
 This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 
 ![start](https://i.imgur.com/o9TWOug.gif)
-![joaco](https://i.imgur.com/tObTlpi.png)
+![tutorial](https://i.imgur.com/AIsOJag.gif)
 ![selection](https://i.imgur.com/0o2fh3v.gif)
 ![dj](https://i.imgur.com/jUxmP5W.gif)
 ![wizard](https://i.imgur.com/b5fExn1.gif)
