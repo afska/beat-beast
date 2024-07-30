@@ -11,7 +11,7 @@
 #define SOUND_CALIBRATE_TEST "calibrate_test.gsm"
 #define HORSE_Y 34
 
-const unsigned TARGET_BEAT_MS = 2000;
+const unsigned TARGET_BEAT_MS[4] = {2000, 2500, 3000, 3500};
 
 CalibrationScene::CalibrationScene(const GBFS_FILE* _fs)
     : UIScene(GameState::Screen::CALIBRATION, _fs),
@@ -32,10 +32,15 @@ void CalibrationScene::update() {
 
   if (state == MEASURING) {
     if (PlaybackState.hasFinished) {
-      onError(CalibrationError::DIDNT_PRESS);
+      if (samples == 0)
+        onError(CalibrationError::DIDNT_PRESS);
+      else if (samples != 4)
+        onError(CalibrationError::NOT_4_SAMPLES);
+      else
+        finish();
     } else {
       if (bn::keypad::a_pressed())
-        finish();
+        sample();
     }
   } else if (state == TESTING) {
     const int BPM = 125;
@@ -173,6 +178,16 @@ void CalibrationScene::onError(CalibrationError error) {
       write(strs);
       break;
     }
+    case CalibrationError::NOT_4_SAMPLES: {
+      state = ERROR;
+
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("No!! You pressed |" + bn::to_string<64>(samples) +
+                     "| times instead");
+      strs.push_back("of |4|. Do you want to |retry|?");
+      write(strs);
+      break;
+    }
     case CalibrationError::TOO_EARLY: {
       state = ERROR;
 
@@ -200,6 +215,7 @@ void CalibrationScene::showIntro() {
   bullets.clear();
   player_stop();
   measuredLag = 0;
+  samples = 0;
   state = INTRO;
 
   closeMenu();
@@ -213,27 +229,37 @@ void CalibrationScene::showInstructions() {
   state = INSTRUCTIONS;
 
   bn::vector<bn::string<64>, 2> strs;
-  strs.push_back("You'll hear 5 beats.");
-  strs.push_back("Press A on the |5th beat|.");
+  strs.push_back("Wait |4 beats|. Then,");
+  strs.push_back("press A in the next |4 beats|!");
   write(strs, true);
 }
 
 void CalibrationScene::start() {
   state = MEASURING;
 
+  measuredLag = 0;
+  samples = 0;
+
   bullets.clear();
   closeMenu(false);
   bn::vector<bn::string<64>, 2> strs;
-  strs.push_back("OK, press A on the |5th beat|!");
+  strs.push_back("OK, |wait 4 beats|.");
+  strs.push_back("Then, |press A in the next 4 beats|.");
   write(strs);
 
   player_playGSM(SOUND_CALIBRATE);
 }
 
+void CalibrationScene::sample() {
+  int measure = PlaybackState.msecs - TARGET_BEAT_MS[samples];
+  measuredLag += measure;
+  samples++;
+}
+
 void CalibrationScene::finish() {
   state = REVIEWING;
 
-  measuredLag = PlaybackState.msecs - TARGET_BEAT_MS;
+  measuredLag = measuredLag / 4;
 
   if (measuredLag < 0) {
     onError(CalibrationError::TOO_EARLY);

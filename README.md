@@ -15,7 +15,7 @@ This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 
 The game uses [a fork](https://github.com/GValiente/butano/compare/17.7.0...afska:butano:custom_audio) of the **Butano** engine (created from its `v17.7.0` version) that disables its audio player, so we can use [gsmplayer-gba](https://github.com/pinobatch/gsmplayer-gba) for UI music and a custom player that plays PCM audio for main gameplay. The forked engine code is included here for simplicity, so users only have to clone this repository in order to compile the game.
 
-The ROM file submitted to the jam was compiled using the latest devkitARM version available at the time (GCC `14.1.0`). It generates a _32760 KB_ file, very close to the _32 MB_ limit, so future devkitARM versions might not compile if they generate bigger code.
+The ROM file submitted to the jam was compiled using the latest devkitARM version available at the time (GCC `14.1.0`). It generates a file that is very close to the _32 MB_ limit, so future devkitARM versions might not compile if they generate bigger code.
 
 ```bash
 # This assumes WSL2 on Windows, but it should be similar in other *nix environments.

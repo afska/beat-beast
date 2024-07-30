@@ -22,11 +22,12 @@ class CalibrationScene : public UIScene {
     TESTING,
     ERROR
   };
-  enum CalibrationError { TOO_EARLY, TOO_MUCH, DIDNT_PRESS };
+  enum CalibrationError { DIDNT_PRESS, NOT_4_SAMPLES, TOO_EARLY, TOO_MUCH };
 
   bn::unique_ptr<Horse> horse;
   int lastBeat = -1;
   int measuredLag = 0;
+  int samples = 0;
   CalibrationState state = INTRO;
   bn::vector<bn::unique_ptr<Bullet>, 32> bullets;
 
@@ -38,6 +39,7 @@ class CalibrationScene : public UIScene {
   void showIntro();
   void showInstructions();
   void start();
+  void sample();
   void finish();
   void test();
   void saveAndGoToGame();
