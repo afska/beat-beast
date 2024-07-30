@@ -15,12 +15,15 @@ SettingsMenu::SettingsMenu(bn::sprite_text_generator _normalTextGenerator,
 
 void SettingsMenu::start(unsigned selectedOption) {
   bn::vector<Menu::Option, 10> options;
+  auto audioLag = bn::string<32>(SaveFile::data.audioLag < 100 ? "0" : "") +
+                  bn::string<32>(SaveFile::data.audioLag < 10 ? "0" : "") +
+                  bn::to_string<32>(SaveFile::data.audioLag);
   auto rumbleX = bn::string<32>(SaveFile::data.rumble ? "X" : " ");
   auto bgBlinkX = bn::string<32>(SaveFile::data.bgBlink ? "X" : " ");
   auto intensityN = bn::to_string<32>(SaveFile::data.intensity);
   auto contrastN = bn::to_string<32>(SaveFile::data.contrast);
 
-  options.push_back(Menu::Option{.text = "Calibrate sync"});
+  options.push_back(Menu::Option{.text = "Latency  <" + audioLag + ">"});
   options.push_back(Menu::Option{.text = "Rumble     <" + rumbleX + ">"});
   options.push_back(Menu::Option{.text = "BG Blink   <" + bgBlinkX + ">"});
   options.push_back(Menu::Option{.text = "Intensity  <" + intensityN + ">"});
