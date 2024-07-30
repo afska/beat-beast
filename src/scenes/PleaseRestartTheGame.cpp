@@ -559,11 +559,14 @@ void BossGlitchOutroScene::updateDialog() {
       break;
     }
     case 51: {
-      if (PlaybackState.hasFinished)
+      if (!didStartBonusSong && PlaybackState.hasFinished) {
         player_playGSM("bonus.gsm");
+        didStartBonusSong = true;
+      }
 
-      if ((int)PlaybackState.msecs - SaveFile::data.audioLag >=
-          FINAL_SONG_LOOP) {
+      if (didStartBonusSong &&
+          (int)PlaybackState.msecs - SaveFile::data.audioLag >=
+              FINAL_SONG_LOOP) {
         SaveFile::data.didFinishGame = true;
         SaveFile::data.isInsideFinal = false;
         SaveFile::save();
