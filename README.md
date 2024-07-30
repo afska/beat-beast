@@ -26,12 +26,12 @@ sudo dkp-pacman -S gba-dev
 # [!] manual: restart shell
 
 # Clone the repository
-git clone https://github.com/afska/synthbattle
-cd synthbattle/
+git clone https://github.com/afska/beat-beast
+cd beat-beast/
 
 # Compile
 make -j$(nproc)
-# (this will generate a synthbattle.out.gba ROM file)
+# (this will generate a beat-beast.out.gba ROM file)
 
 # --- optional ---
 # to update boss scripts:
