@@ -11,6 +11,12 @@ This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 ![wizard](https://i.imgur.com/b5fExn1.gif)
 ![riffer](https://i.imgur.com/e6Rv1Kl.gif)
 
+Help _Joaquín_ shoot his way out of this rhythmic world!
+
+Experience 15 minutes of intense fun, and even more if rhythm games usually have you off beat. Featuring an amazing 3D title screen, powered by an impressive stack of 150 BMP files pushing 3.66 triangles per second! Enjoy menus accompanied by Good Sounding Music (GSM) and dive into main gameplay with Perfectly Crafted Melodies (PCM)—it's a sound blast!
+
+Made with [Butano](https://github.com/GValiente/butano). Check out the `#licenses` folder for details!
+
 ## Install
 
 The game uses [a fork](https://github.com/GValiente/butano/compare/17.7.0...afska:butano:custom_audio) of the **Butano** engine (created from its `v17.7.0` version) that disables its audio player, so we can use [gsmplayer-gba](https://github.com/pinobatch/gsmplayer-gba) for UI music and a custom player that plays PCM audio for main gameplay. The forked engine code is included here for simplicity, so users only have to clone this repository in order to compile the game.
