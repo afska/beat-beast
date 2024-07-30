@@ -32,6 +32,8 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
     62, 125, 162};
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
     MOVEMENT_TIME_MULTIPLIER = {2, 2, 1};
+const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
+    FORCE_BULLET_BLACK_HOLE = {5, 5, 3.5};
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1
@@ -662,8 +664,11 @@ void BossWizardScene::updateSprites() {
         if (distanceX > 100)
           distanceX = 100;
         bn::fixed extraForce = (100 - distanceX) / 10;
-        blackHole->get()->setTargetPosition(targetPosition.value() +
-                                            bn::fixed_point(5 + extraForce, 0));
+
+        auto force =
+            FORCE_BULLET_BLACK_HOLE[SaveFile::data.selectedDifficultyLevel];
+        blackHole->get()->setTargetPosition(
+            targetPosition.value() + bn::fixed_point(force + extraForce, 0));
         collided = true;
       }
     }
