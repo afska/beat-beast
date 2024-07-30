@@ -70,7 +70,7 @@ void Horse::update() {
 
   if (hurtCooldown > 0) {
     hurtCooldown--;
-    if (!isHurt())
+    if (!isHurt() && !isGhost)
       mainSprite.set_visible(hurtCooldown % 2 == 0);
   }
 
@@ -277,7 +277,8 @@ void Horse::setHurtState() {
 }
 
 void Horse::resetAnimations() {
-  mainSprite.set_visible(true);
+  if (!isGhost)
+    mainSprite.set_visible(true);
   if (!customScale) {
     mainSprite.set_scale(1.0);
     mainSprite.set_rotation_angle(0.0);

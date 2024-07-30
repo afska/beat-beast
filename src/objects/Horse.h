@@ -12,6 +12,7 @@ class Horse : public TopLeftGameObject {
   bool canShoot = false;
   bool fakeJump = true;
   bool customScale = false;
+  bool isGhost = false;
   bn::fixed gunOffsetX = 0;
   bn::fixed gunOffsetY = 0;
 

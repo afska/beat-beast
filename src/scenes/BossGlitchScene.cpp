@@ -132,6 +132,7 @@ BossGlitchScene::BossGlitchScene(const GBFS_FILE* _fs)
       255 /*0b0000000000000000000011111111*/;
 
   ghostHorse = bn::unique_ptr{new Horse({HORSE_X, HORSE_Y})};
+  ghostHorse->get()->isGhost = true;
   ghostHorse->get()->showGun = false;
   ghostHorse->get()->setPosition({HORSE_X, HORSE_Y}, true);
   ghostHorse->get()->getMainSprite().set_mosaic_enabled(true);
