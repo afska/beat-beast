@@ -43,7 +43,7 @@ void CalibrationScene::update() {
         sample();
     }
   } else if (state == TESTING) {
-    const int BPM = 125;
+    const int BPM = 133;
     const int PER_MINUTE = 71583;  // (1/60000) * 0xffffffff
     int msecs = PlaybackState.msecs - measuredLag;
     int beat = Math::fastDiv(msecs * BPM, PER_MINUTE);

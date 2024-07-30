@@ -539,7 +539,7 @@ void BossGlitchOutroScene::updateDialog() {
     }
     case 48: {
       bn::vector<bn::string<64>, 2> strs;
-      player_playGSM("calibrate_test.gsm");
+      player_playGSM("bonusloop.gsm");
       player_setLoop(true);
       pauseVideo = false;
       bounce = false;
