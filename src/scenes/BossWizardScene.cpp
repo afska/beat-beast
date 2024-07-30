@@ -30,6 +30,8 @@
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
     62, 125, 162};
+const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
+    MOVEMENT_TIME_MULTIPLIER = {2, 2, 1};
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1
@@ -237,24 +239,22 @@ void BossWizardScene::processChart() {
       auto type = event->getType();
 
       // Movement
+      auto movementTime =
+          (bn::fixed(chartReader->getBeatDurationMs()) *
+           MOVEMENT_TIME_MULTIPLIER[SaveFile::data.selectedDifficultyLevel])
+              .floor_integer();
       if (IS_EVENT_MOVE_COL1(type))
-        wizard->get()->setTargetPosition({-50, -40},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({-50, -40}, movementTime);
       if (IS_EVENT_MOVE_COL2(type))
-        wizard->get()->setTargetPosition({0, -50},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({0, -50}, movementTime);
       if (IS_EVENT_MOVE_COL3(type))
-        wizard->get()->setTargetPosition({80, -40},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({80, -40}, movementTime);
       if (IS_EVENT_MOVE_BOTTOMRIGHT(type))
-        wizard->get()->setTargetPosition({80, 60},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({80, 60}, movementTime);
       if (IS_EVENT_MOVE_BOTTOMLEFT(type))
-        wizard->get()->setTargetPosition({-50, 60},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({-50, 60}, movementTime);
       if (IS_EVENT_MOVE_RIGHT(type))
-        wizard->get()->setTargetPosition({80, 0},
-                                         chartReader->getBeatDurationMs());
+        wizard->get()->setTargetPosition({80, 0}, movementTime);
       if (IS_EVENT_MOVE_OFFSCREEN(type))
         wizard->get()->setTargetPosition({200, -70},
                                          chartReader->getBeatDurationMs());
@@ -662,8 +662,8 @@ void BossWizardScene::updateSprites() {
         if (distanceX > 100)
           distanceX = 100;
         bn::fixed extraForce = (100 - distanceX) / 10;
-        blackHole->get()->setTargetPosition(
-            targetPosition.value() + bn::fixed_point(4.5 + extraForce, 0));
+        blackHole->get()->setTargetPosition(targetPosition.value() +
+                                            bn::fixed_point(5 + extraForce, 0));
         collided = true;
       }
     }
