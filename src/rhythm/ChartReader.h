@@ -1,8 +1,9 @@
 #ifndef CHART_READER_H
 #define CHART_READER_H
 
-#include "bn_vector.h"
 #include "models/Song.h"
+
+#include "bn_vector.h"
 
 #define MAX_PENDING_EVENTS 64
 

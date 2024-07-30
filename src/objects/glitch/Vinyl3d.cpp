@@ -1,4 +1,5 @@
 #include "Vinyl3d.h"
+
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_glitch_vinyl.h"

@@ -1,8 +1,9 @@
 #ifndef MINI_ROCK_H
 #define MINI_ROCK_H
 
-#include "../../rhythm/models/Event.h"
 #include "../GameObject.h"
+
+#include "../../rhythm/models/Event.h"
 
 class MiniRock : public GameObject {
  public:

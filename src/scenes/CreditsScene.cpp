@@ -4,9 +4,9 @@
 #include "../assets/fonts/common_variable_8x16_sprite_font_accent.h"
 #include "../player/player.h"
 #include "../utils/Math.h"
+
 #include "bn_blending.h"
 #include "bn_keypad.h"
-
 #include "bn_regular_bg_items_back_final.h"
 
 #define WAIT 28

@@ -1,6 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "../savefile/GameState.h"
+#include "../utils/gbfs/gbfs.h"
+
 #include "bn_affine_bg_ptr.h"
 #include "bn_camera_ptr.h"
 #include "bn_display.h"
@@ -15,10 +18,6 @@
 #include "bn_string.h"
 #include "bn_unique_ptr.h"
 #include "bn_vector.h"
-
-#include "../savefile/GameState.h"
-
-#include "../utils/gbfs/gbfs.h"
 
 class Scene {
  public:

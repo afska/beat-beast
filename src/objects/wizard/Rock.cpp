@@ -1,4 +1,5 @@
 #include "Rock.h"
+
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_wizard_rock.h"

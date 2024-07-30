@@ -2,6 +2,7 @@
 #define OCTOPUS_H
 
 #include "../GameObject.h"
+
 #include "Tentacle.h"
 #include "Turntable.h"
 

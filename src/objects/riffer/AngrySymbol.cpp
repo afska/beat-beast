@@ -1,7 +1,6 @@
 #include "AngrySymbol.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_riffer_angrysymbols.h"

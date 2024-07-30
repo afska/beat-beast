@@ -1,8 +1,9 @@
 #ifndef VINYL_3D_H
 #define VINYL_3D_H
 
-#include "../../rhythm/models/Event.h"
 #include "Attack3d.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Vinyl3d : public Attack3d {
  public:

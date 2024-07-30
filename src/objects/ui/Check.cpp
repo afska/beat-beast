@@ -1,7 +1,6 @@
 #include "Check.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_ui_good.h"

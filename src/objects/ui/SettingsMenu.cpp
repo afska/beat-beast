@@ -1,6 +1,7 @@
 #include "SettingsMenu.h"
 
 #include "../../savefile/SaveFile.h"
+
 #include "bn_bg_palettes.h"
 #include "bn_sprite_palettes.h"
 

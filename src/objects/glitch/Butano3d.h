@@ -1,8 +1,9 @@
 #ifndef BUTANO_3D_H
 #define BUTANO_3D_H
 
-#include "../../rhythm/models/Event.h"
 #include "Attack3d.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Butano3d : public Attack3d {
  public:

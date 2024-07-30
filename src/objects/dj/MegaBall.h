@@ -1,8 +1,9 @@
 #ifndef MEGA_BALL_H
 #define MEGA_BALL_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class MegaBall : public RhythmicBullet {
  public:

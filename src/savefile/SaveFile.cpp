@@ -1,9 +1,10 @@
 #include "SaveFile.h"
 
-#include "../../../butano/butano/hw/include/bn_hw_core.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../utils/Rumble.h"
+
+#include "../../../butano/butano/hw/include/bn_hw_core.h"
 
 BN_DATA_EWRAM SaveFile::SaveFileData SaveFile::data;
 

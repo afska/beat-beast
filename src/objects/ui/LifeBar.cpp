@@ -1,7 +1,6 @@
 #include "LifeBar.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 #define MAX_DIFFERENT_VALUES 20

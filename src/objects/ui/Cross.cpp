@@ -1,7 +1,6 @@
 #include "Cross.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 const bn::array<bn::fixed, 14> yAnimation = {-1, -2, -3, -4, -3, -2, -1,

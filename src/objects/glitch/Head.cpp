@@ -1,7 +1,6 @@
 #include "Head.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 Head::Head(bn::sprite_item _spriteItem,

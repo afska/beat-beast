@@ -2,6 +2,7 @@
 #define LIFE_BAR_H
 
 #include "../TopLeftGameObject.h"
+
 #include "LoopingCross.h"
 
 class LifeBar : public TopLeftGameObject {

@@ -1,8 +1,9 @@
 #ifndef FLYING_DRAGON_H
 #define FLYING_DRAGON_H
 
-#include "../../rhythm/models/Event.h"
 #include "../GameObject.h"
+
+#include "../../rhythm/models/Event.h"
 
 class FlyingDragon : public GameObject {
  public:

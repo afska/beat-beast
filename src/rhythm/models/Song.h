@@ -2,13 +2,13 @@
 #define SONG_H
 
 #include <tonc_core.h>
-#include "bn_string.h"
 
+#include "../../utils/gbfs/gbfs.h"
 #include "Chart.h"
 #include "Event.h"
 #include "parse.h"
 
-#include "../../utils/gbfs/gbfs.h"
+#include "bn_string.h"
 
 typedef struct {
   u8 bpm;

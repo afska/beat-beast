@@ -8,6 +8,7 @@
 #include "../objects/dj/MegaBall.h"
 #include "../objects/dj/Octopus.h"
 #include "../objects/dj/Vinyl.h"
+
 #include "bn_regular_bg_position_hbe_ptr.h"
 
 class BossDJScene : public BossScene {

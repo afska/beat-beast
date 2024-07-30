@@ -1,8 +1,9 @@
 #ifndef ROCK_H
 #define ROCK_H
 
-#include "../../rhythm/models/Event.h"
 #include "../GameObject.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Rock : public GameObject {
  public:

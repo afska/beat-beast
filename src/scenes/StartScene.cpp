@@ -6,6 +6,7 @@
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Math.h"
+
 #include "bn_blending.h"
 #include "bn_sprite_items_start_logo1.h"
 #include "bn_sprite_items_start_logo2.h"

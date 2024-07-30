@@ -1,8 +1,9 @@
 #ifndef METEORITE_H
 #define METEORITE_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Meteorite : public RhythmicBullet {
  public:

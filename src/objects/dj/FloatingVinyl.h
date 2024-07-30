@@ -1,8 +1,9 @@
 #ifndef FLOATING_VINYL_H
 #define FLOATING_VINYL_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class FloatingVinyl : public RhythmicBullet {
  public:

@@ -1,8 +1,9 @@
 #ifndef FIRE_BALL_H
 #define FIRE_BALL_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class FireBall : public RhythmicBullet {
  public:

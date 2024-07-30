@@ -1,4 +1,5 @@
 #include "Meteorite.h"
+
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_wizard_meteorite.h"

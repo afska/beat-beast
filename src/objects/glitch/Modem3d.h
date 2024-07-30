@@ -1,8 +1,9 @@
 #ifndef MODEM_3D_H
 #define MODEM_3D_H
 
-#include "../../rhythm/models/Event.h"
 #include "Attack3d.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Modem3d : public Attack3d {
  public:

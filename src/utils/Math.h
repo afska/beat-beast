@@ -2,6 +2,7 @@
 #define MATH_UTILS_H
 
 #include <stdint.h>
+
 #include "bn_array.h"
 #include "bn_fixed.h"
 #include "bn_fixed_point.h"

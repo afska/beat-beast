@@ -1,8 +1,9 @@
 #ifndef GAME_NOTE_H
 #define GAME_NOTE_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class GameNote : public RhythmicBullet {
  public:

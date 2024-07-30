@@ -2,6 +2,7 @@
 #define ALLY_DRAGON_H
 
 #include "../GameObject.h"
+
 #include "../Horse.h"
 
 class AllyDragon : public GameObject {

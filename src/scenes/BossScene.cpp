@@ -1,12 +1,11 @@
 #include "BossScene.h"
 
 #include "../assets/SpriteProvider.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 #include "../player/player.h"
 #include "../savefile/SaveFile.h"
 #include "../utils/Rumble.h"
-
-#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
-#include "../assets/fonts/common_fixed_8x16_sprite_font_accent.h"
 
 #include "bn_bgs_mosaic.h"
 #include "bn_blending.h"

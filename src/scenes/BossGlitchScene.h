@@ -14,6 +14,7 @@
 #include "../objects/glitch/Vinyl3d.h"
 #include "../objects/riffer/PlatformFire.h"
 #include "../objects/wizard/Lightning.h"
+
 #include "bn_regular_bg_position_hbe_ptr.h"
 
 class BossGlitchScene : public BossScene {

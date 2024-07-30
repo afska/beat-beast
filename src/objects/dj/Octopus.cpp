@@ -1,6 +1,7 @@
 #include "Octopus.h"
 
 #include "../../utils/Math.h"
+
 #include "bn_sprite_items_dj_octopus.h"
 
 #define HITBOX_SIZE 48

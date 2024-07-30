@@ -1,4 +1,5 @@
 #include "MegaBall.h"
+
 #include "../../assets/SpriteProvider.h"
 #include "../../utils/Math.h"
 

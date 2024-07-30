@@ -1,4 +1,5 @@
 #include "Obstacle.h"
+
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_ui_obstacle.h"

@@ -10,7 +10,6 @@
 
 #include "bn_blending.h"
 #include "bn_keypad.h"
-
 #include "bn_sprite_items_selection_bigquestion.h"
 #include "bn_sprite_items_selection_icon_dj.h"
 #include "bn_sprite_items_selection_icon_horse.h"

@@ -1,8 +1,9 @@
 #ifndef PORTAL_H
 #define PORTAL_H
 
-#include "../../rhythm/models/Event.h"
 #include "../GameObject.h"
+
+#include "../../rhythm/models/Event.h"
 #include "../Horse.h"
 
 class Portal : public GameObject {

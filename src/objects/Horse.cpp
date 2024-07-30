@@ -1,8 +1,7 @@
 #include "Horse.h"
 
-#include "../utils/Math.h"
-
 #include "../assets/SpriteProvider.h"
+#include "../utils/Math.h"
 
 #define HITBOX_Y 8
 

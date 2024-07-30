@@ -1,4 +1,5 @@
 #include "CircularFireBall.h"
+
 #include "../../assets/SpriteProvider.h"
 #include "../../utils/Math.h"
 

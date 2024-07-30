@@ -1,9 +1,9 @@
 #include "Menu.h"
 
 #include "../../assets/SpriteProvider.h"
-#include "bn_keypad.h"
-
 #include "../../player/player_sfx.h"
+
+#include "bn_keypad.h"
 
 #define SFX_MOVE "menu_move.pcm"
 #define SFX_CLICK "menu_click.pcm"

@@ -1,8 +1,9 @@
 #ifndef MEGA_BALL_3D_H
 #define MEGA_BALL_3D_H
 
-#include "../../rhythm/models/Event.h"
 #include "Attack3d.h"
+
+#include "../../rhythm/models/Event.h"
 
 class MegaBall3d : public Attack3d {
  public:

@@ -1,4 +1,5 @@
 #include "GameNote.h"
+
 #include "../../utils/Math.h"
 
 #include "bn_sprite_items_riffer_note1.h"

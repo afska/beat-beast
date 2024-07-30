@@ -1,7 +1,6 @@
 #include "LoopingCross.h"
 
 #include "../../assets/SpriteProvider.h"
-
 #include "../../utils/Math.h"
 
 LoopingCross::LoopingCross(bn::fixed_point initialPosition)

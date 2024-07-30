@@ -1,8 +1,9 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include "../../rhythm/models/Event.h"
 #include "../RhythmicBullet.h"
+
+#include "../../rhythm/models/Event.h"
 
 class Wave : public RhythmicBullet {
  public:
