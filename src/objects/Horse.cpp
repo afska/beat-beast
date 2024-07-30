@@ -68,6 +68,12 @@ void Horse::update() {
     }
   }
 
+  if (hurtCooldown > 0) {
+    hurtCooldown--;
+    if (!isHurt())
+      mainSprite.set_visible(hurtCooldown % 2 == 0);
+  }
+
   setPosition(topLeftPosition, isMoving);
 }
 
@@ -267,9 +273,11 @@ void Horse::setHurtState() {
       mainSprite, 2, SpriteProvider::horse().tiles_item(), 13, 10, 13, 10, 13,
       10, 13, 10);
   hurtFrame = 0;
+  hurtCooldown = 60;
 }
 
 void Horse::resetAnimations() {
+  mainSprite.set_visible(true);
   if (!customScale) {
     mainSprite.set_scale(1.0);
     mainSprite.set_rotation_angle(0.0);

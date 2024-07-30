@@ -30,6 +30,7 @@ class Horse : public TopLeftGameObject {
   bool isBusy() { return isJumping() || isHurt(); }
   bool isJumping() { return jumpingAnimation.has_value(); }
   bool isHurt() { return hurtAnimation.has_value(); }
+  bool canBeHit() { return hurtCooldown == 0; }
   bool getIsMoving() { return isMoving; }
   bn::fixed_point getShootingPoint();
   bn::fixed_point getShootingDirection();
@@ -74,6 +75,7 @@ class Horse : public TopLeftGameObject {
   int jumpFrame = 0;
   int hurtFrame = 0;
   int shootCooldown = 0;
+  int hurtCooldown = 0;
 
   void setIsMoving(bool isNowMoving);
 

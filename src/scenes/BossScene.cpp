@@ -89,7 +89,7 @@ void BossScene::addExplosion(bn::fixed_point position) {
 }
 
 void BossScene::sufferDamage(bn::fixed amount) {
-  if (horse->isHurt())
+  if (!horse->canBeHit())
     return;  // (you're invincible while displaying the hurt animation)
   if (didFinish)
     return;
