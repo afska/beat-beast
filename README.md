@@ -4,12 +4,12 @@
 
 This is our entry for the [GBA Jam 2024](https://itch.io/jam/gbajam24)!
 
-![start](gifs/start.gif)
-![joaco](gifs/joaco.png)
-![selection](gifs/selection.gif)
-![dj](gifs/dj.gif)
-![wizard](gifs/wizard.gif)
-![riffer](gifs/riffer.gif)
+![start](https://i.imgur.com/o9TWOug.gif)
+![joaco](https://i.imgur.com/tObTlpi.png)
+![selection](https://i.imgur.com/0o2fh3v.gif)
+![dj](https://i.imgur.com/jUxmP5W.gif)
+![wizard](https://i.imgur.com/b5fExn1.gif)
+![riffer](https://i.imgur.com/e6Rv1Kl.gif)
 
 ## Install
 
