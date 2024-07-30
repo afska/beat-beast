@@ -20,8 +20,7 @@
 #include "bn_sprite_palettes.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    85, 175, 500};
-#define LIFE_BOSS 175
+    150, 175, 300};
 #define GRAVITY 0.75
 #define JUMP_FORCE 7
 
@@ -96,11 +95,11 @@ BossRifferScene::BossRifferScene(const GBFS_FILE* _fs)
     : BossScene(GameState::Screen::RIFFER,
                 "riffer",
                 bn::unique_ptr{new Horse({HORSE_INITIAL_X, HORSE_INITIAL_Y})},
-                bn::unique_ptr{
-                    new LifeBar({184, 0},
-                                LIFE_BOSS,
-                                bn::sprite_items::riffer_icon_riffer,
-                                bn::sprite_items::riffer_lifebar_riffer_fill)},
+                bn::unique_ptr{new LifeBar(
+                    {184, 0},
+                    LIFE_BOSS[SaveFile::data.selectedDifficultyLevel],
+                    bn::sprite_items::riffer_icon_riffer,
+                    bn::sprite_items::riffer_lifebar_riffer_fill)},
                 _fs),
       camera(bn::camera_ptr::create(0, 0)),
       riffer(bn::unique_ptr{new Riffer({314, 78})}) {
