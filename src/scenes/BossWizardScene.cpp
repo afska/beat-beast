@@ -663,7 +663,7 @@ void BossWizardScene::updateSprites() {
           distanceX = 100;
         bn::fixed extraForce = (100 - distanceX) / 10;
         blackHole->get()->setTargetPosition(
-            targetPosition.value() + bn::fixed_point(3.5 + extraForce, 0));
+            targetPosition.value() + bn::fixed_point(4.5 + extraForce, 0));
         collided = true;
       }
     }
