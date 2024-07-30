@@ -7,9 +7,9 @@
 #define HITBOX_Y 8
 
 const bn::fixed SCREEN_LIMIT_X = 10;
-const bn::array<bn::fixed, 18> jumpYOffset = {-3,  -7,  -10, -13, -15, -13,
-                                              -12, -11, -10, -9,  -8,  -7,
-                                              -6,  -5,  -4,  -3,  -2,  -1};
+const bn::array<bn::fixed, 18> JUMP_Y_OFFSET = {-3,  -7,  -10, -13, -15, -13,
+                                                -12, -11, -10, -9,  -8,  -7,
+                                                -6,  -5,  -4,  -3,  -2,  -1};
 
 const unsigned GUN_OFFSET[2] = {35, 33};
 const int GUN_PIVOT_OFFSET[2] = {-12, -1};
@@ -202,8 +202,8 @@ void Horse::updateAnimations() {
     if (jumpingAnimation->done())
       setIdleOrRunningState();
 
-    if (jumpFrame < jumpYOffset.size() && fakeJump)
-      topLeftPosition.set_y(topLeftPosition.y() + jumpYOffset[jumpFrame] * 2);
+    if (jumpFrame < JUMP_Y_OFFSET.size() && fakeJump)
+      topLeftPosition.set_y(topLeftPosition.y() + JUMP_Y_OFFSET[jumpFrame] * 2);
     jumpFrame++;
   }
 
@@ -273,7 +273,7 @@ void Horse::setHurtState() {
       mainSprite, 2, SpriteProvider::horse().tiles_item(), 13, 10, 13, 10, 13,
       10, 13, 10);
   hurtFrame = 0;
-  hurtCooldown = 60;
+  hurtCooldown = 90;
 }
 
 void Horse::resetAnimations() {
