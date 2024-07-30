@@ -8,12 +8,13 @@ The game was made in less than 3 months, largely rushed to fit all content withi
 
 ## Install
 
-The game uses **a fork** of the [Butano](https://github.com/GValiente/butano) engine (created from its `v17.7.0` version) that disables its audio player, so we can use [gsmplayer-gba](https://github.com/pinobatch/gsmplayer-gba) for menu's music and a custom player that plays PCM audio at 36314hz for main gameplay.
+The game uses [a fork](https://github.com/GValiente/butano/compare/17.7.0...afska:butano:custom_audio) of the **Butano** engine (created from its `v17.7.0` version) that disables its audio player, so we can use [gsmplayer-gba](https://github.com/pinobatch/gsmplayer-gba) for UI music and a custom player that plays PCM audio for main gameplay. The forked engine code is included here for simplicity, so users only have to clone this repository in order to compile the game.
 
 ```bash
 # This assumes WSL2 on Windows, but it should be similar in other *nix environments.
 cd ~
 
+# Install toolchain
 sudo apt update
 sudo apt install git python3 python-is-python3
 wget https://apt.devkitpro.org/install-devkitpro-pacman
@@ -24,9 +25,11 @@ sudo dkp-pacman -Syu
 sudo dkp-pacman -S gba-dev
 # [!] manual: restart shell
 
-git clone https://github.com/Hazematman/butano
+# Clone the repository
 git clone https://github.com/afska/synthbattle
 cd synthbattle/
+
+# Compile
 make -j$(nproc)
 # (this will generate a synthbattle.out.gba ROM file)
 
