@@ -294,15 +294,18 @@ void BossRifferScene::processChart() {
       // Movement
       if (phase3) {
         if (IS_EVENT_MOVE_COL1(type)) {
-          riffer->setTargetPosition({809, 3}, chartReader->getBeatDurationMs());
+          riffer->setTargetPosition({809, 3 - 30},
+                                    chartReader->getBeatDurationMs());
           lastTargetedPlatform = 1;
         }
         if (IS_EVENT_MOVE_COL2(type)) {
-          riffer->setTargetPosition({860, 3}, chartReader->getBeatDurationMs());
+          riffer->setTargetPosition({860, 3 - 7},
+                                    chartReader->getBeatDurationMs());
           lastTargetedPlatform = 2;
         }
         if (IS_EVENT_MOVE_COL3(type)) {
-          riffer->setTargetPosition({936, 2}, chartReader->getBeatDurationMs());
+          riffer->setTargetPosition({936, 3 - 30},
+                                    chartReader->getBeatDurationMs());
         }
         if (IS_EVENT_MOVE_RIGHT(type)) {
           riffer->setTargetPosition({890, 47},
@@ -486,7 +489,7 @@ void BossRifferScene::processChart() {
                    : bn::fixed_point(PLATFORMS_X[lastTargetedPlatform] -
                                          122 /* HACK: no idea why */,
                                      riffer->getCenteredPosition().y()),
-            {0, 1}, event, phase3 ? 1.5 : 1)};
+            {0, 1}, event, phase3 ? 1.25 : 1)};
         wave->setCamera(camera);
         enemyBullets.push_back(bn::move(wave));
       }
