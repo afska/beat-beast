@@ -19,7 +19,7 @@
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".pcm";
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> TOTAL_LIFE = {
-    30, 15, 3};
+    30, 15, 5};
 
 BossScene::BossScene(GameState::Screen _screen,
                      bn::string<32> _fileName,
