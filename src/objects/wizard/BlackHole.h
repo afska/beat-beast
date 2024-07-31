@@ -21,6 +21,8 @@ class BlackHole : public GameObject {
  private:
   bn::sprite_ptr sprite;
   bn::sprite_animate_action<6> animation;
+  bn::sprite_ptr fireSprite;
+  bn::sprite_animate_action<3> fireAnimation;
   bn::fixed scaleInSpeed;
   bn::optional<bn::fixed_point> targetPosition;
   bn::fixed scale;
