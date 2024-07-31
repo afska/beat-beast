@@ -374,8 +374,8 @@ void TutorialScene::updateDialog() {
         reportSuccess();
 
         bn::vector<bn::string<64>, 2> strs;
-        strs.push_back("Guardians will throw things at me.");
-        strs.push_back("The attacks take exactly |one beat|.");
+        strs.push_back("Jumping also increases my");
+        strs.push_back("|movement speed| temporarily.");
         write(strs, true);
         state++;
       }
@@ -383,13 +383,21 @@ void TutorialScene::updateDialog() {
     }
     case 10: {
       bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("Guardians will throw things at me.");
+      strs.push_back("The attacks take exactly |one beat|.");
+      write(strs, true);
+      state++;
+      break;
+    }
+    case 2 + 10: {
+      bn::vector<bn::string<64>, 2> strs;
       strs.push_back("If there's something |on the floor|,");
       strs.push_back("make me jump on the |next beat|.");
       write(strs, true);
       state++;
       break;
     }
-    case 12: {
+    case 2 + 12: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Jump |10| times, avoiding");
       strs.push_back("getting hit by the obstacles!");
@@ -397,7 +405,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 13: {
+    case 2 + 13: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         count = 10;
@@ -406,14 +414,14 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 14: {
+    case 2 + 14: {
       if (isNewBeatNow) {
         obstacles.push_back(bn::unique_ptr{new Obstacle(
             Math::toAbsTopLeft({0, HORSE_Y + 64 - 8}), {1, 0}, msecs)});
       }
       break;
     }
-    case 15: {
+    case 2 + 15: {
       reportSuccess();
 
       bn::vector<bn::string<64>, 2> strs;
@@ -423,7 +431,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 17: {
+    case 2 + 17: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Use |D-Pad| to |aim|, and |B| to shoot.");
       strs.push_back("Shooting offbeat causes a |cooldown|.");
@@ -433,14 +441,14 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 19: {
+    case 2 + 19: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Destroy |10| radios.");
       write(strs);
       state++;
       break;
     }
-    case 20: {
+    case 2 + 20: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         bullets.clear();
@@ -451,7 +459,7 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 22: {
+    case 2 + 22: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Actually, I lied.");
       strs.push_back("I can also shoot on |sub-beats|!");
@@ -461,7 +469,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 24: {
+    case 2 + 24: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("A sub-beat would be half a beat.");
       strs.push_back("Destroy |4| radios in |3| seconds.");
@@ -469,7 +477,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 25: {
+    case 2 + 25: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         bullets.clear();
@@ -479,11 +487,11 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 26: {
+    case 2 + 26: {
       updateCountdown();
       break;
     }
-    case 27: {
+    case 2 + 27: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Shooting increases my |combo bar|.");
       strs.push_back("When it's full, I unlock |dual shots|!");
@@ -492,7 +500,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 29: {
+    case 2 + 29: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("Max out the |combo bar|, and");
       strs.push_back("try my |dual shots|.");
@@ -500,7 +508,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 30: {
+    case 2 + 30: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         bullets.clear();
@@ -509,12 +517,12 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 31: {
+    case 2 + 31: {
       if (didDoubleShoot)
         state++;
       break;
     }
-    case 32: {
+    case 2 + 32: {
       reportSuccess();
 
       bn::vector<bn::string<64>, 2> strs;
@@ -526,7 +534,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 34: {
+    case 2 + 34: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("While looking to the |left|,");
       strs.push_back("shoot to the |top-right| corner.");
@@ -534,7 +542,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 35: {
+    case 2 + 35: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
@@ -544,12 +552,12 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 36: {
+    case 2 + 36: {
       if (didShootUpperRightWhileLookingLeft)
         state++;
       break;
     }
-    case 37: {
+    case 2 + 37: {
       reportSuccess();
       questionMark.reset();
 
@@ -560,7 +568,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 38: {
+    case 2 + 38: {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         questionMark.reset();
@@ -570,12 +578,12 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 39: {
+    case 2 + 39: {
       if (didShootUpperLeftWhileLookingRight)
         state++;
       break;
     }
-    case 40: {
+    case 2 + 40: {
       reportSuccess();
       questionMark.reset();
 
@@ -592,14 +600,14 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 42: {
+    case 2 + 42: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("|SHOOT HIM|!");
       write(strs);
       state++;
       break;
     }
-    case 43: {
+    case 2 + 43: {
       if (finishedWriting()) {
         didUnlockAim = true;
         player_sfx_play(SFX_OBJECTIVE);
@@ -607,7 +615,7 @@ void TutorialScene::updateDialog() {
       }
       break;
     }
-    case 45: {
+    case 2 + 45: {
       reportSuccess();
 
       bn::vector<bn::string<64>, 2> strs;
@@ -617,7 +625,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 47: {
+    case 2 + 47: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("This doesn't mean victory!");
       strs.push_back("We still have to |finish the level|.");
@@ -625,7 +633,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 49: {
+    case 2 + 49: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("That's all I can teach you for now.");
       strs.push_back("Let's battle these guardians!");
@@ -633,7 +641,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 51: {
+    case 2 + 51: {
       win();
       break;
     }
