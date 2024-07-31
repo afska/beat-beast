@@ -29,7 +29,7 @@
 #include "bn_sprite_items_wizard_lightning3.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    62, 125, 162};
+    62, 110, 162};
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
     MOVEMENT_TIME_MULTIPLIER = {2, 2, 1};
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
