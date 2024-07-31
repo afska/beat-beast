@@ -548,11 +548,20 @@ void SelectionScene::prepareStateForLevel() {
   GameState::data.isPlaying = true;
   GameState::data.currentLevelProgress =
       SaveFile::data.progress[selectedDifficultyLevel].levels[selectedIndex];
+  GameState::data.newRecordHealth = false;
+  GameState::data.newRecordDamage = false;
+  GameState::data.newRecordSync = false;
 }
 
 void SelectionScene::processLevelResult() {
+  if (!GameState::data.isPlaying)
+    return;
+
   newRecordHealth = GameState::data.newRecordHealth;
   newRecordDamage = GameState::data.newRecordDamage;
   newRecordSync = GameState::data.newRecordSync;
+  GameState::data.newRecordHealth = false;
+  GameState::data.newRecordDamage = false;
+  GameState::data.newRecordSync = false;
   GameState::data.isPlaying = false;
 }
