@@ -1,20 +1,20 @@
 Licenses for each *.pcm/*.gsm MUSIC file in the gbfs_files/ directory.
 
-------------------
+----------
 bonus.gsm
 dj.pcm
 glitch.pcm
 riffer.pcm
 wizard.pcm
-------------------
+----------
 
 by Synthenia
 
 CC BY-NC 4.0
 
-------------------
+---------
 lazer.gsm
-------------------
+---------
 
 by Synthenia
 
