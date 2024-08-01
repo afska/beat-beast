@@ -147,9 +147,7 @@ constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
     true,  true,  true,  true,  true,  true,  true};
 
 constexpr const bn::array<const char*, SaveFile::TOTAL_DIFFICULTY_LEVELS>
-    DIFFICULTY_LEVELS = {"Easy", "Normal", "Impossible"};
-
-constexpr const bn::array<int, 3> BREAK_POINTS = {30, 80, 130};
+    DIFFICULTY_LEVELS = {"Easy", "Normal", "Impossible", "CAFFEINE"};
 
 constexpr const bn::fixed HEADER_X = 55;
 constexpr const bn::fixed HEADER_Y = -80 + 11;
@@ -261,8 +259,8 @@ void SelectionScene::processInput() {
   if (bn::keypad::r_pressed()) {
     if (selectedDifficultyLevel < SaveFile::TOTAL_DIFFICULTY_LEVELS - 1) {
       bool forbidden =
-          selectedDifficultyLevel == SaveFile::TOTAL_DIFFICULTY_LEVELS - 2 &&
-          !SaveFile::data.didFinishGame;
+          (selectedDifficultyLevel == 1 && !SaveFile::data.didFinishGame) ||
+          (selectedDifficultyLevel == 2 && !SaveFile::data.didFinishImpossible);
       if (!forbidden) {
         selectedDifficultyLevel++;
         updateDifficultyLevel();

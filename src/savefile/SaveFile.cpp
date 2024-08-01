@@ -28,7 +28,8 @@ bool SaveFile::initialize() {
     data.selectedLevel = 0;
     data.isInsideFinal = false;
     data.didFinishGame = false;
-    for (int i = 0; i < 12; i++)
+    data.didFinishImpossible = false;
+    for (int i = 0; i < 11; i++)
       data._padding2[i] = 0xEE;
 
     for (int d = 0; d < TOTAL_DIFFICULTY_LEVELS; d++) {

@@ -6,7 +6,7 @@
 namespace SaveFile {
 
 const int TOTAL_LEVELS = 5;
-const int TOTAL_DIFFICULTY_LEVELS = 3;
+const int TOTAL_DIFFICULTY_LEVELS = 4;
 
 struct __attribute__((__packed__)) LevelProgress {
   unsigned char health;
@@ -39,7 +39,8 @@ struct __attribute__((__packed__)) SaveFileData {
   unsigned char selectedLevel;
   bool isInsideFinal;
   bool didFinishGame;
-  unsigned char _padding2[12];
+  bool didFinishImpossible;
+  unsigned char _padding2[11];
 
   // progress
   GameProgress progress[TOTAL_DIFFICULTY_LEVELS];

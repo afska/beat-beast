@@ -384,8 +384,13 @@ void BossGlitchOutroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_head1);
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("How about we add a |harder|");
-      strs.push_back("difficulty level?");
+      if (SaveFile::data.selectedDifficultyLevel == 3) {
+        strs.push_back("At this point, I think you're");
+        strs.push_back("just |trolling|.");
+      } else {
+        strs.push_back("How about we add a |harder|");
+        strs.push_back("difficulty level?");
+      }
       write(strs, true);
 
       state++;
@@ -396,7 +401,12 @@ void BossGlitchOutroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("Hmm... that could work!");
+      if (SaveFile::data.selectedDifficultyLevel == 3) {
+        strs.push_back("Nah, I'm just |very good|");
+        strs.push_back("at rhythm games now!");
+      } else {
+        strs.push_back("Hmm... that could work!");
+      }
       write(strs, true);
 
       state++;
@@ -568,6 +578,8 @@ void BossGlitchOutroScene::updateDialog() {
           (int)PlaybackState.msecs - SaveFile::data.audioLag >=
               FINAL_SONG_LOOP) {
         SaveFile::data.didFinishGame = true;
+        if (SaveFile::data.selectedDifficultyLevel == 2)
+          SaveFile::data.didFinishImpossible = true;
         SaveFile::data.isInsideFinal = false;
         SaveFile::save();
 

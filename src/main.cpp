@@ -97,6 +97,8 @@ bn::unique_ptr<Scene> setNextScene(GameState::Screen nextScreen) {
       nextScreen == GameState::Screen::GLITCH ? 0 : contrast);
   bn::sprite_palettes::set_contrast(
       nextScreen == GameState::Screen::GLITCH ? 0 : contrast);
+  bn::bg_palettes::set_hue_shift_intensity(0);
+  bn::sprite_palettes::set_hue_shift_intensity(0);
 
   _3D_CHANNEL = 0;
   auto continuationScreen = GameState::data.currentScreen;
