@@ -182,8 +182,8 @@ void CalibrationScene::onError(CalibrationError error) {
       state = ERROR;
 
       bn::vector<bn::string<64>, 2> strs;
-      strs.push_back("No!! You pressed |" + bn::to_string<64>(samples) +
-                     "| times instead");
+      strs.push_back("No!! You pressed |" + bn::to_string<64>(samples) + "| " +
+                     (samples == 1 ? "time" : "times") + " instead");
       strs.push_back("of |4|. Do you want to |retry|?");
       write(strs);
       break;
