@@ -35,9 +35,6 @@ constexpr const bn::array<bn::fixed, 4> LIGHTNING_X = {61, 90, 144, 167};
 constexpr const bn::array<bn::fixed, 4> PLATFORM_FIRE_X = {42, 74, 132, 160};
 constexpr const bn::fixed PLATFORM_FIRE_Y = 129;
 
-const bn::fixed BEAT_DURATION_FRAMES = 23;  // HACK: Why hardcoding it?
-// chartReader->getBeatDurationMs() / GBA_FRAME
-
 #define HORSE_X CHANNEL_X[0]
 #define HORSE_Y 90
 
@@ -272,6 +269,9 @@ void BossGlitchScene::processInput() {
 }
 
 void BossGlitchScene::processChart() {
+  int BEAT_DURATION_FRAMES =
+      (bn::fixed(chartReader->getBeatDurationMs()) / GBA_FRAME).floor_integer();
+
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
       auto type = event->getType();
