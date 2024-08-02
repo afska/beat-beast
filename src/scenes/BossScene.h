@@ -66,6 +66,7 @@ class BossScene : public Scene {
   bool blocked = false;
   bn::fixed_point crossOffset = {0, 0};
   bn::fixed deadHorseYOffset = 0;
+  bn::fixed pauseFadeIntensity = 0;
 
   //   v- BEAT_TIMING_WINDOW
   // --(---------x---------)--
