@@ -270,7 +270,11 @@ void BossGlitchScene::processInput() {
 
 void BossGlitchScene::processChart() {
   int BEAT_DURATION_FRAMES =
-      (bn::fixed(chartReader->getBeatDurationMs()) / GBA_FRAME).floor_integer();
+      (bn::fixed(chartReader->getBeatDurationMs()) / GBA_FRAME)
+          .floor_integer() -
+      1;
+  if (SaveFile::data.selectedDifficultyLevel == 3)
+    BEAT_DURATION_FRAMES -= 2;  // HACK: not a hack, a feature
 
   for (auto& event : chartReader->pendingEvents) {
     if (event->isRegular()) {
