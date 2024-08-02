@@ -29,11 +29,11 @@
 #include "bn_sprite_items_wizard_lightning3.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    62, 110, 162, 175};
+    62, 110, 150};
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
-    MOVEMENT_TIME_MULTIPLIER = {2, 2, 1, 1};
+    MOVEMENT_TIME_MULTIPLIER = {2, 2, 1};
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
-    FORCE_BULLET_BLACK_HOLE = {5, 5, 3.5, 3.5};
+    FORCE_BULLET_BLACK_HOLE = {5, 5, 3.5};
 
 // Damage to player
 #define DMG_MINI_ROCK_TO_PLAYER 1
@@ -486,11 +486,7 @@ void BossWizardScene::processChart() {
 void BossWizardScene::updateBackground() {
   // transition to lava stop
   int bg0ScrollX = background0.get()->position().x().floor_integer();
-  bool isCaffeine = SaveFile::data.selectedDifficultyLevel == 3;
-  if (phase == 3 &&
-      (bg0ScrollX <= -3577 || (isCaffeine && PlaybackState.msecs >= 72000))) {
-    if (isCaffeine)
-      pixelBlink->blink();
+  if (phase == 3 && bg0ScrollX <= -3577) {
     background0.reset();
     background0 = bn::regular_bg_items::back_wizard_mountainlava1_bg0.create_bg(
         (512 - Math::SCREEN_WIDTH) / 2, (256 - Math::SCREEN_HEIGHT) / 2);

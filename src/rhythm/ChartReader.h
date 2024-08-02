@@ -1,10 +1,8 @@
 #ifndef CHART_READER_H
 #define CHART_READER_H
 
-#include "../savefile/SaveFile.h"
 #include "models/Song.h"
 
-#include "bn_fixed.h"
 #include "bn_vector.h"
 
 #define MAX_PENDING_EVENTS 64
@@ -16,12 +14,7 @@ class ChartReader {
   Song* getSong() { return &song; }
   Chart* getChart() { return &chart; }
   int getMsecs() { return msecs; }
-  unsigned getBeatDurationMs() {
-    if (SaveFile::data.selectedDifficultyLevel == 3)
-      return (bn::fixed(beatDurationMs) / 1.2532).floor_integer();
-    else
-      return beatDurationMs;
-  }
+  unsigned getBeatDurationMs() { return beatDurationMs; }
   bool isInsideBeat() { return _isInsideBeat; }
   bool isInsideTick() { return _isInsideTick; }
   bool isPreciselyInsideBeat() { return _isPreciselyInsideBeat; }

@@ -21,7 +21,7 @@
 const bn::string<32> CHART_EXTENSION = ".boss";
 const bn::string<32> AUDIO_EXTENSION = ".pcm";
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> TOTAL_LIFE = {
-    30, 15, 5, 1};
+    30, 15, 5};
 
 BossScene::BossScene(GameState::Screen _screen,
                      bn::string<32> _fileName,
@@ -43,10 +43,8 @@ BossScene::BossScene(GameState::Screen _screen,
       gunReload(bn::unique_ptr<GunReload>{new GunReload({26, 12 + 12})}),
       pixelBlink(bn::unique_ptr{new PixelBlink(0.5)}),
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}) {
-  auto chartDifficultyLevel = SaveFile::data.selectedDifficultyLevel;
-  if (chartDifficultyLevel == 3)
-    chartDifficultyLevel--;
-  auto difficultyLevel = static_cast<DifficultyLevel>(chartDifficultyLevel);
+  auto difficultyLevel =
+      static_cast<DifficultyLevel>(SaveFile::data.selectedDifficultyLevel);
   auto song = SONG_parse(_fs, fileName + CHART_EXTENSION, difficultyLevel);
   auto chart = SONG_findChartByDifficultyLevel(song, difficultyLevel);
 
@@ -59,15 +57,13 @@ BossScene::BossScene(GameState::Screen _screen,
   textGeneratorAccent.set_bg_priority(0);
 
   printLife(lifeBar->getLife());
-  if (SaveFile::data.selectedDifficultyLevel == 3)
+  if (SaveFile::data.selectedDifficultyLevel == 2)
     bn::sprite_palettes::set_hue_shift_intensity(0.1);
 }
 
 void BossScene::init() {
   bn::blending::set_fade_alpha(BG_DARK_ALPHA);
   player_playPCM((fileName + AUDIO_EXTENSION).c_str());
-  if (SaveFile::data.selectedDifficultyLevel == 3)
-    player_setRate(1);
 }
 
 void BossScene::update() {

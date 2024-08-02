@@ -383,7 +383,7 @@ void BossGlitchOutroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_head1);
 
       bn::vector<bn::string<64>, 2> strs;
-      if (SaveFile::data.selectedDifficultyLevel == 3) {
+      if (SaveFile::data.selectedDifficultyLevel == 2) {
         strs.push_back("At this point, I think you're");
         strs.push_back("just |trolling|.");
       } else {
@@ -400,7 +400,7 @@ void BossGlitchOutroScene::updateDialog() {
       setDialogIcon(bn::sprite_items::glitch_icon_horse);
 
       bn::vector<bn::string<64>, 2> strs;
-      if (SaveFile::data.selectedDifficultyLevel == 3) {
+      if (SaveFile::data.selectedDifficultyLevel == 2) {
         strs.push_back("Nah, I'm just |very good|");
         strs.push_back("at rhythm games now!");
       } else {

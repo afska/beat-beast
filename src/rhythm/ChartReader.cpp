@@ -10,7 +10,7 @@
 #define MINUTE 60000
 
 const bn::array<int, SaveFile::TOTAL_DIFFICULTY_LEVELS> TICK_TIMING_WINDOW_MS =
-    {100, 80, 80, 80};
+    {100, 80, 80};
 
 ChartReader::ChartReader(int _audioLag, Song _song, Chart _chart)
     : song(_song), chart(_chart), audioLag(_audioLag) {
@@ -82,12 +82,8 @@ void ChartReader::processNextEvents() {
   // SPECIAL events are always processed at the right time.
 
   int ahead = (int)getBeatDurationMs() * BEAT_PREDICTION;
-  int realAudioLag =
-      SaveFile::data.selectedDifficultyLevel == 3 && audioLag > 0
-          ? audioLag + (bn::fixed(audioLag) * 1.11).floor_integer()
-          : audioLag;  //                     ^^^^ // HACK: why? :')
-  int predictionTime = eventsThatNeedBeatPrediction == 0 ? realAudioLag
-                       : audioLag > ahead                ? realAudioLag
+  int predictionTime = eventsThatNeedBeatPrediction == 0 ? audioLag
+                       : audioLag > ahead                ? audioLag
                                                          : ahead;
 
   processEvents(

@@ -6,7 +6,7 @@
 namespace SaveFile {
 
 const int TOTAL_LEVELS = 5;
-const int TOTAL_DIFFICULTY_LEVELS = 4;
+const int TOTAL_DIFFICULTY_LEVELS = 3;
 
 struct __attribute__((__packed__)) LevelProgress {
   unsigned char health;

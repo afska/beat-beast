@@ -16,7 +16,7 @@
 #include "bn_sprite_items_dj_lifebar_octopus_fill.h"
 
 const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
-    75, 150, 200, 250};
+    75, 150, 200};
 
 // Loop
 #define LOOP_OFFSET_CURSOR -2121920
