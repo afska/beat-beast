@@ -55,7 +55,7 @@ Playback PlaybackState;
 //           'timer =', 65536-(280896/i), '; buffer =',
 //           i, '; sample rate =', i*(1<<24)/280896, 'hz'
 //         );
-//   Playback rate can be changed: 0.86, 0.73, 0.47, 1, 1.11, 1.26, 1.54.
+//   Playback rate can be changed to fixed speeds (from -3 to 3).
 // In PCM mode:
 //   It works exactly like the `player_sfx.h` module.
 //   Playback rate can be either 1 or 1.25.

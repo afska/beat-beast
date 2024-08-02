@@ -37,7 +37,6 @@
 // The sample rate is 36314hz.
 // Each PCM chunk is 304 bytes and represents 304 samples.
 // Two chunks are copied per frame.
-// Playback rate can be either 1 or 1.11.
 
 static bool did_run = false;
 static bool is_looping = false;
