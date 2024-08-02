@@ -288,6 +288,7 @@ void UIScene::processMenuOption(int option) {
         break;
       }
       case 2: {  // Restart
+        onRestart();
         setNextScreen(getScreen());
         break;
       }
@@ -309,6 +310,7 @@ void UIScene::processMenuOption(int option) {
       break;
     }
     case 1: {  // Restart
+      onRestart();
       setNextScreen(getScreen());
       break;
     }

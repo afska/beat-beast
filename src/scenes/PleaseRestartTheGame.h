@@ -11,6 +11,7 @@
 #include "../objects/ui/GunReload.h"
 #include "../objects/ui/LifeBar.h"
 #include "../objects/ui/QuestionMark.h"
+#include "../player/player.h"
 
 class BossGlitchOutroScene : public UIScene {
  public:
@@ -26,6 +27,7 @@ class BossGlitchOutroScene : public UIScene {
   bool didUnlockShooting = false;
   int countdown = 0;
   bool bounce = true;
+  bool didStartBonusLoop = false;
   bool didStartBonusSong = false;
 
   int msecs = 0;
@@ -70,6 +72,10 @@ class BossGlitchOutroScene : public UIScene {
 
  protected:
   bool canSkipAutoWrite() override { return false; }
+  void onRestart() override {
+    if (didStartBonusLoop)
+      player_stop();
+  }
 };
 
 #endif  // BOSS_GLITCH_OUTRO_SCENE_H

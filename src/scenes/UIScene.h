@@ -55,6 +55,7 @@ class UIScene : public Scene {
     return false;
   }
 
+  virtual void onRestart() {}
   virtual bool canSkipAutoWrite() { return true; }
   virtual bool canPause() { return true; }
 

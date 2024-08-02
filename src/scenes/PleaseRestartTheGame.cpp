@@ -551,6 +551,7 @@ void BossGlitchOutroScene::updateDialog() {
       bn::vector<bn::string<64>, 2> strs;
       player_playGSM("bonusloop.gsm");
       player_setLoop(true);
+      didStartBonusLoop = true;
       pauseVideo = false;
       bounce = false;
       strs.push_back("I guess I'm in charge now!");
