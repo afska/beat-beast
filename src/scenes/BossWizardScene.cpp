@@ -488,7 +488,7 @@ void BossWizardScene::updateBackground() {
   int bg0ScrollX = background0.get()->position().x().floor_integer();
   bool isCaffeine = SaveFile::data.selectedDifficultyLevel == 3;
   if (phase == 3 &&
-      (bg0ScrollX <= -3577 || (isCaffeine && PlaybackState.msecs >= 73000))) {
+      (bg0ScrollX <= -3577 || (isCaffeine && PlaybackState.msecs >= 72000))) {
     if (isCaffeine)
       pixelBlink->blink();
     background0.reset();
