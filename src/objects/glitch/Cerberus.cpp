@@ -47,13 +47,15 @@ Cerberus::Cerberus(bn::fixed_point initialPosition)
   updateSubsprites();
 }
 
-bool Cerberus::update() {
+bool Cerberus::update(bool updateAnimations) {
   Math::moveSpriteTowards(mainSprite, targetPosition, speedX, speedY);
   setCenteredPosition(mainSprite.position());
 
   updateSubsprites();
-  mainAnimation.update();
-  secondaryAnimation.update();
+  if (updateAnimations) {
+    mainAnimation.update();
+    secondaryAnimation.update();
+  }
 
   boundingBox.set_position(mainSprite.position());
 

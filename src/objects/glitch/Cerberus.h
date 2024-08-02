@@ -9,7 +9,7 @@ class Cerberus : public TopLeftGameObject {
  public:
   Cerberus(bn::fixed_point initialPosition);
 
-  bool update();
+  bool update(bool updateAnimations = true);
   void bounce();
   void setTargetPosition(bn::fixed_point newTargetPosition,
                          unsigned beatDurationMs);

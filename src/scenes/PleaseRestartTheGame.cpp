@@ -35,7 +35,6 @@ BossGlitchOutroScene::BossGlitchOutroScene(const GBFS_FILE* _fs)
 
 void BossGlitchOutroScene::init() {
   canQuit = false;
-  pauseVideo = true;
   UIScene::init();
 
   cerberus = bn::unique_ptr{new Cerberus({60 - 64, 0})};
@@ -172,7 +171,7 @@ void BossGlitchOutroScene::updateSprites() {
 
   // Enemies
   if (cerberus.has_value()) {
-    cerberus->get()->update();
+    cerberus->get()->update(false);
     butano2d->update();
   }
 
@@ -552,7 +551,6 @@ void BossGlitchOutroScene::updateDialog() {
       player_playGSM("bonusloop.gsm");
       player_setLoop(true);
       didStartBonusLoop = true;
-      pauseVideo = false;
       bounce = false;
       strs.push_back("I guess I'm in charge now!");
       write(strs, true);
