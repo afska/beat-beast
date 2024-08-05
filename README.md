@@ -50,6 +50,11 @@ make -j$(nproc)
 # to update boss scripts:
 make rebuild # the `rebuild` target builds the levels && the code
 # (requires extra development tools, like node)
+
+# --- macOS ---
+# - install devkitARM following the official instructions
+# - set the PYTHON variable in the Makefile to python3
+# - compile with make -j$(sysctl -n hw.logicalcpu)
 ```
 
 ### Development scripts

@@ -18,7 +18,6 @@
 #include "utils/Rumble.h"
 #include "utils/gbfs/gbfs.h"
 
-#include "../../butano/butano/hw/include/bn_hw_game_pak.h"
 #include "bn_bg_palettes.h"
 #include "bn_bgs_mosaic.h"
 #include "bn_blending.h"
