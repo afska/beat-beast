@@ -22,6 +22,7 @@ class StartScene : public Scene {
   bn::sprite_text_generator textGeneratorAccent;
   bn::unique_ptr<Menu> menu;
   bn::unique_ptr<SettingsMenu> settingsMenu;
+  bn::unique_ptr<Menu> difficultyMenu;
   bn::sprite_ptr logo1;
   bn::sprite_ptr logo2;
   bn::sprite_ptr logo3;
@@ -33,6 +34,8 @@ class StartScene : public Scene {
 
   void updateVideo();
   void processMenuOption(int option);
+  void processDifficultyMenuOption(int option);
+  void start();
 };
 
 #endif  // START_SCENE_H

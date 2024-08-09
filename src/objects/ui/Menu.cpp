@@ -7,6 +7,8 @@
 
 #define SFX_MOVE "menu_move.pcm"
 #define SFX_CLICK "menu_click.pcm"
+#define SFX_PAUSE "menu_pause.pcm"
+#define SFX_QUESTION "menu_question.pcm"
 
 Menu::Menu(bn::sprite_text_generator _normalTextGenerator,
            bn::sprite_text_generator _accentTextGenerator)
@@ -27,6 +29,8 @@ void Menu::start(bn::vector<Option, 32> _options,
                  bn::fixed _positionX,
                  bn::fixed _positionY,
                  unsigned _selectedOption) {
+  if ((int)_selectedOption >= _options.size())
+    _selectedOption = _options.size() - 1;
   options = _options;
   selectedOption = _selectedOption;
   confirmedOption = -1;
@@ -112,6 +116,14 @@ void Menu::stop() {
   normalTextSprites.clear();
   accentTextSprites.clear();
   confirmedOption = -1;
+}
+
+void Menu::pauseSound() {
+  player_sfx_play(SFX_PAUSE);
+}
+
+void Menu::questionSound() {
+  player_sfx_play(SFX_QUESTION);
 }
 
 void Menu::clickSound() {

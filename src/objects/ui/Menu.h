@@ -30,6 +30,8 @@ class Menu {
              unsigned _selectedOption = 0);
   void update();
   void stop();
+  void pauseSound();
+  void questionSound();
   void clickSound();
 
   bool hasStarted() { return options.has_value(); }

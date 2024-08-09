@@ -8,6 +8,7 @@
 #include "../utils/Math.h"
 
 #include "bn_blending.h"
+#include "bn_keypad.h"
 #include "bn_sprite_items_start_logo1.h"
 #include "bn_sprite_items_start_logo2.h"
 #include "bn_sprite_items_start_logo3.h"
@@ -26,6 +27,8 @@ StartScene::StartScene(const GBFS_FILE* _fs)
       menu(bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
       settingsMenu(
           bn::unique_ptr{new SettingsMenu(textGenerator, textGeneratorAccent)}),
+      difficultyMenu(
+          bn::unique_ptr{new Menu(textGenerator, textGeneratorAccent)}),
       logo1(bn::sprite_items::start_logo1.create_sprite(
           Math::toAbsTopLeft({9, 19}, 64, 32))),
       logo2(bn::sprite_items::start_logo2.create_sprite(logo1.x() + 64,
@@ -65,6 +68,7 @@ void StartScene::update() {
   if (!credits) {
     menu->update();
     settingsMenu->update();
+    difficultyMenu->update();
     if (menu->hasConfirmedOption()) {
       auto confirmedOption = menu->receiveConfirmedOption();
       processMenuOption(confirmedOption);
@@ -72,9 +76,20 @@ void StartScene::update() {
     if (settingsMenu->getNextScreen() != GameState::Screen::NO)
       setNextScreen(settingsMenu->getNextScreen());
     if (settingsMenu->isClosing()) {
-      menu->clickSound();
+      menu->pauseSound();
       settingsMenu->stop();
       init();
+    }
+    if (difficultyMenu->hasStarted()) {
+      if (bn::keypad::b_pressed()) {
+        menu->pauseSound();
+        difficultyMenu->stop();
+        init();
+      }
+    }
+    if (difficultyMenu->hasConfirmedOption()) {
+      auto confirmedOption = difficultyMenu->receiveConfirmedOption();
+      processDifficultyMenuOption(confirmedOption);
     }
   }
 
@@ -120,18 +135,22 @@ void StartScene::updateVideo() {
 
 void StartScene::processMenuOption(int option) {
   switch (option) {
-    case 0: {
-      if (SaveFile::didCompleteTutorial()) {
-        setNextScreen(GameState::Screen::SELECTION);
-      } else {
-        GameState::data.isPlaying = true;
-        setNextScreen(GameState::Screen::STORY);
-      }
+    case 0: {  // Start
+      menu->stop();
+      menu->questionSound();
+
+      bn::vector<Menu::Option, 10> options;
+      options.push_back(Menu::Option{.text = "Easy"});
+      options.push_back(Menu::Option{.text = "Normal"});
+      if (SaveFile::data.didFinishGame)
+        options.push_back(Menu::Option{.text = "Impossible"});
+      difficultyMenu->start(options, true, false, 1, 1.5, 1.5, 0, 0,
+                            SaveFile::data.selectedDifficultyLevel);
       break;
     }
     case 1: {  // Settings
       menu->stop();
-      menu->clickSound();
+      menu->questionSound();
       settingsMenu->start();
       break;
     }
@@ -142,5 +161,39 @@ void StartScene::processMenuOption(int option) {
     }
     default: {
     }
+  }
+}
+
+void StartScene::processDifficultyMenuOption(int option) {
+  switch (option) {
+    case 0: {  // Easy
+      SaveFile::data.selectedDifficultyLevel = 0;
+      SaveFile::save();
+      start();
+      break;
+    }
+    case 1: {  // Normal
+      SaveFile::data.selectedDifficultyLevel = 1;
+      SaveFile::save();
+      start();
+      break;
+    }
+    case 2: {  // Impossible
+      SaveFile::data.selectedDifficultyLevel = 2;
+      SaveFile::save();
+      start();
+      break;
+    }
+    default: {
+    }
+  }
+}
+
+void StartScene::start() {
+  if (SaveFile::didCompleteTutorial()) {
+    setNextScreen(GameState::Screen::SELECTION);
+  } else {
+    GameState::data.isPlaying = true;
+    setNextScreen(GameState::Screen::STORY);
   }
 }
