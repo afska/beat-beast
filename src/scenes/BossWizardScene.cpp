@@ -636,7 +636,7 @@ void BossWizardScene::updateSprites() {
             });
 
     if (wizard.has_value()) {
-      if (bullet->collidesWith(wizard->get())) {
+      if (bullet->collidesWith(wizard->get()) && phase != 8) {
         addExplosion(bullet->getPosition());
         causeDamage(bullet->damage);
 
