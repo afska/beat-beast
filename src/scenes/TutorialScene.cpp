@@ -756,5 +756,8 @@ void TutorialScene::win() {
 
   GameState::saveWin();
 
+  SaveFile::data.selectedLevel = 1;
+  SaveFile::save();
+
   setNextScreen(GameState::Screen::SELECTION);
 }
