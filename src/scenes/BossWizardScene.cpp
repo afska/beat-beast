@@ -1,6 +1,7 @@
 #include "BossWizardScene.h"
 
 #include "../assets/SpriteProvider.h"
+#include "../assets/fonts/common_fixed_8x16_sprite_font.h"
 #include "../player/player.h"
 #include "../player/player_sfx.h"
 #include "../savefile/SaveFile.h"
@@ -95,6 +96,7 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS>
 #define SFX_LIGHTNING "lightning.pcm"
 
 #define INITIAL_FADE_ALPHA 0.2
+#define TEXT_Y 58
 
 const bn::fixed HORSE_INITIAL_X = 80;
 const bn::fixed HORSE_Y = 97;
@@ -120,7 +122,8 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
           (256 - Math::SCREEN_HEIGHT) / 2)),
       background0(bn::regular_bg_items::back_wizard_mountain_bg0.create_bg(
           (256 - Math::SCREEN_WIDTH) / 2,
-          (256 - Math::SCREEN_HEIGHT) / 2)) {
+          (256 - Math::SCREEN_HEIGHT) / 2)),
+      hintTextGenerator(common_fixed_8x16_sprite_font) {
   background0.get()->set_blending_enabled(true);
   background0.get()->set_mosaic_enabled(true);
   background1.get()->set_blending_enabled(true);
@@ -130,6 +133,10 @@ BossWizardScene::BossWizardScene(const GBFS_FILE* _fs)
   background3.get()->set_blending_enabled(true);
   background3.get()->set_mosaic_enabled(true);
   chartReader->eventsThatNeedAudioLagPrediction = 4080 /*0b111111110000*/;
+
+  hintTextGenerator.set_center_alignment();
+  hintTextGenerator.set_z_order(-3);
+  hintTextGenerator.set_bg_priority(0);
 }
 
 void BossWizardScene::updateBossFight() {
@@ -137,6 +144,11 @@ void BossWizardScene::updateBossFight() {
   processChart();
   updateBackground();
   updateSprites();
+
+  if (!hintTextSprites.empty()) {
+    for (auto& spr : hintTextSprites)
+      spr.set_scale(Math::SCALE_STEPS[horse->getBounceFrame()]);
+  }
 }
 
 void BossWizardScene::processInput() {
@@ -528,6 +540,8 @@ void BossWizardScene::updateBackground() {
       background0.get()->set_mosaic_enabled(true);
       bg0ScrollX = background0.get()->position().x().floor_integer();
       goToNextPhase();
+      hintTextGenerator.generate({0, TEXT_Y}, "Press A to fly!",
+                                 hintTextSprites);
     }
   }
 
@@ -857,6 +871,7 @@ void BossWizardScene::goToNextPhase() {
     background0.get()->set_blending_enabled(true);
     background0.get()->set_mosaic_enabled(true);
     background0.get()->set_priority(0);
+    hintTextSprites.clear();
   }
 
   phase++;

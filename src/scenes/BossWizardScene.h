@@ -39,6 +39,8 @@ class BossWizardScene : public BossScene {
   bn::optional<bn::unique_ptr<DragonEgg>> dragonEgg;
   bn::optional<bn::unique_ptr<AllyDragon>> allyDragon;
   bn::optional<bn::unique_ptr<BlackHole>> blackHole;
+  bn::vector<bn::sprite_ptr, 64> hintTextSprites;
+  bn::sprite_text_generator hintTextGenerator;
   bn::fixed flySpeedX = 0;
   int phase = 1;
   bool fadingToWhite = false;
