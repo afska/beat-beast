@@ -24,7 +24,7 @@ Lightning::Lightning(bn::sprite_item _spriteItem1,
       event(_event) {
   setPosition(_topLeftPosition);
   boundingBox.set_dimensions(bn::fixed_size(16, 160));
-  boundingBox.set_position(bn::fixed_point(mainSprite.position().x(), 80));
+  boundingBox.set_position(Math::toAbsTopLeft(_topLeftPosition, 16, 160));
 
   mainSprite.set_visible(false);
   sprite2.set_visible(false);
