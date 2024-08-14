@@ -64,7 +64,17 @@ bool LifeBar::setLife(bn::fixed _life) {
   return false;
 }
 
+void LifeBar::highlight() {
+  icon.set_scale(2);
+}
+
 void LifeBar::update() {
+  if (icon.horizontal_scale() > 1) {
+    icon.set_scale(icon.horizontal_scale() - 0.05);
+    if (icon.horizontal_scale() < 1)
+      icon.set_scale(1);
+  }
+
   if (animationIndex > -1) {
     auto scale = Math::SCALE_STEPS[animationIndex];
     mainSprite.set_scale(scale);

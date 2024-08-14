@@ -19,6 +19,7 @@ class LifeBar : public TopLeftGameObject {
   bn::fixed getMaxLife() { return maxLife; }
   bool setLife(bn::fixed _life);
 
+  void highlight();
   void update();
   void bounce();
   void hide();
