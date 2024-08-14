@@ -147,7 +147,7 @@ constexpr const bn::array<bool, 150> TRIANGLE_VISIBLE = {
     true,  true,  true,  true,  true,  true,  true};
 
 constexpr const bn::array<const char*, SaveFile::TOTAL_DIFFICULTY_LEVELS>
-    DIFFICULTY_LEVELS = {"Easy", "Normal", "Impossible"};
+    DIFFICULTY_LEVELS = {"Easy", "Hard", "Impossible"};
 
 constexpr const bn::fixed HEADER_X = 55;
 constexpr const bn::fixed HEADER_Y = -80 + 11;

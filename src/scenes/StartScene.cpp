@@ -141,7 +141,7 @@ void StartScene::processMenuOption(int option) {
 
       bn::vector<Menu::Option, 10> options;
       options.push_back(Menu::Option{.text = "Easy"});
-      options.push_back(Menu::Option{.text = "Normal"});
+      options.push_back(Menu::Option{.text = "Hard"});
       if (SaveFile::data.didFinishGame)
         options.push_back(Menu::Option{.text = "Impossible"});
       difficultyMenu->start(options, true, false, 1, 1.5, 1.5, 0, 0,
