@@ -1054,14 +1054,15 @@ void BossRifferScene::causeDamage(bn::fixed amount) {
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
 
-  if (didWin) {
+  if (amount >= 1 && didWin) {
     auto lifeInt = lifeBar->getLife().floor_integer();
     auto newLife = lifeBar->getLife() + BULLET_EXTRA_LIFE_RECOVER;
     lifeBar->setLife(newLife);
     auto newLifeInt = lifeBar->getLife().floor_integer();
-    if (lifeInt != newLifeInt)
+    if (lifeInt != newLifeInt) {
       lifeBar->highlight();
-    printLife(newLife);
+      printLife(newLife);
+    }
   }
 }
 

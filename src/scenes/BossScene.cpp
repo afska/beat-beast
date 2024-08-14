@@ -100,7 +100,8 @@ void BossScene::sufferDamage(bn::fixed amount) {
 
   horse->hurt();
   comboBar->setCombo(0);
-  bool dead = lifeBar->setLife(lifeBar->getLife() - amount);
+  bool dead =
+      lifeBar->setLife(bn::fixed(lifeBar->getLife().floor_integer()) - amount);
   printLife(dead ? 0 : lifeBar->getLife());
   if (!dead)
     comboBar->bump();

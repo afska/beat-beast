@@ -55,7 +55,7 @@ bool LifeBar::setLife(bn::fixed _life) {
   if (_life <= 0)
     return true;
   if (realLife > maxLife)
-    return false;
+    realLife = maxLife;
 
   life = realLife;
   visualLife =
