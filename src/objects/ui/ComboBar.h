@@ -6,8 +6,8 @@
 class ComboBar : public TopLeftGameObject {
  public:
   ComboBar(bn::fixed_point _topLeftPosition,
-           unsigned _maxCombo = 10,
-           unsigned _divisor = 1);
+           unsigned _maxCombo = 10  // HACK: DON'T CHANGE THIS
+  );
 
   void relocate(bn::fixed_point _topLeftPosition);
   unsigned getCombo() { return combo; }

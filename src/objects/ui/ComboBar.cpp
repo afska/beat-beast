@@ -5,16 +5,14 @@
 
 const bn::fixed_point MARGIN_BORDER = {2, 2};
 const bn::fixed MARGIN_ITEMS = 4;
+const bn::array<int, 10> VISUAL_VALUES = {0, 1, 3, 4, 6, 7, 9, 11, 12, 13};
 
 const int ANIMATION_OFFSET = 3;
 const unsigned ANIMATION_WAIT_TIME = 3;
 
-ComboBar::ComboBar(bn::fixed_point _topLeftPosition,
-                   unsigned _maxCombo,
-                   unsigned _divisor)
+ComboBar::ComboBar(bn::fixed_point _topLeftPosition, unsigned _maxCombo)
     : TopLeftGameObject(SpriteProvider::combobar().create_sprite(0, 0)),
-      maxCombo(_maxCombo),
-      divisor(_divisor) {
+      maxCombo(_maxCombo) {
   relocate(_topLeftPosition);
   setCombo(0);
 
@@ -55,7 +53,7 @@ void ComboBar::update() {
   if (combo == maxCombo)
     mainSprite.set_item(SpriteProvider::combobar(), maxComboFrame);
   else
-    updateFill((unsigned)bn::min((int)(combo / divisor) + animationOffset, 14));
+    updateFill((unsigned)bn::min(VISUAL_VALUES[combo] + animationOffset, 14));
 }
 
 void ComboBar::bump() {
