@@ -26,7 +26,7 @@ class TutorialScene : public UIScene {
   bn::unique_ptr<Horse> horse;
   bn::unique_ptr<LifeBar> lifeBar;
   bn::optional<bn::unique_ptr<ComboBar>> comboBar;
-  bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
+  bn::vector<bn::unique_ptr<Bullet>, 16> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::unique_ptr<GunReload> gunReload;
   bn::optional<bn::unique_ptr<Check>> check;

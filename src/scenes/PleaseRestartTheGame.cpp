@@ -103,9 +103,11 @@ void BossGlitchOutroScene::processInput() {
   if (bn::keypad::b_pressed() && !horse->isBusy()) {
     if (isInsideTick && horse->canReallyShoot()) {
       shoot();
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      if (!bullets.full()) {
+        bullets.push_back(bn::unique_ptr{
+            new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                       SpriteProvider::bullet())});
+      }
     } else {
       reportFailedShot();
     }

@@ -43,7 +43,7 @@ class BossGlitchOutroScene : public UIScene {
   bn::optional<bn::unique_ptr<Cerberus>> cerberus;
   bn::unique_ptr<Butano2d> butano2d;
   bn::optional<bn::unique_ptr<LifeBar>> enemyLifeBar;
-  bn::vector<bn::unique_ptr<Bullet>, 64> bullets;
+  bn::vector<bn::unique_ptr<Bullet>, 16> bullets;
   bn::optional<bn::unique_ptr<Cross>> cross;
   bn::optional<bn::unique_ptr<QuestionMark>> questionMark;
 

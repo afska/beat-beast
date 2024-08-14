@@ -110,9 +110,11 @@ void TutorialScene::processInput() {
       if (comboBar.has_value())
         comboBar->get()->setCombo(comboBar->get()->getCombo() + 1);
       shoot();
-      bullets.push_back(bn::unique_ptr{new Bullet(horse->getShootingPoint(),
-                                                  horse->getShootingDirection(),
-                                                  SpriteProvider::bullet())});
+      if (!bullets.full()) {
+        bullets.push_back(bn::unique_ptr{
+            new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                       SpriteProvider::bullet())});
+      }
     } else {
       reportFailedShot();
     }
@@ -120,14 +122,17 @@ void TutorialScene::processInput() {
   if (didUnlockAim && comboBar.has_value() && comboBar->get()->isMaxedOut() &&
       bn::keypad::b_released() && !horse->isBusy()) {
     shoot();
-    bullets.push_back(bn::unique_ptr{
-        new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
-                   SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
+    if (!bullets.full()) {
+      bullets.push_back(bn::unique_ptr{
+          new Bullet(horse->getShootingPoint(), horse->getShootingDirection(),
+                     SpriteProvider::bulletbonus(), BULLET_BONUS_DMG)});
+    }
     didDoubleShoot = true;
   }
 
   // jump
-  if (didUnlockJump && bn::keypad::a_pressed() && !wantsToContinue)
+  if (didUnlockJump && bn::keypad::a_pressed() && !wantsToContinue &&
+      !menu->hasStarted())
     horse->jump();
 }
 
@@ -671,12 +676,19 @@ void TutorialScene::updateDialog() {
     case 2 + 53: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("That's all I can teach you for now.");
-      strs.push_back("Let's battle these guardians!");
+      strs.push_back("Let's battle these guardians...");
       write(strs, true);
       state++;
       break;
     }
     case 2 + 55: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("...in |any order|!");
+      write(strs, true);
+      state++;
+      break;
+    }
+    case 2 + 57: {
       win();
       break;
     }
