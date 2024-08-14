@@ -45,6 +45,7 @@ const bn::array<bn::fixed, SaveFile::TOTAL_DIFFICULTY_LEVELS> LIFE_BOSS = {
 #define IS_EVENT_MOVE_BOTTOMRIGHT(TYPE) IS_EVENT(TYPE, 0, 5)
 #define IS_EVENT_MOVE_BOTTOMLEFT(TYPE) IS_EVENT(TYPE, 0, 6)
 #define IS_EVENT_MOVE_LEFT(TYPE) IS_EVENT(TYPE, 0, 7)
+#define IS_EVENT_MOVE_PRETHROW(TYPE) IS_EVENT(TYPE, 0, 8)
 #define IS_EVENT_MOVE_OFFSCREEN(TYPE) IS_EVENT(TYPE, 0, 9)
 
 #define IS_EVENT_PLATFORM_FIRE_1(TYPE) IS_EVENT(TYPE, 1, 1)
@@ -332,6 +333,10 @@ void BossRifferScene::processChart() {
           riffer->setTargetPosition({289, 17},
                                     chartReader->getBeatDurationMs());
           lastTargetedPlatform = 3;
+        }
+        if (IS_EVENT_MOVE_PRETHROW(type)) {
+          riffer->setTargetPosition({289 + 20, 17 - 15},
+                                    chartReader->getBeatDurationMs());
         }
         if (IS_EVENT_MOVE_RIGHT(type))
           riffer->setTargetPosition({312, 41},

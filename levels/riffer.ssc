@@ -3,7 +3,7 @@
 #TICKCOUNT:2;
 
 // 00000000
-//  ^^^^^^^ move riffer (1 = topleft | 2 = top | 3 = topright | 4 = right | 5 = bottomright | 6 = bottomleft | 7 = left | 9 = offscreen)
+//  ^^^^^^^ move riffer (1 = topleft | 2 = top | 3 = topright | 4 = right | 5 = bottomright | 6 = bottomleft | 7 = left | 8 = pre-throw | 9 = offscreen)
 //  || ^||- platform fire (1 = prepare 1 | 2 = prepare 2 | 3 = prepare 3 | 5 = prepare inf. 1 | 6 = prepare inf. 2 | 7 = prepare inf. 3 | 8 = prepare inf. 4 | 9 = start)
 //  || ^|-- wave (1 = prepare | 2 = send)
 //  || |--- game note (1~4)
@@ -203,11 +203,11 @@
 !8
 00000001
 !7
-00000003
+00000008
 !8
 ,
-!9 // 00:50 (throw)
-00000000
+00000000 // 00:50 (throw)
+!9
 00000000
 00000000
 ,
@@ -968,11 +968,11 @@
 !8
 00000001
 !7
-00000003
+00000009
 !8
 ,
-!9 // 00:50 (throw)
-00000000
+00000000 // 00:50 (throw)
+!9
 00000000
 00000000
 ,
@@ -1741,11 +1741,11 @@
 !8
 00000001
 !7
-00000003
+00000008
 !8
 ,
-!9 // 00:50 (throw)
-00000000
+00000000 // 00:50 (throw)
+!9
 00000000
 00000000
 ,
