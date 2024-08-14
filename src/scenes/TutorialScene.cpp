@@ -14,7 +14,7 @@
 #define BPM 85
 #define BEAT_DURATION_MS 705
 #define ONE_DIV_BEAT_DURATION_MS 6084537
-#define OFFSET 32
+#define OFFSET 48
 #define HORSE_Y 34
 #define SFX_OBJECTIVE "ui_objective.pcm"
 #define SFX_SUCCESS "ui_success.pcm"

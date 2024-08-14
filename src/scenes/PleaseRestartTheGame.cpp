@@ -19,7 +19,6 @@
 #define HORSE_Y 34
 #define BPM 85
 #define OFFSET 32
-#define BEAT_PREDICTION_WINDOW 100
 
 #define SFX_WAITWHAT "rock.pcm"
 #define SFX_GO "minirock.pcm"
