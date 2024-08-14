@@ -6,6 +6,7 @@
 #define BULLET_OFF_BEAT_SPEED 1.5
 #define BULLET_ON_BEAT_SPEED 2.5
 #define BULLET_BONUS_DMG 0.25
+#define BULLET_EXTRA_LIFE_RECOVER 0.1
 
 class Bullet : public RhythmicBullet {
  public:

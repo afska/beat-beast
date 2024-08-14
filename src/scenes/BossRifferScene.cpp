@@ -1048,6 +1048,12 @@ void BossRifferScene::causeDamage(bn::fixed amount) {
   enemyLifeBar->damage += amount;
   if (enemyLifeBar->setLife(enemyLifeBar->getLife() - amount))
     didWin = true;
+
+  if (didWin) {
+    auto newLife = lifeBar->getLife() + BULLET_EXTRA_LIFE_RECOVER;
+    lifeBar->setLife(newLife);
+    printLife(newLife);
+  }
 }
 
 void BossRifferScene::addExplosion(bn::fixed_point position) {

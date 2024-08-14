@@ -3,6 +3,7 @@
 
 #include "BossScene.h"
 
+#include "../objects/Bullet.h"
 #include "../objects/glitch/BlackHole3d.h"
 #include "../objects/glitch/Bullet3d.h"
 #include "../objects/glitch/Butano3d.h"

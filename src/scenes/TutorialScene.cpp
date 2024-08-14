@@ -512,7 +512,7 @@ void TutorialScene::updateDialog() {
       if (finishedWriting()) {
         player_sfx_play(SFX_OBJECTIVE);
         bullets.clear();
-        comboBar = bn::unique_ptr{new ComboBar({0, 1}, 15, 1)};
+        comboBar = bn::unique_ptr{new ComboBar({0, 1})};
         state++;
       }
       break;
@@ -629,11 +629,46 @@ void TutorialScene::updateDialog() {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("This doesn't mean victory!");
       strs.push_back("We still have to |finish the level|.");
-      write(strs, true);
+      write(strs);
       state++;
+      hasFinishedWriting = false;
+      // HACK: ^^^ Otherwise, the menu would appear early
+      break;
+    }
+    case 2 + 48: {
+      if (finishedWriting()) {
+        bn::vector<Menu::Option, 10> options;
+        options.push_back(Menu::Option{.text = "Really?"});
+        ask(options);
+
+        state++;
+      }
       break;
     }
     case 2 + 49: {
+      if (menu->hasConfirmedOption()) {
+        menu->receiveConfirmedOption();
+        closeMenu();
+
+        bn::vector<bn::string<64>, 2> strs;
+        strs.push_back("It seems to be |a bug|.");
+        strs.push_back("But hey, we can exploit it.");
+        write(strs, true);
+
+        state++;
+      }
+      break;
+    }
+    case 2 + 51: {
+      bn::vector<bn::string<64>, 2> strs;
+      strs.push_back("If you shoot a dead enemy,");
+      strs.push_back("I'll start |recovering life|!");
+      write(strs, true);
+
+      state++;
+      break;
+    }
+    case 2 + 53: {
       bn::vector<bn::string<64>, 2> strs;
       strs.push_back("That's all I can teach you for now.");
       strs.push_back("Let's battle these guardians!");
@@ -641,7 +676,7 @@ void TutorialScene::updateDialog() {
       state++;
       break;
     }
-    case 2 + 51: {
+    case 2 + 55: {
       win();
       break;
     }

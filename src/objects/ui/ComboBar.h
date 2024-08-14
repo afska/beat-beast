@@ -6,7 +6,7 @@
 class ComboBar : public TopLeftGameObject {
  public:
   ComboBar(bn::fixed_point _topLeftPosition,
-           unsigned _maxCombo = 15,
+           unsigned _maxCombo = 10,
            unsigned _divisor = 1);
 
   void relocate(bn::fixed_point _topLeftPosition);

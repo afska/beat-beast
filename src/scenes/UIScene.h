@@ -71,8 +71,9 @@ class UIScene : public Scene {
   void closeText();
   void setDialogIcon(bn::sprite_item);
 
- private:
   bool hasFinishedWriting = false;
+
+ private:
   bool isPaused = false;
 
   void setUpBlending();

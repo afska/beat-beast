@@ -262,8 +262,9 @@ void BossScene::disableGunAlert() {
 void BossScene::printLife(bn::fixed life) {
   textSprites.clear();
   textGenerator.generate({-102, -61},
-                         (life < 10 ? "0" : "") + bn::to_string<32>(life) +
-                             "/" + (lifeBar->getMaxLife() < 10 ? "0" : "") +
+                         (life < 10 ? "0" : "") +
+                             bn::to_string<32>(life.floor_integer()) + "/" +
+                             (lifeBar->getMaxLife() < 10 ? "0" : "") +
                              bn::to_string<32>(lifeBar->getMaxLife()),
                          textSprites);
 }
