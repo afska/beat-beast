@@ -84,7 +84,7 @@ INLINE void unmute() {
 INLINE void turn_on_sound() {
   SETSNDRES(1);
   SNDSTAT = SNDSTAT_ENABLE;
-  DSOUNDCTRL = 0xff0c; /*0b1111111100001100*/
+  DSOUNDCTRL = 0xfb0c; /*0b1111101100001100*/
   mute();
 }
 
