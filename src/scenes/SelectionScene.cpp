@@ -183,7 +183,6 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   horse->showGun = false;
   horse->setPosition({HORSE_X, HORSE_Y}, true);
   horse->update();
-  updateVideo();
 
   textGenerator.set_center_alignment();
   textGenerator.set_z_order(-1);
@@ -228,6 +227,8 @@ SelectionScene::SelectionScene(const GBFS_FILE* _fs)
   processLevelResult();
   updateSelection(false);
   updateDifficultyLevel(false);
+
+  updateVideo();
 }
 
 void SelectionScene::init() {

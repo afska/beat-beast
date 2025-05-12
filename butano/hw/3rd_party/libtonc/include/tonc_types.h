@@ -15,6 +15,7 @@
 #ifndef TONC_TYPES
 #define TONC_TYPES
 
+#include <stdbool.h>
 
 /*!	\defgroup grpTypes	Types and attributes	*/
 
@@ -183,11 +184,6 @@ typedef struct { u32 data[8];  } TILE, TILE4;
 //! 8bpp tile type, for easy indexing and 8-bit tiles
 typedef struct { u32 data[16]; } TILE8;
 
-
-#ifndef __cplusplus
-//! Boolean type
-typedef enum { false, true } bool;
-#endif
 
 #ifndef BOOL
 typedef u8 BOOL;	// C++ bool == u8 too, that's why
